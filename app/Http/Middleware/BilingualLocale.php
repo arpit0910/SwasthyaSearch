@@ -28,6 +28,8 @@ class BilingualLocale
             App::setLocale('en');
         }
 
+        \Illuminate\Support\Facades\View::share('locale', App::getLocale());
+
         return $next($request);
     }
 }

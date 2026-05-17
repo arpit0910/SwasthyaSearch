@@ -6,7 +6,6 @@ use App\Models\Department;
 use App\Models\Doctor;
 use App\Models\Hospital;
 use Illuminate\Http\Request;
-use Inertia\Inertia;
 
 class DoctorController extends Controller
 {
@@ -43,9 +42,9 @@ class DoctorController extends Controller
             $search = $request->search;
             $query->where(function ($q) use ($search) {
                 $q->where('first_name', 'LIKE', "%{$search}%")
-                  ->orWhere('last_name', 'LIKE', "%{$search}%")
-                  ->orWhere('about_en', 'LIKE', "%{$search}%")
-                  ->orWhere('about_hi', 'LIKE', "%{$search}%");
+                    ->orWhere('last_name', 'LIKE', "%{$search}%")
+                    ->orWhere('about_en', 'LIKE', "%{$search}%")
+                    ->orWhere('about_hi', 'LIKE', "%{$search}%");
             });
         }
 
@@ -53,9 +52,9 @@ class DoctorController extends Controller
         $departments = Department::where('is_active', true)->orderBy($nameColumn)->get();
         $cities = Hospital::where('is_verified', true)->whereNotNull('city')->distinct()->pluck('city');
 
-        return Inertia::render('Doctors/Index', [
-            'doctors' => $query->get()->map(fn (Doctor $doctor) => $this->formatDoctor($doctor)),
-            'departments' => $departments->map(fn (Department $department) => $this->formatDepartment($department)),
+        return view('doctors.index', [
+            'doctors' => $query->get()->map(fn(Doctor $doctor) => $this->formatDoctor($doctor)),
+            'departments' => $departments->map(fn(Department $department) => $this->formatDepartment($department)),
             'cities' => $cities,
             'filters' => $request->only(['department', 'experience', 'city', 'search']),
         ]);
@@ -97,7 +96,7 @@ class DoctorController extends Controller
             'specialization_summary' => $doctor->specialization_summary,
             'awards_recognitions' => $doctor->awards_recognitions ?: [],
             'membership_fellowships' => $doctor->membership_fellowships ?: [],
-            'hospitals' => $doctor->hospitals->map(fn (Hospital $hospital) => [
+            'hospitals' => $doctor->hospitals->map(fn(Hospital $hospital) => [
                 'id' => $hospital->id,
                 'name' => [
                     'en' => $hospital->name_en,

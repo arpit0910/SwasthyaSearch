@@ -12,7 +12,6 @@ use Exception;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Session;
 use Illuminate\Support\Str;
-use Inertia\Inertia;
 
 class SearchController extends Controller
 {
@@ -20,7 +19,7 @@ class SearchController extends Controller
     {
         $nameColumn = app()->getLocale() === 'hi' ? 'name_hi' : 'name_en';
 
-        return Inertia::render('Home/Index', [
+        return view('home.index', [
             'departments' => Department::where('is_active', true)->orderBy($nameColumn)->get()->map(fn (Department $department) => $this->formatDepartment($department)),
             'doctors' => Doctor::with(['department', 'hospitals'])->where('is_verified', true)->latest()->take(6)->get()->map(fn (Doctor $doctor) => $this->formatDoctor($doctor)),
             'articles' => Article::with('comments')->where('is_published', true)->latest()->get(),

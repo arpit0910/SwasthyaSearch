@@ -4,7 +4,6 @@ namespace App\Http\Controllers;
 
 use App\Models\Hospital;
 use Illuminate\Http\Request;
-use Inertia\Inertia;
 
 class HospitalController extends Controller
 {
@@ -27,16 +26,16 @@ class HospitalController extends Controller
             $search = $request->search;
             $query->where(function ($q) use ($search) {
                 $q->where('name_en', 'LIKE', "%{$search}%")
-                  ->orWhere('name_hi', 'LIKE', "%{$search}%")
-                  ->orWhere('address', 'LIKE', "%{$search}%");
+                    ->orWhere('name_hi', 'LIKE', "%{$search}%")
+                    ->orWhere('address', 'LIKE', "%{$search}%");
             });
         }
 
         $cities = Hospital::where('is_verified', true)->whereNotNull('city')->distinct()->pluck('city');
         $types = Hospital::where('is_verified', true)->whereNotNull('type')->distinct()->pluck('type');
 
-        return Inertia::render('Hospitals/Index', [
-            'hospitals' => $query->get()->map(fn (Hospital $hospital) => [
+        return view('hospitals.index', [
+            'hospitals' => $query->get()->map(fn(Hospital $hospital) => [
                 'id' => $hospital->id,
                 'name' => [
                     'en' => $hospital->name_en,

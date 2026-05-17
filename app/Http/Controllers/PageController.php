@@ -5,18 +5,17 @@ namespace App\Http\Controllers;
 use App\Models\Department;
 use App\Models\Disease;
 use Illuminate\Http\Request;
-use Inertia\Inertia;
 
 class PageController extends Controller
 {
     public function about()
     {
-        return Inertia::render('Pages/About');
+        return view('pages.about');
     }
 
     public function contact()
     {
-        return Inertia::render('Pages/Contact');
+        return view('pages.contact');
     }
 
     public function departments()
@@ -42,7 +41,7 @@ class PageController extends Controller
                 'doctors_count' => $department->doctors_count,
             ]);
 
-        return Inertia::render('Pages/Departments', [
+        return view('pages.departments', [
             'departments' => $departments,
         ]);
     }
@@ -92,7 +91,7 @@ class PageController extends Controller
             ] : null,
         ]);
 
-        return Inertia::render('Pages/Diseases', [
+        return view('pages.diseases', [
             'departments' => $departments,
             'diseases' => $diseases,
             'filters' => $request->only(['department', 'search']),

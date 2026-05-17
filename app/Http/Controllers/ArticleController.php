@@ -4,7 +4,6 @@ namespace App\Http\Controllers;
 
 use App\Models\Article;
 use Illuminate\Http\Request;
-use Inertia\Inertia;
 
 class ArticleController extends Controller
 {
@@ -30,7 +29,7 @@ class ArticleController extends Controller
 
         $categories = Article::where('is_published', true)->distinct()->pluck('category');
 
-        return Inertia::render('Articles/Index', [
+        return view('articles.index', [
             'articles' => $query->get(),
             'categories' => $categories,
             'filters' => $request->only(['category', 'search']),
@@ -41,7 +40,7 @@ class ArticleController extends Controller
     {
         $article->load('comments');
 
-        return Inertia::render('Articles/Show', [
+        return view('articles.show', [
             'article' => $article,
         ]);
     }
