@@ -24,6 +24,7 @@ class Doctor extends Model implements HasMedia
         'about_hi',
         'is_verified',
         'email',
+        'country_code',
         'phone',
         'address_line1',
         'address_line2',

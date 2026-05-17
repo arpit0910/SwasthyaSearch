@@ -33,6 +33,7 @@ return new class extends Migration
 
             // Personal Details
             $table->string('email')->nullable();
+            $table->string('country_code')->default('+91')->nullable();
             $table->string('phone')->nullable();
             $table->string('website')->nullable();
             $table->string('address_line1')->nullable();

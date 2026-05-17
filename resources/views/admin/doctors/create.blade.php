@@ -34,7 +34,10 @@
                         </div>
                         <div class="col-md-4">
                             <label class="form-label fw-semibold">Phone Number</label>
-                            <input type="text" name="phone" class="form-control" placeholder="+91 98765 43210">
+                            <div class="input-group">
+                                <input type="text" name="country_code" class="form-control" style="max-width: 80px;" value="+91" placeholder="+91">
+                                <input type="text" name="phone" class="form-control" placeholder="9876543210">
+                            </div>
                         </div>
                         <div class="col-md-4">
                             <label class="form-label fw-semibold">Date of Birth</label>

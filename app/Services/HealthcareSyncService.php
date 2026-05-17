@@ -21,7 +21,7 @@ class HealthcareSyncService
      * @param string|null $cacheKey Cache key for progress tracking.
      * @param int $chunkSize Number of records to process per batch chunk.
      */
-    public static function syncBatch(array $doctorsBatch, array $hospitalsBatch, ?string $cacheKey = null, int $chunkSize = 25): array
+    public static function syncBatch(array $doctorsBatch, array $hospitalsBatch, ?string $cacheKey = null, int $chunkSize = 25, ?string $defaultCity = null): array
     {
         $results = [
             'hospitals_synced' => 0,
@@ -54,7 +54,7 @@ class HealthcareSyncService
 
             foreach ($chunk as $hospData) {
                 try {
-                    self::syncHospital($hospData);
+                    self::syncHospital($hospData, $defaultCity);
                     $results['hospitals_synced']++;
                 } catch (Exception $e) {
                     Log::error("Hospital Sync Error: " . $e->getMessage(), ['data' => $hospData]);
@@ -83,7 +83,7 @@ class HealthcareSyncService
 
             foreach ($chunk as $docData) {
                 try {
-                    $syncResult = self::syncDoctor($docData);
+                    $syncResult = self::syncDoctor($docData, $defaultCity);
                     $results['doctors_synced']++;
                     if ($syncResult['new_department']) {
                         $results['departments_created']++;
@@ -111,17 +111,41 @@ class HealthcareSyncService
     }
 
     /**
+     * Helper to separate country code from phone number string.
+     */
+    public static function splitPhone(?string $rawPhone): array
+    {
+        if (empty($rawPhone)) {
+            return ['country_code' => '+91', 'phone' => null];
+        }
+
+        $rawPhone = trim($rawPhone);
+        if (preg_match('/^(\+\d{1,4})\s*[- ]?\s*(.*)$/', $rawPhone, $matches)) {
+            return [
+                'country_code' => $matches[1],
+                'phone' => trim($matches[2], '- '),
+            ];
+        }
+
+        return ['country_code' => '+91', 'phone' => trim($rawPhone, '- ')];
+    }
+
+    /**
      * Synchronize a single hospital record with strict address formatting, geocoding, and scheme metadata.
      */
-    public static function syncHospital(array $sourceData): Hospital
+    public static function syncHospital(array $sourceData, ?string $defaultCity = null): Hospital
     {
         $nameEn = trim($sourceData['name_en'] ?? '');
         if (empty($nameEn)) {
             throw new Exception("Hospital name_en is required for synchronization.");
         }
 
-        $cityName = trim($sourceData['city'] ?? 'Jaipur');
-        $nameHi = trim($sourceData['name_hi'] ?? ($nameEn . " ({$cityName})"));
+        $cityName = trim($sourceData['city'] ?? ($defaultCity ?: 'Jaipur'));
+        $cityNameHi = self::getHindiCityName($cityName);
+        $nameHi = trim($sourceData['name_hi'] ?? self::getHindiHospitalName($nameEn, $cityName, $cityNameHi));
+        if (isset($sourceData['name_hi']) && str_contains($sourceData['name_hi'], $cityName)) {
+            $nameHi = self::getHindiHospitalName($nameEn, $cityName, $cityNameHi);
+        }
 
         // Normalize Address
         $addressData = self::normalizeAddress($sourceData, $cityName);
@@ -141,11 +165,29 @@ class HealthcareSyncService
 
         $existingHospital = Hospital::where('name_en', $nameEn)->where('city', $cityName)->first();
 
+        // Categorize Hospital Type accurately if not explicitly provided
+        $hospType = $sourceData['type'] ?? ($existingHospital?->type ?: 'Private Hospital');
+        if (empty($sourceData['type']) && !$existingHospital) {
+            $nameEnLower = strtolower($nameEn);
+            if (str_contains($nameEnLower, 'govt') || str_contains($nameEnLower, 'government') || str_contains($nameEnLower, 'aiims') || str_contains($nameEnLower, 'district hospital') || str_contains($nameEnLower, 'civil hospital') || str_contains($nameEnLower, 'sawai man singh') || str_contains($nameEnLower, 'mahatma gandhi') || str_contains($nameEnLower, 'esi')) {
+                $hospType = 'Government Hospital';
+            } elseif (str_contains($nameEnLower, 'trust') || str_contains($nameEnLower, 'foundation') || str_contains($nameEnLower, 'mission') || str_contains($nameEnLower, 'charitable') || str_contains($nameEnLower, 'society') || str_contains($nameEnLower, 'memorial')) {
+                $hospType = 'Semi-Private Hospital';
+            } elseif (str_contains($nameEnLower, 'clinic') || str_contains($nameEnLower, 'poly clinic') || str_contains($nameEnLower, 'dental') || str_contains($nameEnLower, 'care centre')) {
+                $hospType = 'Clinic';
+            } else {
+                $hospType = 'Private Hospital';
+            }
+        }
+
+        $rawPhone = $sourceData['emergency_phone'] ?? ($existingHospital?->emergency_phone ?: '+91-141-' . rand(2000000, 2999999));
+        $phoneParts = self::splitPhone($rawPhone);
+
         return Hospital::updateOrCreate(
             ['name_en' => $nameEn, 'city' => $cityName],
             [
                 'name_hi' => $nameHi,
-                'type' => $sourceData['type'] ?? ($existingHospital?->type ?: 'Hospital'),
+                'type' => $hospType,
                 'address' => $addressData['full_address'],
                 'address_line1' => $addressData['address_line1'],
                 'address_line2' => $addressData['address_line2'],
@@ -154,7 +196,8 @@ class HealthcareSyncService
                 'pincode' => $addressData['pincode'],
                 'latitude' => $coords['latitude'],
                 'longitude' => $coords['longitude'],
-                'emergency_phone' => $sourceData['emergency_phone'] ?? ($existingHospital?->emergency_phone ?: '+91-' . rand(1000000000, 9999999999)),
+                'emergency_country_code' => $sourceData['emergency_country_code'] ?? $phoneParts['country_code'],
+                'emergency_phone' => $phoneParts['phone'],
                 'is_verified' => true,
                 // Old schema flags
                 'accepts_ayushman' => $schemes['accepts_ayushman_card'],
@@ -174,7 +217,7 @@ class HealthcareSyncService
     /**
      * Synchronize a single doctor record with dynamic department creation, address normalization, and hospital mapping.
      */
-    public static function syncDoctor(array $sourceData): array
+    public static function syncDoctor(array $sourceData, ?string $defaultCity = null): array
     {
         $firstName = trim($sourceData['first_name'] ?? '');
         $lastName = trim($sourceData['last_name'] ?? '');
@@ -183,11 +226,25 @@ class HealthcareSyncService
             throw new Exception("Doctor first_name is required for synchronization.");
         }
 
-        $cityName = trim($sourceData['city'] ?? 'Jaipur');
+        $cityName = trim($sourceData['city'] ?? ($defaultCity ?: 'Jaipur'));
+        $cityNameHi = self::getHindiCityName($cityName);
 
         // --- DYNAMIC DEPARTMENT CREATION LOGIC ---
         $deptNameEn = trim($sourceData['department_name_en'] ?? 'General Medicine');
-        $deptNameHi = trim($sourceData['department_name_hi'] ?? self::getHindiDeptName($deptNameEn));
+        $deptMapEn = [
+            'General Physician' => 'General Medicine',
+            'Dentist' => 'Dentistry',
+            'ENT' => 'ENT (Otolaryngology)',
+            'Gynecology & Obstetrics' => 'Obstetrics and Gynecology',
+            'Pediatrician' => 'Pediatrics',
+            'Eye Specialist' => 'Ophthalmology',
+            'Heart Specialist' => 'Cardiology',
+            'Skin Specialist' => 'Dermatology',
+            'Brain Specialist' => 'Neurology',
+            'Bone Specialist' => 'Orthopedics',
+        ];
+        $deptNameEn = $deptMapEn[$deptNameEn] ?? $deptNameEn;
+        $deptNameHi = self::getHindiDeptName($deptNameEn);
 
         $existingDept = Department::where('name_en', $deptNameEn)->first();
         $newDepartmentCreated = false;
@@ -226,9 +283,10 @@ class HealthcareSyncService
 
         $regNumber = $existingDoctor?->registration_number ?: ($sourceData['registration_number'] ?? ('RAJ-MC-' . rand(10000, 99999)));
         $experience = (int)($sourceData['experience_years'] ?? ($existingDoctor?->experience_years ?: rand(8, 25)));
-        $degrees = !empty($sourceData['education_degrees']) ? $sourceData['education_degrees'] : ($existingDoctor?->education_degrees ?: ['MBBS', 'MD']);
+        $degrees = !empty($sourceData['education_degrees']) ? $sourceData['education_degrees'] : ($existingDoctor?->education_degrees ?: null);
         $fee = (float)($sourceData['consultation_fee'] ?? ($existingDoctor?->consultation_fee ?: 500));
-        $phone = $sourceData['phone'] ?? ($existingDoctor?->phone ?: '+91-141-' . rand(2000000, 2999999));
+        $rawPhone = $sourceData['phone'] ?? ($existingDoctor?->phone ?: '+91-141-' . rand(2000000, 2999999));
+        $phoneParts = self::splitPhone($rawPhone);
         $website = $sourceData['website'] ?? ($existingDoctor?->website && !str_contains($existingDoctor->website, 'swasthyasearch.com') ? $existingDoctor->website : null);
 
         $doctor = Doctor::updateOrCreate(
@@ -243,10 +301,11 @@ class HealthcareSyncService
                 'education_degrees' => $degrees,
                 'experience_years' => $experience,
                 'about_en' => $sourceData['about_en'] ?? ($existingDoctor?->about_en ?: "Highly experienced specialist in {$deptNameEn} practicing in {$cityName}."),
-                'about_hi' => $sourceData['about_hi'] ?? ($existingDoctor?->about_hi ?: "{$cityName} में अभ्यास करने वाले {$deptNameHi} के अत्यधिक अनुभवी विशेषज्ञ डॉक्टर।"),
+                'about_hi' => "{$cityNameHi} में अभ्यास करने वाले {$deptNameHi} के अत्यधिक अनुभवी विशेषज्ञ डॉक्टर डॉ. " . self::getHindiDoctorName($firstName) . " " . self::getHindiDoctorName($lastName) . "।",
                 'is_verified' => true,
                 'consultation_fee' => $fee,
-                'phone' => $phone,
+                'country_code' => $sourceData['country_code'] ?? $phoneParts['country_code'],
+                'phone' => $phoneParts['phone'],
                 'address_line1' => $addressData['address_line1'],
                 'address_line2' => $addressData['address_line2'],
                 'city' => $addressData['city'],
@@ -290,7 +349,7 @@ class HealthcareSyncService
                     'accepts_jan_aadhaar' => $schemes['accepts_jan_aadhaar'],
                     'rgahs_approved' => $schemes['rgahs_approved'],
                     'cashless_schemes_list' => $schemes['cashless_schemes_list'],
-                ]);
+                ], $defaultCity);
             }
 
             $doctor->hospitals()->syncWithoutDetaching([
@@ -326,7 +385,7 @@ class HealthcareSyncService
             $parts = array_map('trim', explode(',', $rawAddress));
             $addressLine1 = $parts[0] ?? "Plot No. " . rand(10, 200);
             $addressLine2 = $parts[1] ?? (isset($parts[2]) ? $parts[1] : "Main Medical Avenue");
-            
+
             // Try to extract pincode from raw address if missing
             if (empty($pincode) && preg_match('/\b(30\d{4}|11\d{4}|40\d{4}|50\d{4}|70\d{4})\b/', $rawAddress, $matches)) {
                 $pincode = $matches[1];
@@ -497,32 +556,216 @@ class HealthcareSyncService
         ];
     }
 
-    /**
-     * Map English department names to standard Hindi translations.
-     */
-    private static function getHindiDeptName(string $deptEn): string
+    public static function getHindiDeptName(string $deptEn): string
     {
+        $deptEnClean = trim($deptEn);
         $map = [
-            'General Physician' => 'सामान्य चिकित्सक',
-            'Pediatrics' => 'बाल रोग',
-            'Cardiology' => 'हृदय रोग (कार्डियोलॉजी)',
-            'Gynecology & Obstetrics' => 'स्त्री रोग और प्रसूति',
-            'Orthopedics' => 'हड्डी रोग (ऑर्थोपेडिक्स)',
-            'Dermatology' => 'त्वचा विज्ञान (डर्मेटोलॉजी)',
-            'Neurology' => 'तंत्रिका विज्ञान (न्यूरोलॉजी)',
-            'Ophthalmology' => 'नेत्र विज्ञान (ऑप्थल्मोलॉजी)',
-            'ENT' => 'ईएनटी (कान, नाक, गला)',
-            'Psychiatry' => 'मनोरोग विज्ञान (साइकेट्री)',
-            'Dentist' => 'दंत चिकित्सक (डेंटिस्ट)',
+            'Addiction Medicine' => 'नशा मुक्ति चिकित्सा',
+            'Adolescent Medicine' => 'किशोर चिकित्सा',
+            'Allergy and Immunology' => 'एलर्जी और प्रतिरक्षा विज्ञान',
+            'Anesthesiology' => 'एनेस्थीसियोलॉजी',
+            'Audiology' => 'श्रवण विज्ञान',
+            'Bariatric Medicine' => 'बैरिएट्रिक चिकित्सा',
+            'Bariatric Surgery' => 'बैरिएट्रिक शल्य चिकित्सा',
+            'Breast Surgery' => 'स्तन शल्य चिकित्सा',
+            'Cardiac Surgery' => 'हृदय शल्य चिकित्सा',
+            'Cardiology' => 'हृदय रोग विभाग',
+            'Clinical Genetics' => 'क्लिनिकल आनुवंशिकी',
+            'Colorectal Surgery' => 'कोलोरेक्टल शल्य चिकित्सा',
+            'Critical Care Medicine' => 'गहन चिकित्सा',
+            'Dentistry' => 'दंत चिकित्सा',
+            'Dentist' => 'दंत चिकित्सा',
+            'Dermatology' => 'त्वचा रोग विभाग',
+            'Developmental and Behavioral Pediatrics' => 'विकासात्मक और व्यवहारिक बाल चिकित्सा',
+            'Emergency Medicine' => 'आपातकालीन चिकित्सा',
+            'Endocrinology' => 'अंतःस्राविकी',
+            'ENT (Otolaryngology)' => 'कान, नाक और गला रोग विभाग',
+            'ENT' => 'कान, नाक और गला रोग विभाग',
+            'Family Medicine' => 'पारिवारिक चिकित्सा',
+            'Gastroenterology' => 'पाचन तंत्र रोग विभाग',
+            'General Medicine' => 'सामान्य चिकित्सा',
+            'General Physician' => 'सामान्य चिकित्सा',
+            'General Surgery' => 'सामान्य शल्य चिकित्सा',
+            'Geriatrics' => 'वृद्धावस्था चिकित्सा',
+            'Gynecology' => 'स्त्री रोग विभाग',
+            'Gynecology & Obstetrics' => 'प्रसूति एवं स्त्री रोग विभाग',
+            'Hematology' => 'रक्त रोग विभाग',
+            'Hepatology' => 'यकृत रोग विभाग',
+            'Infectious Diseases' => 'संक्रामक रोग विभाग',
+            'Internal Medicine' => 'आंतरिक चिकित्सा',
+            'Interventional Cardiology' => 'इंटरवेंशनल कार्डियोलॉजी',
+            'Interventional Radiology' => 'इंटरवेंशनल रेडियोलॉजी',
+            'Neonatology' => 'नवजात शिशु चिकित्सा',
+            'Nephrology' => 'गुर्दा रोग विभाग',
+            'Neurology' => 'तंत्रिका रोग विभाग',
+            'Neurosurgery' => 'तंत्रिका शल्य चिकित्सा',
+            'Nuclear Medicine' => 'न्यूक्लियर मेडिसिन',
+            'Nutrition and Dietetics' => 'पोषण और आहार विज्ञान',
+            'Obstetrics' => 'प्रसूति विभाग',
+            'Obstetrics and Gynecology' => 'प्रसूति एवं स्त्री रोग विभाग',
+            'Occupational Medicine' => 'व्यावसायिक चिकित्सा',
+            'Oncology' => 'कैंसर रोग विभाग',
+            'Ophthalmology' => 'नेत्र रोग विभाग',
+            'Oral and Maxillofacial Surgery' => 'मुख एवं जबड़ा शल्य चिकित्सा',
+            'Orthodontics' => 'ऑर्थोडॉन्टिक्स',
+            'Orthopedics' => 'हड्डी रोग विभाग',
+            'Pain Medicine' => 'दर्द चिकित्सा',
+            'Palliative Medicine' => 'प्रशामक चिकित्सा',
+            'Pathology' => 'पैथोलॉजी',
+            'Pediatric Cardiology' => 'बाल हृदय रोग विभाग',
+            'Pediatric Endocrinology' => 'बाल अंतःस्राविकी',
+            'Pediatric Gastroenterology' => 'बाल पाचन तंत्र रोग विभाग',
+            'Pediatric Neurology' => 'बाल तंत्रिका रोग विभाग',
+            'Pediatric Surgery' => 'बाल शल्य चिकित्सा',
+            'Pediatrics' => 'बाल रोग विभाग',
+            'Pediatrician' => 'बाल रोग विभाग',
+            'Physical Medicine and Rehabilitation' => 'भौतिक चिकित्सा एवं पुनर्वास',
+            'Physiotherapy' => 'फिजियोथेरेपी',
+            'Plastic and Reconstructive Surgery' => 'प्लास्टिक एवं पुनर्निर्माण शल्य चिकित्सा',
+            'Plastic Surgery' => 'प्लास्टिक एवं पुनर्निर्माण शल्य चिकित्सा',
+            'Podiatry' => 'पैर रोग चिकित्सा',
+            'Preventive Medicine' => 'निवारक चिकित्सा',
+            'Psychiatry' => 'मनोचिकित्सा',
+            'Psychology' => 'मनोविज्ञान',
+            'Pulmonology' => 'श्वसन रोग विभाग',
+            'Radiation Oncology' => 'रेडिएशन ऑन्कोलॉजी',
+            'Radiology' => 'रेडियोलॉजी',
+            'Reproductive Endocrinology and Infertility' => 'प्रजनन अंतःस्राविकी और बांझपन',
+            'Rheumatology' => 'रूमेटोलॉजी',
+            'Sleep Medicine' => 'नींद चिकित्सा',
+            'Sports Medicine' => 'खेल चिकित्सा',
+            'Thoracic Surgery' => 'वक्ष शल्य चिकित्सा',
+            'Transplant Medicine' => 'प्रत्यारोपण चिकित्सा',
+            'Trauma Surgery' => 'ट्रॉमा शल्य चिकित्सा',
+            'Urology' => 'मूत्र रोग विभाग',
+            'Vascular Surgery' => 'रक्तवाहिनी शल्य चिकित्सा',
             'Ayurveda' => 'आयुर्वेद',
             'Homeopathy' => 'होम्योपैथी',
-            'Gastroenterology' => 'गैस्ट्रोएंटरोलॉजी',
-            'Urology' => 'मूत्र रोग (यूरोलॉजी)',
-            'Oncology' => 'कैंसर रोग (ऑन्कोलॉजी)',
-            'Pulmonology' => 'श्वसन रोग (पल्मोनोलॉजी)',
-            'General Medicine' => 'सामान्य चिकित्सा',
         ];
 
-        return $map[$deptEn] ?? $deptEn;
+        return $map[$deptEnClean] ?? $deptEnClean;
+    }
+
+    public static function getHindiCityName(string $city): string
+    {
+        $cityClean = strtolower(trim($city));
+        $map = [
+            'jaipur' => 'जयपुर',
+            'delhi' => 'दिल्ली',
+            'new delhi' => 'नई दिल्ली',
+            'mumbai' => 'मुंबई',
+            'bangalore' => 'बैंगलोर',
+            'bengaluru' => 'बैंगलोर',
+            'kolkata' => 'कोलकाता',
+            'chennai' => 'चेन्नई',
+            'hyderabad' => 'हैदराबाद',
+            'pune' => 'पुणे',
+            'ahmedabad' => 'अहमदाबाद',
+        ];
+
+        if (isset($map[$cityClean])) {
+            return $map[$cityClean];
+        }
+
+        if (class_exists('Transliterator')) {
+            $transliterator = \Transliterator::create('Any-Devanagari');
+            if ($transliterator) {
+                $words = explode(' ', trim($city));
+                foreach ($words as &$word) {
+                    if (preg_match('/[a-zA-Z]/', $word)) {
+                        $trans = $transliterator->transliterate($word);
+                        $trans = rtrim($trans, '्');
+                        $word = $trans;
+                    }
+                }
+                return implode(' ', $words);
+            }
+        }
+
+        return ucfirst($city);
+    }
+
+    public static function getHindiHospitalName(string $nameEn, string $cityNameEn, string $cityNameHi): string
+    {
+        $nameEnClean = trim(str_ireplace([" " . $cityNameEn, " ({$cityNameEn})", " " . $cityNameEn . " ", " " . $cityNameHi, " ({$cityNameHi})"], "", $nameEn));
+
+        $map = [
+            'Hospital' => 'अस्पताल',
+            'Hospitals' => 'अस्पताल',
+            'Clinic' => 'क्लिनिक',
+            'Clinics' => 'क्लिनिक',
+            'Care Centre' => 'केयर सेंटर',
+            'Care Center' => 'केयर सेंटर',
+            'Research Centre' => 'रिसर्च सेंटर',
+            'Research Center' => 'रिसर्च सेंटर',
+            'Institute' => 'संस्थान',
+            'Memorial' => 'मेमोरियल',
+            'Multispeciality' => 'मल्टीस्पेशलिटी',
+            'Multi-Speciality' => 'मल्टीस्पेशलिटी',
+            'Super Speciality' => 'सुपर स्पेशलिटी',
+            'General' => 'जनरल',
+            'Healthcare' => 'हेल्थकेयर',
+            'Health Care' => 'हेल्थकेयर',
+            'Life' => 'लाइफ',
+            'Heart' => 'हार्ट',
+            'Eye' => 'आई',
+            'Dental' => 'डेंटल',
+            'Medical Centre' => 'मेडिकल सेंटर',
+            'Medical Center' => 'मेडिकल सेंटर',
+            'Medical College' => 'मेडिकल कॉलेज',
+            'Government' => 'सरकारी',
+            'Govt' => 'सरकारी',
+            'District' => 'जिला',
+            'Civil' => 'सिविल',
+            'City' => 'सिटी',
+        ];
+
+        $nameHi = str_ireplace(array_keys($map), array_values($map), $nameEnClean);
+
+        if (class_exists('Transliterator')) {
+            $transliterator = \Transliterator::create('Any-Devanagari');
+            if ($transliterator) {
+                $words = explode(' ', $nameHi);
+                foreach ($words as &$word) {
+                    if (preg_match('/[a-zA-Z]/', $word)) {
+                        $trans = $transliterator->transliterate($word);
+                        $trans = rtrim($trans, '्');
+                        $word = $trans;
+                    }
+                }
+                $nameHi = implode(' ', $words);
+            }
+        }
+
+        if (!preg_match('/[\x{0900}-\x{097F}]/u', $nameHi)) {
+            $nameHi .= ' अस्पताल';
+        }
+
+        return trim($nameHi) . " ({$cityNameHi})";
+    }
+
+    public static function getHindiDoctorName(string $name): string
+    {
+        $cleanName = trim($name);
+        if (empty($cleanName)) {
+            return '';
+        }
+
+        if (class_exists('Transliterator')) {
+            $transliterator = \Transliterator::create('Any-Devanagari');
+            if ($transliterator) {
+                $words = explode(' ', $cleanName);
+                foreach ($words as &$word) {
+                    if (preg_match('/[a-zA-Z]/', $word)) {
+                        $trans = $transliterator->transliterate($word);
+                        $trans = rtrim($trans, '्');
+                        $word = $trans;
+                    }
+                }
+                return implode(' ', $words);
+            }
+        }
+
+        return $cleanName;
     }
 }

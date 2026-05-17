@@ -22,6 +22,7 @@ class Hospital extends Model
         'pincode',
         'latitude',
         'longitude',
+        'emergency_country_code',
         'emergency_phone',
         'is_verified',
         'accepts_ayushman',

@@ -74,8 +74,10 @@
                         </div>
                         <div class="col-md-6">
                             <label class="form-label fw-semibold">Emergency Helpline</label>
-                            <input type="text" name="emergency_phone" class="form-control"
-                                value="{{ $hospital->emergency_phone }}" required>
+                            <div class="input-group">
+                                <input type="text" name="emergency_country_code" class="form-control" style="max-width: 80px;" value="{{ $hospital->emergency_country_code ?? '+91' }}" placeholder="+91">
+                                <input type="text" name="emergency_phone" class="form-control" value="{{ $hospital->emergency_phone }}" required placeholder="11 2345 6789">
+                            </div>
                         </div>
                         <div class="col-md-6 d-flex align-items-end">
                             <div class="form-check mb-2">

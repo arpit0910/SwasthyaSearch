@@ -73,6 +73,10 @@ class DoctorController extends Controller
                 'en' => $department->name_en,
                 'hi' => $department->name_hi,
             ],
+            'description' => [
+                'en' => $department->description_en,
+                'hi' => $department->description_hi,
+            ],
         ];
     }
 

@@ -17,85 +17,116 @@
         </div>
     </div>
 
-    <!-- Search Bar -->
-    <div class="card border-0 shadow-sm mb-4">
-        <div class="card-body p-3">
-            <form action="{{ route('admin.departments') }}" method="GET" class="d-flex gap-2">
-                <div class="input-group">
-                    <span class="input-group-text bg-light border-end-0"><i class="fa-solid fa-magnifying-glass text-muted"></i></span>
-                    <input type="text" name="search" class="form-control border-start-0" placeholder="Search departments by name..." value="{{ request('search') }}">
+        <!-- Departments Table -->
+        <div class="card border-0 shadow-sm mb-4">
+            <div class="card-body p-0">
+                <div class="table-responsive p-3">
+                    <table id="departmentsTable" class="table table-hover align-middle mb-0 w-100">
+                        <thead class="table-light">
+                            <tr>
+                                <th class="ps-4">Department Name (EN / HI)</th>
+                                <th>Description (EN / HI)</th>
+                                <th>Status</th>
+                                <th class="text-end pe-4">Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach($departments as $department)
+                                <tr>
+                                    <td class="ps-4" style="width: 25%;">
+                                        <div class="fw-bold text-dark">{{ $department->getTranslation('name', 'en') }}</div>
+                                        <div class="text-muted fs-7">{{ $department->getTranslation('name', 'hi') }}</div>
+                                    </td>
+                                    <td style="width: 50%;">
+                                        <div class="text-dark mb-1 fs-7">{{ Str::limit($department->getTranslation('description', 'en'), 80) }}</div>
+                                        <div class="text-muted fs-7">{{ Str::limit($department->getTranslation('description', 'hi'), 80) }}</div>
+                                    </td>
+                                    <td>
+                                        @if($department->is_active)
+                                            <span class="badge badge-teal"><i class="fa-solid fa-circle-check me-1"></i> Active</span>
+                                        @else
+                                            <span class="badge bg-secondary"><i class="fa-solid fa-circle-xmark me-1"></i> Inactive</span>
+                                        @endif
+                                    </td>
+                                    <td class="text-end pe-4">
+                                        <button class="btn btn-sm btn-outline-primary me-1" data-bs-toggle="modal" data-bs-target="#editModal{{ $department->id }}">
+                                            <i class="fa-solid fa-pen-to-square"></i>
+                                        </button>
+                                        <form action="{{ route('admin.departments.destroy', $department) }}" method="POST" class="d-inline" onsubmit="return confirm('Are you sure you want to delete this department?');">
+                                            @csrf
+                                            @method('DELETE')
+                                            <button type="submit" class="btn btn-sm btn-outline-danger">
+                                                <i class="fa-solid fa-trash"></i>
+                                            </button>
+                                        </form>
+                                    </td>
+                                </tr>
+
+                                @include('admin.departments.edit', ['department' => $department])
+                            @endforeach
+                        </tbody>
+                    </table>
                 </div>
-                <button type="submit" class="btn btn-primary px-4">Search</button>
-                @if(request('search'))
-                    <a href="{{ route('admin.departments') }}" class="btn btn-outline-secondary">Reset</a>
-                @endif
-            </form>
+            </div>
         </div>
     </div>
 
-    <!-- Departments Table -->
-    <div class="card border-0 shadow-sm mb-4">
-        <div class="table-responsive">
-            <table class="table table-hover align-middle mb-0">
-                <thead class="table-light">
-                    <tr>
-                        <th class="ps-4">Department Name (EN / HI)</th>
-                        <th>Description (EN / HI)</th>
-                        <th>Status</th>
-                        <th class="text-end pe-4">Actions</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    @forelse($departments as $department)
-                        <tr>
-                            <td class="ps-4" style="width: 25%;">
-                                <div class="fw-bold text-dark">{{ $department->getTranslation('name', 'en') }}</div>
-                                <div class="text-muted fs-7">{{ $department->getTranslation('name', 'hi') }}</div>
-                            </td>
-                            <td style="width: 50%;">
-                                <div class="text-dark mb-1 fs-7">{{ Str::limit($department->getTranslation('description', 'en'), 80) }}</div>
-                                <div class="text-muted fs-7">{{ Str::limit($department->getTranslation('description', 'hi'), 80) }}</div>
-                            </td>
-                            <td>
-                                @if($department->is_active)
-                                    <span class="badge badge-teal"><i class="fa-solid fa-circle-check me-1"></i> Active</span>
-                                @else
-                                    <span class="badge bg-secondary"><i class="fa-solid fa-circle-xmark me-1"></i> Inactive</span>
-                                @endif
-                            </td>
-                            <td class="text-end pe-4">
-                                <button class="btn btn-sm btn-outline-primary me-1" data-bs-toggle="modal" data-bs-target="#editModal{{ $department->id }}">
-                                    <i class="fa-solid fa-pen-to-square"></i>
-                                </button>
-                                <form action="{{ route('admin.departments.destroy', $department) }}" method="POST" class="d-inline" onsubmit="return confirm('Are you sure you want to delete this department?');">
-                                    @csrf
-                                    @method('DELETE')
-                                    <button type="submit" class="btn btn-sm btn-outline-danger">
-                                        <i class="fa-solid fa-trash"></i>
-                                    </button>
-                                </form>
-                            </td>
-                        </tr>
-
-                        @include('admin.departments.edit', ['department' => $department])
-                    @empty
-                        <tr>
-                            <td colspan="4" class="text-center py-5 text-muted">
-                                <i class="fa-solid fa-layer-group fs-1 mb-3 d-block"></i>
-                                No departments found matching your criteria.
-                            </td>
-                        </tr>
-                    @endforelse
-                </tbody>
-            </table>
-        </div>
-        <div class="card-footer bg-white py-3 border-0 d-flex justify-content-end">
-            {{ $departments->links() }}
-        </div>
-    </div>
-</div>
-
-@include('admin.departments.create')
-@include('admin.departments.import')
+    @include('admin.departments.create')
+    @include('admin.departments.import')
 
 @endsection
+
+@push('styles')
+    <!-- DataTables Bootstrap 5 CSS -->
+    <link href="https://cdn.datatables.net/1.13.6/css/dataTables.bootstrap5.min.css" rel="stylesheet">
+    <style>
+        .dataTables_wrapper .row {
+            margin-bottom: 0.75rem;
+            align-items: center;
+        }
+        .dataTables_length select {
+            border-radius: 0.5rem;
+            border: 1px solid #e2e8f0;
+            padding: 0.25rem 0.5rem;
+        }
+        .dataTables_filter input {
+            border-radius: 0.5rem;
+            border: 1px solid #e2e8f0;
+            padding: 0.35rem 0.75rem;
+            outline: none;
+        }
+        .dataTables_filter input:focus {
+            border-color: #14b8a6;
+            box-shadow: 0 0 0 2px rgba(20, 184, 166, 0.2);
+        }
+        .page-item.active .page-link {
+            background-color: #14b8a6;
+            border-color: #14b8a6;
+        }
+    </style>
+@endpush
+
+@push('scripts')
+    <!-- jQuery & DataTables JS -->
+    <script src="https://code.jquery.com/jquery-3.7.0.min.js"></script>
+    <script src="https://cdn.datatables.net/1.13.6/js/jquery.dataTables.min.js"></script>
+    <script src="https://cdn.datatables.net/1.13.6/js/dataTables.bootstrap5.min.js"></script>
+    <script>
+        $(document).ready(function() {
+            $('#departmentsTable').DataTable({
+                "paging": true,
+                "lengthChange": true,
+                "searching": true,
+                "ordering": true,
+                "info": true,
+                "autoWidth": false,
+                "pageLength": 10,
+                "language": {
+                    "search": "",
+                    "searchPlaceholder": "Search departments...",
+                    "emptyTable": '<div class="text-center py-5 text-muted"><i class="fa-solid fa-layer-group fs-1 mb-3 d-block"></i>No departments found matching your criteria.</div>'
+                }
+            });
+        });
+    </script>
+@endpush

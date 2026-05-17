@@ -38,10 +38,10 @@ class AdminDashboardController extends Controller
         $query = Hospital::query();
         if ($search = $request->query('search')) {
             $query->where('name_en', 'like', "%{$search}%")
-                  ->orWhere('name_hi', 'like', "%{$search}%")
-                  ->orWhere('city', 'like', "%{$search}%");
+                ->orWhere('name_hi', 'like', "%{$search}%")
+                ->orWhere('city', 'like', "%{$search}%");
         }
-        $hospitals = $query->latest()->paginate(10);
+        $hospitals = $query->latest()->get();
         return view('admin.hospitals.index', compact('hospitals'));
     }
 
@@ -59,6 +59,7 @@ class AdminDashboardController extends Controller
             'pincode' => 'nullable|string|max:20',
             'latitude' => 'nullable|numeric',
             'longitude' => 'nullable|numeric',
+            'emergency_country_code' => 'nullable|string|max:10',
             'emergency_phone' => 'required|string',
             'is_verified' => 'boolean',
             'accepts_ayushman' => 'boolean',
@@ -82,6 +83,7 @@ class AdminDashboardController extends Controller
             'pincode' => $data['pincode'] ?? null,
             'latitude' => $data['latitude'] ?? null,
             'longitude' => $data['longitude'] ?? null,
+            'emergency_country_code' => $data['emergency_country_code'] ?? '+91',
             'emergency_phone' => $data['emergency_phone'],
             'is_verified' => $request->boolean('is_verified', true),
             'accepts_ayushman' => $request->boolean('accepts_ayushman', false),
@@ -108,6 +110,7 @@ class AdminDashboardController extends Controller
             'pincode' => 'nullable|string|max:20',
             'latitude' => 'nullable|numeric',
             'longitude' => 'nullable|numeric',
+            'emergency_country_code' => 'nullable|string|max:10',
             'emergency_phone' => 'required|string',
             'is_verified' => 'boolean',
             'accepts_ayushman' => 'boolean',
@@ -131,6 +134,7 @@ class AdminDashboardController extends Controller
             'pincode' => $data['pincode'] ?? null,
             'latitude' => $data['latitude'] ?? null,
             'longitude' => $data['longitude'] ?? null,
+            'emergency_country_code' => $data['emergency_country_code'] ?? '+91',
             'emergency_phone' => $data['emergency_phone'],
             'is_verified' => $request->boolean('is_verified', true),
             'accepts_ayushman' => $request->boolean('accepts_ayushman', false),
@@ -168,7 +172,8 @@ class AdminDashboardController extends Controller
                     'type' => $data['type'] ?? 'Hospital',
                     'address' => $data['address'] ?? 'General Address',
                     'city' => $data['city'] ?? 'Delhi',
-                    'emergency_phone' => $data['emergency_phone'] ?? '102',
+                    'emergency_country_code' => \App\Services\HealthcareSyncService::splitPhone($data['emergency_phone'] ?? '102')['country_code'],
+                    'emergency_phone' => \App\Services\HealthcareSyncService::splitPhone($data['emergency_phone'] ?? '102')['phone'],
                     'latitude' => $data['latitude'] ?? null,
                     'longitude' => $data['longitude'] ?? null,
                     'is_verified' => true,
@@ -208,9 +213,9 @@ class AdminDashboardController extends Controller
         $query = Doctor::with('departments');
         if ($search = $request->query('search')) {
             $query->where('first_name', 'like', "%{$search}%")
-                  ->orWhere('last_name', 'like', "%{$search}%");
+                ->orWhere('last_name', 'like', "%{$search}%");
         }
-        $doctors = $query->latest()->paginate(10);
+        $doctors = $query->latest()->get();
         $departments = Department::all();
         return view('admin.doctors.index', compact('doctors', 'departments'));
     }
@@ -228,6 +233,7 @@ class AdminDashboardController extends Controller
             'about_hi' => 'required|string',
             'is_verified' => 'boolean',
             'email' => 'nullable|email|max:255',
+            'country_code' => 'nullable|string|max:10',
             'phone' => 'nullable|string|max:20',
             'date_of_birth' => 'nullable|date',
             'gender' => 'nullable|string',
@@ -255,6 +261,7 @@ class AdminDashboardController extends Controller
             'about_hi' => $data['about_hi'],
             'is_verified' => $request->boolean('is_verified', true),
             'email' => $data['email'] ?? null,
+            'country_code' => $data['country_code'] ?? '+91',
             'phone' => $data['phone'] ?? null,
             'date_of_birth' => $data['date_of_birth'] ?? null,
             'gender' => $data['gender'] ?? null,
@@ -292,6 +299,7 @@ class AdminDashboardController extends Controller
             'about_hi' => 'required|string',
             'is_verified' => 'boolean',
             'email' => 'nullable|email|max:255',
+            'country_code' => 'nullable|string|max:10',
             'phone' => 'nullable|string|max:20',
             'date_of_birth' => 'nullable|date',
             'gender' => 'nullable|string',
@@ -319,6 +327,7 @@ class AdminDashboardController extends Controller
             'about_hi' => $data['about_hi'],
             'is_verified' => $request->boolean('is_verified', true),
             'email' => $data['email'] ?? null,
+            'country_code' => $data['country_code'] ?? '+91',
             'phone' => $data['phone'] ?? null,
             'date_of_birth' => $data['date_of_birth'] ?? null,
             'gender' => $data['gender'] ?? null,
@@ -378,7 +387,9 @@ class AdminDashboardController extends Controller
                     'last_name' => $data['last_name'] ?? '',
                     'department_id' => $dept ? $dept->id : null,
                     'medical_council' => $data['medical_council'] ?? 'MCI',
-                    'education_degrees' => !empty($data['education_degrees']) ? array_map('trim', explode(';', $data['education_degrees'])) : ['MBBS'],
+                    'country_code' => \App\Services\HealthcareSyncService::splitPhone($data['phone'] ?? null)['country_code'],
+                    'phone' => \App\Services\HealthcareSyncService::splitPhone($data['phone'] ?? null)['phone'],
+                    'education_degrees' => !empty($data['education_degrees']) ? array_map('trim', explode(';', $data['education_degrees'])) : \App\Services\ScraperService::getRealDegreesForDepartment($data['department_name_en'] ?? 'General Medicine'),
                     'experience_years' => (int)($data['experience_years'] ?? 10),
                     'about_en' => $data['about_en'] ?? 'Expert doctor',
                     'about_hi' => $data['about_hi'] ?? 'विशेषज्ञ डॉक्टर',
@@ -425,7 +436,7 @@ class AdminDashboardController extends Controller
             $query->where('name_en', 'like', "%{$search}%")
                 ->orWhere('name_hi', 'like', "%{$search}%");
         }
-        $departments = $query->latest()->paginate(10);
+        $departments = $query->latest()->get();
         return view('admin.departments.index', compact('departments'));
     }
 
@@ -511,7 +522,7 @@ class AdminDashboardController extends Controller
             $query->where('name_en', 'like', "%{$search}%")
                 ->orWhere('name_hi', 'like', "%{$search}%");
         }
-        $diseases = $query->latest()->paginate(10);
+        $diseases = $query->latest()->get();
         $departments = Department::all();
         return view('admin.diseases.index', compact('diseases', 'departments'));
     }
@@ -597,9 +608,9 @@ class AdminDashboardController extends Controller
         $query = Article::query();
         if ($search = $request->query('search')) {
             $query->where('title_en', 'like', "%{$search}%")
-                  ->orWhere('title_hi', 'like', "%{$search}%");
+                ->orWhere('title_hi', 'like', "%{$search}%");
         }
-        $articles = $query->latest()->paginate(10);
+        $articles = $query->latest()->get();
         return view('admin.articles.index', compact('articles'));
     }
 
@@ -661,9 +672,9 @@ class AdminDashboardController extends Controller
         $query = Faq::query();
         if ($search = $request->query('search')) {
             $query->where('question_en', 'like', "%{$search}%")
-                  ->orWhere('question_hi', 'like', "%{$search}%");
+                ->orWhere('question_hi', 'like', "%{$search}%");
         }
-        $faqs = $query->latest()->paginate(10);
+        $faqs = $query->latest()->get();
         return view('admin.faqs.index', compact('faqs'));
     }
 
