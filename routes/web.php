@@ -31,6 +31,8 @@ Route::prefix('admin')->middleware('web')->group(function () {
         Route::put('/hospitals/{hospital}', [AdminDashboardController::class, 'updateHospital'])->name('admin.hospitals.update');
         Route::delete('/hospitals/{hospital}', [AdminDashboardController::class, 'destroyHospital'])->name('admin.hospitals.destroy');
         Route::post('/hospitals/import', [AdminDashboardController::class, 'importHospitals'])->name('admin.hospitals.import');
+        Route::post('/hospitals/sync', [AdminDashboardController::class, 'syncHospitals'])->name('admin.hospitals.sync');
+        Route::get('/hospitals/sync-progress', [AdminDashboardController::class, 'syncHospitalsProgress'])->name('admin.hospitals.sync.progress');
 
         // Doctors
         Route::get('/doctors', [AdminDashboardController::class, 'doctors'])->name('admin.doctors');
@@ -38,6 +40,8 @@ Route::prefix('admin')->middleware('web')->group(function () {
         Route::put('/doctors/{doctor}', [AdminDashboardController::class, 'updateDoctor'])->name('admin.doctors.update');
         Route::delete('/doctors/{doctor}', [AdminDashboardController::class, 'destroyDoctor'])->name('admin.doctors.destroy');
         Route::post('/doctors/import', [AdminDashboardController::class, 'importDoctors'])->name('admin.doctors.import');
+        Route::post('/doctors/sync', [AdminDashboardController::class, 'syncDoctors'])->name('admin.doctors.sync');
+        Route::get('/doctors/sync-progress', [AdminDashboardController::class, 'syncDoctorsProgress'])->name('admin.doctors.sync.progress');
 
         // Departments
         Route::get('/departments', [AdminDashboardController::class, 'departments'])->name('admin.departments');

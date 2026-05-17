@@ -8,6 +8,9 @@
             <p class="text-muted mb-0">Manage registered hospitals, clinics, and medical centers.</p>
         </div>
         <div class="d-flex gap-2">
+            <button class="btn btn-outline-primary d-flex align-items-center gap-2" data-bs-toggle="modal" data-bs-target="#syncModal">
+                <i class="fa-solid fa-rotate"></i> Sync Hospitals
+            </button>
             <button class="btn btn-outline-secondary d-flex align-items-center gap-2" data-bs-toggle="modal" data-bs-target="#importModal">
                 <i class="fa-solid fa-file-import"></i> Import CSV
             </button>
@@ -98,5 +101,6 @@
 
 @include('admin.hospitals.create')
 @include('admin.hospitals.import')
+@include('admin.hospitals.sync')
 
 @endsection

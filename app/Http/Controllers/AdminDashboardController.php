@@ -8,7 +8,9 @@ use App\Models\Disease;
 use App\Models\Doctor;
 use App\Models\Faq;
 use App\Models\Hospital;
+use App\Services\ScraperService;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Cache;
 
 class AdminDashboardController extends Controller
 {
@@ -127,6 +129,29 @@ class AdminDashboardController extends Controller
         }
         fclose($file);
         return back()->with('success', 'Hospitals imported successfully.');
+    }
+
+    public function syncHospitals(Request $request)
+    {
+        $request->validate(['city' => 'required|string|max:255']);
+        $city = $request->city;
+        $cacheKey = 'scrape_progress_hospitals';
+
+        ScraperService::scrapeHospitals($city, false, null, $cacheKey);
+
+        return response()->json(['status' => 'completed', 'message' => "Hospitals synchronized for {$city}."]);
+    }
+
+    public function syncHospitalsProgress()
+    {
+        $progress = Cache::get('scrape_progress_hospitals', [
+            'status' => 'idle',
+            'city' => '',
+            'progress' => 0,
+            'message' => 'Waiting to start...',
+        ]);
+
+        return response()->json($progress);
     }
 
     // --- DOCTORS CRUD & IMPORT ---
@@ -291,6 +316,29 @@ class AdminDashboardController extends Controller
         }
         fclose($file);
         return back()->with('success', 'Doctors imported successfully.');
+    }
+
+    public function syncDoctors(Request $request)
+    {
+        $request->validate(['city' => 'required|string|max:255']);
+        $city = $request->city;
+        $cacheKey = 'scrape_progress_doctors';
+
+        ScraperService::scrapeDoctors($city, false, null, $cacheKey);
+
+        return response()->json(['status' => 'completed', 'message' => "Doctors synchronized for {$city}."]);
+    }
+
+    public function syncDoctorsProgress()
+    {
+        $progress = Cache::get('scrape_progress_doctors', [
+            'status' => 'idle',
+            'city' => '',
+            'progress' => 0,
+            'message' => 'Waiting to start...',
+        ]);
+
+        return response()->json($progress);
     }
 
     // --- DEPARTMENTS CRUD & IMPORT ---
