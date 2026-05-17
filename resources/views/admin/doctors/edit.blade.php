@@ -115,9 +115,8 @@
                         </div>
                     </div>
 
-                    <h6 class="fw-bold text-primary mb-3"><i class="fa-solid fa-file-lines me-2"></i>Biography &
-                        Summaries</h6>
-                    <div class="row g-3">
+                    <h6 class="fw-bold text-primary mb-3"><i class="fa-solid fa-file-lines me-2"></i>Biography & Summaries</h6>
+                    <div class="row g-3 mb-4">
                         <div class="col-12">
                             <label class="form-label fw-semibold">Specialization Summary</label>
                             <input type="text" name="specialization_summary" class="form-control"
@@ -132,6 +131,38 @@
                             <label class="form-label fw-semibold">About Doctor (Hindi) <span
                                     class="text-danger">*</span></label>
                             <textarea name="about_hi" class="form-control" rows="3" required>{{ $doctor->getTranslation('about', 'hi') }}</textarea>
+                        </div>
+                    </div>
+
+                    <h6 class="fw-bold text-primary mb-3"><i class="fa-solid fa-map-location-dot me-2"></i>Location & Address Details</h6>
+                    <div class="row g-3">
+                        <div class="col-md-6">
+                            <label class="form-label fw-semibold">Address Line 1</label>
+                            <input type="text" name="address_line1" class="form-control" value="{{ $doctor->address_line1 }}">
+                        </div>
+                        <div class="col-md-6">
+                            <label class="form-label fw-semibold">Address Line 2</label>
+                            <input type="text" name="address_line2" class="form-control" value="{{ $doctor->address_line2 }}">
+                        </div>
+                        <div class="col-md-4">
+                            <label class="form-label fw-semibold">City</label>
+                            <input type="text" name="city" class="form-control" value="{{ $doctor->city ?? 'Jaipur' }}">
+                        </div>
+                        <div class="col-md-4">
+                            <label class="form-label fw-semibold">State</label>
+                            <input type="text" name="state" class="form-control" value="{{ $doctor->state ?? 'Rajasthan' }}">
+                        </div>
+                        <div class="col-md-4">
+                            <label class="form-label fw-semibold">Pincode</label>
+                            <input type="text" name="pincode" class="form-control" value="{{ $doctor->pincode }}">
+                        </div>
+                        <div class="col-md-6">
+                            <label class="form-label fw-semibold">Latitude</label>
+                            <input type="number" step="any" name="latitude" class="form-control" value="{{ $doctor->latitude }}">
+                        </div>
+                        <div class="col-md-6">
+                            <label class="form-label fw-semibold">Longitude</label>
+                            <input type="number" step="any" name="longitude" class="form-control" value="{{ $doctor->longitude }}">
                         </div>
                     </div>
                 </div>

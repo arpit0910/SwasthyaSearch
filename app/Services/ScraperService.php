@@ -5,6 +5,7 @@ namespace App\Services;
 use App\Models\Department;
 use App\Models\Doctor;
 use App\Models\Hospital;
+use App\Services\HealthcareSyncService;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Log;
@@ -19,7 +20,8 @@ class ScraperService
      */
     public static function scrapeDoctors(string $city, bool $forceFallback = false, ?string $customUrl = null, ?string $cacheKey = null): array
     {
-        $citySlug = strtolower(trim($city)); CitySlug = str_replace(' ', '-', $citySlug);
+        $citySlug = strtolower(trim($city));
+        $citySlug = str_replace(' ', '-', $citySlug);
         $cityName = ucfirst(trim($city));
 
         if ($cacheKey) {
@@ -29,32 +31,36 @@ class ScraperService
         $scrapedDoctors = [];
 
         if (!$forceFallback) {
-            $urlsToScrape = $customUrl ? [$customUrl] : [
-                "https://www.practo.com/{$citySlug}/doctors",
-                "https://www.practo.com/{$citySlug}/general-physician",
-                "https://www.practo.com/{$citySlug}/pediatrician",
-                "https://www.practo.com/{$citySlug}/gynecologist",
-                "https://www.practo.com/{$citySlug}/cardiologist",
-                "https://www.practo.com/{$citySlug}/orthopedist",
-                "https://www.practo.com/{$citySlug}/dermatologist",
-                "https://www.practo.com/{$citySlug}/neurologist",
-                "https://www.practo.com/{$citySlug}/ophthalmologist",
-                "https://www.practo.com/{$citySlug}/ear-nose-throat-ent-specialist",
-                "https://www.practo.com/{$citySlug}/psychiatrist",
-                "https://www.practo.com/{$citySlug}/dentist",
-                "https://www.practo.com/{$citySlug}/ayurveda",
-                "https://www.practo.com/{$citySlug}/homoeopath",
-                "https://www.practo.com/{$citySlug}/gastroenterologist",
-                "https://www.practo.com/{$citySlug}/urologist",
-                "https://www.practo.com/{$citySlug}/oncologist",
-                "https://www.practo.com/{$citySlug}/pulmonologist",
-            ];
+            if ($customUrl) {
+                $urlsToScrape = [$customUrl];
+            } else {
+                $urlsToScrape = ["https://www.practo.com/{$citySlug}/doctors"];
+
+                // Dynamically pull ALL active departments from the database to ensure 100% department coverage during live scraping
+                $activeDepartments = Department::where('is_active', true)->where('name_en', '!=', '')->get();
+                foreach ($activeDepartments as $dept) {
+                    $slug = strtolower(preg_replace('/[^a-zA-Z0-9]+/', '-', trim($dept->name_en)));
+                    $slug = trim($slug, '-');
+                    if (!empty($slug)) {
+                        $urlsToScrape[] = "https://www.practo.com/{$citySlug}/{$slug}";
+                    }
+                }
+                $urlsToScrape = array_values(array_unique($urlsToScrape));
+            }
 
             $totalUrls = count($urlsToScrape);
             foreach ($urlsToScrape as $index => $url) {
                 if ($cacheKey) {
-                    $prog = 5 + (int)(($index / $totalUrls) * 50);
-                    Cache::put($cacheKey, ['status' => 'running', 'city' => $cityName, 'progress' => $prog, 'message' => "Fetching live data from department " . ($index + 1) . "..."], 300);
+                    $prog = 5 + (int)(($index / ($totalUrls ?: 1)) * 50);
+                    Cache::put($cacheKey, ['status' => 'running', 'city' => $cityName, 'progress' => $prog, 'message' => "Fetching live data from department " . ($index + 1) . " of {$totalUrls}..."], 300);
+                }
+
+                // Extract expected department name from URL slug for accurate mapping if HTML parsing misses it E.g. 'cardiology' -> 'Cardiology'
+                $parts = explode('/', rtrim($url, '/'));
+                $lastPart = end($parts);
+                $expectedDept = ucfirst(str_replace('-', ' ', $lastPart));
+                if (strtolower($expectedDept) === 'doctors') {
+                    $expectedDept = 'General Medicine';
                 }
 
                 try {
@@ -67,7 +73,7 @@ class ScraperService
 
                     if ($response->successful()) {
                         $html = $response->body();
-                        $parsed = self::parseDoctorHtml($html, $cityName);
+                        $parsed = self::parseDoctorHtml($html, $cityName, $expectedDept);
                         if (!empty($parsed)) {
                             $scrapedDoctors = array_merge($scrapedDoctors, $parsed);
                         }
@@ -95,101 +101,7 @@ class ScraperService
             $scrapedDoctors = self::getFallbackDoctors($cityName);
         }
 
-        $totalDocs = count($scrapedDoctors);
-        if ($cacheKey) {
-            Cache::put($cacheKey, ['status' => 'running', 'city' => $cityName, 'progress' => 65, 'message' => "Synchronizing {$totalDocs} doctors into database..."], 300);
-        }
-
-        foreach ($scrapedDoctors as $index => $data) {
-            // Update progress during DB insertion
-            if ($cacheKey && $totalDocs > 0) {
-                $prog = 65 + (int)(($index / $totalDocs) * 30);
-                Cache::put($cacheKey, ['status' => 'running', 'city' => $cityName, 'progress' => $prog, 'message' => "Saving doctor: Dr. {$data['first_name']}..."], 300);
-            }
-
-            // 1. Process Department
-            $deptNameEn = $data['department_name_en'] ?? 'General Medicine';
-            $deptNameHi = $data['department_name_hi'] ?? self::getHindiDeptName($deptNameEn);
-
-            $department = Department::updateOrCreate(
-                ['name_en' => $deptNameEn],
-                [
-                    'name_hi' => $deptNameHi,
-                    'description_en' => "Specialized healthcare department for {$deptNameEn}.",
-                    'description_hi' => "{$deptNameHi} के लिए विशेष स्वास्थ्य सेवा विभाग।",
-                    'is_active' => true,
-                ]
-            );
-
-            // 2. Process Hospital / Clinic
-            $hospitalNameEn = $data['hospital_name_en'] ?? "{$cityName} Healthcare Clinic";
-            $hospitalNameHi = $data['hospital_name_hi'] ?? ($hospitalNameEn . " ({$cityName})");
-            $address = $data['address'] ?? "{$cityName}, India";
-
-            $existingHospital = Hospital::where('name_en', $hospitalNameEn)->where('city', $cityName)->first();
-
-            $hospital = Hospital::updateOrCreate(
-                ['name_en' => $hospitalNameEn, 'city' => $cityName],
-                [
-                    'name_hi' => $hospitalNameHi,
-                    'type' => $data['hospital_type'] ?? ($existingHospital?->type ?: 'Clinic'),
-                    'address' => $address,
-                    'city' => $cityName,
-                    'latitude' => $data['latitude'] ?? ($existingHospital?->latitude ?: 26.9124),
-                    'longitude' => $data['longitude'] ?? ($existingHospital?->longitude ?: 75.7873),
-                    'emergency_phone' => $data['phone'] ?? ($existingHospital?->emergency_phone ?: '+91-141-2345678'),
-                    'is_verified' => true,
-                ]
-            );
-
-            // 3. Process Doctor
-            $existingDoctor = Doctor::where('first_name', $data['first_name'])
-                ->where('last_name', $data['last_name'] ?? '')
-                ->first();
-
-            $regNumber = $existingDoctor?->registration_number ?: ($data['registration_number'] ?? ('RAJ-MC-' . rand(10000, 99999)));
-            $experience = (int)($data['experience_years'] ?? ($existingDoctor?->experience_years ?: rand(8, 25)));
-            $degrees = !empty($data['education_degrees']) ? $data['education_degrees'] : ($existingDoctor?->education_degrees ?: ['MBBS', 'MD']);
-            $fee = (float)($data['consultation_fee'] ?? ($existingDoctor?->consultation_fee ?: 500));
-            $phone = $data['phone'] ?? ($existingDoctor?->phone ?: '+91-141-' . rand(2000000, 2999999));
-            $website = $data['website'] ?? ($existingDoctor?->website && !str_contains($existingDoctor->website, 'swasthyasearch.com') ? $existingDoctor->website : null);
-
-            $doctor = Doctor::updateOrCreate(
-                [
-                    'first_name' => $data['first_name'],
-                    'last_name' => $data['last_name'] ?? '',
-                ],
-                [
-                    'registration_number' => $regNumber,
-                    'department_id' => $department->id,
-                    'medical_council' => $data['medical_council'] ?? ($existingDoctor?->medical_council ?: 'Medical Council of India'),
-                    'education_degrees' => $degrees,
-                    'experience_years' => $experience,
-                    'about_en' => $data['about_en'] ?? ($existingDoctor?->about_en ?: "Highly experienced specialist in {$deptNameEn} practicing in {$cityName}."),
-                    'about_hi' => $data['about_hi'] ?? ($existingDoctor?->about_hi ?: "{$cityName} में अभ्यास करने वाले {$deptNameHi} के अत्यधिक अनुभवी विशेषज्ञ डॉक्टर।"),
-                    'is_verified' => true,
-                    'consultation_fee' => $fee,
-                    'phone' => $phone,
-                    'website' => $website,
-                    'languages_spoken' => $existingDoctor?->languages_spoken ?: ['English', 'Hindi'],
-                    'gender' => $data['gender'] ?? ($existingDoctor?->gender ?: (rand(0, 1) ? 'Male' : 'Female')),
-                ]
-            );
-
-            $doctor->departments()->syncWithoutDetaching([$department->id]);
-            $doctor->hospitals()->syncWithoutDetaching([
-                $hospital->id => [
-                    'days_of_week' => 'Mon-Sat',
-                    'start_time' => '10:00:00',
-                    'end_time' => '18:00:00',
-                    'consultation_fee' => $fee,
-                ]
-            ]);
-        }
-
-        if ($cacheKey) {
-            Cache::put($cacheKey, ['status' => 'completed', 'city' => $cityName, 'progress' => 100, 'message' => "Successfully synchronized {$totalDocs} doctors for {$cityName}!"], 300);
-        }
+        HealthcareSyncService::syncBatch($scrapedDoctors, [], $cacheKey);
 
         return $scrapedDoctors;
     }
@@ -199,7 +111,8 @@ class ScraperService
      */
     public static function scrapeHospitals(string $city, bool $forceFallback = false, ?string $customUrl = null, ?string $cacheKey = null): array
     {
-        $citySlug = strtolower(trim($city)); $citySlug = str_replace(' ', '-', $citySlug);
+        $citySlug = strtolower(trim($city));
+        $citySlug = str_replace(' ', '-', $citySlug);
         $cityName = ucfirst(trim($city));
 
         if ($cacheKey) {
@@ -259,42 +172,12 @@ class ScraperService
             $scrapedHospitals = self::getFallbackHospitals($cityName);
         }
 
-        $totalHosp = count($scrapedHospitals);
-        if ($cacheKey) {
-            Cache::put($cacheKey, ['status' => 'running', 'city' => $cityName, 'progress' => 65, 'message' => "Synchronizing {$totalHosp} hospitals into database..."], 300);
-        }
-
-        foreach ($scrapedHospitals as $index => $data) {
-            if ($cacheKey && $totalHosp > 0) {
-                $prog = 65 + (int)(($index / $totalHosp) * 30);
-                Cache::put($cacheKey, ['status' => 'running', 'city' => $cityName, 'progress' => $prog, 'message' => "Saving hospital: {$data['name_en']}..."], 300);
-            }
-
-            $existingHospital = Hospital::where('name_en', $data['name_en'])->where('city', $cityName)->first();
-
-            Hospital::updateOrCreate(
-                ['name_en' => $data['name_en'], 'city' => $cityName],
-                [
-                    'name_hi' => $data['name_hi'] ?? ($data['name_en'] . " ({$cityName})"),
-                    'type' => $data['type'] ?? ($existingHospital?->type ?: 'Hospital'),
-                    'address' => $data['address'] ?? "{$cityName}, India",
-                    'city' => $cityName,
-                    'latitude' => $data['latitude'] ?? ($existingHospital?->latitude ?: 26.9124),
-                    'longitude' => $data['longitude'] ?? ($existingHospital?->longitude ?: 75.7873),
-                    'emergency_phone' => $data['emergency_phone'] ?? ($existingHospital?->emergency_phone ?: '+91-' . rand(1000000000, 9999999999)),
-                    'is_verified' => true,
-                ]
-            );
-        }
-
-        if ($cacheKey) {
-            Cache::put($cacheKey, ['status' => 'completed', 'city' => $cityName, 'progress' => 100, 'message' => "Successfully synchronized {$totalHosp} hospitals for {$cityName}!"], 300);
-        }
+        HealthcareSyncService::syncBatch([], $scrapedHospitals, $cacheKey);
 
         return $scrapedHospitals;
     }
 
-    private static function parseDoctorHtml(string $html, string $cityName): array
+    private static function parseDoctorHtml(string $html, string $cityName, string $expectedDept = 'General Medicine'): array
     {
         $doctors = [];
         libxml_use_internal_errors(true);
@@ -317,6 +200,8 @@ class ScraperService
             $specialtyNode = $xpath->query(".//div[contains(@class, 'u-d-flex')]/span | .//div[contains(@class, 'pr-doctor-speciality')] | .//div[contains(@class, 'speciality')]", $card)->item(0);
             if ($specialtyNode) {
                 $doc['department_name_en'] = trim($specialtyNode->textContent);
+            } else {
+                $doc['department_name_en'] = $expectedDept;
             }
 
             $hospitalNode = $xpath->query(".//div[contains(@class, 'pr-hospital-name')] | .//span[contains(@class, 'clinic-name')] | .//a[contains(@href, '/hospital/')]", $card)->item(0);
@@ -389,55 +274,52 @@ class ScraperService
 
     private static function getFallbackDoctors(string $cityName): array
     {
-        $depts = [
-            'General Physician' => 'सामान्य चिकित्सक',
-            'Pediatrics' => 'बाल रोग',
-            'Cardiology' => 'हृदय रोग (कार्डियोलॉजी)',
-            'Gynecology & Obstetrics' => 'स्त्री रोग और प्रसूति',
-            'Orthopedics' => 'हड्डी रोग (ऑर्थोपेडिक्स)',
-            'Dermatology' => 'त्वचा विज्ञान (डर्मेटोलॉजी)',
-            'Neurology' => 'तंत्रिका विज्ञान (न्यूरोलॉजी)',
-            'Ophthalmology' => 'नेत्र विज्ञान (ऑप्थल्मोलॉजी)',
-            'ENT' => 'ईएनटी (कान, नाक, गला)',
-            'Psychiatry' => 'मनोरोग विज्ञान (साइकेट्री)',
-            'Dentist' => 'दंत चिकित्सक (डेंटिस्ट)',
-            'Ayurveda' => 'आयुर्वेद',
-            'Homeopathy' => 'होम्योपैथी',
-            'Gastroenterology' => 'गैस्ट्रोएंटरोलॉजी',
-            'Urology' => 'मूत्र रोग (यूरोलॉजी)',
-            'Oncology' => 'कैंसर रोग (ऑन्कोलॉजी)',
-            'Pulmonology' => 'श्वसन रोग (पल्मोनोलॉजी)',
-        ];
+        // Guarantee 100% coverage of ALL active departments in the database E.g. no missing doctors
+        $departments = Department::where('is_active', true)->get();
 
         $doctors = [];
-        $firstNames = ['Amit', 'Rajesh', 'Sunita', 'Vikram', 'Pooja', 'Anil', 'Ramesh', 'Kavita', 'Suresh', 'Deepak', 'Neha', 'Manish', 'Geeta', 'Sanjay', 'Tarun', 'Naveen', 'Ritu'];
-        $lastNames = ['Sharma', 'Verma', 'Gupta', 'Agarwal', 'Mehta', 'Jain', 'Singh', 'Yadav', 'Patel', 'Choudhary', 'Joshi', 'Bhatia', 'Kumar', 'Rao'];
+        $firstNames = ['Amit', 'Rajesh', 'Sunita', 'Vikram', 'Pooja', 'Anil', 'Ramesh', 'Kavita', 'Suresh', 'Deepak', 'Neha', 'Manish', 'Geeta', 'Sanjay', 'Tarun', 'Naveen', 'Ritu', 'Seema', 'Lokesh', 'Govind', 'Anjali', 'Mohit', 'Preeti', 'Karan'];
+        $lastNames = ['Sharma', 'Verma', 'Gupta', 'Agarwal', 'Mehta', 'Jain', 'Singh', 'Yadav', 'Patel', 'Choudhary', 'Joshi', 'Bhatia', 'Kumar', 'Rao', 'Chauhan', 'Kulkarni', 'Bansal', 'Soni'];
 
         $i = 0;
-        foreach ($depts as $deptEn => $deptHi) {
-            $fn = $firstNames[$i % count($firstNames)];
-            $ln = $lastNames[$i % count($lastNames)];
-            $hospName = "{$cityName} Super Speciality Hospital";
+        foreach ($departments as $dept) {
+            $deptEn = $dept->name_en;
+            $deptHi = $dept->name_hi;
 
-            $doctors[] = [
-                'first_name' => $fn,
-                'last_name' => $ln,
-                'department_name_en' => $deptEn,
-                'department_name_hi' => $deptHi,
-                'hospital_name_en' => $hospName,
-                'hospital_name_hi' => "{$hospName} ({$cityName})",
-                'address' => "Main Medical Road, {$cityName}",
-                'experience_years' => rand(10, 30),
-                'consultation_fee' => rand(400, 1000),
-                'education_degrees' => ['MBBS', "MD - {$deptEn}"],
-                'medical_council' => "State Medical Council",
-                'about_en' => "Dr. {$fn} {$ln} is an expert {$deptEn} specialist practicing at {$hospName} in {$cityName}.",
-                'about_hi' => "डॉ. {$fn} {$ln} {$cityName} के {$hospName} में अभ्यास करने वाले एक विशेषज्ञ {$deptHi} हैं।",
-                'gender' => ($i % 2 === 0) ? 'Male' : 'Female',
-                'phone' => '+91-' . rand(1000000000, 9999999999),
-                'website' => ($i % 3 === 0) ? "www.dr{$fn}{$ln}.com" : null,
-            ];
-            $i++;
+            // Generate 2 expert verified doctors per department to ensure rich directory listing E.g. Bariatric, Neonatology, etc.
+            for ($d = 0; $d < 2; $d++) {
+                $fn = $firstNames[$i % count($firstNames)];
+                $ln = $lastNames[$i % count($lastNames)];
+                $hospName = "{$cityName} Super Speciality Hospital";
+                $sector = rand(1, 15);
+
+                $doctors[] = [
+                    'first_name' => $fn,
+                    'last_name' => $ln,
+                    'department_name_en' => $deptEn,
+                    'department_name_hi' => $deptHi,
+                    'hospital_name_en' => $hospName,
+                    'hospital_name_hi' => "{$hospName} ({$cityName})",
+                    'address' => "Sector {$sector}, Main Medical Road, {$cityName}",
+                    'address_line1' => "Suite No. " . rand(101, 505) . ", Sector {$sector}",
+                    'address_line2' => "Main Medical Road",
+                    'city' => $cityName,
+                    'state' => 'Rajasthan',
+                    'pincode' => '3020' . str_pad((string)rand(1, 30), 2, '0', STR_PAD_LEFT),
+                    'latitude' => 26.9124 + (rand(-50, 50) / 1000),
+                    'longitude' => 75.7873 + (rand(-50, 50) / 1000),
+                    'experience_years' => rand(10, 35),
+                    'consultation_fee' => rand(400, 1200),
+                    'education_degrees' => ['MBBS', "MD - {$deptEn}", 'Fellowship'],
+                    'medical_council' => "Medical Council of India (MCI)",
+                    'about_en' => "Dr. {$fn} {$ln} is an acclaimed {$deptEn} specialist practicing at {$hospName} E.g. dedicated to advanced patient care.",
+                    'about_hi' => "डॉ. {$fn} {$ln} {$cityName} के {$hospName} में अभ्यास करने वाले एक प्रसिद्ध {$deptHi} विशेषज्ञ हैं।",
+                    'gender' => ($i % 2 === 0) ? 'Male' : 'Female',
+                    'phone' => '+91-141-' . rand(2000000, 2999999),
+                    'website' => ($i % 3 === 0) ? "www.dr{$fn}{$ln}.com" : null,
+                ];
+                $i++;
+            }
         }
 
         return $doctors;
@@ -456,19 +338,47 @@ class ScraperService
             "Sunrise Medical Centre",
             "Greenleaf Community Hospital",
             "Divine Grace Healthcare",
+            "Sawai Man Singh (SMS) Medical College & Hospital",
+            "Mahatma Gandhi Medical College & Hospital",
+            "Rukmani Birla Hospital",
+            "Narayana Multispeciality Hospital",
+            "Manipal Hospital",
         ];
 
         $hospitals = [];
         foreach ($names as $index => $name) {
+            $sector = rand(1, 20);
+            $isGovt = str_contains($name, 'Sawai Man Singh') || str_contains($name, 'Mahatma Gandhi');
+
             $hospitals[] = [
                 'name_en' => "{$name} {$cityName}",
                 'name_hi' => "{$name} ({$cityName})",
-                'type' => ($index % 3 === 0) ? 'Clinic' : 'Hospital',
-                'address' => "Sector " . rand(1, 15) . ", Central Avenue, {$cityName}",
+                'type' => ($index % 4 === 0 && !$isGovt) ? 'Clinic' : 'Hospital',
+                'address' => "Sector {$sector}, Central Medical Avenue, {$cityName}",
+                'address_line1' => "Plot No. " . rand(10, 200) . ", Sector {$sector}",
+                'address_line2' => "Central Medical Avenue",
                 'city' => $cityName,
-                'emergency_phone' => '+91-' . rand(1000000000, 9999999999),
-                'latitude' => 26.9 + (rand(-100, 100) / 1000),
-                'longitude' => 75.7 + (rand(-100, 100) / 1000),
+                'state' => 'Rajasthan',
+                'pincode' => '3020' . str_pad((string)rand(1, 30), 2, '0', STR_PAD_LEFT),
+                'emergency_phone' => '+91-141-' . rand(2000000, 2999999),
+                'latitude' => 26.9124 + (rand(-50, 50) / 1000),
+                'longitude' => 75.7873 + (rand(-50, 50) / 1000),
+                'accepts_ayushman' => $isGovt ? true : (bool)rand(0, 1),
+                'accepts_janaadhaar' => $isGovt ? true : (bool)rand(0, 1),
+                'accepts_cghs' => $isGovt ? true : (bool)rand(0, 1),
+                'is_cashless' => true,
+                'cashless_schemes_list' => [
+                    'Ayushman Bharat Yojana (PM-JAY)',
+                    'Rajasthan Jan Aadhaar Yojana',
+                    'Central Government Health Scheme (CGHS)',
+                    'ECHS / Railway Panel',
+                    'Star Health & Allied Insurance TPA',
+                    'HDFC ERGO Cashless TPA',
+                    'ICICI Lombard General Insurance',
+                    'SBI General Insurance',
+                    'Care Health Insurance (Religare)',
+                    'Bajaj Allianz Cashless Panel',
+                ],
             ];
         }
 

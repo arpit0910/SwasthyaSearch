@@ -15,19 +15,41 @@ class Hospital extends Model
         'name_hi',
         'type',
         'address',
+        'address_line1',
+        'address_line2',
         'city',
+        'state',
+        'pincode',
         'latitude',
         'longitude',
         'emergency_phone',
         'is_verified',
+        'accepts_ayushman',
+        'accepts_janaadhaar',
+        'accepts_cghs',
+        'is_cashless',
+        'cashless_schemes_list',
+        'cashless_treatment_available',
+        'accepts_ayushman_card',
+        'accepts_jan_aadhaar',
+        'rgahs_approved',
     ];
 
     protected $appends = ['name'];
 
     protected $casts = [
         'is_verified' => 'boolean',
-        'latitude' => 'decimal:7',
-        'longitude' => 'decimal:7',
+        'accepts_ayushman' => 'boolean',
+        'accepts_janaadhaar' => 'boolean',
+        'accepts_cghs' => 'boolean',
+        'is_cashless' => 'boolean',
+        'cashless_schemes_list' => 'array',
+        'cashless_treatment_available' => 'boolean',
+        'accepts_ayushman_card' => 'boolean',
+        'accepts_jan_aadhaar' => 'boolean',
+        'rgahs_approved' => 'boolean',
+        'latitude' => 'decimal:8',
+        'longitude' => 'decimal:8',
     ];
 
     public function doctors()
@@ -35,6 +57,26 @@ class Hospital extends Model
         return $this->belongsToMany(Doctor::class, 'doctor_hospital')
             ->withPivot('days_of_week', 'start_time', 'end_time', 'consultation_fee')
             ->withTimestamps();
+    }
+
+    public function scopeCloseTo($query, $latitude, $longitude, $radius = 50)
+    {
+        $haversine = "(6371 * acos(cos(radians(?)) * cos(radians(latitude)) * cos(radians(longitude) - radians(?)) + sin(radians(?)) * sin(radians(latitude))))";
+
+        $query->selectRaw("*, {$haversine} AS distance", [$latitude, $longitude, $latitude])
+            ->whereNotNull('latitude')
+            ->whereNotNull('longitude');
+
+        if ($radius) {
+            $query->whereRaw("{$haversine} <= ?", [$latitude, $longitude, $latitude, $radius]);
+        }
+
+        return $query->orderBy('distance');
+    }
+
+    public function scopeNearest($query, $latitude, $longitude)
+    {
+        return $this->scopeCloseTo($query, $latitude, $longitude);
     }
 
     public function getNameAttribute(): array

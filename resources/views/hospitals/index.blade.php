@@ -147,7 +147,56 @@
                     <div class="p-6 flex-1 flex flex-col space-y-5 bg-white">
                         <div class="flex items-start space-x-3 text-slate-600 text-xs leading-relaxed bg-slate-50/80 p-4 rounded-2xl border border-slate-100 shadow-2xs">
                             <i data-lucide="map-pin" class="w-4 h-4 text-teal-500 shrink-0 mt-0.5"></i>
-                            <span class="flex-1">{{ $h->address }}, {{ $h->city }}</span>
+                            <div class="flex-1 space-y-1">
+                                <div>{{ !empty($h->address_line1) ? $h->address_line1 . ', ' . (!empty($h->address_line2) ? $h->address_line2 . ', ' : '') . $h->city . ', ' . $h->state . ' - ' . $h->pincode : $h->address . ', ' . $h->city }}</div>
+                                @if(!empty($h->latitude) && !empty($h->longitude))
+                                    <a href="https://www.google.com/maps/search/?api=1&query={{ $h->latitude }},{{ $h->longitude }}" target="_blank" class="inline-flex items-center space-x-1 text-teal-600 hover:text-teal-700 font-bold mt-1 bg-teal-50/80 px-2.5 py-1 rounded-lg border border-teal-100 transition-colors">
+                                        <i data-lucide="navigation" class="w-3 h-3"></i>
+                                        <span>{{ $locale === 'hi' ? 'नक्शे पर दिशा व दूरी देखें' : 'View Map & Directions' }}</span>
+                                    </a>
+                                @endif
+                            </div>
+                        </div>
+
+                        <!-- Govt Schemes & Cashless Facilities -->
+                        <div class="space-y-2 pt-2 border-t border-slate-100">
+                            <span class="text-xs font-bold text-slate-700 block">{{ $locale === 'hi' ? 'उपलब्ध स्वास्थ्य योजनाएं व सुविधाएं:' : 'Available Health Schemes & Facilities:' }}</span>
+                            <div class="flex flex-wrap gap-1.5">
+                                @if(!empty($h->accepts_ayushman))
+                                    <span class="bg-emerald-50 text-emerald-700 border border-emerald-200 px-2.5 py-1 rounded-lg text-xs font-bold flex items-center space-x-1 shadow-2xs">
+                                        <i data-lucide="shield-check" class="w-3.5 h-3.5 text-emerald-600"></i>
+                                        <span>{{ $locale === 'hi' ? 'आयुष्मान कार्ड' : 'Ayushman Card' }}</span>
+                                    </span>
+                                @endif
+                                @if(!empty($h->accepts_janaadhaar))
+                                    <span class="bg-blue-50 text-blue-700 border border-blue-200 px-2.5 py-1 rounded-lg text-xs font-bold flex items-center space-x-1 shadow-2xs">
+                                        <i data-lucide="award" class="w-3.5 h-3.5 text-blue-600"></i>
+                                        <span>{{ $locale === 'hi' ? 'जन आधार' : 'Jan Aadhaar' }}</span>
+                                    </span>
+                                @endif
+                                @if(!empty($h->accepts_cghs))
+                                    <span class="bg-purple-50 text-purple-700 border border-purple-200 px-2.5 py-1 rounded-lg text-xs font-bold flex items-center space-x-1 shadow-2xs">
+                                        <i data-lucide="check-badge" class="w-3.5 h-3.5 text-purple-600"></i>
+                                        <span>{{ $locale === 'hi' ? 'सीजीएचएस (CGHS)' : 'CGHS Govt' }}</span>
+                                    </span>
+                                @endif
+                                @if(!empty($h->is_cashless))
+                                    <span class="bg-teal-50 text-teal-700 border border-teal-200 px-2.5 py-1 rounded-lg text-xs font-bold flex items-center space-x-1 shadow-2xs">
+                                        <i data-lucide="credit-card" class="w-3.5 h-3.5 text-teal-600"></i>
+                                        <span>{{ $locale === 'hi' ? 'कैशलेस सुविधा' : 'Cashless Facility' }}</span>
+                                    </span>
+                                @endif
+                            </div>
+                            @if(!empty($h->cashless_schemes_list) && is_array($h->cashless_schemes_list) && count($h->cashless_schemes_list) > 0)
+                                <div class="mt-2 bg-slate-50 p-2.5 rounded-xl border border-slate-200/60 text-xs text-slate-600">
+                                    <span class="font-bold text-slate-700 block mb-1">{{ $locale === 'hi' ? 'पैनल में शामिल बीमा/योजनाएं:' : 'Empanelled Insurance/Schemes:' }}</span>
+                                    <div class="flex flex-wrap gap-1">
+                                        @foreach($h->cashless_schemes_list as $scheme)
+                                            <span class="bg-white border border-slate-200 px-2 py-0.5 rounded-md text-[11px] font-medium text-slate-700 shadow-2xs">{{ $scheme }}</span>
+                                        @endforeach
+                                    </div>
+                                </div>
+                            @endif
                         </div>
 
                         <div class="flex-1 flex flex-col justify-end space-y-3 pt-2">

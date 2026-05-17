@@ -17,11 +17,24 @@ return new class extends Migration
             $table->string('name_hi');
             $table->string('type')->default('Clinic'); // Clinic/Hospital
             $table->string('address')->nullable();
+            $table->string('address_line1')->nullable();
+            $table->string('address_line2')->nullable();
             $table->string('city')->nullable();
-            $table->decimal('latitude', 10, 7)->nullable();
-            $table->decimal('longitude', 10, 7)->nullable();
+            $table->string('state')->nullable();
+            $table->string('pincode')->nullable();
+            $table->decimal('latitude', 11, 8)->nullable();
+            $table->decimal('longitude', 11, 8)->nullable();
             $table->string('emergency_phone')->nullable();
             $table->boolean('is_verified')->default(true);
+            $table->boolean('accepts_ayushman')->default(false);
+            $table->boolean('accepts_janaadhaar')->default(false);
+            $table->boolean('accepts_cghs')->default(false);
+            $table->boolean('is_cashless')->default(false);
+            $table->boolean('cashless_treatment_available')->default(false);
+            $table->boolean('accepts_ayushman_card')->default(false);
+            $table->boolean('accepts_jan_aadhaar')->default(false);
+            $table->boolean('rgahs_approved')->default(false);
+            $table->json('cashless_schemes_list')->nullable();
             $table->timestamps();
             $table->softDeletes();
         });

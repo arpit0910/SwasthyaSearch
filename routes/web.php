@@ -11,6 +11,7 @@ use App\Http\Controllers\LegalController;
 use App\Http\Controllers\PageController;
 use App\Http\Controllers\SampleDownloadController;
 use App\Http\Controllers\SearchController;
+use App\Http\Controllers\Api\HealthcareQueryController;
 use Illuminate\Foundation\Http\Middleware\ValidateCsrfToken;
 use Illuminate\Support\Facades\Route;
 
@@ -74,6 +75,7 @@ Route::prefix('admin')->middleware('web')->group(function () {
 // Public Omni-Search & Chatbot Routes
 Route::get('/', [SearchController::class, 'index'])->name('home');
 Route::get('/api/search', [SearchController::class, 'search'])->name('api.search');
+Route::get('/api/doctors/nearest', [HealthcareQueryController::class, 'nearestDoctors'])->name('api.doctors.nearest');
 Route::post('/switch-locale', [SearchController::class, 'switchLocale'])->name('switch.locale');
 
 // Doctors & Hospitals Directory Routes

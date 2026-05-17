@@ -49,7 +49,12 @@ class DoctorController extends Controller
         }
 
         $nameColumn = app()->getLocale() === 'hi' ? 'name_hi' : 'name_en';
-        $departments = Department::where('is_active', true)->orderBy($nameColumn)->get();
+        $departments = Department::where('is_active', true)
+            ->whereNotNull('name_en')
+            ->where('name_en', '!=', '')
+            ->whereHas('doctors')
+            ->orderBy($nameColumn)
+            ->get();
         $cities = Hospital::where('is_verified', true)->whereNotNull('city')->distinct()->pluck('city');
 
         return view('doctors.index', [
@@ -96,6 +101,13 @@ class DoctorController extends Controller
             'specialization_summary' => $doctor->specialization_summary,
             'awards_recognitions' => $doctor->awards_recognitions ?: [],
             'membership_fellowships' => $doctor->membership_fellowships ?: [],
+            'address_line1' => $doctor->address_line1,
+            'address_line2' => $doctor->address_line2,
+            'city' => $doctor->city,
+            'state' => $doctor->state,
+            'pincode' => $doctor->pincode,
+            'latitude' => $doctor->latitude,
+            'longitude' => $doctor->longitude,
             'hospitals' => $doctor->hospitals->map(fn(Hospital $hospital) => [
                 'id' => $hospital->id,
                 'name' => [
@@ -104,11 +116,20 @@ class DoctorController extends Controller
                 ],
                 'type' => $hospital->type,
                 'address' => $hospital->address ?: 'Jaipur, Rajasthan',
+                'address_line1' => $hospital->address_line1,
+                'address_line2' => $hospital->address_line2,
+                'state' => $hospital->state,
+                'pincode' => $hospital->pincode,
                 'city' => $hospital->city ?: 'Jaipur',
                 'latitude' => $hospital->latitude ?: 26.9124,
                 'longitude' => $hospital->longitude ?: 75.7873,
                 'emergency_phone' => $hospital->emergency_phone ?: '+91-141-2345678',
                 'is_verified' => $hospital->is_verified,
+                'accepts_ayushman' => $hospital->accepts_ayushman,
+                'accepts_janaadhaar' => $hospital->accepts_janaadhaar,
+                'accepts_cghs' => $hospital->accepts_cghs,
+                'is_cashless' => $hospital->is_cashless,
+                'cashless_schemes_list' => $hospital->cashless_schemes_list,
                 'pivot' => $hospital->pivot,
             ]),
         ];

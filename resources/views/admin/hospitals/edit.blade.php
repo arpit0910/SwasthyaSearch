@@ -13,36 +13,123 @@
                     <div class="row g-3">
                         <div class="col-md-6">
                             <label class="form-label fw-semibold">Hospital Name (English)</label>
-                            <input type="text" name="name_en" class="form-control" value="{{ $hospital->getTranslation('name', 'en') }}" required>
+                            <input type="text" name="name_en" class="form-control"
+                                value="{{ $hospital->getTranslation('name', 'en') }}" required>
                         </div>
                         <div class="col-md-6">
                             <label class="form-label fw-semibold">Hospital Name (Hindi)</label>
-                            <input type="text" name="name_hi" class="form-control" value="{{ $hospital->getTranslation('name', 'hi') }}" required>
+                            <input type="text" name="name_hi" class="form-control"
+                                value="{{ $hospital->getTranslation('name', 'hi') }}" required>
                         </div>
                         <div class="col-md-6">
                             <label class="form-label fw-semibold">Facility Type</label>
                             <select name="type" class="form-select" required>
-                                <option value="Hospital" {{ $hospital->type == 'Hospital' ? 'selected' : '' }}>Hospital</option>
-                                <option value="Clinic" {{ $hospital->type == 'Clinic' ? 'selected' : '' }}>Clinic</option>
-                                <option value="Specialty Center" {{ $hospital->type == 'Specialty Center' ? 'selected' : '' }}>Specialty Center</option>
+                                <option value="Hospital" {{ $hospital->type == 'Hospital' ? 'selected' : '' }}>Hospital
+                                </option>
+                                <option value="Clinic" {{ $hospital->type == 'Clinic' ? 'selected' : '' }}>Clinic
+                                </option>
+                                <option value="Specialty Center"
+                                    {{ $hospital->type == 'Specialty Center' ? 'selected' : '' }}>Specialty Center
+                                </option>
                             </select>
                         </div>
                         <div class="col-md-6">
                             <label class="form-label fw-semibold">City</label>
-                            <input type="text" name="city" class="form-control" value="{{ $hospital->city }}" required>
+                            <input type="text" name="city" class="form-control" value="{{ $hospital->city }}"
+                                required>
                         </div>
                         <div class="col-12">
-                            <label class="form-label fw-semibold">Complete Address</label>
-                            <input type="text" name="address" class="form-control" value="{{ $hospital->address }}" required>
+                            <label class="form-label fw-semibold">Complete Address (Display)</label>
+                            <input type="text" name="address" class="form-control" value="{{ $hospital->address }}"
+                                required>
+                        </div>
+                        <div class="col-md-6">
+                            <label class="form-label fw-semibold">Address Line 1</label>
+                            <input type="text" name="address_line1" class="form-control"
+                                value="{{ $hospital->address_line1 }}">
+                        </div>
+                        <div class="col-md-6">
+                            <label class="form-label fw-semibold">Address Line 2</label>
+                            <input type="text" name="address_line2" class="form-control"
+                                value="{{ $hospital->address_line2 }}">
+                        </div>
+                        <div class="col-md-6">
+                            <label class="form-label fw-semibold">State</label>
+                            <input type="text" name="state" class="form-control"
+                                value="{{ $hospital->state ?? 'Rajasthan' }}">
+                        </div>
+                        <div class="col-md-6">
+                            <label class="form-label fw-semibold">Pincode</label>
+                            <input type="text" name="pincode" class="form-control" value="{{ $hospital->pincode }}">
+                        </div>
+                        <div class="col-md-6">
+                            <label class="form-label fw-semibold">Latitude</label>
+                            <input type="number" step="any" name="latitude" class="form-control"
+                                value="{{ $hospital->latitude }}">
+                        </div>
+                        <div class="col-md-6">
+                            <label class="form-label fw-semibold">Longitude</label>
+                            <input type="number" step="any" name="longitude" class="form-control"
+                                value="{{ $hospital->longitude }}">
                         </div>
                         <div class="col-md-6">
                             <label class="form-label fw-semibold">Emergency Helpline</label>
-                            <input type="text" name="emergency_phone" class="form-control" value="{{ $hospital->emergency_phone }}" required>
+                            <input type="text" name="emergency_phone" class="form-control"
+                                value="{{ $hospital->emergency_phone }}" required>
                         </div>
                         <div class="col-md-6 d-flex align-items-end">
                             <div class="form-check mb-2">
-                                <input type="checkbox" name="is_verified" class="form-check-input" value="1" id="is_ver{{ $hospital->id }}" {{ $hospital->is_verified ? 'checked' : '' }}>
-                                <label class="form-check-label fw-semibold" for="is_ver{{ $hospital->id }}">Verified Medical Center</label>
+                                <input type="checkbox" name="is_verified" class="form-check-input" value="1"
+                                    id="is_ver{{ $hospital->id }}" {{ $hospital->is_verified ? 'checked' : '' }}>
+                                <label class="form-check-label fw-semibold" for="is_ver{{ $hospital->id }}">Verified
+                                    Medical Center</label>
+                            </div>
+                        </div>
+                        <div class="col-12 border-top pt-3 mt-3">
+                            <h6 class="fw-bold mb-3">Government Schemes & Cashless Facilities</h6>
+                            <div class="row g-2">
+                                <div class="col-md-3">
+                                    <div class="form-check">
+                                        <input type="checkbox" name="accepts_ayushman" class="form-check-input"
+                                            value="1" id="ayushman_{{ $hospital->id }}"
+                                            {{ $hospital->accepts_ayushman ? 'checked' : '' }}>
+                                        <label class="form-check-label" for="ayushman_{{ $hospital->id }}">Ayushman
+                                            Card</label>
+                                    </div>
+                                </div>
+                                <div class="col-md-3">
+                                    <div class="form-check">
+                                        <input type="checkbox" name="accepts_janaadhaar" class="form-check-input"
+                                            value="1" id="janaadhaar_{{ $hospital->id }}"
+                                            {{ $hospital->accepts_janaadhaar ? 'checked' : '' }}>
+                                        <label class="form-check-label" for="janaadhaar_{{ $hospital->id }}">Jan
+                                            Aadhaar</label>
+                                    </div>
+                                </div>
+                                <div class="col-md-3">
+                                    <div class="form-check">
+                                        <input type="checkbox" name="accepts_cghs" class="form-check-input"
+                                            value="1" id="cghs_{{ $hospital->id }}"
+                                            {{ $hospital->accepts_cghs ? 'checked' : '' }}>
+                                        <label class="form-check-label" for="cghs_{{ $hospital->id }}">CGHS
+                                            Govt</label>
+                                    </div>
+                                </div>
+                                <div class="col-md-3">
+                                    <div class="form-check">
+                                        <input type="checkbox" name="is_cashless" class="form-check-input"
+                                            value="1" id="cashless_{{ $hospital->id }}"
+                                            {{ $hospital->is_cashless ? 'checked' : '' }}>
+                                        <label class="form-check-label" for="cashless_{{ $hospital->id }}">Cashless
+                                            Facility</label>
+                                    </div>
+                                </div>
+                                <div class="col-12 mt-3">
+                                    <label class="form-label fw-semibold">Empanelled Insurance / Cashless Schemes
+                                        (Comma separated)</label>
+                                    <input type="text" name="cashless_schemes_list" class="form-control"
+                                        value="{{ is_array($hospital->cashless_schemes_list) ? implode(', ', $hospital->cashless_schemes_list) : $hospital->cashless_schemes_list }}">
+                                </div>
                             </div>
                         </div>
                     </div>

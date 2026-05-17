@@ -254,10 +254,38 @@
                                         </div>
 
                                         <p class="text-slate-600 text-[11px] leading-normal pt-1 border-t border-slate-200/60">
-                                            <span class="font-semibold text-slate-700">{{ $locale === 'hi' ? 'पता:' : 'Address:' }}</span> {{ $h->address ?? 'Jaipur, Rajasthan' }} {{ !empty($h->city) ? ", {$h->city}" : '' }}
+                                            <span class="font-semibold text-slate-700">{{ $locale === 'hi' ? 'पता:' : 'Address:' }}</span> {{ !empty($h->address_line1) ? $h->address_line1 . ', ' . (!empty($h->address_line2) ? $h->address_line2 . ', ' : '') . $h->city . ', ' . $h->state . ' - ' . $h->pincode : ($h->address ?? 'Jaipur, Rajasthan') }}
                                         </p>
 
-                                        <div class="flex items-center justify-between text-slate-500 text-[11px] pt-1">
+                                        <!-- Govt Schemes & Cashless Facilities -->
+                                        <div class="pt-1 flex flex-wrap gap-1">
+                                            @if(!empty($h->accepts_ayushman))
+                                                <span class="bg-emerald-50 text-emerald-700 border border-emerald-200 px-2 py-0.5 rounded text-[10px] font-bold flex items-center space-x-1 shadow-2xs">
+                                                    <i data-lucide="shield-check" class="w-3 h-3 text-emerald-600"></i>
+                                                    <span>{{ $locale === 'hi' ? 'आयुष्मान' : 'Ayushman' }}</span>
+                                                </span>
+                                            @endif
+                                            @if(!empty($h->accepts_janaadhaar))
+                                                <span class="bg-blue-50 text-blue-700 border border-blue-200 px-2 py-0.5 rounded text-[10px] font-bold flex items-center space-x-1 shadow-2xs">
+                                                    <i data-lucide="award" class="w-3 h-3 text-blue-600"></i>
+                                                    <span>{{ $locale === 'hi' ? 'जन आधार' : 'Jan Aadhaar' }}</span>
+                                                </span>
+                                            @endif
+                                            @if(!empty($h->accepts_cghs))
+                                                <span class="bg-purple-50 text-purple-700 border border-purple-200 px-2 py-0.5 rounded text-[10px] font-bold flex items-center space-x-1 shadow-2xs">
+                                                    <i data-lucide="check-badge" class="w-3 h-3 text-purple-600"></i>
+                                                    <span>{{ $locale === 'hi' ? 'सीजीएचएस' : 'CGHS' }}</span>
+                                                </span>
+                                            @endif
+                                            @if(!empty($h->is_cashless))
+                                                <span class="bg-teal-50 text-teal-700 border border-teal-200 px-2 py-0.5 rounded text-[10px] font-bold flex items-center space-x-1 shadow-2xs">
+                                                    <i data-lucide="credit-card" class="w-3 h-3 text-teal-600"></i>
+                                                    <span>{{ $locale === 'hi' ? 'कैशलेस' : 'Cashless' }}</span>
+                                                </span>
+                                            @endif
+                                        </div>
+
+                                        <div class="flex items-center justify-between text-slate-500 text-[11px] pt-1 border-t border-slate-200/60">
                                             <span class="flex items-center space-x-1 pr-1 truncate">
                                                 <i data-lucide="clock" class="w-3 h-3 text-slate-400 shrink-0"></i>
                                                 <span class="truncate">{{ $pivot->days_of_week ?? 'Mon - Sat' }}</span>
@@ -272,7 +300,7 @@
                                                 {{ !empty($h->emergency_phone) ? ($locale === 'hi' ? 'संपर्क:' : 'Tel:') . ' ' . $h->emergency_phone : '' }}
                                             </span>
                                             <a
-                                                href="https://www.google.com/maps/dir/?api=1&destination={{ urlencode(($h->address ?? '') . ', ' . ($h->city ?? 'Jaipur')) }}"
+                                                href="https://www.google.com/maps/search/?api=1&query={{ !empty($h->latitude) ? $h->latitude . ',' . $h->longitude : urlencode(($h->address ?? '') . ', ' . ($h->city ?? 'Jaipur')) }}"
                                                 target="_blank"
                                                 class="inline-flex items-center space-x-1.5 text-xs text-indigo-600 hover:text-indigo-700 font-bold bg-indigo-50 hover:bg-indigo-100/80 px-3 py-1.5 rounded-xl border border-indigo-100 transition-all shadow-2xs"
                                             >

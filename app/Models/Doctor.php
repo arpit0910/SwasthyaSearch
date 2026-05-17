@@ -25,6 +25,13 @@ class Doctor extends Model implements HasMedia
         'is_verified',
         'email',
         'phone',
+        'address_line1',
+        'address_line2',
+        'city',
+        'state',
+        'pincode',
+        'latitude',
+        'longitude',
         'website',
         'date_of_birth',
         'gender',
@@ -33,6 +40,10 @@ class Doctor extends Model implements HasMedia
         'specialization_summary',
         'awards_recognitions',
         'membership_fellowships',
+        'cashless_treatment_available',
+        'accepts_ayushman_card',
+        'accepts_jan_aadhaar',
+        'rgahs_approved',
     ];
 
     protected $appends = ['about'];
@@ -46,6 +57,12 @@ class Doctor extends Model implements HasMedia
         'experience_years' => 'integer',
         'consultation_fee' => 'decimal:2',
         'date_of_birth' => 'date',
+        'cashless_treatment_available' => 'boolean',
+        'accepts_ayushman_card' => 'boolean',
+        'accepts_jan_aadhaar' => 'boolean',
+        'rgahs_approved' => 'boolean',
+        'latitude' => 'decimal:8',
+        'longitude' => 'decimal:8',
     ];
 
     public function department()
@@ -63,6 +80,26 @@ class Doctor extends Model implements HasMedia
         return $this->belongsToMany(Hospital::class, 'doctor_hospital')
             ->withPivot('days_of_week', 'start_time', 'end_time', 'consultation_fee')
             ->withTimestamps();
+    }
+
+    public function scopeCloseTo($query, $latitude, $longitude, $radius = 50)
+    {
+        $haversine = "(6371 * acos(cos(radians(?)) * cos(radians(latitude)) * cos(radians(longitude) - radians(?)) + sin(radians(?)) * sin(radians(latitude))))";
+
+        $query->selectRaw("*, {$haversine} AS distance", [$latitude, $longitude, $latitude])
+            ->whereNotNull('latitude')
+            ->whereNotNull('longitude');
+
+        if ($radius) {
+            $query->whereRaw("{$haversine} <= ?", [$latitude, $longitude, $latitude, $radius]);
+        }
+
+        return $query->orderBy('distance');
+    }
+
+    public function scopeNearest($query, $latitude, $longitude)
+    {
+        return $this->scopeCloseTo($query, $latitude, $longitude);
     }
 
     public function getAboutAttribute(): array

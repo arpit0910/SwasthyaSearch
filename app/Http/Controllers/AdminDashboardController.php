@@ -53,9 +53,22 @@ class AdminDashboardController extends Controller
             'type' => 'required|string',
             'city' => 'required|string',
             'address' => 'required|string',
+            'address_line1' => 'nullable|string|max:255',
+            'address_line2' => 'nullable|string|max:255',
+            'state' => 'nullable|string|max:100',
+            'pincode' => 'nullable|string|max:20',
+            'latitude' => 'nullable|numeric',
+            'longitude' => 'nullable|numeric',
             'emergency_phone' => 'required|string',
             'is_verified' => 'boolean',
+            'accepts_ayushman' => 'boolean',
+            'accepts_janaadhaar' => 'boolean',
+            'accepts_cghs' => 'boolean',
+            'is_cashless' => 'boolean',
+            'cashless_schemes_list' => 'nullable|string',
         ]);
+
+        $schemesList = !empty($data['cashless_schemes_list']) ? array_map('trim', explode(',', $data['cashless_schemes_list'])) : null;
 
         Hospital::create([
             'name_en' => $data['name_en'],
@@ -63,8 +76,19 @@ class AdminDashboardController extends Controller
             'type' => $data['type'],
             'city' => $data['city'],
             'address' => $data['address'],
+            'address_line1' => $data['address_line1'] ?? null,
+            'address_line2' => $data['address_line2'] ?? null,
+            'state' => $data['state'] ?? 'Rajasthan',
+            'pincode' => $data['pincode'] ?? null,
+            'latitude' => $data['latitude'] ?? null,
+            'longitude' => $data['longitude'] ?? null,
             'emergency_phone' => $data['emergency_phone'],
             'is_verified' => $request->boolean('is_verified', true),
+            'accepts_ayushman' => $request->boolean('accepts_ayushman', false),
+            'accepts_janaadhaar' => $request->boolean('accepts_janaadhaar', false),
+            'accepts_cghs' => $request->boolean('accepts_cghs', false),
+            'is_cashless' => $request->boolean('is_cashless', false),
+            'cashless_schemes_list' => $schemesList,
         ]);
 
         return back()->with('success', 'Hospital created successfully.');
@@ -78,9 +102,22 @@ class AdminDashboardController extends Controller
             'type' => 'required|string',
             'city' => 'required|string',
             'address' => 'required|string',
+            'address_line1' => 'nullable|string|max:255',
+            'address_line2' => 'nullable|string|max:255',
+            'state' => 'nullable|string|max:100',
+            'pincode' => 'nullable|string|max:20',
+            'latitude' => 'nullable|numeric',
+            'longitude' => 'nullable|numeric',
             'emergency_phone' => 'required|string',
             'is_verified' => 'boolean',
+            'accepts_ayushman' => 'boolean',
+            'accepts_janaadhaar' => 'boolean',
+            'accepts_cghs' => 'boolean',
+            'is_cashless' => 'boolean',
+            'cashless_schemes_list' => 'nullable|string',
         ]);
+
+        $schemesList = !empty($data['cashless_schemes_list']) ? array_map('trim', explode(',', $data['cashless_schemes_list'])) : null;
 
         $hospital->update([
             'name_en' => $data['name_en'],
@@ -88,8 +125,19 @@ class AdminDashboardController extends Controller
             'type' => $data['type'],
             'city' => $data['city'],
             'address' => $data['address'],
+            'address_line1' => $data['address_line1'] ?? null,
+            'address_line2' => $data['address_line2'] ?? null,
+            'state' => $data['state'] ?? 'Rajasthan',
+            'pincode' => $data['pincode'] ?? null,
+            'latitude' => $data['latitude'] ?? null,
+            'longitude' => $data['longitude'] ?? null,
             'emergency_phone' => $data['emergency_phone'],
             'is_verified' => $request->boolean('is_verified', true),
+            'accepts_ayushman' => $request->boolean('accepts_ayushman', false),
+            'accepts_janaadhaar' => $request->boolean('accepts_janaadhaar', false),
+            'accepts_cghs' => $request->boolean('accepts_cghs', false),
+            'is_cashless' => $request->boolean('is_cashless', false),
+            'cashless_schemes_list' => $schemesList,
         ]);
 
         return back()->with('success', 'Hospital updated successfully.');
@@ -188,6 +236,13 @@ class AdminDashboardController extends Controller
             'specialization_summary' => 'nullable|string',
             'awards_recognitions' => 'nullable|string',
             'membership_fellowships' => 'nullable|string',
+            'address_line1' => 'nullable|string|max:255',
+            'address_line2' => 'nullable|string|max:255',
+            'city' => 'nullable|string|max:100',
+            'state' => 'nullable|string|max:100',
+            'pincode' => 'nullable|string|max:20',
+            'latitude' => 'nullable|numeric',
+            'longitude' => 'nullable|numeric',
         ]);
 
         $doctor = Doctor::create([
@@ -208,6 +263,13 @@ class AdminDashboardController extends Controller
             'specialization_summary' => $data['specialization_summary'] ?? null,
             'awards_recognitions' => !empty($data['awards_recognitions']) ? array_map('trim', explode(',', $data['awards_recognitions'])) : null,
             'membership_fellowships' => !empty($data['membership_fellowships']) ? array_map('trim', explode(',', $data['membership_fellowships'])) : null,
+            'address_line1' => $data['address_line1'] ?? null,
+            'address_line2' => $data['address_line2'] ?? null,
+            'city' => $data['city'] ?? 'Jaipur',
+            'state' => $data['state'] ?? 'Rajasthan',
+            'pincode' => $data['pincode'] ?? null,
+            'latitude' => $data['latitude'] ?? null,
+            'longitude' => $data['longitude'] ?? null,
         ]);
 
         if (!empty($data['departments'])) {
@@ -238,6 +300,13 @@ class AdminDashboardController extends Controller
             'specialization_summary' => 'nullable|string',
             'awards_recognitions' => 'nullable|string',
             'membership_fellowships' => 'nullable|string',
+            'address_line1' => 'nullable|string|max:255',
+            'address_line2' => 'nullable|string|max:255',
+            'city' => 'nullable|string|max:100',
+            'state' => 'nullable|string|max:100',
+            'pincode' => 'nullable|string|max:20',
+            'latitude' => 'nullable|numeric',
+            'longitude' => 'nullable|numeric',
         ]);
 
         $doctor->update([
@@ -258,6 +327,13 @@ class AdminDashboardController extends Controller
             'specialization_summary' => $data['specialization_summary'] ?? null,
             'awards_recognitions' => !empty($data['awards_recognitions']) ? array_map('trim', explode(',', $data['awards_recognitions'])) : null,
             'membership_fellowships' => !empty($data['membership_fellowships']) ? array_map('trim', explode(',', $data['membership_fellowships'])) : null,
+            'address_line1' => $data['address_line1'] ?? null,
+            'address_line2' => $data['address_line2'] ?? null,
+            'city' => $data['city'] ?? 'Jaipur',
+            'state' => $data['state'] ?? 'Rajasthan',
+            'pincode' => $data['pincode'] ?? null,
+            'latitude' => $data['latitude'] ?? null,
+            'longitude' => $data['longitude'] ?? null,
         ]);
 
         if (!empty($data['departments'])) {

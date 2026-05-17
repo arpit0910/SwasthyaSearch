@@ -25,9 +25,23 @@ return new class extends Migration
             $table->text('about_hi')->nullable();
             $table->boolean('is_verified')->default(true);
 
+            // Scheme / Independent Clinic Flags
+            $table->boolean('cashless_treatment_available')->default(false);
+            $table->boolean('accepts_ayushman_card')->default(false);
+            $table->boolean('accepts_jan_aadhaar')->default(false);
+            $table->boolean('rgahs_approved')->default(false);
+
             // Personal Details
             $table->string('email')->nullable();
             $table->string('phone')->nullable();
+            $table->string('website')->nullable();
+            $table->string('address_line1')->nullable();
+            $table->string('address_line2')->nullable();
+            $table->string('city')->nullable();
+            $table->string('state')->nullable();
+            $table->string('pincode')->nullable();
+            $table->decimal('latitude', 11, 8)->nullable();
+            $table->decimal('longitude', 11, 8)->nullable();
             $table->date('date_of_birth')->nullable();
             $table->string('gender')->nullable();
             $table->json('languages_spoken')->nullable();
