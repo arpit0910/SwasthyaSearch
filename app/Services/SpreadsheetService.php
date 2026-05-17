@@ -1,0 +1,115 @@
+<?php
+
+namespace App\Services;
+
+class SpreadsheetService
+{
+    /**
+     * Parses an XLSX or CSV file and returns an array of associative arrays.
+     */
+    public static function parseSpreadsheet(string $filePath): array
+    {
+        $ext = strtolower(pathinfo($filePath, PATHINFO_EXTENSION));
+
+        if ($ext === 'xlsx') {
+            $zip = new \ZipArchive();
+            if ($zip->open($filePath) === true) {
+                // 1. Parse sharedStrings.xml
+                $sharedStrings = [];
+                if (($ssXml = $zip->getFromName('xl/sharedStrings.xml')) !== false) {
+                    $ss = simplexml_load_string($ssXml);
+                    if ($ss && isset($ss->si)) {
+                        foreach ($ss->si as $val) {
+                            if (isset($val->t)) {
+                                $sharedStrings[] = (string) $val->t;
+                            } elseif (isset($val->r)) {
+                                $text = '';
+                                foreach ($val->r as $r) {
+                                    if (isset($r->t)) {
+                                        $text .= (string) $r->t;
+                                    }
+                                }
+                                $sharedStrings[] = $text;
+                            } else {
+                                $sharedStrings[] = '';
+                            }
+                        }
+                    }
+                }
+
+                // 2. Parse sheet1.xml
+                $rows = [];
+                if (($sheetXml = $zip->getFromName('xl/worksheets/sheet1.xml')) !== false) {
+                    $sheet = simplexml_load_string($sheetXml);
+                    if ($sheet && isset($sheet->sheetData->row)) {
+                        foreach ($sheet->sheetData->row as $rowObj) {
+                            $rowVals = [];
+                            $colIndex = 0;
+                            foreach ($rowObj->c as $c) {
+                                // Calculate column index from r attribute (e.g., A1, B1, C1)
+                                $cellRef = (string) $c['r'];
+                                $colLetters = preg_replace('/[0-9]/', '', $cellRef);
+                                // Convert column letter to 0-based index
+                                $currCol = 0;
+                                $len = strlen($colLetters);
+                                for ($i = 0; $i < $len; $i++) {
+                                    $currCol = $currCol * 26 + (ord(strtoupper($colLetters[$i])) - 64);
+                                }
+                                $currCol -= 1; // 0-indexed
+
+                                // Pad empty cells if any were skipped
+                                while ($colIndex < $currCol) {
+                                    $rowVals[] = '';
+                                    $colIndex++;
+                                }
+
+                                $val = isset($c->v) ? (string) $c->v : '';
+                                if (isset($c['t']) && (string) $c['t'] === 's') {
+                                    $val = $sharedStrings[(int) $val] ?? $val;
+                                }
+                                $rowVals[] = $val;
+                                $colIndex++;
+                            }
+                            if (!empty(array_filter($rowVals))) {
+                                $rows[] = $rowVals;
+                            }
+                        }
+                    }
+                }
+                $zip->close();
+
+                if (!empty($rows)) {
+                    $headers = array_shift($rows);
+                    $headers = array_map(fn($h) => trim(strtolower($h)), $headers);
+                    $data = [];
+                    foreach ($rows as $r) {
+                        // Pad row to match headers length
+                        $r = array_pad($r, count($headers), '');
+                        // Truncate if longer
+                        $r = array_slice($r, 0, count($headers));
+                        $data[] = array_combine($headers, $r);
+                    }
+                    return $data;
+                }
+            }
+        }
+
+        // Fallback to CSV parsing
+        $data = [];
+        if (($handle = fopen($filePath, 'r')) !== false) {
+            $headers = fgetcsv($handle);
+            if ($headers) {
+                $headers = array_map(fn($h) => trim(strtolower($h)), $headers);
+                while (($row = fgetcsv($handle)) !== false) {
+                    if (!empty(array_filter($row))) {
+                        $row = array_pad($row, count($headers), '');
+                        $row = array_slice($row, 0, count($headers));
+                        $data[] = array_combine($headers, $row);
+                    }
+                }
+            }
+            fclose($handle);
+        }
+        return $data;
+    }
+}

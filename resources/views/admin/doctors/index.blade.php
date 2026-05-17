@@ -1,0 +1,108 @@
+@extends('admin.layouts.app')
+
+@section('content')
+<div class="container-fluid p-0">
+    <div class="d-flex align-items-center justify-content-between mb-4">
+        <div>
+            <h1 class="h3 mb-1 fw-bold text-dark">Doctors Directory</h1>
+            <p class="text-muted mb-0">Manage registered healthcare professionals and specialists.</p>
+        </div>
+        <div class="d-flex gap-2">
+            <button class="btn btn-outline-secondary d-flex align-items-center gap-2" data-bs-toggle="modal" data-bs-target="#importModal">
+                <i class="fa-solid fa-file-import"></i> Import CSV
+            </button>
+            <button class="btn btn-primary d-flex align-items-center gap-2" data-bs-toggle="modal" data-bs-target="#createModal">
+                <i class="fa-solid fa-plus"></i> Add Doctor
+            </button>
+        </div>
+    </div>
+
+    <!-- Search Bar -->
+    <div class="card border-0 shadow-sm mb-4">
+        <div class="card-body p-3">
+            <form action="{{ route('admin.doctors') }}" method="GET" class="d-flex gap-2">
+                <div class="input-group">
+                    <span class="input-group-text bg-light border-end-0"><i class="fa-solid fa-magnifying-glass text-muted"></i></span>
+                    <input type="text" name="search" class="form-control border-start-0" placeholder="Search doctors by name..." value="{{ request('search') }}">
+                </div>
+                <button type="submit" class="btn btn-primary px-4">Search</button>
+                @if(request('search'))
+                    <a href="{{ route('admin.doctors') }}" class="btn btn-outline-secondary">Reset</a>
+                @endif
+            </form>
+        </div>
+    </div>
+
+    <!-- Doctors Table -->
+    <div class="card border-0 shadow-sm mb-4">
+        <div class="table-responsive">
+            <table class="table table-hover align-middle mb-0">
+                <thead class="table-light">
+                    <tr>
+                        <th class="ps-4">Doctor Name</th>
+                        <th>Specialty / Dept</th>
+                        <th>Registration No.</th>
+                        <th>Experience</th>
+                        <th>Status</th>
+                        <th class="text-end pe-4">Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @forelse($doctors as $doctor)
+                        <tr>
+                            <td class="ps-4">
+                                <div class="fw-bold text-dark">Dr. {{ $doctor->first_name }} {{ $doctor->last_name }}</div>
+                                <div class="text-muted fs-7">{{ $doctor->education_degrees ?? 'MBBS, MD' }}</div>
+                            </td>
+                            <td>
+                                @forelse($doctor->departments as $dept)
+                                    <span class="badge bg-light text-dark border me-1">{{ $dept->getTranslation('name', 'en') }}</span>
+                                @empty
+                                    <span class="badge bg-light text-dark border">{{ $doctor->department->getTranslation('name', 'en') ?? 'General' }}</span>
+                                @endforelse
+                            </td>
+                            <td><span class="font-monospace">{{ $doctor->registration_number }}</span></td>
+                            <td>{{ $doctor->experience_years }} years</td>
+                            <td>
+                                @if($doctor->is_verified)
+                                    <span class="badge badge-teal"><i class="fa-solid fa-circle-check me-1"></i> Verified</span>
+                                @else
+                                    <span class="badge bg-warning text-dark"><i class="fa-solid fa-clock me-1"></i> Pending</span>
+                                @endif
+                            </td>
+                            <td class="text-end pe-4">
+                                <button class="btn btn-sm btn-outline-primary me-1" data-bs-toggle="modal" data-bs-target="#editModal{{ $doctor->id }}">
+                                    <i class="fa-solid fa-pen-to-square"></i>
+                                </button>
+                                <form action="{{ route('admin.doctors.destroy', $doctor) }}" method="POST" class="d-inline" onsubmit="return confirm('Are you sure you want to delete this doctor?');">
+                                    @csrf
+                                    @method('DELETE')
+                                    <button type="submit" class="btn btn-sm btn-outline-danger">
+                                        <i class="fa-solid fa-trash"></i>
+                                    </button>
+                                </form>
+                            </td>
+                        </tr>
+
+                        @include('admin.doctors.edit', ['doctor' => $doctor])
+                    @empty
+                        <tr>
+                            <td colspan="6" class="text-center py-5 text-muted">
+                                <i class="fa-solid fa-user-doctor fs-1 mb-3 d-block"></i>
+                                No doctors found matching your criteria.
+                            </td>
+                        </tr>
+                    @endforelse
+                </tbody>
+            </table>
+        </div>
+        <div class="card-footer bg-white py-3 border-0 d-flex justify-content-end">
+            {{ $doctors->links() }}
+        </div>
+    </div>
+</div>
+
+@include('admin.doctors.create')
+@include('admin.doctors.import')
+
+@endsection

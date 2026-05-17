@@ -1,0 +1,47 @@
+<!-- Edit Modal -->
+<div class="modal fade" id="editModal{{ $article->id }}" tabindex="-1">
+    <div class="modal-dialog modal-xl modal-dialog-centered">
+        <div class="modal-content border-0 shadow">
+            <div class="modal-header bg-light border-0 py-3">
+                <h5 class="modal-title fw-bold">Edit Medical Article</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+            <form action="{{ route('admin.articles.update', $article) }}" method="POST">
+                @csrf
+                @method('PUT')
+                <div class="modal-body p-4">
+                    <div class="row g-3">
+                        <div class="col-md-6">
+                            <label class="form-label fw-semibold">Article Title (English)</label>
+                            <input type="text" name="title_en" class="form-control" value="{{ $article->getTranslation('title', 'en') }}" required>
+                        </div>
+                        <div class="col-md-6">
+                            <label class="form-label fw-semibold">Article Title (Hindi)</label>
+                            <input type="text" name="title_hi" class="form-control" value="{{ $article->getTranslation('title', 'hi') }}" required>
+                        </div>
+                        <div class="col-md-6">
+                            <label class="form-label fw-semibold">Excerpt (English)</label>
+                            <textarea name="excerpt_en" class="form-control" rows="2" required>{{ $article->getTranslation('excerpt', 'en') }}</textarea>
+                        </div>
+                        <div class="col-md-6">
+                            <label class="form-label fw-semibold">Excerpt (Hindi)</label>
+                            <textarea name="excerpt_hi" class="form-control" rows="2" required>{{ $article->getTranslation('excerpt', 'hi') }}</textarea>
+                        </div>
+                        <div class="col-md-6">
+                            <label class="form-label fw-semibold">Full Content (English - Markdown Supported)</label>
+                            <textarea name="content_en" class="form-control font-monospace fs-7" rows="10" required>{{ $article->getTranslation('content', 'en') }}</textarea>
+                        </div>
+                        <div class="col-md-6">
+                            <label class="form-label fw-semibold">Full Content (Hindi - Markdown Supported)</label>
+                            <textarea name="content_hi" class="form-control font-monospace fs-7" rows="10" required>{{ $article->getTranslation('content', 'hi') }}</textarea>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer border-0 bg-light py-3">
+                    <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">Cancel</button>
+                    <button type="submit" class="btn btn-primary px-4">Save Changes</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>

@@ -1,0 +1,35 @@
+<?php
+
+namespace Database\Seeders;
+
+use App\Models\Faq;
+use Illuminate\Database\Seeder;
+
+class FaqSeeder extends Seeder
+{
+    /**
+     * Run the database seeds.
+     */
+    public function run(): void
+    {
+        Faq::firstOrCreate(
+            ['question_en' => 'Is SwasthyaSearch completely free for patients?'],
+            [
+                'question_hi' => 'क्या स्वास्थ्या सर्च मरीजों के लिए पूरी तरह से मुफ़्त है?',
+                'answer_en' => 'Yes! SwasthyaSearch is 100% free and contains zero advertisements or hidden commissions. You can contact doctors directly.',
+                'answer_hi' => 'हाँ! स्वास्थ्या सर्च 100% मुफ़्त है और इसमें कोई विज्ञापन या छिपे हुए कमीशन नहीं हैं। आप सीधे डॉक्टरों से संपर्क कर सकते हैं।',
+                'category' => 'General',
+            ]
+        );
+
+        Faq::firstOrCreate(
+            ['question_en' => 'How does the AI Chatbot find the right doctor?'],
+            [
+                'question_hi' => 'एआई चैटबॉट सही डॉक्टर कैसे खोजता है?',
+                'answer_en' => 'Our AI analyzes your symptoms using semantic vector embeddings and instantly matches them with the correct medical department and verified doctors near you.',
+                'answer_hi' => 'हमारा एआई सिमेंटिक वेक्टर एम्बेडिंग का उपयोग करके आपके लक्षणों का विश्लेषण करता है और तुरंत आपके आस-पास के सही चिकित्सा विभाग और सत्यापित डॉक्टरों से मेल खाता है।',
+                'category' => 'Technology',
+            ]
+        );
+    }
+}
