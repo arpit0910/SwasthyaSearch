@@ -1,0 +1,15 @@
+<IfModule mod_rewrite.c>
+    <IfModule mod_negotiation.c>
+        Options -MultiViews -Indexes
+    </IfModule>
+
+    RewriteEngine On
+
+    # Remove public from URL if present
+    RewriteCond %{REQUEST_URI} ^/public/ [NC]
+    RewriteRule ^public/(.*)$ /$1 [R=301,L]
+
+    # Rewrite all requests to the public directory
+    RewriteCond %{REQUEST_URI} !^/public/
+    RewriteRule ^(.*)$ public/$1 [L]
+</IfModule>
