@@ -111,4 +111,16 @@ class PageController extends Controller
         // Here we return back with a success flash message.
         return back()->with('success', 'Your message has been sent successfully. Our support team will get back to you within 24 hours!');
     }
+
+    public function submitFeedback(Request $request)
+    {
+        $validated = $request->validate([
+            'name' => 'required|string|max:255',
+            'rating' => 'required|integer|min:1|max:5',
+            'category' => 'required|string|max:255',
+            'comments' => 'required|string|max:2000',
+        ]);
+
+        return back()->with('success', 'Thank you for your valuable feedback! Your input helps us improve SwasthyaSearch for everyone.');
+    }
 }

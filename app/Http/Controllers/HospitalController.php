@@ -31,6 +31,19 @@ class HospitalController extends Controller
             });
         }
 
+        // Filter by Benefit
+        if ($request->filled('benefit') && $request->benefit !== 'All') {
+            if ($request->benefit === 'ayushman') {
+                $query->where('accepts_ayushman', true);
+            } elseif ($request->benefit === 'janaadhaar') {
+                $query->where('accepts_janaadhaar', true);
+            } elseif ($request->benefit === 'cghs') {
+                $query->where('accepts_cghs', true);
+            } elseif ($request->benefit === 'cashless') {
+                $query->where('is_cashless', true);
+            }
+        }
+
         $cities = Hospital::where('is_verified', true)->whereNotNull('city')->distinct()->pluck('city');
         $types = Hospital::where('is_verified', true)->whereNotNull('type')->distinct()->pluck('type');
 
@@ -60,7 +73,7 @@ class HospitalController extends Controller
             ]),
             'cities' => $cities,
             'types' => $types,
-            'filters' => $request->only(['type', 'city', 'search']),
+            'filters' => $request->only(['type', 'city', 'search', 'benefit']),
         ]);
     }
 }

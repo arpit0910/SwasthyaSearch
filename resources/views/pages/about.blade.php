@@ -10,7 +10,7 @@
         <span class="bg-teal-500/20 text-teal-300 border border-teal-500/30 px-4 py-1.5 rounded-full text-xs font-semibold tracking-wider uppercase inline-block mb-4 shadow-sm">
             {{ $locale === 'hi' ? 'हमारा मिशन और विजन' : 'Our Mission & Vision' }}
         </span>
-        <h1 class="text-4xl sm:text-6xl font-extrabold tracking-tight mb-6 bg-gradient-to-r from-white via-slate-100 to-slate-300 bg-clip-text text-transparent leading-tight">
+        <h1 class="text-4xl sm:text-6xl font-extrabold tracking-tight mb-6 bg-gradient-to-r from-white via-slate-100 to-slate-300 bg-clip-text text-transparent py-2 leading-normal">
             {{ $locale === 'hi' ? 'स्वास्थ्य सेवा को सुलभ, पारदर्शी और मुफ़्त बनाना' : 'Empowering Patients with Free, Transparent Healthcare' }}
         </h1>
         <p class="max-w-3xl mx-auto text-slate-300 text-lg sm:text-xl leading-relaxed">
@@ -75,7 +75,7 @@
                 <i data-lucide="sparkles" class="w-4 h-4"></i>
                 <span>{{ $locale === 'hi' ? 'हमारी कहानी' : 'Our Story' }}</span>
             </div>
-            <h2 class="text-3xl sm:text-4xl font-extrabold text-slate-900 tracking-tight leading-snug">
+            <h2 class="text-3xl sm:text-4xl font-extrabold text-slate-900 tracking-tight leading-normal py-0.5">
                 {{ $locale === 'hi' ? 'स्वास्थ्या सर्च की शुरुआत क्यों हुई?' : 'Why We Started SwasthyaSearch' }}
             </h2>
             <p class="text-slate-600 text-base sm:text-lg leading-relaxed">

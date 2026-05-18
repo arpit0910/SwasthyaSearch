@@ -10,7 +10,7 @@
         <span class="bg-teal-500/20 text-teal-300 border border-teal-500/30 px-4 py-1.5 rounded-full text-xs font-semibold tracking-wider uppercase inline-block mb-4 shadow-sm">
             {{ $locale === 'hi' ? 'सत्यापित विशेषज्ञ' : 'Verified Medical Experts' }}
         </span>
-        <h1 class="text-3xl sm:text-5xl font-extrabold tracking-tight mb-4 bg-gradient-to-r from-white via-slate-100 to-slate-300 bg-clip-text text-transparent">
+        <h1 class="text-3xl sm:text-5xl font-extrabold tracking-tight mb-4 bg-gradient-to-r from-white via-slate-100 to-slate-300 bg-clip-text text-transparent py-2 leading-normal">
             {{ $locale === 'hi' ? 'हमारे विशेषज्ञ डॉक्टरों से परामर्श लें' : 'Find & Consult Expert Doctors' }}
         </h1>
         <p class="max-w-2xl mx-auto text-slate-300 text-base sm:text-lg leading-relaxed">
@@ -152,15 +152,15 @@
                         </div>
 
                         <div class="flex-1 min-w-0">
-                            <div class="flex items-center space-x-1.5 mb-1">
-                                <h3 class="font-extrabold text-lg text-slate-900 truncate group-hover:text-teal-600 transition-colors duration-200">
+                            <div class="flex items-start space-x-1.5 mb-1">
+                                <h3 class="font-extrabold text-lg text-slate-900 line-clamp-3 leading-snug group-hover:text-teal-600 transition-colors duration-200">
                                     {{ $fullName }}
                                 </h3>
                                 @if ($doc->is_verified)
-                                    <i data-lucide="check-circle-2" class="w-4 h-4 text-teal-500 shrink-0"></i>
+                                    <i data-lucide="check-circle-2" class="w-4 h-4 text-teal-500 shrink-0 mt-1"></i>
                                 @endif
                             </div>
-                            <p class="text-xs font-bold text-teal-600 bg-teal-50 border border-teal-100/80 px-3 py-1 rounded-full inline-block mb-2 shadow-2xs truncate max-w-full">
+                            <p class="text-xs font-bold text-teal-600 bg-teal-50 border border-teal-100/80 px-3 py-1 rounded-2xl inline-block mb-2 shadow-2xs line-clamp-2 max-w-full">
                                 {{ $deptName }}
                             </p>
                             <div class="flex flex-wrap gap-1 text-slate-500 text-xs">
@@ -187,6 +187,18 @@
                                 </div>
                             </div>
                         </div>
+
+                        <!-- Mobile Accordion Toggle Button -->
+                        <button type="button" onclick="toggleMobileAccordion('doc-{{ $doc->id }}')" class="md:hidden w-full flex items-center justify-between p-3 bg-slate-50 hover:bg-slate-100 border border-slate-200 rounded-xl text-xs font-bold text-slate-700 transition-all duration-200">
+                            <span class="flex items-center space-x-2">
+                                <i data-lucide="info" class="w-4 h-4 text-teal-600"></i>
+                                <span id="doc-{{ $doc->id }}-text">{{ $locale === 'hi' ? 'अतिरिक्त विवरण देखें' : 'View Additional Details' }}</span>
+                            </span>
+                            <i data-lucide="chevron-down" id="doc-{{ $doc->id }}-icon" class="w-4 h-4 text-slate-500 transition-transform duration-300"></i>
+                        </button>
+
+                        <!-- Collapsible Content (Hidden on Mobile by default, visible on MD+) -->
+                        <div id="doc-{{ $doc->id }}-content" class="hidden md:flex flex-col space-y-4 flex-1">
 
                         @if (!empty($doc->registration_number))
                             <div class="flex items-center justify-between text-xs text-slate-500 px-1 pt-1 border-t border-slate-100">
@@ -254,7 +266,7 @@
                                         </div>
 
                                         <p class="text-slate-600 text-[11px] leading-normal pt-1 border-t border-slate-200/60">
-                                            <span class="font-semibold text-slate-700">{{ $locale === 'hi' ? 'पता:' : 'Address:' }}</span> {{ !empty($h->address_line1) ? $h->address_line1 . ', ' . (!empty($h->address_line2) ? $h->address_line2 . ', ' : '') . $h->city . ', ' . $h->state . ' - ' . $h->pincode : ($h->address ?? 'Jaipur, Rajasthan') }}
+                                            <span class="font-semibold text-slate-700">{{ $locale === 'hi' ? 'पता:' : 'Address:' }}</span> {{ !empty($h->address_line1) ? $h->address_line1 . ', ' . (!empty($h->address_line2) ? $h->address_line2 . ', ' : '') . $h->city . ', ' . $h->state . (!empty($h->pincode) ? ' - ' . $h->pincode : '') : ($h->address ?? '') }}
                                         </p>
 
                                         <!-- Govt Schemes & Cashless Facilities -->
@@ -300,7 +312,7 @@
                                                 {{ !empty($h->emergency_phone) ? ($locale === 'hi' ? 'संपर्क:' : 'Tel:') . ' ' . $h->emergency_phone : '' }}
                                             </span>
                                             <a
-                                                href="https://www.google.com/maps/search/?api=1&query={{ !empty($h->latitude) ? $h->latitude . ',' . $h->longitude : urlencode(($h->address ?? '') . ', ' . ($h->city ?? 'Jaipur')) }}"
+                                                href="https://www.google.com/maps/dir/?api=1&destination={{ !empty($h->latitude) ? $h->latitude . ',' . $h->longitude : urlencode(($h->address ?? '') . ', ' . ($h->city ?? 'Jaipur')) }}"
                                                 target="_blank"
                                                 class="inline-flex items-center space-x-1.5 text-xs text-indigo-600 hover:text-indigo-700 font-bold bg-indigo-50 hover:bg-indigo-100/80 px-3 py-1.5 rounded-xl border border-indigo-100 transition-all shadow-2xs"
                                             >
@@ -312,13 +324,14 @@
                                 @endforeach
                             </div>
                         @endif
+                        </div>
                     </div>
 
                     <!-- Card Footer -->
-                    <div class="p-6 pt-0 bg-white flex items-center space-x-3">
+                    <div class="p-6 pt-0 bg-white flex flex-col sm:flex-row gap-2.5 sm:gap-3">
                         <a
-                            href="tel:{{ $doc->phone ?? '+911412345678' }}"
-                            class="flex-1 bg-teal-600 hover:bg-teal-700 text-white font-bold py-3 px-4 rounded-xl shadow-md hover:shadow-lg transition-all duration-200 text-xs uppercase tracking-wider flex items-center justify-center space-x-2"
+                            href="{{ !empty($doc->phone) ? 'tel:' . $doc->phone : '#' }}"
+                            class="w-full sm:flex-1 bg-teal-600 hover:bg-teal-700 text-white font-bold py-3 px-4 rounded-xl shadow-md hover:shadow-lg transition-all duration-200 text-xs uppercase tracking-wider flex items-center justify-center space-x-2"
                         >
                             <i data-lucide="phone" class="w-4 h-4 text-teal-100"></i>
                             <span>{{ $locale === 'hi' ? 'अभी कॉल करें' : 'Call Now' }}</span>
@@ -327,7 +340,7 @@
                             <a
                                 href="{{ str_starts_with($doc->website, 'http') ? $doc->website : 'https://' . $doc->website }}"
                                 target="_blank"
-                                class="flex-1 bg-slate-900 hover:bg-slate-800 text-white font-bold py-3 px-4 rounded-xl shadow-md hover:shadow-lg transition-all duration-200 text-xs uppercase tracking-wider flex items-center justify-center space-x-2"
+                                class="w-full sm:flex-1 bg-slate-900 hover:bg-slate-800 text-white font-bold py-3 px-4 rounded-xl shadow-md hover:shadow-lg transition-all duration-200 text-xs uppercase tracking-wider flex items-center justify-center space-x-2"
                             >
                                 <i data-lucide="globe" class="w-4 h-4 text-teal-400"></i>
                                 <span>{{ $locale === 'hi' ? 'वेबसाइट देखें' : 'Visit Website' }}</span>
@@ -340,3 +353,26 @@
     @endif
 </main>
 @endsection
+
+@push('scripts')
+<script>
+    function toggleMobileAccordion(id) {
+        const content = document.getElementById(id + '-content');
+        const icon = document.getElementById(id + '-icon');
+        const text = document.getElementById(id + '-text');
+        const isHi = "{{ $locale }}" === "hi";
+
+        if (content.classList.contains('hidden')) {
+            content.classList.remove('hidden');
+            content.classList.add('flex');
+            icon.classList.add('rotate-180');
+            text.innerText = isHi ? 'विवरण छुपाएं' : 'Hide Details';
+        } else {
+            content.classList.add('hidden');
+            content.classList.remove('flex');
+            icon.classList.remove('rotate-180');
+            text.innerText = isHi ? 'अतिरिक्त विवरण देखें' : 'View Additional Details';
+        }
+    }
+</script>
+@endpush

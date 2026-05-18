@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Article;
+use App\Models\BloodBank;
 use App\Models\Department;
 use App\Models\Disease;
 use App\Models\Doctor;
@@ -19,6 +20,7 @@ class AdminDashboardController extends Controller
         $stats = [
             'verified_doctors' => Doctor::where('is_verified', true)->count(),
             'verified_hospitals' => Hospital::where('is_verified', true)->count(),
+            'verified_blood_banks' => BloodBank::where('is_verified', true)->count(),
             'articles_count' => Article::count(),
             'active_departments' => Department::where('is_active', true)->count(),
         ];
@@ -153,6 +155,70 @@ class AdminDashboardController extends Controller
         return back()->with('success', 'Hospital deleted successfully.');
     }
 
+    public function exportHospitals()
+    {
+        $hospitals = Hospital::all();
+        $headers = [
+            'Content-type' => 'text/csv',
+            'Content-Disposition' => 'attachment; filename=hospitals_export.csv',
+            'Pragma' => 'no-cache',
+            'Cache-Control' => 'must-revalidate, post-check=0, pre-check=0',
+            'Expires' => '0',
+        ];
+
+        $callback = function () use ($hospitals) {
+            $file = fopen('php://output', 'w');
+            fputcsv($file, [
+                'id',
+                'name_en',
+                'name_hi',
+                'type',
+                'city',
+                'state',
+                'pincode',
+                'address',
+                'address_line1',
+                'address_line2',
+                'emergency_phone',
+                'is_verified',
+                'accepts_ayushman',
+                'accepts_janaadhaar',
+                'accepts_cghs',
+                'is_cashless',
+                'cashless_schemes_list',
+                'latitude',
+                'longitude'
+            ]);
+
+            foreach ($hospitals as $hospital) {
+                fputcsv($file, [
+                    $hospital->id,
+                    $hospital->getTranslation('name', 'en', false) ?: $hospital->name_en,
+                    $hospital->getTranslation('name', 'hi', false) ?: $hospital->name_hi,
+                    $hospital->type,
+                    $hospital->city,
+                    $hospital->state,
+                    $hospital->pincode,
+                    $hospital->address,
+                    $hospital->address_line1,
+                    $hospital->address_line2,
+                    $hospital->emergency_phone,
+                    $hospital->is_verified ? 1 : 0,
+                    $hospital->accepts_ayushman ? 1 : 0,
+                    $hospital->accepts_janaadhaar ? 1 : 0,
+                    $hospital->accepts_cghs ? 1 : 0,
+                    $hospital->is_cashless ? 1 : 0,
+                    is_array($hospital->cashless_schemes_list) ? implode(';', $hospital->cashless_schemes_list) : $hospital->cashless_schemes_list,
+                    $hospital->latitude,
+                    $hospital->longitude,
+                ]);
+            }
+            fclose($file);
+        };
+
+        return response()->stream($callback, 200, $headers);
+    }
+
     public function importHospitals(Request $request)
     {
         $request->validate(['file' => 'required|mimes:csv,txt']);
@@ -161,27 +227,42 @@ class AdminDashboardController extends Controller
         $header = fgetcsv($file);
 
         while ($row = fgetcsv($file)) {
+            if (count($header) !== count($row)) continue;
             $data = array_combine($header, $row);
-            if (!isset($data['name_en'])) continue;
+            if (empty($data['name_en'])) continue;
 
-            Hospital::firstOrCreate(
-                ['name_en' => $data['name_en']],
-                [
-                    'name_en' => $data['name_en'],
-                    'name_hi' => $data['name_hi'] ?? $data['name_en'],
-                    'type' => $data['type'] ?? 'Hospital',
-                    'address' => $data['address'] ?? 'General Address',
-                    'city' => $data['city'] ?? 'Delhi',
-                    'emergency_country_code' => \App\Services\HealthcareSyncService::splitPhone($data['emergency_phone'] ?? '102')['country_code'],
-                    'emergency_phone' => \App\Services\HealthcareSyncService::splitPhone($data['emergency_phone'] ?? '102')['phone'],
-                    'latitude' => $data['latitude'] ?? null,
-                    'longitude' => $data['longitude'] ?? null,
-                    'is_verified' => true,
-                ]
-            );
+            $hospital = !empty($data['id']) ? Hospital::find($data['id']) : Hospital::where('name_en', $data['name_en'])->where('city', $data['city'] ?? 'Jaipur')->first();
+
+            $updateData = [
+                'name_en' => $data['name_en'],
+                'name_hi' => !empty($data['name_hi']) ? $data['name_hi'] : $data['name_en'],
+                'type' => !empty($data['type']) ? $data['type'] : 'Hospital',
+                'city' => !empty($data['city']) ? $data['city'] : 'Jaipur',
+                'state' => !empty($data['state']) ? $data['state'] : 'Rajasthan',
+                'pincode' => !empty($data['pincode']) ? $data['pincode'] : null,
+                'address' => !empty($data['address']) ? $data['address'] : null,
+                'address_line1' => !empty($data['address_line1']) ? $data['address_line1'] : null,
+                'address_line2' => !empty($data['address_line2']) ? $data['address_line2'] : null,
+                'emergency_phone' => !empty($data['emergency_phone']) ? \App\Services\HealthcareSyncService::splitPhone($data['emergency_phone'])['phone'] : null,
+                'emergency_country_code' => !empty($data['emergency_phone']) ? \App\Services\HealthcareSyncService::splitPhone($data['emergency_phone'])['country_code'] : null,
+                'latitude' => !empty($data['latitude']) ? (float)$data['latitude'] : null,
+                'longitude' => !empty($data['longitude']) ? (float)$data['longitude'] : null,
+                'is_verified' => isset($data['is_verified']) ? filter_var($data['is_verified'], FILTER_VALIDATE_BOOLEAN) : true,
+                'accepts_ayushman' => isset($data['accepts_ayushman']) ? filter_var($data['accepts_ayushman'], FILTER_VALIDATE_BOOLEAN) : false,
+                'accepts_janaadhaar' => isset($data['accepts_janaadhaar']) ? filter_var($data['accepts_janaadhaar'], FILTER_VALIDATE_BOOLEAN) : false,
+                'accepts_cghs' => isset($data['accepts_cghs']) ? filter_var($data['accepts_cghs'], FILTER_VALIDATE_BOOLEAN) : false,
+                'is_cashless' => isset($data['is_cashless']) ? filter_var($data['is_cashless'], FILTER_VALIDATE_BOOLEAN) : false,
+                'cashless_schemes_list' => !empty($data['cashless_schemes_list']) ? array_map('trim', explode(';', $data['cashless_schemes_list'])) : null,
+            ];
+
+            if ($hospital) {
+                $hospital->update($updateData);
+            } else {
+                Hospital::create($updateData);
+            }
         }
         fclose($file);
-        return back()->with('success', 'Hospitals imported successfully.');
+        return back()->with('success', 'Hospitals imported & updated successfully.');
     }
 
     public function syncHospitals(Request $request)
@@ -358,6 +439,79 @@ class AdminDashboardController extends Controller
         return back()->with('success', 'Doctor deleted successfully.');
     }
 
+    public function exportDoctors()
+    {
+        $doctors = Doctor::with('departments')->get();
+        $headers = [
+            'Content-type' => 'text/csv',
+            'Content-Disposition' => 'attachment; filename=doctors_export.csv',
+            'Pragma' => 'no-cache',
+            'Cache-Control' => 'must-revalidate, post-check=0, pre-check=0',
+            'Expires' => '0',
+        ];
+
+        $callback = function () use ($doctors) {
+            $file = fopen('php://output', 'w');
+            fputcsv($file, [
+                'id',
+                'registration_number',
+                'first_name',
+                'last_name',
+                'department_name_en',
+                'department_name_hi',
+                'medical_council',
+                'phone',
+                'consultation_fee',
+                'experience_years',
+                'education_degrees',
+                'about_en',
+                'about_hi',
+                'city',
+                'state',
+                'pincode',
+                'address_line1',
+                'address_line2',
+                'languages_spoken',
+                'gender',
+                'is_verified',
+                'latitude',
+                'longitude'
+            ]);
+
+            foreach ($doctors as $doctor) {
+                $dept = $doctor->departments->first() ?? $doctor->department;
+                fputcsv($file, [
+                    $doctor->id,
+                    $doctor->registration_number,
+                    $doctor->first_name,
+                    $doctor->last_name,
+                    $dept ? ($dept->getTranslation('name', 'en', false) ?: $dept->name_en) : 'General Medicine',
+                    $dept ? ($dept->getTranslation('name', 'hi', false) ?: $dept->name_hi) : 'सामान्य चिकित्सा',
+                    $doctor->medical_council,
+                    $doctor->phone,
+                    $doctor->consultation_fee,
+                    $doctor->experience_years,
+                    is_array($doctor->education_degrees) ? implode(';', $doctor->education_degrees) : $doctor->education_degrees,
+                    $doctor->getTranslation('about', 'en', false) ?: $doctor->about_en,
+                    $doctor->getTranslation('about', 'hi', false) ?: $doctor->about_hi,
+                    $doctor->city,
+                    $doctor->state,
+                    $doctor->pincode,
+                    $doctor->address_line1,
+                    $doctor->address_line2,
+                    is_array($doctor->languages_spoken) ? implode(';', $doctor->languages_spoken) : $doctor->languages_spoken,
+                    $doctor->gender,
+                    $doctor->is_verified ? 1 : 0,
+                    $doctor->latitude,
+                    $doctor->longitude,
+                ]);
+            }
+            fclose($file);
+        };
+
+        return response()->stream($callback, 200, $headers);
+    }
+
     public function importDoctors(Request $request)
     {
         $request->validate(['file' => 'required|mimes:csv,txt']);
@@ -366,43 +520,63 @@ class AdminDashboardController extends Controller
         $header = fgetcsv($file);
 
         while ($row = fgetcsv($file)) {
+            if (count($header) !== count($row)) continue;
             $data = array_combine($header, $row);
-            if (!isset($data['first_name'])) continue;
+            if (empty($data['first_name'])) continue;
 
-            $dept = Department::where('name_en', 'like', "%{$data['department_name_en']}%")->first();
-            if (!$dept && isset($data['department_name_en'])) {
+            $doctor = !empty($data['id']) ? Doctor::find($data['id']) : Doctor::where('registration_number', $data['registration_number'] ?? '')->first();
+
+            $deptNameEn = !empty($data['department_name_en']) ? $data['department_name_en'] : 'General Medicine';
+            $dept = Department::where('name_en', 'like', "%{$deptNameEn}%")->first();
+            if (!$dept) {
                 $dept = Department::create([
-                    'name_en' => $data['department_name_en'],
-                    'name_hi' => $data['department_name_hi'] ?? $data['department_name_en'],
+                    'name_en' => $deptNameEn,
+                    'name_hi' => !empty($data['department_name_hi']) ? $data['department_name_hi'] : $deptNameEn,
                     'description_en' => 'Imported department',
                     'description_hi' => 'Imported department',
                     'is_active' => true,
                 ]);
             }
 
-            $doctor = Doctor::firstOrCreate(
-                ['registration_number' => $data['registration_number'] ?? ('REG-' . rand(1000, 9999))],
-                [
-                    'first_name' => $data['first_name'],
-                    'last_name' => $data['last_name'] ?? '',
-                    'department_id' => $dept ? $dept->id : null,
-                    'medical_council' => $data['medical_council'] ?? 'MCI',
-                    'country_code' => \App\Services\HealthcareSyncService::splitPhone($data['phone'] ?? null)['country_code'],
-                    'phone' => \App\Services\HealthcareSyncService::splitPhone($data['phone'] ?? null)['phone'],
-                    'education_degrees' => !empty($data['education_degrees']) ? array_map('trim', explode(';', $data['education_degrees'])) : \App\Services\ScraperService::getRealDegreesForDepartment($data['department_name_en'] ?? 'General Medicine'),
-                    'experience_years' => (int)($data['experience_years'] ?? 10),
-                    'about_en' => $data['about_en'] ?? 'Expert doctor',
-                    'about_hi' => $data['about_hi'] ?? 'विशेषज्ञ डॉक्टर',
-                    'is_verified' => true,
-                ]
-            );
+            $phoneParts = !empty($data['phone']) ? \App\Services\HealthcareSyncService::splitPhone($data['phone']) : ['country_code' => null, 'phone' => null];
+
+            $updateData = [
+                'first_name' => $data['first_name'],
+                'last_name' => $data['last_name'] ?? '',
+                'registration_number' => !empty($data['registration_number']) ? $data['registration_number'] : null,
+                'department_id' => $dept ? $dept->id : null,
+                'medical_council' => !empty($data['medical_council']) ? $data['medical_council'] : null,
+                'country_code' => $phoneParts['country_code'],
+                'phone' => $phoneParts['phone'],
+                'consultation_fee' => !empty($data['consultation_fee']) ? (float)$data['consultation_fee'] : null,
+                'experience_years' => !empty($data['experience_years']) ? (int)$data['experience_years'] : null,
+                'education_degrees' => !empty($data['education_degrees']) ? array_map('trim', explode(';', $data['education_degrees'])) : \App\Services\ScraperService::getRealDegreesForDepartment($deptNameEn),
+                'about_en' => !empty($data['about_en']) ? $data['about_en'] : null,
+                'about_hi' => !empty($data['about_hi']) ? $data['about_hi'] : null,
+                'city' => !empty($data['city']) ? $data['city'] : 'Jaipur',
+                'state' => !empty($data['state']) ? $data['state'] : 'Rajasthan',
+                'pincode' => !empty($data['pincode']) ? $data['pincode'] : null,
+                'address_line1' => !empty($data['address_line1']) ? $data['address_line1'] : null,
+                'address_line2' => !empty($data['address_line2']) ? $data['address_line2'] : null,
+                'languages_spoken' => !empty($data['languages_spoken']) ? array_map('trim', explode(';', $data['languages_spoken'])) : null,
+                'gender' => !empty($data['gender']) ? $data['gender'] : null,
+                'latitude' => !empty($data['latitude']) ? (float)$data['latitude'] : null,
+                'longitude' => !empty($data['longitude']) ? (float)$data['longitude'] : null,
+                'is_verified' => isset($data['is_verified']) ? filter_var($data['is_verified'], FILTER_VALIDATE_BOOLEAN) : true,
+            ];
+
+            if ($doctor) {
+                $doctor->update($updateData);
+            } else {
+                $doctor = Doctor::create($updateData);
+            }
 
             if ($dept) {
                 $doctor->departments()->syncWithoutDetaching([$dept->id]);
             }
         }
         fclose($file);
-        return back()->with('success', 'Doctors imported successfully.');
+        return back()->with('success', 'Doctors imported & updated successfully.');
     }
 
     public function syncDoctors(Request $request)
@@ -419,6 +593,278 @@ class AdminDashboardController extends Controller
     public function syncDoctorsProgress()
     {
         $progress = Cache::get('scrape_progress_doctors', [
+            'status' => 'idle',
+            'city' => '',
+            'progress' => 0,
+            'message' => 'Waiting to start...',
+        ]);
+
+        return response()->json($progress);
+    }
+
+    // --- BLOOD BANKS CRUD & IMPORT & SYNC ---
+    public function bloodBanks(Request $request)
+    {
+        $query = \App\Models\BloodBank::query();
+        if ($search = $request->query('search')) {
+            $query->where('name_en', 'like', "%{$search}%")
+                ->orWhere('name_hi', 'like', "%{$search}%")
+                ->orWhere('city', 'like', "%{$search}%");
+        }
+        $bloodBanks = $query->latest()->get();
+        return view('admin.blood_banks.index', compact('bloodBanks'));
+    }
+
+    public function storeBloodBank(Request $request)
+    {
+        $data = $request->validate([
+            'name_en' => 'required|string|max:255',
+            'name_hi' => 'required|string|max:255',
+            'city' => 'required|string',
+            'address_en' => 'required|string',
+            'address_hi' => 'required|string',
+            'state' => 'nullable|string|max:100',
+            'pincode' => 'nullable|string|max:20',
+            'latitude' => 'nullable|numeric',
+            'longitude' => 'nullable|numeric',
+            'country_code' => 'nullable|string|max:10',
+            'phone' => 'nullable|string|max:20',
+            'emergency_country_code' => 'nullable|string|max:10',
+            'emergency_phone' => 'nullable|string|max:20',
+            'email' => 'nullable|email|max:255',
+            'website' => 'nullable|string|max:255',
+            'is_verified' => 'boolean',
+            'is_24_7' => 'boolean',
+            'is_government' => 'boolean',
+            'component_facility' => 'boolean',
+            'apheresis_facility' => 'boolean',
+            'available_blood_groups' => 'nullable|array',
+        ]);
+
+        \App\Models\BloodBank::create([
+            'name_en' => $data['name_en'],
+            'name_hi' => $data['name_hi'],
+            'city' => $data['city'],
+            'address_en' => $data['address_en'],
+            'address_hi' => $data['address_hi'],
+            'state' => $data['state'] ?? 'Rajasthan',
+            'pincode' => $data['pincode'] ?? null,
+            'latitude' => $data['latitude'] ?? null,
+            'longitude' => $data['longitude'] ?? null,
+            'country_code' => $data['country_code'] ?? '+91',
+            'phone' => $data['phone'] ?? null,
+            'emergency_country_code' => $data['emergency_country_code'] ?? '+91',
+            'emergency_phone' => $data['emergency_phone'] ?? null,
+            'email' => $data['email'] ?? null,
+            'website' => $data['website'] ?? null,
+            'is_verified' => $request->boolean('is_verified', true),
+            'is_24_7' => $request->boolean('is_24_7', true),
+            'is_government' => $request->boolean('is_government', false),
+            'component_facility' => $request->boolean('component_facility', true),
+            'apheresis_facility' => $request->boolean('apheresis_facility', false),
+            'available_blood_groups' => $data['available_blood_groups'] ?? ['A+', 'A-', 'B+', 'B-', 'O+', 'O-', 'AB+', 'AB-'],
+            'last_updated_stock_at' => now(),
+        ]);
+
+        return back()->with('success', 'Blood Bank created successfully.');
+    }
+
+    public function updateBloodBank(Request $request, \App\Models\BloodBank $bloodBank)
+    {
+        $data = $request->validate([
+            'name_en' => 'required|string|max:255',
+            'name_hi' => 'required|string|max:255',
+            'city' => 'required|string',
+            'address_en' => 'required|string',
+            'address_hi' => 'required|string',
+            'state' => 'nullable|string|max:100',
+            'pincode' => 'nullable|string|max:20',
+            'latitude' => 'nullable|numeric',
+            'longitude' => 'nullable|numeric',
+            'country_code' => 'nullable|string|max:10',
+            'phone' => 'nullable|string|max:20',
+            'emergency_country_code' => 'nullable|string|max:10',
+            'emergency_phone' => 'nullable|string|max:20',
+            'email' => 'nullable|email|max:255',
+            'website' => 'nullable|string|max:255',
+            'is_verified' => 'boolean',
+            'is_24_7' => 'boolean',
+            'is_government' => 'boolean',
+            'component_facility' => 'boolean',
+            'apheresis_facility' => 'boolean',
+            'available_blood_groups' => 'nullable|array',
+        ]);
+
+        $bloodBank->update([
+            'name_en' => $data['name_en'],
+            'name_hi' => $data['name_hi'],
+            'city' => $data['city'],
+            'address_en' => $data['address_en'],
+            'address_hi' => $data['address_hi'],
+            'state' => $data['state'] ?? 'Rajasthan',
+            'pincode' => $data['pincode'] ?? null,
+            'latitude' => $data['latitude'] ?? null,
+            'longitude' => $data['longitude'] ?? null,
+            'country_code' => $data['country_code'] ?? '+91',
+            'phone' => $data['phone'] ?? null,
+            'emergency_country_code' => $data['emergency_country_code'] ?? '+91',
+            'emergency_phone' => $data['emergency_phone'] ?? null,
+            'email' => $data['email'] ?? null,
+            'website' => $data['website'] ?? null,
+            'is_verified' => $request->boolean('is_verified', true),
+            'is_24_7' => $request->boolean('is_24_7', true),
+            'is_government' => $request->boolean('is_government', false),
+            'component_facility' => $request->boolean('component_facility', true),
+            'apheresis_facility' => $request->boolean('apheresis_facility', false),
+            'available_blood_groups' => $data['available_blood_groups'] ?? ['A+', 'A-', 'B+', 'B-', 'O+', 'O-', 'AB+', 'AB-'],
+            'last_updated_stock_at' => now(),
+        ]);
+
+        return back()->with('success', 'Blood Bank updated successfully.');
+    }
+
+    public function destroyBloodBank(\App\Models\BloodBank $bloodBank)
+    {
+        $bloodBank->delete();
+        return back()->with('success', 'Blood Bank deleted successfully.');
+    }
+
+    public function exportBloodBanks()
+    {
+        $bloodBanks = \App\Models\BloodBank::all();
+        $headers = [
+            'Content-type' => 'text/csv',
+            'Content-Disposition' => 'attachment; filename=blood_banks_export.csv',
+            'Pragma' => 'no-cache',
+            'Cache-Control' => 'must-revalidate, post-check=0, pre-check=0',
+            'Expires' => '0',
+        ];
+
+        $callback = function () use ($bloodBanks) {
+            $file = fopen('php://output', 'w');
+            fputcsv($file, [
+                'id',
+                'name_en',
+                'name_hi',
+                'city',
+                'state',
+                'pincode',
+                'address_en',
+                'address_hi',
+                'country_code',
+                'phone',
+                'emergency_country_code',
+                'emergency_phone',
+                'email',
+                'website',
+                'is_verified',
+                'is_24_7',
+                'is_government',
+                'component_facility',
+                'apheresis_facility',
+                'available_blood_groups',
+                'latitude',
+                'longitude'
+            ]);
+
+            foreach ($bloodBanks as $bb) {
+                fputcsv($file, [
+                    $bb->id,
+                    $bb->name_en,
+                    $bb->name_hi,
+                    $bb->city,
+                    $bb->state,
+                    $bb->pincode,
+                    $bb->address_en,
+                    $bb->address_hi,
+                    $bb->country_code,
+                    $bb->phone,
+                    $bb->emergency_country_code,
+                    $bb->emergency_phone,
+                    $bb->email,
+                    $bb->website,
+                    $bb->is_verified ? 1 : 0,
+                    $bb->is_24_7 ? 1 : 0,
+                    $bb->is_government ? 1 : 0,
+                    $bb->component_facility ? 1 : 0,
+                    $bb->apheresis_facility ? 1 : 0,
+                    is_array($bb->available_blood_groups) ? implode(';', $bb->available_blood_groups) : '',
+                    $bb->latitude,
+                    $bb->longitude,
+                ]);
+            }
+            fclose($file);
+        };
+
+        return response()->stream($callback, 200, $headers);
+    }
+
+    public function importBloodBanks(Request $request)
+    {
+        $request->validate(['file' => 'required|mimes:csv,txt']);
+        $path = $request->file('file')->getRealPath();
+        $file = fopen($path, 'r');
+        $header = fgetcsv($file);
+
+        while ($row = fgetcsv($file)) {
+            if (count($header) !== count($row)) continue;
+            $data = array_combine($header, $row);
+            if (empty($data['name_en'])) continue;
+
+            $bb = !empty($data['id']) ? \App\Models\BloodBank::find($data['id']) : \App\Models\BloodBank::where('name_en', $data['name_en'])->where('city', $data['city'] ?? 'Jaipur')->first();
+
+            $phoneParts = !empty($data['phone']) ? \App\Services\HealthcareSyncService::splitPhone($data['phone']) : ['country_code' => '+91', 'phone' => null];
+            $emergPhoneParts = !empty($data['emergency_phone']) ? \App\Services\HealthcareSyncService::splitPhone($data['emergency_phone']) : ['country_code' => '+91', 'phone' => null];
+
+            $updateData = [
+                'name_en' => $data['name_en'],
+                'name_hi' => !empty($data['name_hi']) ? $data['name_hi'] : $data['name_en'],
+                'city' => !empty($data['city']) ? $data['city'] : 'Jaipur',
+                'state' => !empty($data['state']) ? $data['state'] : 'Rajasthan',
+                'pincode' => !empty($data['pincode']) ? $data['pincode'] : null,
+                'address_en' => !empty($data['address_en']) ? $data['address_en'] : ($data['address'] ?? ''),
+                'address_hi' => !empty($data['address_hi']) ? $data['address_hi'] : ($data['address'] ?? ''),
+                'country_code' => !empty($data['country_code']) ? $data['country_code'] : $phoneParts['country_code'],
+                'phone' => $phoneParts['phone'],
+                'emergency_country_code' => !empty($data['emergency_country_code']) ? $data['emergency_country_code'] : $emergPhoneParts['country_code'],
+                'emergency_phone' => $emergPhoneParts['phone'],
+                'email' => !empty($data['email']) ? $data['email'] : null,
+                'website' => !empty($data['website']) ? $data['website'] : null,
+                'latitude' => !empty($data['latitude']) ? (float)$data['latitude'] : null,
+                'longitude' => !empty($data['longitude']) ? (float)$data['longitude'] : null,
+                'is_verified' => isset($data['is_verified']) ? filter_var($data['is_verified'], FILTER_VALIDATE_BOOLEAN) : true,
+                'is_24_7' => isset($data['is_24_7']) ? filter_var($data['is_24_7'], FILTER_VALIDATE_BOOLEAN) : true,
+                'is_government' => isset($data['is_government']) ? filter_var($data['is_government'], FILTER_VALIDATE_BOOLEAN) : false,
+                'component_facility' => isset($data['component_facility']) ? filter_var($data['component_facility'], FILTER_VALIDATE_BOOLEAN) : true,
+                'apheresis_facility' => isset($data['apheresis_facility']) ? filter_var($data['apheresis_facility'], FILTER_VALIDATE_BOOLEAN) : false,
+                'available_blood_groups' => !empty($data['available_blood_groups']) ? array_map('trim', explode(';', $data['available_blood_groups'])) : ['A+', 'A-', 'B+', 'B-', 'O+', 'O-', 'AB+', 'AB-'],
+                'last_updated_stock_at' => now(),
+            ];
+
+            if ($bb) {
+                $bb->update($updateData);
+            } else {
+                \App\Models\BloodBank::create($updateData);
+            }
+        }
+        fclose($file);
+        return back()->with('success', 'Blood Banks imported & updated successfully.');
+    }
+
+    public function syncBloodBanks(Request $request)
+    {
+        $request->validate(['city' => 'required|string|max:255']);
+        $city = $request->city;
+        $cacheKey = 'scrape_progress_bloodbanks';
+
+        ScraperService::scrapeBloodBanks($city, false, null, $cacheKey);
+
+        return response()->json(['status' => 'completed', 'message' => "Blood Banks synchronized for {$city}."]);
+    }
+
+    public function syncBloodBanksProgress()
+    {
+        $progress = Cache::get('scrape_progress_bloodbanks', [
             'status' => 'idle',
             'city' => '',
             'progress' => 0,

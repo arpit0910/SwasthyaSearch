@@ -45,6 +45,21 @@
             <div class="card h-100 border-0 shadow-sm">
                 <div class="card-body p-4 d-flex align-items-center justify-content-between">
                     <div>
+                        <div class="text-muted fw-semibold mb-1 text-uppercase fs-7">Verified Blood Banks</div>
+                        <div class="h2 mb-0 fw-bold text-dark">{{ number_format($stats['verified_blood_banks']) }}</div>
+                        <div class="text-danger fs-7 mt-2"><i class="fa-solid fa-droplet me-1"></i> Emergency Blood Stock</div>
+                    </div>
+                    <div class="p-3 bg-danger bg-opacity-10 rounded-3 text-danger fs-2">
+                        <i class="fa-solid fa-droplet"></i>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-12 col-sm-6 col-xl-3">
+            <div class="card h-100 border-0 shadow-sm">
+                <div class="card-body p-4 d-flex align-items-center justify-content-between">
+                    <div>
                         <div class="text-muted fw-semibold mb-1 text-uppercase fs-7">Medical Articles</div>
                         <div class="h2 mb-0 fw-bold text-dark">{{ number_format($stats['articles_count']) }}</div>
                         <div class="text-info fs-7 mt-2"><i class="fa-solid fa-file-lines me-1"></i> Expert Publications</div>

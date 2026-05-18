@@ -38,11 +38,11 @@
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div class="flex justify-between h-16 items-center gap-4">
                 <div class="flex items-center min-w-0">
-                    <a href="{{ route('home') }}" class="flex items-center space-x-3 group mr-6 shrink-0">
+                    <a href="{{ route('home') }}" class="flex items-center space-x-2 sm:space-x-3 group mr-2 sm:mr-6 shrink-0">
                         <div class="p-2.5 bg-gradient-to-tr from-teal-500 to-indigo-600 rounded-2xl shadow-md group-hover:shadow-lg transition-all duration-300 transform group-hover:-translate-y-0.5">
                             <i data-lucide="heart-pulse" class="w-6 h-6 text-white animate-pulse"></i>
                         </div>
-                        <span class="text-2xl font-bold bg-gradient-to-r from-slate-800 to-indigo-900 bg-clip-text text-transparent tracking-tight">
+                        <span class="text-xl sm:text-2xl font-bold bg-gradient-to-r from-slate-800 to-indigo-900 bg-clip-text text-transparent tracking-tight py-1 leading-normal">
                             Swasthya<span class="text-teal-600">Search</span>
                         </span>
                     </a>
@@ -53,6 +53,9 @@
                         </a>
                         <a href="{{ route('hospitals.index') }}" class="px-3 py-2 rounded-xl text-sm font-semibold transition-all duration-200 {{ request()->routeIs('hospitals.*') ? 'bg-teal-50 text-teal-700 border border-teal-100/80 shadow-2xs' : 'text-slate-600 hover:text-slate-900 hover:bg-slate-50' }}">
                             {{ $locale === 'hi' ? 'अस्पताल व क्लीनिक' : 'Hospitals' }}
+                        </a>
+                        <a href="{{ route('blood_banks.index') }}" class="px-3 py-2 rounded-xl text-sm font-semibold transition-all duration-200 {{ request()->routeIs('blood_banks.*') ? 'bg-teal-50 text-teal-700 border border-teal-100/80 shadow-2xs' : 'text-slate-600 hover:text-slate-900 hover:bg-slate-50' }}">
+                            {{ $locale === 'hi' ? 'ब्लड बैंक' : 'Blood Banks' }}
                         </a>
                         <a href="{{ route('articles.index') }}" class="px-3 py-2 rounded-xl text-sm font-semibold transition-all duration-200 {{ request()->routeIs('articles.*') ? 'bg-teal-50 text-teal-700 border border-teal-100/80 shadow-2xs' : 'text-slate-600 hover:text-slate-900 hover:bg-slate-50' }}">
                             {{ $locale === 'hi' ? 'स्वास्थ्य लेख' : 'Articles' }}
@@ -71,17 +74,17 @@
                         <form action="{{ route('switch.locale') }}" method="POST" class="inline">
                             @csrf
                             <input type="hidden" name="locale" value="en">
-                            <button type="submit" class="flex items-center space-x-1.5 px-3 py-1.5 rounded-lg text-sm font-medium transition-all duration-200 {{ $locale === 'en' ? 'bg-white text-indigo-900 shadow-sm font-semibold' : 'text-slate-600 hover:text-slate-900' }}">
-                                <i data-lucide="globe" class="w-4 h-4 text-teal-600"></i>
-                                <span>English</span>
+                            <button type="submit" class="flex items-center space-x-1 sm:space-x-1.5 px-2 sm:px-3 py-1.5 rounded-lg text-xs sm:text-sm font-medium transition-all duration-200 {{ $locale === 'en' ? 'bg-white text-indigo-900 shadow-sm font-semibold' : 'text-slate-600 hover:text-slate-900' }}">
+                                <i data-lucide="globe" class="w-3.5 h-3.5 sm:w-4 sm:h-4 text-teal-600"></i>
+                                <span><span class="hidden sm:inline">English</span><span class="sm:hidden font-bold">EN</span></span>
                             </button>
                         </form>
                         <form action="{{ route('switch.locale') }}" method="POST" class="inline">
                             @csrf
                             <input type="hidden" name="locale" value="hi">
-                            <button type="submit" class="flex items-center space-x-1.5 px-3 py-1.5 rounded-lg text-sm font-medium transition-all duration-200 {{ $locale === 'hi' ? 'bg-white text-indigo-900 shadow-sm font-semibold' : 'text-slate-600 hover:text-slate-900' }}">
-                                <i data-lucide="globe" class="w-4 h-4 text-teal-600"></i>
-                                <span>हिंदी</span>
+                            <button type="submit" class="flex items-center space-x-1 sm:space-x-1.5 px-2 sm:px-3 py-1.5 rounded-lg text-xs sm:text-sm font-medium transition-all duration-200 {{ $locale === 'hi' ? 'bg-white text-indigo-900 shadow-sm font-semibold' : 'text-slate-600 hover:text-slate-900' }}">
+                                <i data-lucide="globe" class="w-3.5 h-3.5 sm:w-4 sm:h-4 text-teal-600"></i>
+                                <span><span class="hidden sm:inline">हिंदी</span><span class="sm:hidden font-bold">HI</span></span>
                             </button>
                         </form>
                     </div>
@@ -286,8 +289,20 @@
                             </div>
             `;
 
+            if (msg.department_info) {
+                html += `
+                    <div class="bg-teal-50 border border-teal-200 p-3.5 rounded-2xl text-teal-950 text-xs shadow-2xs mt-2 flex items-start space-x-2.5">
+                        <i data-lucide="info" class="w-4 h-4 text-teal-600 shrink-0 mt-0.5 animate-pulse"></i>
+                        <div>
+                            <span class="font-extrabold block text-teal-900 mb-0.5">${currentLocale === 'hi' ? 'अनुशंसित विभाग / परामर्श:' : 'Recommended Department / Action:'}</span>
+                            <span class="leading-relaxed font-medium">${msg.department_info}</span>
+                        </div>
+                    </div>
+                `;
+            }
+
             if (msg.doctors && msg.doctors.length > 0) {
-                html += `<div class="space-y-2 pt-1">`;
+                html += `<div class="space-y-2 pt-2"><h5 class="text-xs font-bold text-slate-400 uppercase tracking-wider">${currentLocale === 'hi' ? 'विशेषज्ञ डॉक्टर' : 'Specialist Doctors'}</h5>`;
                 msg.doctors.forEach(doc => {
                     const fullName = `Dr. ${doc.first_name} ${doc.last_name}`;
                     const deptName = doc.department ? getLocalizedText(doc.department.name) : '';
@@ -324,6 +339,64 @@
                                     </a>
                                 </div>
                             ` : ''}
+                        </div>
+                    `;
+                });
+                html += `</div>`;
+            }
+
+            if (msg.hospitals && msg.hospitals.length > 0) {
+                html += `<div class="space-y-2 pt-2 border-t border-slate-100"><h5 class="text-xs font-bold text-slate-400 uppercase tracking-wider">${currentLocale === 'hi' ? 'अस्पताल व क्लीनिक' : 'Hospitals & Clinics'}</h5>`;
+                msg.hospitals.forEach(hosp => {
+                    const hospName = getLocalizedText(hosp.name);
+                    const emergencyPhone = hosp.emergency_phone || '';
+                    const city = hosp.city || '';
+
+                    html += `
+                        <div class="bg-white p-3 rounded-2xl border border-teal-100 shadow-sm hover:shadow transition-all duration-200 text-slate-800">
+                            <div class="flex justify-between items-start gap-2">
+                                <h4 class="font-bold text-sm text-teal-950 flex items-center space-x-1">
+                                    <span>${hospName}</span>
+                                    ${hosp.is_verified ? '<i data-lucide="check-circle-2" class="w-3.5 h-3.5 text-teal-600 inline shrink-0"></i>' : ''}
+                                </h4>
+                                <span class="text-[10px] bg-teal-50 text-teal-700 px-2 py-0.5 rounded-lg font-bold uppercase tracking-wider shrink-0">
+                                    ${hosp.type || 'Hospital'}
+                                </span>
+                            </div>
+                            <div class="mt-1.5 flex items-start space-x-1 text-xs text-slate-600">
+                                <i data-lucide="map-pin" class="w-3.5 h-3.5 text-slate-400 shrink-0 mt-0.5"></i>
+                                <span class="line-clamp-2">${hosp.address || ''} ${city ? ', ' + city : ''}</span>
+                            </div>
+                            ${emergencyPhone ? `
+                                <div class="mt-2 pt-2 border-t border-slate-100 flex justify-end">
+                                    <a href="tel:${emergencyPhone}" class="text-xs bg-teal-50 hover:bg-teal-600 hover:text-white text-teal-700 font-medium px-3 py-1 rounded-xl shadow-sm transition-all duration-200 flex items-center space-x-1">
+                                        <i data-lucide="phone-call" class="w-3 h-3"></i>
+                                        <span>${currentLocale === 'hi' ? 'कॉल करें' : 'Call Emergency'}</span>
+                                    </a>
+                                </div>
+                            ` : ''}
+                        </div>
+                    `;
+                });
+                html += `</div>`;
+            }
+
+            if (msg.articles && msg.articles.length > 0) {
+                html += `<div class="space-y-2 pt-2 border-t border-slate-100"><h5 class="text-xs font-bold text-slate-400 uppercase tracking-wider">${currentLocale === 'hi' ? 'स्वास्थ्य लेख' : 'Health Articles'}</h5>`;
+                msg.articles.forEach(art => {
+                    const artTitle = getLocalizedText(art.title);
+                    const artExcerpt = getLocalizedText(art.excerpt) || (getLocalizedText(art.content) || '').substring(0, 80) + '...';
+
+                    html += `
+                        <div class="bg-white p-3 rounded-2xl border border-indigo-100 shadow-sm hover:shadow transition-all duration-200 text-slate-800">
+                            <h4 class="font-bold text-sm text-slate-900 line-clamp-1">${artTitle}</h4>
+                            <p class="text-xs text-slate-600 mt-1 line-clamp-2">${artExcerpt}</p>
+                            <div class="mt-2 pt-2 border-t border-slate-100 flex justify-end">
+                                <a href="/articles/${art.id}" target="_blank" class="text-xs bg-indigo-50 hover:bg-indigo-600 hover:text-white text-indigo-700 font-medium px-3 py-1 rounded-xl shadow-sm transition-all duration-200 flex items-center space-x-1">
+                                    <span>${currentLocale === 'hi' ? 'पूरा लेख पढ़ें' : 'Read Article'}</span>
+                                    <i data-lucide="external-link" class="w-3 h-3"></i>
+                                </a>
+                            </div>
                         </div>
                     `;
                 });

@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
 use App\Models\Doctor;
+use App\Services\ReliableHealthcareDirectoryService;
 use Illuminate\Http\Request;
 
 class HealthcareQueryController extends Controller
@@ -116,6 +117,118 @@ class HealthcareQueryController extends Controller
                 'scheme_filter' => $scheme,
             ],
             'data' => $transformed,
+        ]);
+    }
+
+    /**
+     * City-wise emergency-safe directory response for doctors, hospitals, and blood banks.
+     *
+     * GET /api/directory?city=Jaipur&department=Cardiology
+     */
+    public function cityDirectory(Request $request)
+    {
+        $validated = $request->validate([
+            'city' => 'required|string|max:120',
+            'department' => 'nullable|string|max:120',
+        ]);
+
+        $city = trim($validated['city']);
+        $department = isset($validated['department']) ? trim($validated['department']) : null;
+
+        $doctors = ReliableHealthcareDirectoryService::doctorsByCity($city, $department);
+        $hospitals = ReliableHealthcareDirectoryService::hospitalsByCity($city);
+        $bloodBanks = ReliableHealthcareDirectoryService::bloodBanksByCity($city);
+
+        $departmentWise = $doctors
+            ->groupBy(fn($doctor) => $doctor->department?->name_en ?? 'General Medicine')
+            ->map(fn($group) => $group->map(function ($doctor) {
+                return [
+                    'id' => $doctor->id,
+                    'name' => trim('Dr. ' . $doctor->first_name . ' ' . ($doctor->last_name ?? '')),
+                    'department' => $doctor->department?->name_en,
+                    'registration_number' => $doctor->registration_number,
+                    'medical_council' => $doctor->medical_council,
+                    'phone' => $doctor->phone,
+                    'country_code' => $doctor->country_code,
+                    'city' => $doctor->city,
+                    'state' => $doctor->state,
+                    'pincode' => $doctor->pincode,
+                    'address_line1' => $doctor->address_line1,
+                    'address_line2' => $doctor->address_line2,
+                    'latitude' => $doctor->latitude,
+                    'longitude' => $doctor->longitude,
+                    'source' => [
+                        'name' => $doctor->source_name,
+                        'url' => $doctor->source_url,
+                        'confidence_score' => $doctor->source_confidence_score,
+                        'verification_status' => $doctor->source_verification_status,
+                        'last_seen_at' => $doctor->source_last_seen_at,
+                    ],
+                ];
+            })->values())
+            ->toArray();
+
+        return response()->json([
+            'status' => 'success',
+            'filters' => [
+                'city' => $city,
+                'department' => $department,
+                'minimum_confidence' => 85,
+                'verification_status' => 'verified',
+            ],
+            'counts' => [
+                'doctors' => $doctors->count(),
+                'hospitals' => $hospitals->count(),
+                'blood_banks' => $bloodBanks->count(),
+                'departments' => count($departmentWise),
+            ],
+            'doctors_by_department' => $departmentWise,
+            'hospitals' => $hospitals->map(fn($h) => [
+                'id' => $h->id,
+                'name_en' => $h->name_en,
+                'name_hi' => $h->name_hi,
+                'type' => $h->type,
+                'city' => $h->city,
+                'state' => $h->state,
+                'pincode' => $h->pincode,
+                'address' => $h->address,
+                'address_line1' => $h->address_line1,
+                'address_line2' => $h->address_line2,
+                'latitude' => $h->latitude,
+                'longitude' => $h->longitude,
+                'emergency_phone' => $h->emergency_phone,
+                'emergency_country_code' => $h->emergency_country_code,
+                'source' => [
+                    'name' => $h->source_name,
+                    'url' => $h->source_url,
+                    'confidence_score' => $h->source_confidence_score,
+                    'verification_status' => $h->source_verification_status,
+                    'last_seen_at' => $h->source_last_seen_at,
+                ],
+            ])->values(),
+            'blood_banks' => $bloodBanks->map(fn($b) => [
+                'id' => $b->id,
+                'name_en' => $b->name_en,
+                'name_hi' => $b->name_hi,
+                'city' => $b->city,
+                'state' => $b->state,
+                'pincode' => $b->pincode,
+                'address_en' => $b->address_en,
+                'address_hi' => $b->address_hi,
+                'phone' => $b->phone,
+                'country_code' => $b->country_code,
+                'emergency_phone' => $b->emergency_phone,
+                'emergency_country_code' => $b->emergency_country_code,
+                'available_blood_groups' => $b->available_blood_groups,
+                'is_24_7' => $b->is_24_7,
+                'source' => [
+                    'name' => $b->source_name,
+                    'url' => $b->source_url,
+                    'confidence_score' => $b->source_confidence_score,
+                    'verification_status' => $b->source_verification_status,
+                    'last_seen_at' => $b->source_last_seen_at,
+                ],
+            ])->values(),
         ]);
     }
 }

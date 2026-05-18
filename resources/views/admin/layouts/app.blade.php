@@ -159,6 +159,9 @@
         <a href="{{ route('admin.doctors') }}" class="nav-link {{ request()->routeIs('admin.doctors') ? 'active' : '' }}">
             <i class="fa-solid fa-user-doctor"></i> Doctors
         </a>
+        <a href="{{ route('admin.blood_banks') }}" class="nav-link {{ request()->routeIs('admin.blood_banks') ? 'active' : '' }}">
+            <i class="fa-solid fa-droplet"></i> Blood Banks
+        </a>
 
         <div class="nav-group-title">Taxonomy & AI Matching</div>
         <a href="{{ route('admin.departments') }}" class="nav-link {{ request()->routeIs('admin.departments') ? 'active' : '' }}">

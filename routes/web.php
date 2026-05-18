@@ -4,6 +4,7 @@ use App\Http\Controllers\AdminAuthController;
 use App\Http\Controllers\AdminDashboardController;
 use App\Http\Controllers\ArticleCommentController;
 use App\Http\Controllers\ArticleController;
+use App\Http\Controllers\BloodBankController;
 use App\Http\Controllers\ChatbotController;
 use App\Http\Controllers\DoctorController;
 use App\Http\Controllers\HospitalController;
@@ -12,6 +13,7 @@ use App\Http\Controllers\PageController;
 use App\Http\Controllers\SampleDownloadController;
 use App\Http\Controllers\SearchController;
 use App\Http\Controllers\Api\HealthcareQueryController;
+use App\Http\Controllers\Api\ReliableDirectoryController;
 use Illuminate\Foundation\Http\Middleware\ValidateCsrfToken;
 use Illuminate\Support\Facades\Route;
 
@@ -32,6 +34,7 @@ Route::prefix('admin')->middleware('web')->group(function () {
         Route::put('/hospitals/{hospital}', [AdminDashboardController::class, 'updateHospital'])->name('admin.hospitals.update');
         Route::delete('/hospitals/{hospital}', [AdminDashboardController::class, 'destroyHospital'])->name('admin.hospitals.destroy');
         Route::post('/hospitals/import', [AdminDashboardController::class, 'importHospitals'])->name('admin.hospitals.import');
+        Route::get('/hospitals/export', [AdminDashboardController::class, 'exportHospitals'])->name('admin.hospitals.export');
         Route::post('/hospitals/sync', [AdminDashboardController::class, 'syncHospitals'])->name('admin.hospitals.sync');
         Route::get('/hospitals/sync-progress', [AdminDashboardController::class, 'syncHospitalsProgress'])->name('admin.hospitals.sync.progress');
 
@@ -41,8 +44,19 @@ Route::prefix('admin')->middleware('web')->group(function () {
         Route::put('/doctors/{doctor}', [AdminDashboardController::class, 'updateDoctor'])->name('admin.doctors.update');
         Route::delete('/doctors/{doctor}', [AdminDashboardController::class, 'destroyDoctor'])->name('admin.doctors.destroy');
         Route::post('/doctors/import', [AdminDashboardController::class, 'importDoctors'])->name('admin.doctors.import');
+        Route::get('/doctors/export', [AdminDashboardController::class, 'exportDoctors'])->name('admin.doctors.export');
         Route::post('/doctors/sync', [AdminDashboardController::class, 'syncDoctors'])->name('admin.doctors.sync');
         Route::get('/doctors/sync-progress', [AdminDashboardController::class, 'syncDoctorsProgress'])->name('admin.doctors.sync.progress');
+
+        // Blood Banks
+        Route::get('/blood-banks', [AdminDashboardController::class, 'bloodBanks'])->name('admin.blood_banks');
+        Route::post('/blood-banks', [AdminDashboardController::class, 'storeBloodBank'])->name('admin.blood_banks.store');
+        Route::put('/blood-banks/{bloodBank}', [AdminDashboardController::class, 'updateBloodBank'])->name('admin.blood_banks.update');
+        Route::delete('/blood-banks/{bloodBank}', [AdminDashboardController::class, 'destroyBloodBank'])->name('admin.blood_banks.destroy');
+        Route::post('/blood-banks/import', [AdminDashboardController::class, 'importBloodBanks'])->name('admin.blood_banks.import');
+        Route::get('/blood-banks/export', [AdminDashboardController::class, 'exportBloodBanks'])->name('admin.blood_banks.export');
+        Route::post('/blood-banks/sync', [AdminDashboardController::class, 'syncBloodBanks'])->name('admin.blood_banks.sync');
+        Route::get('/blood-banks/sync-progress', [AdminDashboardController::class, 'syncBloodBanksProgress'])->name('admin.blood_banks.sync.progress');
 
         // Departments
         Route::get('/departments', [AdminDashboardController::class, 'departments'])->name('admin.departments');
@@ -76,11 +90,16 @@ Route::prefix('admin')->middleware('web')->group(function () {
 Route::get('/', [SearchController::class, 'index'])->name('home');
 Route::get('/api/search', [SearchController::class, 'search'])->name('api.search');
 Route::get('/api/doctors/nearest', [HealthcareQueryController::class, 'nearestDoctors'])->name('api.doctors.nearest');
+Route::get('/api/directory', [HealthcareQueryController::class, 'cityDirectory'])->name('api.directory.city');
+Route::get('/api/doctors', [ReliableDirectoryController::class, 'doctors'])->name('api.doctors.city');
+Route::get('/api/hospitals', [ReliableDirectoryController::class, 'hospitals'])->name('api.hospitals.city');
+Route::get('/api/blood-banks', [ReliableDirectoryController::class, 'bloodBanks'])->name('api.blood_banks.city');
 Route::post('/switch-locale', [SearchController::class, 'switchLocale'])->name('switch.locale');
 
 // Doctors & Hospitals Directory Routes
 Route::get('/doctors', [DoctorController::class, 'index'])->name('doctors.index');
 Route::get('/hospitals', [HospitalController::class, 'index'])->name('hospitals.index');
+Route::get('/blood-banks', [BloodBankController::class, 'index'])->name('blood_banks.index');
 
 // Articles Routes
 Route::get('/articles', [ArticleController::class, 'index'])->name('articles.index');
@@ -92,6 +111,7 @@ Route::get('/departments', [PageController::class, 'departments'])->name('depart
 Route::get('/diseases', [PageController::class, 'diseases'])->name('diseases.index');
 Route::get('/contact', [PageController::class, 'contact'])->name('contact');
 Route::post('/contact', [PageController::class, 'submitContact'])->name('contact.submit');
+Route::post('/feedback', [PageController::class, 'submitFeedback'])->name('feedback.submit');
 
 Route::get('/privacy-policy', [LegalController::class, 'privacyPolicy'])->name('privacy.policy');
 Route::get('/terms-of-service', [LegalController::class, 'termsOfService'])->name('terms.service');

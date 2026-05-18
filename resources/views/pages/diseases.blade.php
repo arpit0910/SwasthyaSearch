@@ -15,7 +15,7 @@
                     <span>{{ $locale === 'hi' ? 'रोग वर्गीकरण' : 'Disease Taxonomy' }}</span>
                 </span>
                 <h1
-                    class="text-3xl sm:text-5xl font-extrabold tracking-tight mb-4 bg-gradient-to-r from-white via-slate-100 to-slate-300 bg-clip-text text-transparent">
+                    class="text-3xl sm:text-5xl font-extrabold tracking-tight mb-4 bg-gradient-to-r from-white via-slate-100 to-slate-300 bg-clip-text text-transparent py-2 leading-normal">
                     {{ $locale === 'hi' ? 'रोग और लक्षण निर्देशिका' : 'Diseases & Symptoms Directory' }}
                 </h1>
                 <p class="text-slate-300 text-base sm:text-lg leading-relaxed">

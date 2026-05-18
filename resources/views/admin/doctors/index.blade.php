@@ -12,6 +12,9 @@
                     data-bs-target="#syncModal">
                     <i class="fa-solid fa-rotate"></i> Sync Doctors
                 </button>
+                <a href="{{ route('admin.doctors.export') }}" class="btn btn-outline-success d-flex align-items-center gap-2">
+                    <i class="fa-solid fa-file-export"></i> Export CSV
+                </a>
                 <button class="btn btn-outline-secondary d-flex align-items-center gap-2" data-bs-toggle="modal"
                     data-bs-target="#importModal">
                     <i class="fa-solid fa-file-import"></i> Import CSV

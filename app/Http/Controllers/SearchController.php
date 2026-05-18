@@ -20,10 +20,17 @@ class SearchController extends Controller
         $nameColumn = app()->getLocale() === 'hi' ? 'name_hi' : 'name_en';
 
         return view('home.index', [
-            'departments' => Department::where('is_active', true)->orderBy($nameColumn)->get()->map(fn (Department $department) => $this->formatDepartment($department)),
-            'doctors' => Doctor::with(['department', 'hospitals'])->where('is_verified', true)->latest()->take(6)->get()->map(fn (Doctor $doctor) => $this->formatDoctor($doctor)),
+            'departments' => Department::where('is_active', true)->orderBy($nameColumn)->get()->map(fn(Department $department) => $this->formatDepartment($department)),
+            'doctors' => Doctor::with(['department', 'hospitals'])->where('is_verified', true)->latest()->take(6)->get()->map(fn(Doctor $doctor) => $this->formatDoctor($doctor)),
             'articles' => Article::with('comments')->where('is_published', true)->latest()->get(),
             'faqs' => Faq::latest()->get(),
+            'stats' => [
+                'cities' => Hospital::distinct('city')->count('city') ?: 1,
+                'doctors' => Doctor::count(),
+                'departments' => Department::where('is_active', true)->count(),
+                'hospitals' => Hospital::count(),
+                'blood_banks' => \App\Models\BloodBank::count(),
+            ],
         ]);
     }
 
@@ -34,7 +41,7 @@ class SearchController extends Controller
 
         if (empty($query)) {
             return response()->json([
-                'doctors' => Doctor::with(['department', 'hospitals'])->where('is_verified', true)->latest()->take(10)->get()->map(fn (Doctor $doctor) => $this->formatDoctor($doctor)),
+                'doctors' => Doctor::with(['department', 'hospitals'])->where('is_verified', true)->latest()->take(10)->get()->map(fn(Doctor $doctor) => $this->formatDoctor($doctor)),
                 'matched_department' => null,
                 'matched_disease' => null,
             ]);
@@ -99,7 +106,7 @@ class SearchController extends Controller
         $deptName = $matchedDept ? ($locale === 'hi' ? $matchedDept->name_hi : $matchedDept->name_en) : null;
 
         return response()->json([
-            'doctors' => $doctors->map(fn (Doctor $doctor) => $this->formatDoctor($doctor)),
+            'doctors' => $doctors->map(fn(Doctor $doctor) => $this->formatDoctor($doctor)),
             'matched_department' => $deptName,
             'matched_disease' => $matchedDiseaseName,
         ]);
@@ -148,27 +155,33 @@ class SearchController extends Controller
             ],
             'is_verified' => $doctor->is_verified,
             'email' => $doctor->email,
-            'phone' => $doctor->phone ?: ($doctor->hospitals->first()?->emergency_phone ?: '+91-141-2345678'),
+            'phone' => $doctor->phone ?: $doctor->hospitals->first()?->emergency_phone,
             'website' => $doctor->website && !str_contains($doctor->website, 'swasthyasearch.com') ? $doctor->website : null,
             'gender' => $doctor->gender,
-            'languages_spoken' => $doctor->languages_spoken ?: ['English', 'Hindi'],
-            'consultation_fee' => $doctor->consultation_fee ?: ($doctor->hospitals->first()?->pivot?->consultation_fee ?: 500),
+            'languages_spoken' => $doctor->languages_spoken ?: [],
+            'consultation_fee' => $doctor->consultation_fee ?: $doctor->hospitals->first()?->pivot?->consultation_fee,
             'specialization_summary' => $doctor->specialization_summary,
             'awards_recognitions' => $doctor->awards_recognitions ?: [],
             'membership_fellowships' => $doctor->membership_fellowships ?: [],
-            'hospitals' => $doctor->hospitals->map(fn (Hospital $hospital) => [
+            'hospitals' => $doctor->hospitals->map(fn(Hospital $hospital) => [
                 'id' => $hospital->id,
                 'name' => [
                     'en' => $hospital->name_en,
                     'hi' => $hospital->name_hi,
                 ],
                 'type' => $hospital->type,
-                'address' => $hospital->address ?: 'Jaipur, Rajasthan',
-                'city' => $hospital->city ?: 'Jaipur',
-                'latitude' => $hospital->latitude ?: 26.9124,
-                'longitude' => $hospital->longitude ?: 75.7873,
-                'emergency_phone' => $hospital->emergency_phone ?: '+91-141-2345678',
+                'address' => $hospital->address,
+                'city' => $hospital->city,
+                'latitude' => $hospital->latitude,
+                'longitude' => $hospital->longitude,
+                'emergency_phone' => $hospital->emergency_phone,
                 'is_verified' => $hospital->is_verified,
+                'accepts_ayushman' => $hospital->accepts_ayushman || $hospital->accepts_ayushman_card,
+                'accepts_janaadhaar' => $hospital->accepts_janaadhaar || $hospital->accepts_jan_aadhaar,
+                'accepts_cghs' => $hospital->accepts_cghs,
+                'rgahs_approved' => $hospital->rgahs_approved,
+                'is_cashless' => $hospital->is_cashless || $hospital->cashless_treatment_available,
+                'cashless_schemes_list' => $hospital->cashless_schemes_list ?: [],
                 'pivot' => $hospital->pivot,
             ]),
         ];

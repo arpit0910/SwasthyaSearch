@@ -2,12 +2,15 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Article;
 use App\Models\ChatSession;
 use App\Models\Department;
 use App\Models\Disease;
 use App\Models\Doctor;
+use App\Models\Hospital;
 use Exception;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Str;
 
 class ChatbotController extends Controller
@@ -32,13 +35,18 @@ class ChatbotController extends Controller
         $messages = $chatSession->messages ?? [];
         $messages[] = ['sender' => 'user', 'text' => $userMessage, 'timestamp' => now()->toIso8601String()];
 
-        // Interpret message to find relevant doctors/departments
+        // Interpret message to find relevant doctors, hospitals, articles, and department
         $matchedDeptId = null;
-        $matchedDiseaseName = null;
+        $matchedDiseaseNameEn = null;
+        $matchedDiseaseNameHi = null;
+        $departmentInfo = null;
+
         $doctors = collect();
+        $hospitals = collect();
+        $articles = collect();
 
         // Strategy 1: If pgsql, try vector search
-        if (\Illuminate\Support\Facades\DB::getDriverName() === 'pgsql') {
+        if (DB::getDriverName() === 'pgsql') {
             try {
                 $stringObj = Str::of($userMessage);
                 $userEmbedding = method_exists($stringObj, 'toEmbeddings') ? $stringObj->toEmbeddings() : json_encode(array_fill(0, 1536, 0.01));
@@ -49,7 +57,8 @@ class ChatbotController extends Controller
                 if ($diseases->isNotEmpty()) {
                     $firstMatch = $diseases->first();
                     $matchedDeptId = $firstMatch->department_id;
-                    $matchedDiseaseName = $locale === 'hi' ? $firstMatch->name_hi : $firstMatch->name_en;
+                    $matchedDiseaseNameEn = $firstMatch->name_en;
+                    $matchedDiseaseNameHi = $firstMatch->name_hi;
                 }
             } catch (Exception $e) {
                 // Fallback to text matching
@@ -62,12 +71,14 @@ class ChatbotController extends Controller
             foreach ($allDiseases as $disease) {
                 if (!empty($disease->name_en) && stripos($userMessage, $disease->name_en) !== false) {
                     $matchedDeptId = $disease->department_id;
-                    $matchedDiseaseName = $locale === 'hi' ? $disease->name_hi : $disease->name_en;
+                    $matchedDiseaseNameEn = $disease->name_en;
+                    $matchedDiseaseNameHi = $disease->name_hi;
                     break;
                 }
                 if (!empty($disease->name_hi) && mb_stripos($userMessage, $disease->name_hi) !== false) {
                     $matchedDeptId = $disease->department_id;
-                    $matchedDiseaseName = $locale === 'hi' ? $disease->name_hi : $disease->name_en;
+                    $matchedDiseaseNameEn = $disease->name_en;
+                    $matchedDiseaseNameHi = $disease->name_hi;
                     break;
                 }
             }
@@ -90,7 +101,6 @@ class ChatbotController extends Controller
 
         // Strategy 4: Word-by-word LIKE search in DB (for partial keyword queries)
         if (!$matchedDeptId) {
-            // Split message into meaningful words over 3 chars
             $words = array_filter(explode(' ', $userMessage), fn($w) => mb_strlen($w) > 3);
             foreach ($words as $word) {
                 $diseaseMatch = Disease::where('name_en', 'LIKE', "%{$word}%")
@@ -99,7 +109,8 @@ class ChatbotController extends Controller
                     ->first();
                 if ($diseaseMatch) {
                     $matchedDeptId = $diseaseMatch->department_id;
-                    $matchedDiseaseName = $locale === 'hi' ? $diseaseMatch->name_hi : $diseaseMatch->name_en;
+                    $matchedDiseaseNameEn = $diseaseMatch->name_en;
+                    $matchedDiseaseNameHi = $diseaseMatch->name_hi;
                     break;
                 }
 
@@ -113,29 +124,34 @@ class ChatbotController extends Controller
             }
         }
 
+        // Determine department info & fetch doctors
         if ($matchedDeptId) {
+            $dept = Department::find($matchedDeptId);
+            $deptNameEn = $dept ? $dept->name_en : '';
+            $deptNameHi = $dept ? $dept->name_hi : '';
+            $deptName = $locale === 'hi' ? ($deptNameHi ?: $deptNameEn) : $deptNameEn;
+
+            if ($matchedDiseaseNameEn) {
+                $disName = $locale === 'hi' ? ($matchedDiseaseNameHi ?: $matchedDiseaseNameEn) : $matchedDiseaseNameEn;
+                $departmentInfo = $locale === 'hi'
+                    ? "यदि आपको '{$disName}' की समस्या/लक्षण है, तो आपको '{$deptName}' विभाग में जाना चाहिए।"
+                    : "For symptoms related to '{$disName}', you should visit the '{$deptName}' department.";
+            } else {
+                $departmentInfo = $locale === 'hi'
+                    ? "आपके लक्षणों के आधार पर आपको '{$deptName}' विभाग में जाना चाहिए।"
+                    : "Based on your inquiry, you should visit the '{$deptName}' department.";
+            }
+
             $doctors = Doctor::where('department_id', $matchedDeptId)
                 ->with(['department', 'hospitals'])
                 ->where('is_verified', true)
+                ->take(5)
                 ->get();
-            $dept = Department::find($matchedDeptId);
-            $deptName = $dept ? ($locale === 'hi' ? $dept->name_hi : $dept->name_en) : '';
-
-            if ($matchedDiseaseName) {
-                $botReply = $locale === 'hi'
-                    ? "मुझे समझ आया कि आप '{$matchedDiseaseName}' से संबंधित डॉक्टर ढूंढ रहे हैं। यह '{$deptName}' विभाग के अंतर्गत आता है। यहाँ कुछ बेहतरीन डॉक्टर हैं:"
-                    : "I understand you are looking for help with '{$matchedDiseaseName}'. This falls under the '{$deptName}' department. Here are some verified specialists:";
-            } else {
-                $botReply = $locale === 'hi'
-                    ? "यहाँ '{$deptName}' विभाग के हमारे विशेषज्ञ डॉक्टर हैं:"
-                    : "Here are our verified specialists in the '{$deptName}' department:";
-            }
         } else {
             // Check if user is searching for a doctor's name directly
             $doctors = Doctor::where(function ($query) use ($userMessage) {
                 $query->where('first_name', 'LIKE', "%{$userMessage}%")
                     ->orWhere('last_name', 'LIKE', "%{$userMessage}%");
-                // Also check words
                 $words = array_filter(explode(' ', $userMessage), fn($w) => mb_strlen($w) > 2);
                 foreach ($words as $word) {
                     $query->orWhere('first_name', 'LIKE', "%{$word}%")
@@ -144,23 +160,74 @@ class ChatbotController extends Controller
             })
             ->with(['department', 'hospitals'])
             ->where('is_verified', true)
+            ->take(5)
+            ->get();
+        }
+
+        // Fetch Hospitals matching query or general top verified hospitals
+        $hospitals = Hospital::where('is_verified', true)
+            ->where(function ($query) use ($userMessage) {
+                $query->where('name_en', 'LIKE', "%{$userMessage}%")
+                    ->orWhere('name_hi', 'LIKE', "%{$userMessage}%")
+                    ->orWhere('address', 'LIKE', "%{$userMessage}%")
+                    ->orWhere('city', 'LIKE', "%{$userMessage}%")
+                    ->orWhere('type', 'LIKE', "%{$userMessage}%");
+                $words = array_filter(explode(' ', $userMessage), fn($w) => mb_strlen($w) > 3);
+                foreach ($words as $word) {
+                    $query->orWhere('name_en', 'LIKE', "%{$word}%")
+                        ->orWhere('name_hi', 'LIKE', "%{$word}%")
+                        ->orWhere('city', 'LIKE', "%{$word}%");
+                }
+            })
+            ->take(3)
             ->get();
 
-            if ($doctors->isNotEmpty()) {
-                $botReply = $locale === 'hi'
-                    ? "आपके खोज के आधार पर मुझे ये डॉक्टर मिले हैं:"
-                    : "Here are the doctors matching your query:";
-            } else {
-                $botReply = $locale === 'hi'
-                    ? "माफ़ कीजिए, मुझे '{$userMessage}' से संबंधित कोई डॉक्टर या विभाग नहीं मिला। कृपया किसी अन्य लक्षण या डॉक्टर का नाम दर्ज करें।"
-                    : "I'm sorry, I couldn't find any doctors or departments matching '{$userMessage}'. Please try searching for another symptom or specialty.";
-            }
+        if ($hospitals->isEmpty()) {
+            $hospitals = Hospital::where('is_verified', true)->latest()->take(3)->get();
+        }
+
+        // Fetch Articles matching query or general latest articles
+        $articles = Article::where('is_published', true)
+            ->where(function ($query) use ($userMessage) {
+                $query->where('title_en', 'LIKE', "%{$userMessage}%")
+                    ->orWhere('title_hi', 'LIKE', "%{$userMessage}%")
+                    ->orWhere('content_en', 'LIKE', "%{$userMessage}%")
+                    ->orWhere('content_hi', 'LIKE', "%{$userMessage}%");
+                $words = array_filter(explode(' ', $userMessage), fn($w) => mb_strlen($w) > 3);
+                foreach ($words as $word) {
+                    $query->orWhere('title_en', 'LIKE', "%{$word}%")
+                        ->orWhere('title_hi', 'LIKE', "%{$word}%");
+                }
+            })
+            ->take(3)
+            ->get();
+
+        if ($articles->isEmpty()) {
+            $articles = Article::where('is_published', true)->latest()->take(3)->get();
+        }
+
+        // Build bot reply
+        if ($departmentInfo) {
+            $botReply = $locale === 'hi'
+                ? "मैंने आपके लक्षणों का विश्लेषण किया है। नीचे अनुशंसित विभाग, विशेषज्ञ डॉक्टर, प्रमुख अस्पताल और संबंधित स्वास्थ्य लेख दिए गए हैं:"
+                : "I have analyzed your request. Below is the recommended department, along with top doctors, hospitals, and related health articles:";
+        } elseif ($doctors->isNotEmpty() || $hospitals->isNotEmpty() || $articles->isNotEmpty()) {
+            $botReply = $locale === 'hi'
+                ? "यहाँ आपके खोज से संबंधित डॉक्टर, अस्पताल और स्वास्थ्य लेख दिए गए हैं:"
+                : "Here are the doctors, hospitals, and health articles related to your search:";
+        } else {
+            $botReply = $locale === 'hi'
+                ? "माफ़ कीजिए, मुझे '{$userMessage}' से संबंधित कोई सटीक जानकारी नहीं मिली। कृपया किसी अन्य लक्षण या बीमारी का नाम दर्ज करें।"
+                : "I'm sorry, I couldn't find exact details for '{$userMessage}'. Please try searching for another symptom or medical term.";
         }
 
         $messages[] = [
             'sender' => 'bot',
             'text' => $botReply,
+            'department_info' => $departmentInfo,
             'doctors' => $doctors,
+            'hospitals' => $hospitals,
+            'articles' => $articles,
             'timestamp' => now()->toIso8601String(),
         ];
 
@@ -169,7 +236,10 @@ class ChatbotController extends Controller
         return response()->json([
             'session_token' => $sessionToken,
             'reply' => $botReply,
+            'department_info' => $departmentInfo,
             'doctors' => $doctors,
+            'hospitals' => $hospitals,
+            'articles' => $articles,
             'history' => $messages,
         ]);
     }
