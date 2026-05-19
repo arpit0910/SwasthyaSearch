@@ -649,7 +649,16 @@
                             </div>
                 `;
 
-                    if (doc.registration_number) {
+                    const isPlaceholderReg = doc.registration_number && (
+                        doc.registration_number.startsWith('REG-') ||
+                        doc.registration_number.startsWith('RAJ-MC-') ||
+                        doc.registration_number.startsWith('MMC-') ||
+                        doc.registration_number.startsWith('DMC-') ||
+                        doc.registration_number.startsWith('JOD-') ||
+                        doc.registration_number.startsWith('KOT-')
+                    );
+
+                    if (doc.registration_number && !isPlaceholderReg) {
                         html += `
                         <div class="flex items-center justify-between text-xs text-slate-500 px-1 pt-1 border-t border-slate-100">
                             <span>${currentLocale === 'hi' ? 'पंजीकरण संख्या:' : 'Reg No:'}</span>

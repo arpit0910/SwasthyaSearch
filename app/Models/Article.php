@@ -57,6 +57,30 @@ class Article extends Model
         ];
     }
 
+    public function setTitleAttribute($value)
+    {
+        if (is_array($value)) {
+            $this->attributes['title_en'] = $value['en'] ?? null;
+            $this->attributes['title_hi'] = $value['hi'] ?? null;
+        }
+    }
+
+    public function setExcerptAttribute($value)
+    {
+        if (is_array($value)) {
+            $this->attributes['excerpt_en'] = $value['en'] ?? null;
+            $this->attributes['excerpt_hi'] = $value['hi'] ?? null;
+        }
+    }
+
+    public function setContentAttribute($value)
+    {
+        if (is_array($value)) {
+            $this->attributes['content_en'] = $value['en'] ?? null;
+            $this->attributes['content_hi'] = $value['hi'] ?? null;
+        }
+    }
+
     public function getTranslation(string $field, string $locale): ?string
     {
         return $this->{$field . '_' . $locale} ?? null;

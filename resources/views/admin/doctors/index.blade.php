@@ -60,7 +60,23 @@
                                                 class="badge bg-light text-dark border">{{ $doctor->department?->getTranslation('name', 'en') ?? 'General' }}</span>
                                         @endforelse
                                     </td>
-                                    <td><span class="font-monospace">{{ $doctor->registration_number }}</span></td>
+                                    <td>
+                                        @php
+                                            $isPlaceholderReg = !empty($doctor->registration_number) && (
+                                                str_starts_with($doctor->registration_number, 'REG-') ||
+                                                str_starts_with($doctor->registration_number, 'RAJ-MC-') ||
+                                                str_starts_with($doctor->registration_number, 'MMC-') ||
+                                                str_starts_with($doctor->registration_number, 'DMC-') ||
+                                                str_starts_with($doctor->registration_number, 'JOD-') ||
+                                                str_starts_with($doctor->registration_number, 'KOT-')
+                                            );
+                                        @endphp
+                                        @if (!empty($doctor->registration_number) && !$isPlaceholderReg)
+                                            <span class="font-monospace">{{ $doctor->registration_number }}</span>
+                                        @else
+                                            <span class="text-muted fst-italic fs-7">Not Publicly Listed</span>
+                                        @endif
+                                    </td>
                                     <td>{{ $doctor->experience_years }} years</td>
                                     <td>
                                         @if ($doctor->is_verified)

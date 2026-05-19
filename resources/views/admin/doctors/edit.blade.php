@@ -73,10 +73,19 @@
                         <div class="col-md-6">
                             <div class="row g-3">
                                 <div class="col-md-6">
-                                    <label class="form-label fw-semibold">Medical Registration No. <span
-                                            class="text-danger">*</span></label>
+                                    <label class="form-label fw-semibold">Medical Registration No.</label>
+                                    @php
+                                        $isPlaceholderReg = !empty($doctor->registration_number) && (
+                                            str_starts_with($doctor->registration_number, 'REG-') ||
+                                            str_starts_with($doctor->registration_number, 'RAJ-MC-') ||
+                                            str_starts_with($doctor->registration_number, 'MMC-') ||
+                                            str_starts_with($doctor->registration_number, 'DMC-') ||
+                                            str_starts_with($doctor->registration_number, 'JOD-') ||
+                                            str_starts_with($doctor->registration_number, 'KOT-')
+                                        );
+                                    @endphp
                                     <input type="text" name="registration_number" class="form-control"
-                                        value="{{ $doctor->registration_number }}" required>
+                                        value="{{ $isPlaceholderReg ? '' : $doctor->registration_number }}" placeholder="Not Publicly Listed">
                                 </div>
                                 <div class="col-md-6">
                                     <label class="form-label fw-semibold">Experience (Years) <span

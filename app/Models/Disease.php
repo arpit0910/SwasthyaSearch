@@ -35,6 +35,14 @@ class Disease extends Model
         ];
     }
 
+    public function setNameAttribute($value)
+    {
+        if (is_array($value)) {
+            $this->attributes['name_en'] = $value['en'] ?? null;
+            $this->attributes['name_hi'] = $value['hi'] ?? null;
+        }
+    }
+
     public function getTranslation(string $field, string $locale): ?string
     {
         return $this->{$field . '_' . $locale} ?? null;

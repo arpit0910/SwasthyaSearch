@@ -111,6 +111,14 @@ class Doctor extends Model implements HasMedia
         ];
     }
 
+    public function setAboutAttribute($value)
+    {
+        if (is_array($value)) {
+            $this->attributes['about_en'] = $value['en'] ?? null;
+            $this->attributes['about_hi'] = $value['hi'] ?? null;
+        }
+    }
+
     public function getTranslation(string $field, string $locale): ?string
     {
         return $this->{$field . '_' . $locale} ?? null;

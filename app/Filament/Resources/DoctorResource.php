@@ -4,7 +4,7 @@ namespace App\Filament\Resources;
 
 use App\Filament\Resources\DoctorResource\Pages;
 use App\Models\Doctor;
-use Filament\Actions;
+use Filament\Tables\Actions;
 use Filament\Forms;
 use Filament\Schemas\Schema;
 use Filament\Resources\Resource;
@@ -38,11 +38,10 @@ class DoctorResource extends Resource
                             ->searchable()
                             ->preload(),
                         Forms\Components\TextInput::make('registration_number')
-                            ->required()
                             ->maxLength(255)
-                            ->unique(ignoreRecord: true),
+                            ->unique(ignoreRecord: true)
+                            ->formatStateUsing(fn ($state) => (str_starts_with($state ?? '', 'REG-') || str_starts_with($state ?? '', 'RAJ-MC-') || str_starts_with($state ?? '', 'MMC-') || str_starts_with($state ?? '', 'DMC-') || str_starts_with($state ?? '', 'JOD-') || str_starts_with($state ?? '', 'KOT-')) ? '' : $state),
                         Forms\Components\TextInput::make('medical_council')
-                            ->required()
                             ->maxLength(255),
                         Forms\Components\TextInput::make('experience_years')
                             ->required()
@@ -83,7 +82,8 @@ class DoctorResource extends Resource
                     ->badge(),
                 Tables\Columns\TextColumn::make('registration_number')
                     ->searchable()
-                    ->fontFamily('mono'),
+                    ->fontFamily('mono')
+                    ->formatStateUsing(fn ($state) => (str_starts_with($state ?? '', 'REG-') || str_starts_with($state ?? '', 'RAJ-MC-') || str_starts_with($state ?? '', 'MMC-') || str_starts_with($state ?? '', 'DMC-') || str_starts_with($state ?? '', 'JOD-') || str_starts_with($state ?? '', 'KOT-')) ? 'Not Publicly Listed' : $state),
                 Tables\Columns\TextColumn::make('experience_years')
                     ->label('Experience')
                     ->sortable()

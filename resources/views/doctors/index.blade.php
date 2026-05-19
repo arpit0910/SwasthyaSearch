@@ -200,7 +200,17 @@
                         <!-- Collapsible Content (Hidden on Mobile by default, visible on MD+) -->
                         <div id="doc-{{ $doc->id }}-content" class="hidden md:flex flex-col space-y-4 flex-1">
 
-                        @if (!empty($doc->registration_number))
+                        @php
+                            $isPlaceholderReg = !empty($doc->registration_number) && (
+                                str_starts_with($doc->registration_number, 'REG-') ||
+                                str_starts_with($doc->registration_number, 'RAJ-MC-') ||
+                                str_starts_with($doc->registration_number, 'MMC-') ||
+                                str_starts_with($doc->registration_number, 'DMC-') ||
+                                str_starts_with($doc->registration_number, 'JOD-') ||
+                                str_starts_with($doc->registration_number, 'KOT-')
+                            );
+                        @endphp
+                        @if (!empty($doc->registration_number) && !$isPlaceholderReg)
                             <div class="flex items-center justify-between text-xs text-slate-500 px-1 pt-1 border-t border-slate-100">
                                 <span>{{ $locale === 'hi' ? 'पंजीकरण संख्या:' : 'Reg No:' }}</span>
                                 <span class="font-mono font-semibold text-slate-700">{{ $doc->registration_number }} {{ !empty($doc->medical_council) ? "({$doc->medical_council})" : '' }}</span>
@@ -308,9 +318,15 @@
                                         </div>
 
                                         <div class="pt-2 mt-1 border-t border-slate-200/60 flex items-center justify-between gap-2">
-                                            <span class="text-[10px] text-slate-400 italic">
-                                                {{ !empty($h->emergency_phone) ? ($locale === 'hi' ? 'संपर्क:' : 'Tel:') . ' ' . $h->emergency_phone : '' }}
-                                            </span>
+                                            @php $hPhone = !empty($h->emergency_phone) ? $h->emergency_phone : (!empty($h->phone) ? $h->phone : ''); @endphp
+                                            @if(!empty($hPhone))
+                                                <a href="tel:{{ $hPhone }}" class="inline-flex items-center space-x-1 text-xs text-teal-600 hover:text-teal-700 font-bold bg-teal-50 hover:bg-teal-100/80 px-2.5 py-1 rounded-lg border border-teal-100 transition-all shadow-2xs">
+                                                    <i data-lucide="phone-call" class="w-3 h-3 text-teal-600"></i>
+                                                    <span>{{ $locale === 'hi' ? 'अस्पताल संपर्क' : 'Hospital Tel' }}: {{ $hPhone }}</span>
+                                                </a>
+                                            @else
+                                                <span class="text-[10px] text-slate-400 italic">{{ $locale === 'hi' ? 'संपर्क उपलब्ध नहीं' : 'Tel Unlisted' }}</span>
+                                            @endif
                                             <a
                                                 href="https://www.google.com/maps/dir/?api=1&destination={{ !empty($h->latitude) ? $h->latitude . ',' . $h->longitude : urlencode(($h->address ?? '') . ', ' . ($h->city ?? 'Jaipur')) }}"
                                                 target="_blank"
@@ -329,13 +345,24 @@
 
                     <!-- Card Footer -->
                     <div class="p-6 pt-0 bg-white flex flex-col sm:flex-row gap-2.5 sm:gap-3">
-                        <a
-                            href="{{ !empty($doc->phone) ? 'tel:' . $doc->phone : '#' }}"
-                            class="w-full sm:flex-1 bg-teal-600 hover:bg-teal-700 text-white font-bold py-3 px-4 rounded-xl shadow-md hover:shadow-lg transition-all duration-200 text-xs uppercase tracking-wider flex items-center justify-center space-x-2"
-                        >
-                            <i data-lucide="phone" class="w-4 h-4 text-teal-100"></i>
-                            <span>{{ $locale === 'hi' ? 'अभी कॉल करें' : 'Call Now' }}</span>
-                        </a>
+                        @if(!empty($doc->phone))
+                            <a
+                                href="tel:{{ $doc->phone }}"
+                                class="w-full sm:flex-1 bg-teal-600 hover:bg-teal-700 text-white font-bold py-3 px-4 rounded-xl shadow-md hover:shadow-lg transition-all duration-200 text-xs uppercase tracking-wider flex items-center justify-center space-x-2"
+                            >
+                                <i data-lucide="phone" class="w-4 h-4 text-teal-100"></i>
+                                <span>{{ $locale === 'hi' ? 'डॉक्टर / क्लिनिक को कॉल करें' : 'Call Doctor / Clinic' }}</span>
+                            </a>
+                        @else
+                            <button
+                                type="button"
+                                onclick="alert('{{ $locale === 'hi' ? 'डॉक्टर का सीधा नंबर उपलब्ध नहीं है। कृपया ऊपर दिए गए अस्पताल संपर्क नंबरों का उपयोग करें।' : 'Direct doctor mobile/clinic number is unlisted. Please use the hospital contact numbers listed above.' }}')"
+                                class="w-full sm:flex-1 bg-slate-100 text-slate-400 font-bold py-3 px-4 rounded-xl border border-slate-200 text-xs uppercase tracking-wider flex items-center justify-center space-x-2 cursor-not-allowed"
+                            >
+                                <i data-lucide="phone-off" class="w-4 h-4 text-slate-400"></i>
+                                <span>{{ $locale === 'hi' ? 'डॉक्टर संपर्क उपलब्ध नहीं' : 'Doctor Tel Unlisted' }}</span>
+                            </button>
+                        @endif
                         @if (!empty($doc->website))
                             <a
                                 href="{{ str_starts_with($doc->website, 'http') ? $doc->website : 'https://' . $doc->website }}"

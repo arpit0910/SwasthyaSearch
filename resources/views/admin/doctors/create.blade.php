@@ -59,8 +59,8 @@
                         <div class="col-md-6">
                             <div class="row g-3">
                                 <div class="col-md-6">
-                                    <label class="form-label fw-semibold">Medical Registration No. <span class="text-danger">*</span></label>
-                                    <input type="text" name="registration_number" class="form-control" required placeholder="MCI-55412">
+                                    <label class="form-label fw-semibold">Medical Registration No.</label>
+                                    <input type="text" name="registration_number" class="form-control" placeholder="Not Publicly Listed">
                                 </div>
                                 <div class="col-md-6">
                                     <label class="form-label fw-semibold">Experience (Years) <span class="text-danger">*</span></label>

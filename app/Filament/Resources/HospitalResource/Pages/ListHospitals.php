@@ -74,6 +74,39 @@ class ListHospitals extends ListRecords
                         ->success()
                         ->send();
                 }),
+            Action::make('sync')
+                ->label('Live Data Sync')
+                ->icon('heroicon-o-arrow-path')
+                ->color('success')
+                ->modalHeading('Live Scrape & Synchronize Hospitals')
+                ->modalDescription('Select a city to live-scrape and synchronize verified hospitals. Existing records will be updated automatically with high-fidelity data.')
+                ->form([
+                    \Filament\Forms\Components\Select::make('city')
+                        ->label('Select City')
+                        ->options([
+                            'Jaipur' => 'Jaipur',
+                            'Delhi' => 'Delhi',
+                            'Jodhpur' => 'Jodhpur',
+                            'Kota' => 'Kota',
+                            'Mumbai' => 'Mumbai',
+                            'Pune' => 'Pune',
+                            'Bangalore' => 'Bangalore',
+                            'Hyderabad' => 'Hyderabad',
+                            'Ahmedabad' => 'Ahmedabad',
+                            'Kolkata' => 'Kolkata',
+                            'Chennai' => 'Chennai',
+                        ])
+                        ->required()
+                        ->default('Jaipur'),
+                ])
+                ->action(function (array $data) {
+                    \App\Services\ScraperService::scrapeHospitals($data['city'], false, null, 'scrape_progress_hospitals');
+                    \Filament\Notifications\Notification::make()
+                        ->title('Synchronization Complete')
+                        ->body("Successfully synchronized hospitals for {$data['city']}!")
+                        ->success()
+                        ->send();
+                }),
             Actions\CreateAction::make(),
         ];
     }

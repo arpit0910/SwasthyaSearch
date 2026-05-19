@@ -50,7 +50,39 @@ class SearchController extends Controller
         $matchedDeptId = null;
         $matchedDiseaseName = null;
 
-        // 1. Vector Similarity Search or Fallback Text Search on Diseases
+        // 1. Prioritize Direct Doctor Name / Specialization Matching
+        $doctorQuery = Doctor::with(['department', 'hospitals'])->where('is_verified', true);
+        $terms = array_filter(explode(' ', trim($query)));
+        $nameMatchedDoctors = collect();
+
+        if (!empty($terms)) {
+            $nameQuery = clone $doctorQuery;
+            $nameQuery->where(function ($q) use ($terms) {
+                foreach ($terms as $term) {
+                    $q->where(function ($subQ) use ($term) {
+                        $subQ->where('first_name', 'LIKE', "%{$term}%")
+                             ->orWhere('last_name', 'LIKE', "%{$term}%")
+                             ->orWhere('specialization_summary', 'LIKE', "%{$term}%")
+                             ->orWhere('about_en', 'LIKE', "%{$term}%")
+                             ->orWhere('about_hi', 'LIKE', "%{$term}%");
+                    });
+                }
+            });
+            $nameMatchedDoctors = $nameQuery->get();
+        }
+
+        if ($nameMatchedDoctors->isNotEmpty()) {
+            $firstDocDept = $nameMatchedDoctors->first()->department;
+            $deptName = $firstDocDept ? ($locale === 'hi' ? $firstDocDept->name_hi : $firstDocDept->name_en) : null;
+
+            return response()->json([
+                'doctors' => $nameMatchedDoctors->map(fn(Doctor $doctor) => $this->formatDoctor($doctor)),
+                'matched_department' => $deptName,
+                'matched_disease' => null,
+            ]);
+        }
+
+        // 2. Vector Similarity Search or Fallback Text Search on Diseases (If no direct doctor match)
         try {
             /** @var mixed $stringObj */
             $stringObj = Str::of($query);
@@ -87,19 +119,13 @@ class SearchController extends Controller
             }
         }
 
-        // 2. Search Doctors (Direct Matching or Filtered by Department)
         if ($matchedDeptId) {
             $doctors = Doctor::where('department_id', $matchedDeptId)
                 ->with(['department', 'hospitals'])
                 ->where('is_verified', true)
                 ->get();
         } else {
-            // Search doctor name
-            $doctors = Doctor::where('first_name', 'LIKE', "%{$query}%")
-                ->orWhere('last_name', 'LIKE', "%{$query}%")
-                ->with(['department', 'hospitals'])
-                ->where('is_verified', true)
-                ->get();
+            $doctors = collect();
         }
 
         $matchedDept = $matchedDeptId ? Department::find($matchedDeptId) : null;

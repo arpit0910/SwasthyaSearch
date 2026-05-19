@@ -4,7 +4,7 @@ namespace App\Filament\Resources;
 
 use App\Filament\Resources\DiseaseResource\Pages;
 use App\Models\Disease;
-use Filament\Actions;
+use Filament\Tables\Actions;
 use Filament\Forms;
 use Filament\Schemas\Schema;
 use Filament\Resources\Resource;

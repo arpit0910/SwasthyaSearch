@@ -4,7 +4,7 @@ namespace App\Filament\Resources;
 
 use App\Filament\Resources\HospitalResource\Pages;
 use App\Models\Hospital;
-use Filament\Actions;
+use Filament\Tables\Actions;
 use Filament\Forms;
 use Filament\Schemas\Schema;
 use Filament\Resources\Resource;

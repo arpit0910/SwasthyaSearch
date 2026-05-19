@@ -36,6 +36,22 @@ class Faq extends Model
         ];
     }
 
+    public function setQuestionAttribute($value)
+    {
+        if (is_array($value)) {
+            $this->attributes['question_en'] = $value['en'] ?? null;
+            $this->attributes['question_hi'] = $value['hi'] ?? null;
+        }
+    }
+
+    public function setAnswerAttribute($value)
+    {
+        if (is_array($value)) {
+            $this->attributes['answer_en'] = $value['en'] ?? null;
+            $this->attributes['answer_hi'] = $value['hi'] ?? null;
+        }
+    }
+
     public function getTranslation(string $field, string $locale): ?string
     {
         return $this->{$field . '_' . $locale} ?? null;

@@ -81,6 +81,39 @@ class ListDoctors extends ListRecords
                         ->success()
                         ->send();
                 }),
+            Action::make('sync')
+                ->label('Live Data Sync')
+                ->icon('heroicon-o-arrow-path')
+                ->color('success')
+                ->modalHeading('Live Scrape & Synchronize Directory')
+                ->modalDescription('Select a city to live-scrape and synchronize verified healthcare records. Existing records will be updated automatically with high-fidelity data.')
+                ->form([
+                    \Filament\Forms\Components\Select::make('city')
+                        ->label('Select City')
+                        ->options([
+                            'Jaipur' => 'Jaipur',
+                            'Delhi' => 'Delhi',
+                            'Jodhpur' => 'Jodhpur',
+                            'Kota' => 'Kota',
+                            'Mumbai' => 'Mumbai',
+                            'Pune' => 'Pune',
+                            'Bangalore' => 'Bangalore',
+                            'Hyderabad' => 'Hyderabad',
+                            'Ahmedabad' => 'Ahmedabad',
+                            'Kolkata' => 'Kolkata',
+                            'Chennai' => 'Chennai',
+                        ])
+                        ->required()
+                        ->default('Jaipur'),
+                ])
+                ->action(function (array $data) {
+                    \App\Services\ScraperService::scrapeDoctors($data['city'], false, null, 'scrape_progress_doctors');
+                    \Filament\Notifications\Notification::make()
+                        ->title('Synchronization Complete')
+                        ->body("Successfully synchronized doctors for {$data['city']}!")
+                        ->success()
+                        ->send();
+                }),
             Actions\CreateAction::make(),
         ];
     }

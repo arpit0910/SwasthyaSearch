@@ -63,7 +63,11 @@ class HealthcareSyncService
                 }
             }
 
-            // Rate limiting / Throttling between chunks to prevent dropping records or overwhelming DB/APIs
+            unset($chunk);
+            if (function_exists('gc_collect_cycles')) {
+                gc_collect_cycles();
+            }
+
             usleep(250000); // 250ms sleep
         }
 
@@ -95,7 +99,11 @@ class HealthcareSyncService
                 }
             }
 
-            // Rate limiting / Throttling between chunks
+            unset($chunk);
+            if (function_exists('gc_collect_cycles')) {
+                gc_collect_cycles();
+            }
+
             usleep(250000); // 250ms sleep
         }
 
@@ -180,7 +188,7 @@ class HealthcareSyncService
             }
         }
 
-        $rawPhone = $sourceData['emergency_phone'] ?? ($existingHospital?->emergency_phone ?: '+91-141-' . rand(2000000, 2999999));
+        $rawPhone = $sourceData['emergency_phone'] ?? ($existingHospital?->emergency_phone ?: null);
         $phoneParts = self::splitPhone($rawPhone);
 
         return Hospital::updateOrCreate(
@@ -199,13 +207,11 @@ class HealthcareSyncService
                 'emergency_country_code' => $sourceData['emergency_country_code'] ?? $phoneParts['country_code'],
                 'emergency_phone' => $phoneParts['phone'],
                 'is_verified' => true,
-                // Old schema flags
                 'accepts_ayushman' => $schemes['accepts_ayushman_card'],
                 'accepts_janaadhaar' => $schemes['accepts_jan_aadhaar'],
                 'accepts_cghs' => $schemes['rgahs_approved'] || ($sourceData['accepts_cghs'] ?? false),
                 'is_cashless' => $schemes['cashless_treatment_available'],
                 'cashless_schemes_list' => $schemes['cashless_schemes_list'],
-                // New explicit schema flags
                 'cashless_treatment_available' => $schemes['cashless_treatment_available'],
                 'accepts_ayushman_card' => $schemes['accepts_ayushman_card'],
                 'accepts_jan_aadhaar' => $schemes['accepts_jan_aadhaar'],
@@ -277,25 +283,27 @@ class HealthcareSyncService
         // Normalize Cashless Schemes & Flags for independent clinic empanelment
         $schemes = self::normalizeSchemes($sourceData);
 
-        $existingDoctor = Doctor::where('first_name', $firstName)
-            ->where('last_name', $lastName)
-            ->first();
+        $regNumber = $sourceData['registration_number'] ?? null;
+        if (empty($regNumber)) {
+            $regNumber = 'REG-' . strtoupper(substr(md5($firstName . $lastName . $addressData['city'] . $existingDept->id . ($sourceData['hospital_name_en'] ?? $addressData['full_address'])), 0, 10));
+        }
 
-        $regNumber = $existingDoctor?->registration_number ?: ($sourceData['registration_number'] ?? ('RAJ-MC-' . rand(10000, 99999)));
-        $experience = (int)($sourceData['experience_years'] ?? ($existingDoctor?->experience_years ?: rand(8, 25)));
+        $existingDoctor = Doctor::where('registration_number', $regNumber)->first();
+
+        $experience = (int)($sourceData['experience_years'] ?? ($existingDoctor?->experience_years ?: 0));
         $degrees = !empty($sourceData['education_degrees']) ? $sourceData['education_degrees'] : ($existingDoctor?->education_degrees ?: null);
-        $fee = (float)($sourceData['consultation_fee'] ?? ($existingDoctor?->consultation_fee ?: 500));
-        $rawPhone = $sourceData['phone'] ?? ($existingDoctor?->phone ?: '+91-141-' . rand(2000000, 2999999));
+        $fee = (float)($sourceData['consultation_fee'] ?? ($existingDoctor?->consultation_fee ?: 0));
+        $rawPhone = $sourceData['phone'] ?? ($existingDoctor?->phone ?: null);
         $phoneParts = self::splitPhone($rawPhone);
         $website = $sourceData['website'] ?? ($existingDoctor?->website && !str_contains($existingDoctor->website, 'swasthyasearch.com') ? $existingDoctor->website : null);
 
         $doctor = Doctor::updateOrCreate(
             [
-                'first_name' => $firstName,
-                'last_name' => $lastName,
+                'registration_number' => $regNumber,
             ],
             [
-                'registration_number' => $regNumber,
+                'first_name' => $firstName,
+                'last_name' => $lastName,
                 'department_id' => $existingDept->id,
                 'medical_council' => $sourceData['medical_council'] ?? ($existingDoctor?->medical_council ?: 'Medical Council of India'),
                 'education_degrees' => $degrees,
@@ -315,8 +323,7 @@ class HealthcareSyncService
                 'longitude' => $coords['longitude'],
                 'website' => $website,
                 'languages_spoken' => $existingDoctor?->languages_spoken ?: ['English', 'Hindi'],
-                'gender' => $sourceData['gender'] ?? ($existingDoctor?->gender ?: (rand(0, 1) ? 'Male' : 'Female')),
-                // Independent clinic scheme flags
+                'gender' => $sourceData['gender'] ?? ($existingDoctor?->gender ?: 'Unspecified'),
                 'cashless_treatment_available' => $schemes['cashless_treatment_available'],
                 'accepts_ayushman_card' => $schemes['accepts_ayushman_card'],
                 'accepts_jan_aadhaar' => $schemes['accepts_jan_aadhaar'],
@@ -380,29 +387,27 @@ class HealthcareSyncService
         $addressLine2 = trim($data['address_line2'] ?? '');
         $rawAddress = trim($data['address'] ?? '');
 
-        // If line1 is empty but rawAddress is present, parse raw address
         if (empty($addressLine1) && !empty($rawAddress)) {
             $parts = array_map('trim', explode(',', $rawAddress));
-            $addressLine1 = $parts[0] ?? "Plot No. " . rand(10, 200);
-            $addressLine2 = $parts[1] ?? (isset($parts[2]) ? $parts[1] : "Main Medical Avenue");
+            $addressLine1 = $parts[0] ?? null;
+            $addressLine2 = $parts[1] ?? (isset($parts[2]) ? $parts[1] : null);
 
-            // Try to extract pincode from raw address if missing
             if (empty($pincode) && preg_match('/\b(30\d{4}|11\d{4}|40\d{4}|50\d{4}|70\d{4})\b/', $rawAddress, $matches)) {
                 $pincode = $matches[1];
             }
         }
 
         if (empty($addressLine1)) {
-            $addressLine1 = "Central Healthcare Plaza, Sector " . rand(1, 15);
+            $addressLine1 = "Main Medical Avenue";
         }
         if (empty($addressLine2)) {
-            $addressLine2 = "Main Medical Avenue";
+            $addressLine2 = $city;
         }
         if (empty($pincode)) {
-            $pincode = '3020' . str_pad((string)rand(1, 30), 2, '0', STR_PAD_LEFT);
+            $pincode = null;
         }
 
-        $fullAddress = "{$addressLine1}, {$addressLine2}, {$city}, {$state} - {$pincode}";
+        $fullAddress = "{$addressLine1}, {$addressLine2}, {$city}, {$state}" . ($pincode ? " - {$pincode}" : "");
 
         return [
             'address_line1' => $addressLine1,
@@ -419,7 +424,6 @@ class HealthcareSyncService
      */
     public static function geocodeAddress(string $addressLine1, ?string $pincode, string $city, string $state, ?float $lat = null, ?float $lng = null): array
     {
-        // If valid coordinates are already provided in source data, use them directly
         if ($lat !== null && $lng !== null && $lat != 0 && $lng != 0) {
             return [
                 'latitude' => (float)$lat,
@@ -430,10 +434,11 @@ class HealthcareSyncService
         $query = trim("{$addressLine1}, {$city}, {$state}, {$pincode}");
         $apiKey = config('services.google_maps.key');
 
-        // --- 1. GOOGLE MAPS GEOCODING API INTEGRATION ---
         if (!empty($apiKey)) {
             try {
-                $response = Http::timeout(5)->get('https://maps.googleapis.com/maps/api/geocode/json', [
+                $response = Http::retry(3, function ($attempt) {
+                    return $attempt * 1000;
+                })->timeout(5)->get('https://maps.googleapis.com/maps/api/geocode/json', [
                     'address' => $query,
                     'key' => $apiKey,
                 ]);
@@ -450,9 +455,10 @@ class HealthcareSyncService
             }
         }
 
-        // --- 2. OPENSTREETMAP NOMINATIM API INTEGRATION (FREE FALLBACK) ---
         try {
-            $response = Http::withoutVerifying()->withHeaders([
+            $response = Http::withoutVerifying()->retry(3, function ($attempt) {
+                return $attempt * 1000;
+            })->withHeaders([
                 'User-Agent' => 'SwasthyaSearch GeoSyncService/1.0 (hello@swasthyasearch.com)',
             ])->timeout(3)->get('https://nominatim.openstreetmap.org/search', [
                 'q' => "{$city}, {$state}, India",
@@ -462,7 +468,6 @@ class HealthcareSyncService
 
             if ($response->successful() && !empty($response->json())) {
                 $result = $response->json(0);
-                // Add a small deterministic offset based on pincode/address hash so markers don't overlap exactly
                 $hash = crc32($query);
                 $latOffset = (($hash % 100) - 50) / 15000;
                 $lngOffset = ((($hash / 100) % 100) - 50) / 15000;
@@ -473,35 +478,13 @@ class HealthcareSyncService
                 ];
             }
         } catch (Exception $e) {
-            Log::warning("OSM Nominatim Geocoding API failed: " . $e->getMessage() . ". Using deterministic bounding box fallback.");
+            Log::warning("OSM Nominatim Geocoding API failed: " . $e->getMessage() . ". Using nullable fallback.");
         }
 
-        // --- 3. ROBUST DETERMINISTIC BOUNDING BOX FALLBACK ---
-        // Base coordinates for major cities
-        $cityCoords = [
-            'jaipur' => ['lat' => 26.9124, 'lng' => 75.7873],
-            'delhi' => ['lat' => 28.6139, 'lng' => 77.2090],
-            'mumbai' => ['lat' => 19.0760, 'lng' => 72.8777],
-            'bangalore' => ['lat' => 12.9716, 'lng' => 77.5946],
-            'kolkata' => ['lat' => 22.5726, 'lng' => 88.3639],
-            'jodhpur' => ['lat' => 26.2389, 'lng' => 73.0243],
-            'udaipur' => ['lat' => 24.5854, 'lng' => 73.6855],
-            'kota' => ['lat' => 25.2138, 'lng' => 75.8648],
-            'ajmer' => ['lat' => 26.4499, 'lng' => 74.6399],
-            'bikaner' => ['lat' => 28.0229, 'lng' => 73.3119],
-        ];
-
-        $cityKey = strtolower(trim($city));
-        $base = $cityCoords[$cityKey] ?? ['lat' => 26.9124, 'lng' => 75.7873];
-
-        // Generate consistent deterministic offset using crc32 hash of address/pincode
-        $hash = crc32($query);
-        $latOffset = (($hash % 100) - 50) / 12000;
-        $lngOffset = ((($hash / 100) % 100) - 50) / 12000;
-
+        // Return null coordinates if geocoding fails to avoid inventing guessed coordinates
         return [
-            'latitude' => round($base['lat'] + $latOffset, 8),
-            'longitude' => round($base['lng'] + $lngOffset, 8),
+            'latitude' => null,
+            'longitude' => null,
         ];
     }
 
@@ -520,7 +503,6 @@ class HealthcareSyncService
             $schemesList = array_map('trim', explode(',', $schemesList));
         }
 
-        // Auto-populate list if flags are true
         if ($ayushman && !in_array('Ayushman Bharat Yojana (PM-JAY)', $schemesList)) {
             $schemesList[] = 'Ayushman Bharat Yojana (PM-JAY)';
         }
@@ -531,7 +513,6 @@ class HealthcareSyncService
             $schemesList[] = 'RGAHS / CGHS Approved Panel';
         }
 
-        // If cashless is true but list is empty, provide standard TPA list
         if ($cashless && empty($schemesList)) {
             $schemesList = [
                 'Star Health & Allied Insurance TPA',
@@ -653,6 +634,8 @@ class HealthcareSyncService
             'jaipur' => 'जयपुर',
             'delhi' => 'दिल्ली',
             'new delhi' => 'नई दिल्ली',
+            'jodhpur' => 'जोधपुर',
+            'kota' => 'कोटा',
             'mumbai' => 'मुंबई',
             'bangalore' => 'बैंगलोर',
             'bengaluru' => 'बैंगलोर',
