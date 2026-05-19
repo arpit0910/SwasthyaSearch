@@ -516,7 +516,7 @@ class BaseScraperService
         return [];
     }
 
-    private static function parseDoctorHtml(string $html, string $cityName, string $expectedDept = 'General Medicine'): array
+    protected static function parseDoctorHtml(string $html, string $cityName, string $expectedDept = 'General Medicine'): array
     {
         $doctors = [];
         libxml_use_internal_errors(true);
@@ -602,7 +602,7 @@ class BaseScraperService
         return $doctors;
     }
 
-    private static function enrichDoctorProfile(array $doc, string $cityName): array
+    protected static function enrichDoctorProfile(array $doc, string $cityName): array
     {
         if (empty($doc['profile_url'])) {
             return $doc;
@@ -718,7 +718,7 @@ class BaseScraperService
         return $doc;
     }
 
-    private static function parseHospitalHtml(string $html, string $cityName): array
+    protected static function parseHospitalHtml(string $html, string $cityName): array
     {
         $hospitals = [];
         libxml_use_internal_errors(true);
@@ -786,7 +786,7 @@ class BaseScraperService
         return $map[$deptEn] ?? ['MBBS', 'MD / MS', 'DNB'];
     }
 
-    private static function filterDoctorRecords(array $records, string $cityName): array
+    protected static function filterDoctorRecords(array $records, string $cityName): array
     {
         $accepted = [];
         $rejected = 0;
@@ -856,7 +856,7 @@ class BaseScraperService
         return [$accepted, $rejected];
     }
 
-    private static function filterHospitalRecords(array $records, string $cityName): array
+    protected static function filterHospitalRecords(array $records, string $cityName): array
     {
         $accepted = [];
         $rejected = 0;
@@ -891,7 +891,7 @@ class BaseScraperService
         return [$accepted, $rejected];
     }
 
-    private static function filterBloodBankRecords(array $records, string $cityName): array
+    protected static function filterBloodBankRecords(array $records, string $cityName): array
     {
         $accepted = [];
         $rejected = 0;

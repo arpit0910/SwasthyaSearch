@@ -290,9 +290,23 @@ class HealthcareSyncService
 
         $existingDoctor = Doctor::where('registration_number', $regNumber)->first();
 
-        $experience = (int)($sourceData['experience_years'] ?? ($existingDoctor?->experience_years ?: 0));
+        $incomingExperience = isset($sourceData['experience_years']) ? (int) $sourceData['experience_years'] : null;
+        $existingExperience = $existingDoctor?->experience_years;
+        $experience = null;
+        if ($incomingExperience !== null && $incomingExperience > 0) {
+            $experience = $incomingExperience;
+        } elseif (!empty($existingExperience) && (int) $existingExperience > 0) {
+            $experience = (int) $existingExperience;
+        }
         $degrees = !empty($sourceData['education_degrees']) ? $sourceData['education_degrees'] : ($existingDoctor?->education_degrees ?: null);
-        $fee = (float)($sourceData['consultation_fee'] ?? ($existingDoctor?->consultation_fee ?: 0));
+        $incomingFee = isset($sourceData['consultation_fee']) ? (float) $sourceData['consultation_fee'] : null;
+        $existingFee = $existingDoctor?->consultation_fee !== null ? (float) $existingDoctor->consultation_fee : null;
+        $fee = null;
+        if ($incomingFee !== null && $incomingFee > 0) {
+            $fee = $incomingFee;
+        } elseif ($existingFee !== null && $existingFee > 0) {
+            $fee = $existingFee;
+        }
         $rawPhone = $sourceData['phone'] ?? ($existingDoctor?->phone ?: null);
         $phoneParts = self::splitPhone($rawPhone);
         $website = $sourceData['website'] ?? ($existingDoctor?->website && !str_contains($existingDoctor->website, 'swasthyasearch.com') ? $existingDoctor->website : null);

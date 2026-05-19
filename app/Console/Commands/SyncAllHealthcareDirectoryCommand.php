@@ -30,7 +30,7 @@ class SyncAllHealthcareDirectoryCommand extends Command
     public function handle()
     {
         ini_set('memory_limit', '-1');
-        $cities = ['Jaipur', 'Delhi', 'Jodhpur', 'Kota', 'Mumbai'];
+        $cities = ['Ahmedabad', 'Bangalore', 'Chennai', 'Delhi', 'Hyderabad', 'Jaipur', 'Jodhpur', 'Kolkata', 'Kota', 'Mumbai', 'Pune'];
         $forceFallback = $this->option('force-fallback');
 
         $this->info("Starting healthcare directory synchronization for ALL cities: " . implode(', ', $cities));
