@@ -2,6 +2,18 @@
 
 @section('title', ($locale === 'hi' ? 'डॉक्टर निर्देशिका' : 'Doctors Directory') . ' - SwasthyaSearch')
 
+@php
+    $seoCity = request('city');
+    $hasCity = !empty($seoCity) && $seoCity !== 'All';
+    $pageTitle = $hasCity
+        ? "Doctors in {$seoCity} | Find Specialists & Clinics | SwasthyaSearch"
+        : 'Find Doctors Near You | SwasthyaSearch';
+    $pageDescription = $hasCity
+        ? "Find doctors in {$seoCity} by specialty, department, clinic, or symptoms. Call providers directly and confirm timings before visiting."
+        : 'Search doctors by city, specialty, department, or symptoms. Find contact details, clinic information, and healthcare providers near you.';
+@endphp
+@section('meta_title', $pageTitle)
+@section('meta_description', $pageDescription)
 @section('content')
 <!-- Hero Section -->
 <header class="bg-gradient-to-r from-slate-900 via-indigo-950 to-slate-900 text-white py-16 px-4 sm:px-6 lg:px-8 border-b border-slate-800 shadow-xl relative overflow-hidden">
@@ -11,7 +23,7 @@
             {{ $locale === 'hi' ? 'सत्यापित विशेषज्ञ' : 'Verified Medical Experts' }}
         </span>
         <h1 class="text-3xl sm:text-5xl font-extrabold tracking-tight mb-4 bg-gradient-to-r from-white via-slate-100 to-slate-300 bg-clip-text text-transparent py-2 leading-normal">
-            {{ $locale === 'hi' ? 'हमारे विशेषज्ञ डॉक्टरों से परामर्श लें' : 'Find & Consult Expert Doctors' }}
+            {{ $hasCity ? "Find Doctors in {$seoCity}" : 'Find Doctors Near You' }}
         </h1>
         <p class="max-w-2xl mx-auto text-slate-300 text-base sm:text-lg leading-relaxed">
             {{ $locale === 'hi' ? 'आपके स्वास्थ्य के लिए 100% सत्यापित, अनुभवी और शीर्ष चिकित्सा विशेषज्ञ। सीधे संपर्क करें, कोई छिपा शुल्क नहीं।' : 'Explore our comprehensive directory of 100% verified, world-class healthcare professionals. Connect directly with zero commission.' }}
@@ -19,12 +31,18 @@
     </div>
 </header>
 
+<section class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 mt-6">
+    <p class="text-sm text-slate-600">
+        Search by doctor name, specialty, department, symptoms, and city. Please call before visiting as timings and availability may change.
+    </p>
+</section>
+
 <!-- Filter Bar -->
 <section class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 -mt-8 relative z-20 w-full mb-12">
     <form action="{{ route('doctors.index') }}" method="GET" class="bg-white rounded-2xl shadow-xl border border-slate-200/80 p-5 sm:p-6 backdrop-blur-xl">
-        <div class="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-12 gap-4 items-stretch">
+        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 items-stretch">
             <!-- Search Input -->
-            <div class="relative xl:col-span-4">
+            <div class="relative">
                 <i data-lucide="search" class="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-slate-400"></i>
                 <input
                     type="text"
@@ -36,7 +54,7 @@
             </div>
 
             <!-- Department Filter -->
-            <div class="xl:col-span-3">
+            <div>
                 <select
                     name="department"
                     class="h-12 w-full px-4 bg-slate-50 border border-slate-200 rounded-xl text-sm focus:outline-none focus:border-teal-500 focus:ring-2 focus:ring-teal-500/20 transition-all duration-200 font-medium text-slate-700"
@@ -58,7 +76,7 @@
             </div>
 
             <!-- Experience Filter -->
-            <div class="xl:col-span-2">
+            <div>
                 @php $expVal = request('experience', $filters['experience'] ?? 'All'); @endphp
                 <select
                     name="experience"
@@ -73,7 +91,7 @@
             </div>
 
             <!-- City Filter -->
-            <div class="xl:col-span-3">
+            <div>
                 @php $cityVal = request('city', $filters['city'] ?? 'All'); @endphp
                 <select
                     name="city"
@@ -432,3 +450,4 @@
     }
 </script>
 @endpush
+

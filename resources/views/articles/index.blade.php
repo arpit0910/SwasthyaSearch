@@ -2,6 +2,8 @@
 
 @section('title', ($locale === 'hi' ? 'स्वास्थ्य लेख व समाचार' : 'Health Articles & News') . ' - SwasthyaSearch')
 
+@section('meta_title', 'Health Articles and Guides | SwasthyaSearch')
+@section('meta_description', 'Read patient-friendly health articles and guides on symptoms, prevention, and healthcare access. This content is for general information and not a substitute for medical advice.')
 @section('content')
 <!-- Hero Section -->
 <header class="bg-gradient-to-r from-slate-900 via-indigo-950 to-slate-900 text-white py-16 px-4 sm:px-6 lg:px-8 border-b border-slate-800 shadow-xl relative overflow-hidden">
@@ -11,7 +13,7 @@
             {{ $locale === 'hi' ? 'विशेषज्ञ स्वास्थ्य ज्ञान' : 'Expert Medical Knowledge' }}
         </span>
         <h1 class="text-3xl sm:text-5xl font-extrabold tracking-tight mb-4 bg-gradient-to-r from-white via-slate-100 to-slate-300 bg-clip-text text-transparent py-2 leading-normal">
-            {{ $locale === 'hi' ? 'नवीनतम स्वास्थ्य लेख और सुझाव' : 'Latest Health Articles & Wellness Tips' }}
+            {{ $locale === 'hi' ? 'नवीनतम स्वास्थ्य लेख और सुझाव' : 'Health Articles and Guides' }}
         </h1>
         <p class="max-w-2xl mx-auto text-slate-300 text-base sm:text-lg leading-relaxed">
             {{ $locale === 'hi' ? 'शीर्ष डॉक्टरों और पोषण विशेषज्ञों द्वारा लिखे गए प्रामाणिक, शोध-आधारित स्वास्थ्य लेख। स्वस्थ जीवनशैली के लिए आवश्यक जानकारी।' : 'Explore evidence-based medical articles, nutritional advice, and fitness tips authored by accredited doctors and healthcare experts.' }}
@@ -21,11 +23,11 @@
 
 <!-- Filter Bar -->
 <section class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 -mt-8 relative z-20 w-full mb-12">
-    <form action="{{ route('articles.index') }}" method="GET" class="bg-white rounded-2xl shadow-xl border border-slate-200/80 p-6 backdrop-blur-xl">
-        <div class="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-12 gap-4 items-stretch">
+    <form action="{{ route('articles.index') }}" method="GET" class="bg-white rounded-2xl shadow-xl border border-slate-200/80 p-5 sm:p-6 backdrop-blur-xl">
+        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 xl:grid-cols-12 gap-4 items-stretch">
             <!-- Search Input -->
-            <div class="relative xl:col-span-9">
-                <i data-lucide="search" class="absolute left-4 top-3.5 w-5 h-5 text-slate-400"></i>
+            <div class="relative lg:col-span-3 xl:col-span-9">
+                <i data-lucide="search" class="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-slate-400"></i>
                 <input
                     type="text"
                     name="search"
@@ -36,7 +38,7 @@
             </div>
 
             <!-- Category Filter -->
-            <div class="xl:col-span-3">
+            <div class="lg:col-span-1 xl:col-span-3">
                 @php $catVal = request('category', $filters['category'] ?? 'All'); @endphp
                 <select
                     name="category"
@@ -153,3 +155,4 @@
     @endif
 </main>
 @endsection
+

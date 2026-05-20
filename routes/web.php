@@ -108,6 +108,46 @@ Route::get('/api/hospitals', [ReliableDirectoryController::class, 'hospitals'])-
 Route::get('/api/blood-banks', [ReliableDirectoryController::class, 'bloodBanks'])->name('api.blood_banks.city');
 Route::post('/switch-locale', [SearchController::class, 'switchLocale'])->name('switch.locale');
 
+Route::get('/sitemap.xml', function () {
+    $base = rtrim(config('app.url', url('/')), '/');
+    $lastDoctors = optional(\App\Models\Doctor::query()->latest('updated_at')->value('updated_at'))->toDateString() ?? now()->toDateString();
+    $lastHospitals = optional(\App\Models\Hospital::query()->latest('updated_at')->value('updated_at'))->toDateString() ?? now()->toDateString();
+    $lastBloodBanks = optional(\App\Models\BloodBank::query()->latest('updated_at')->value('updated_at'))->toDateString() ?? now()->toDateString();
+    $lastArticles = optional(\App\Models\Article::query()->where('is_published', true)->latest('updated_at')->value('updated_at'))->toDateString() ?? now()->toDateString();
+
+    $staticUrls = [
+        ['loc' => route('home'), 'changefreq' => 'daily', 'priority' => '1.0', 'lastmod' => now()->toDateString()],
+        ['loc' => route('doctors.index'), 'changefreq' => 'daily', 'priority' => '0.9', 'lastmod' => $lastDoctors],
+        ['loc' => route('hospitals.index'), 'changefreq' => 'daily', 'priority' => '0.9', 'lastmod' => $lastHospitals],
+        ['loc' => route('blood_banks.index'), 'changefreq' => 'daily', 'priority' => '0.9', 'lastmod' => $lastBloodBanks],
+        ['loc' => route('articles.index'), 'changefreq' => 'daily', 'priority' => '0.8', 'lastmod' => $lastArticles],
+        ['loc' => route('departments.index'), 'changefreq' => 'weekly', 'priority' => '0.6', 'lastmod' => now()->toDateString()],
+        ['loc' => route('diseases.index'), 'changefreq' => 'weekly', 'priority' => '0.6', 'lastmod' => now()->toDateString()],
+        ['loc' => route('about'), 'changefreq' => 'monthly', 'priority' => '0.6', 'lastmod' => now()->toDateString()],
+        ['loc' => route('contact'), 'changefreq' => 'monthly', 'priority' => '0.6', 'lastmod' => now()->toDateString()],
+        ['loc' => route('privacy.policy'), 'changefreq' => 'yearly', 'priority' => '0.3', 'lastmod' => now()->toDateString()],
+        ['loc' => route('terms.service'), 'changefreq' => 'yearly', 'priority' => '0.3', 'lastmod' => now()->toDateString()],
+    ];
+
+    $articleUrls = \App\Models\Article::query()
+        ->where('is_published', true)
+        ->latest('updated_at')
+        ->get(['id', 'updated_at'])
+        ->map(function ($article) {
+            return [
+                'loc' => route('articles.show', $article->id),
+                'changefreq' => 'weekly',
+                'priority' => '0.7',
+                'lastmod' => optional($article->updated_at)->toDateString() ?? now()->toDateString(),
+            ];
+        })->values()->all();
+
+    $urls = array_merge($staticUrls, $articleUrls);
+
+    $xml = view('sitemap.xml', compact('urls', 'base'))->render();
+    return response($xml, 200)->header('Content-Type', 'application/xml');
+})->name('sitemap');
+
 // Doctors & Hospitals Directory Routes
 Route::get('/doctors', [DoctorController::class, 'index'])->name('doctors.index');
 Route::get('/hospitals', [HospitalController::class, 'index'])->name('hospitals.index');

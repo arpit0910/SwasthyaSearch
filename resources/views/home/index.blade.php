@@ -2,6 +2,8 @@
 
 @section('title', ($locale === 'hi' ? 'मुखपृष्ठ' : 'Home') . ' - SwasthyaSearch')
 
+@section('meta_title', 'SwasthyaSearch - Find Doctors, Hospitals & Blood Banks Near You')
+@section('meta_description', 'Search trusted doctors, hospitals, blood banks, and departments by city or symptoms. Connect directly with healthcare providers without ads or intermediaries.')
 @section('content')
     @php
         $quickSymptoms =
@@ -887,3 +889,4 @@
         updateStarsDisplay(0);
     </script>
 @endpush
+

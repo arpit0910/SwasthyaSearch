@@ -1,0 +1,10 @@
+User-agent: *
+Allow: /
+Disallow: /admin
+Disallow: /filament
+Disallow: /login
+Disallow: /register
+Disallow: /password
+Disallow: /api/
+
+Sitemap: https://invenbill.online/sitemap.xml

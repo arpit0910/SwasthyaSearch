@@ -41,30 +41,13 @@
 
             <div class="bg-white rounded-3xl border border-slate-200/80 p-8 shadow-2xs hover:shadow-xl transition-all duration-300 flex flex-col group">
                 <div class="w-14 h-14 bg-indigo-50 rounded-2xl flex items-center justify-center text-indigo-600 mb-6 border border-indigo-100 group-hover:scale-110 transition-transform duration-300 shadow-inner">
-                    <i data-lucide="phone" class="w-6 h-6"></i>
+                    <i data-lucide="message-square-heart" class="w-6 h-6"></i>
                 </div>
                 <h3 class="text-lg font-extrabold text-slate-900 mb-2">
-                    {{ $locale === 'hi' ? 'फ़ोन हेल्पलाइन' : 'Phone Helpline' }}
-                </h3>
-                <p class="text-slate-500 text-sm mb-4 leading-relaxed">
-                    {{ $locale === 'hi' ? 'सोमवार से शनिवार, सुबह 9:00 बजे से शाम 6:00 बजे तक।' : 'Mon-Sat from 9:00 AM to 6:00 PM IST.' }}
-                </p>
-                <a href="tel:+919876543210" class="text-indigo-600 font-extrabold text-sm hover:underline flex items-center space-x-1">
-                    <span>+91 98765 43210</span>
-                </a>
-            </div>
-
-            <div class="bg-white rounded-3xl border border-slate-200/80 p-8 shadow-2xs hover:shadow-xl transition-all duration-300 flex flex-col group">
-                <div class="w-14 h-14 bg-slate-100 rounded-2xl flex items-center justify-center text-slate-700 mb-6 border border-slate-200 group-hover:scale-110 transition-transform duration-300 shadow-inner">
-                    <i data-lucide="map-pin" class="w-6 h-6"></i>
-                </div>
-                <h3 class="text-lg font-extrabold text-slate-900 mb-2">
-                    {{ $locale === 'hi' ? 'हमारा कार्यालय' : 'Our Office' }}
+                    {{ $locale === 'hi' ? 'लिस्टिंग सुधार सहायता' : 'Listing Correction Support' }}
                 </h3>
                 <p class="text-slate-500 text-sm leading-relaxed">
-                    SwasthyaSearch Healthcare Directory,<br />
-                    45 Park Street, Connaught Place,<br />
-                    New Delhi - 110001, India
+                    {{ $locale === 'hi' ? 'गलत डॉक्टर/अस्पताल/ब्लड बैंक विवरण सुधारने के लिए कृपया फॉर्म में नाम और शहर जरूर लिखें। हमारी टीम समीक्षा करके अपडेट करेगी।' : 'To report incorrect doctor, hospital, or blood bank details, please include the provider name and city in the form. Our team will review and update.' }}
                 </p>
             </div>
         </div>
@@ -75,7 +58,7 @@
                 {{ $locale === 'hi' ? 'हमें एक संदेश भेजें' : 'Send Us A Message' }}
             </h2>
             <p class="text-slate-500 text-sm mb-8 leading-relaxed">
-                {{ $locale === 'hi' ? 'नीचे दिया गया फ़ॉर्म भरें और हमारी ग्राहक सहायता टीम जल्द ही आपसे संपर्क करेगी।' : 'Fill out the form below and our customer support team will get back to you promptly.' }}
+                {{ $locale === 'hi' ? 'नीचे दिया गया फ़ॉर्म भरें। लिस्टिंग सुधार के लिए डॉक्टर/अस्पताल/ब्लड बैंक का नाम और शहर अवश्य लिखें।' : 'Fill out the form below. For listing corrections, include the doctor/hospital/blood bank name and city.' }}
             </p>
 
             @if (session('success'))

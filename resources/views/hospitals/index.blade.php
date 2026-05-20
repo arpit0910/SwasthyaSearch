@@ -2,6 +2,18 @@
 
 @section('title', ($locale === 'hi' ? 'अस्पताल व क्लीनिक' : 'Hospitals & Clinics') . ' - SwasthyaSearch')
 
+@php
+    $seoCity = request('city');
+    $hasCity = !empty($seoCity) && $seoCity !== 'All';
+    $pageTitle = $hasCity
+        ? "Hospitals in {$seoCity} | Find Services & Contacts | SwasthyaSearch"
+        : 'Find Hospitals Near You | SwasthyaSearch';
+    $pageDescription = $hasCity
+        ? "Find hospitals in {$seoCity} by service, department, and location. Call hospitals directly to confirm services and timings before visiting."
+        : 'Search hospitals by city, department, or service. Find hospital contact details, locations, and direct access to healthcare providers.';
+@endphp
+@section('meta_title', $pageTitle)
+@section('meta_description', $pageDescription)
 @section('content')
     <!-- Hero Section -->
     <header
@@ -14,7 +26,7 @@
             </span>
             <h1
                 class="text-3xl sm:text-5xl font-extrabold tracking-tight mb-4 bg-gradient-to-r from-white via-slate-100 to-slate-300 bg-clip-text text-transparent py-2 leading-normal">
-                {{ $locale === 'hi' ? 'शीर्ष अस्पताल और क्लीनिक खोजें' : 'Explore Top Hospitals & Clinics' }}
+                {{ $hasCity ? "Find Hospitals in {$seoCity}" : 'Find Hospitals Near You' }}
             </h1>
             <p class="max-w-2xl mx-auto text-slate-300 text-base sm:text-lg leading-relaxed">
                 {{ $locale === 'hi' ? 'आपातकालीन संपर्क नंबरों और पूर्ण पते के साथ आपके शहर में 100% सत्यापित और विश्वसनीय चिकित्सा सुविधाएं।' : 'Discover accredited hospitals and specialized healthcare clinics near you. Complete with verified emergency contacts and locations.' }}
@@ -22,13 +34,19 @@
         </div>
     </header>
 
+<section class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 mt-6">
+    <p class="text-sm text-slate-600">
+        Compare hospitals by city, facility type, and health benefits. Please call the hospital before visiting to confirm services, timings, and emergency availability.
+    </p>
+</section>
+
     <!-- Filter Bar -->
     <section class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 -mt-8 relative z-20 w-full mb-12">
         <form action="{{ route('hospitals.index') }}" method="GET"
             class="bg-white rounded-2xl shadow-xl border border-slate-200/80 p-5 sm:p-6 backdrop-blur-xl">
-            <div class="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-12 gap-4 items-stretch">
+            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 items-stretch">
                 <!-- Search Input -->
-                <div class="relative xl:col-span-4">
+                <div class="relative">
                     <i data-lucide="search" class="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-slate-400"></i>
                     <input type="text" name="search"
                         placeholder="{{ $locale === 'hi' ? 'अस्पताल, क्लिनिक, पता या शहर खोजें...' : 'Search hospitals, clinics, address, city...' }}"
@@ -37,7 +55,7 @@
                 </div>
 
                 <!-- Type Filter -->
-                <div class="xl:col-span-2">
+                <div>
                     @php $typeVal = request('type', $filters['type'] ?? 'All'); @endphp
                     <select name="type"
                         class="h-12 w-full px-4 bg-slate-50 border border-slate-200 rounded-xl text-sm focus:outline-none focus:border-teal-500 focus:ring-2 focus:ring-teal-500/20 transition-all duration-200 font-medium text-slate-700">
@@ -51,7 +69,7 @@
                 </div>
 
                 <!-- City Filter -->
-                <div class="xl:col-span-3">
+                <div>
                     @php $cityVal = request('city', $filters['city'] ?? 'All'); @endphp
                     <select name="city"
                         class="h-12 w-full px-4 bg-slate-50 border border-slate-200 rounded-xl text-sm focus:outline-none focus:border-teal-500 focus:ring-2 focus:ring-teal-500/20 transition-all duration-200 font-medium text-slate-700">
@@ -65,7 +83,7 @@
                 </div>
 
                 <!-- Benefit Filter -->
-                <div class="xl:col-span-3">
+                <div>
                     @php $benefitVal = request('benefit', $filters['benefit'] ?? 'All'); @endphp
                     <select name="benefit"
                         class="h-12 w-full px-4 bg-slate-50 border border-slate-200 rounded-xl text-sm focus:outline-none focus:border-teal-500 focus:ring-2 focus:ring-teal-500/20 transition-all duration-200 font-medium text-slate-700">
@@ -311,3 +329,4 @@
         }
     </script>
 @endpush
+

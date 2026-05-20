@@ -4,7 +4,169 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta name="csrf-token" content="{{ csrf_token() }}">
-    <title>@yield('title', config('app.name', 'SwasthyaSearch'))</title>
+    @php
+        $appName = config('app.name', 'SwasthyaSearch');
+        $siteUrl = rtrim(config('app.url', url('/')), '/');
+        $currentUrl = url()->current();
+        $hasQuery = request()->getQueryString() !== null;
+        $locale = session('locale', app()->getLocale());
+        $isHindi = $locale === 'hi';
+
+        $defaultTitle = $isHindi
+            ? 'SwasthyaSearch - डॉक्टर, अस्पताल और ब्लड बैंक खोजें'
+            : 'SwasthyaSearch - Find Doctors, Hospitals, and Blood Banks';
+        $defaultDescription = $isHindi
+            ? 'SwasthyaSearch पर अपने शहर में सत्यापित डॉक्टर, अस्पताल, क्लिनिक और ब्लड बैंक खोजें।'
+            : 'Find verified doctors, hospitals, clinics, blood banks, and health articles near you on SwasthyaSearch.';
+
+        $routeName = request()->route()?->getName() ?? '';
+        $routeSeo = [
+            'home' => [
+                'title' => $isHindi ? 'SwasthyaSearch - अपने पास विश्वसनीय स्वास्थ्य सेवा खोजें' : 'SwasthyaSearch - Trusted Healthcare Discovery Near You',
+                'description' => $isHindi ? 'लक्षण, विभाग, शहर या नाम से डॉक्टर, अस्पताल और ब्लड बैंक खोजें।' : 'Search doctors, hospitals, blood banks, and departments by symptom, city, or keyword.',
+            ],
+            'doctors.index' => [
+                'title' => $isHindi ? 'डॉक्टर्स डायरेक्टरी | SwasthyaSearch' : 'Doctors Directory | SwasthyaSearch',
+                'description' => $isHindi ? 'अपने शहर में सत्यापित विशेषज्ञ डॉक्टर खोजें।' : 'Browse verified specialist doctors by city, department, and experience.',
+            ],
+            'hospitals.index' => [
+                'title' => $isHindi ? 'अस्पताल और क्लिनिक डायरेक्टरी | SwasthyaSearch' : 'Hospitals & Clinics Directory | SwasthyaSearch',
+                'description' => $isHindi ? 'अपने शहर के अस्पताल और क्लिनिक खोजें।' : 'Find verified hospitals and clinics with location and contact details.',
+            ],
+            'blood_banks.index' => [
+                'title' => $isHindi ? 'ब्लड बैंक डायरेक्टरी | SwasthyaSearch' : 'Blood Banks Directory | SwasthyaSearch',
+                'description' => $isHindi ? 'अपने शहर में ब्लड बैंक खोजें और उपलब्धता फोन पर पुष्टि करें।' : 'Find blood banks by city and blood group. Call to confirm current availability.',
+            ],
+            'articles.index' => [
+                'title' => $isHindi ? 'स्वास्थ्य लेख | SwasthyaSearch' : 'Health Articles | SwasthyaSearch',
+                'description' => $isHindi ? 'स्वास्थ्य, पोषण और वेलनेस पर उपयोगी लेख पढ़ें।' : 'Read useful health, wellness, and medical awareness articles.',
+            ],
+            'about' => [
+                'title' => $isHindi ? 'हमारे बारे में | SwasthyaSearch' : 'About Us | SwasthyaSearch',
+                'description' => $isHindi ? 'SwasthyaSearch का मिशन: भरोसेमंद हेल्थकेयर खोज को सरल बनाना।' : 'Learn about SwasthyaSearch and our mission for transparent healthcare discovery.',
+            ],
+            'contact' => [
+                'title' => $isHindi ? 'संपर्क करें | SwasthyaSearch' : 'Contact Us | SwasthyaSearch',
+                'description' => $isHindi ? 'SwasthyaSearch सहायता और प्रतिक्रिया के लिए संपर्क करें।' : 'Contact SwasthyaSearch for support, corrections, and feedback.',
+            ],
+        ];
+        $computedTitle = $routeSeo[$routeName]['title'] ?? $defaultTitle;
+        $computedDescription = $routeSeo[$routeName]['description'] ?? $defaultDescription;
+        $metaTitle = trim($__env->yieldContent('meta_title', $__env->yieldContent('title', $computedTitle)));
+        $metaDescription = trim($__env->yieldContent('meta_description', $computedDescription));
+        $defaultCanonical = $currentUrl;
+        $filterableRoutes = ['doctors.index', 'hospitals.index', 'blood_banks.index', 'articles.index'];
+        $isFilterRoute = in_array($routeName, $filterableRoutes, true);
+        $canonicalUrl = trim($__env->yieldContent('canonical_url', ($isFilterRoute && $hasQuery) ? route($routeName) : $defaultCanonical));
+        $defaultRobots = ($isFilterRoute && $hasQuery)
+            ? 'noindex,follow,max-image-preview:large,max-snippet:-1,max-video-preview:-1'
+            : 'index,follow,max-image-preview:large,max-snippet:-1,max-video-preview:-1';
+        $metaRobots = trim($__env->yieldContent('meta_robots', $defaultRobots));
+        $metaKeywords = trim($__env->yieldContent('meta_keywords', 'doctors directory, hospitals directory, blood banks, healthcare search, medical specialists'));
+        $ogImage = trim($__env->yieldContent('og_image', $siteUrl . '/favicon.ico'));
+        $ogType = trim($__env->yieldContent('og_type', request()->routeIs('articles.show') ? 'article' : 'website'));
+    @endphp
+
+    <title>{{ $metaTitle }}</title>
+    <meta name="description" content="{{ $metaDescription }}">
+    <meta name="keywords" content="{{ $metaKeywords }}">
+    <meta name="robots" content="{{ $metaRobots }}">
+    <link rel="canonical" href="{{ $canonicalUrl }}">
+
+    <meta property="og:type" content="{{ $ogType }}">
+    <meta property="og:site_name" content="{{ $appName }}">
+    <meta property="og:title" content="{{ $metaTitle }}">
+    <meta property="og:description" content="{{ $metaDescription }}">
+    <meta property="og:url" content="{{ $canonicalUrl }}">
+    <meta property="og:image" content="{{ $ogImage }}">
+    <meta property="og:locale" content="{{ $isHindi ? 'hi_IN' : 'en_US' }}">
+
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="{{ $metaTitle }}">
+    <meta name="twitter:description" content="{{ $metaDescription }}">
+    <meta name="twitter:image" content="{{ $ogImage }}">
+
+    <link rel="alternate" hreflang="en" href="{{ $canonicalUrl }}">
+    <link rel="alternate" hreflang="hi" href="{{ $canonicalUrl }}">
+    <link rel="alternate" hreflang="x-default" href="{{ $canonicalUrl }}">
+
+    <script type="application/ld+json">
+        {!! json_encode([
+            '@context' => 'https://schema.org',
+            '@type' => 'Organization',
+            'name' => $appName,
+            'url' => $siteUrl,
+            'logo' => $siteUrl . '/favicon.ico',
+            'sameAs' => [],
+        ], JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE) !!}
+    </script>
+    <script type="application/ld+json">
+        {!! json_encode([
+            '@context' => 'https://schema.org',
+            '@type' => 'WebSite',
+            'name' => $appName,
+            'url' => $siteUrl,
+            'inLanguage' => [$isHindi ? 'hi-IN' : 'en-IN', $isHindi ? 'en-IN' : 'hi-IN'],
+            'potentialAction' => [
+                '@type' => 'SearchAction',
+                'target' => $siteUrl . '/doctors?search={search_term_string}',
+                'query-input' => 'required name=search_term_string',
+            ],
+        ], JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE) !!}
+    </script>
+    <script type="application/ld+json">
+        {!! json_encode([
+            '@context' => 'https://schema.org',
+            '@type' => 'WebPage',
+            'name' => $metaTitle,
+            'description' => $metaDescription,
+            'url' => $canonicalUrl,
+            'inLanguage' => $isHindi ? 'hi-IN' : 'en-IN',
+            'isPartOf' => [
+                '@type' => 'WebSite',
+                'name' => $appName,
+                'url' => $siteUrl,
+            ],
+        ], JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE) !!}
+    </script>
+    @php
+        $breadcrumbItems = [
+            ['name' => $isHindi ? 'होम' : 'Home', 'url' => route('home')],
+        ];
+        $routeCrumbs = [
+            'doctors.index' => $isHindi ? 'डॉक्टर्स' : 'Doctors',
+            'hospitals.index' => $isHindi ? 'अस्पताल' : 'Hospitals',
+            'blood_banks.index' => $isHindi ? 'ब्लड बैंक' : 'Blood Banks',
+            'articles.index' => $isHindi ? 'लेख' : 'Articles',
+            'articles.show' => $isHindi ? 'लेख विवरण' : 'Article',
+            'about' => $isHindi ? 'हमारे बारे में' : 'About',
+            'contact' => $isHindi ? 'संपर्क' : 'Contact',
+            'privacy.policy' => $isHindi ? 'गोपनीयता नीति' : 'Privacy Policy',
+            'terms.service' => $isHindi ? 'सेवा शर्तें' : 'Terms of Service',
+        ];
+        if (isset($routeCrumbs[$routeName])) {
+            $breadcrumbItems[] = ['name' => $routeCrumbs[$routeName], 'url' => $canonicalUrl];
+        }
+        if ($isFilterRoute && request('city') && request('city') !== 'All') {
+            $breadcrumbItems[] = ['name' => request('city'), 'url' => $currentUrl];
+        }
+        $breadcrumbSchema = [
+            '@context' => 'https://schema.org',
+            '@type' => 'BreadcrumbList',
+            'itemListElement' => collect($breadcrumbItems)->values()->map(function ($crumb, $i) {
+                return [
+                    '@type' => 'ListItem',
+                    'position' => $i + 1,
+                    'name' => $crumb['name'],
+                    'item' => $crumb['url'],
+                ];
+            })->all(),
+        ];
+    @endphp
+    <script type="application/ld+json">
+        {!! json_encode($breadcrumbSchema, JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE) !!}
+    </script>
+    @yield('structured_data')
     
     <!-- Google Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">

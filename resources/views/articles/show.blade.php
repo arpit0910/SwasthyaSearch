@@ -13,6 +13,31 @@
 @endphp
 
 @section('title', $title . ' - SwasthyaSearch')
+@section('meta_title', $title . ' | SwasthyaSearch')
+@section('meta_description', \Illuminate\Support\Str::limit(strip_tags($excerpt ?: $content), 160, '...'))
+@section('og_type', 'article')
+@section('canonical_url', route('articles.show', $article->id))
+@section('structured_data')
+<script type="application/ld+json">
+{!! json_encode([
+    '@context' => 'https://schema.org',
+    '@type' => 'Article',
+    'headline' => $title,
+    'description' => \Illuminate\Support\Str::limit(strip_tags($excerpt ?: $content), 200, '...'),
+    'author' => !empty($article->author_name) ? [
+        '@type' => 'Person',
+        'name' => $article->author_name,
+    ] : null,
+    'datePublished' => optional($article->created_at)->toIso8601String(),
+    'dateModified' => optional($article->updated_at)->toIso8601String(),
+    'mainEntityOfPage' => route('articles.show', $article->id),
+    'publisher' => [
+        '@type' => 'Organization',
+        'name' => 'SwasthyaSearch',
+    ],
+], JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE) !!}
+</script>
+@endsection
 
 @section('content')
 <!-- Header Banner -->
@@ -69,6 +94,9 @@
         <!-- Main Content -->
         <div class="prose prose-slate max-w-none text-slate-700 text-base sm:text-lg leading-relaxed space-y-6 whitespace-pre-line">
             {{ $content }}
+        </div>
+        <div class="mt-8 rounded-2xl border border-amber-200 bg-amber-50 px-4 py-3 text-sm text-amber-900">
+            This article is for general information only and is not a substitute for professional medical advice, diagnosis, or treatment.
         </div>
     </article>
 

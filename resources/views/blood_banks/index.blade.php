@@ -2,6 +2,18 @@
 
 @section('title', ($locale === 'hi' ? 'ब्लड बैंक निर्देशिका' : 'Blood Banks Directory') . ' - SwasthyaSearch')
 
+@php
+    $seoCity = request('city');
+    $hasCity = !empty($seoCity) && $seoCity !== 'All';
+    $pageTitle = $hasCity
+        ? "Blood Banks in {$seoCity} | Emergency Contacts | SwasthyaSearch"
+        : 'Find Blood Banks Near You | SwasthyaSearch';
+    $pageDescription = $hasCity
+        ? "Find blood banks in {$seoCity} and contact them directly to confirm current blood availability before visiting."
+        : 'Find blood banks by city and contact them directly to confirm current blood availability before visiting.';
+@endphp
+@section('meta_title', $pageTitle)
+@section('meta_description', $pageDescription)
 @section('content')
 <!-- Hero Section -->
 <header class="bg-gradient-to-r from-slate-900 via-red-950 to-slate-900 text-white py-16 px-4 sm:px-6 lg:px-8 border-b border-slate-800 shadow-xl relative overflow-hidden">
@@ -11,7 +23,7 @@
             {{ $locale === 'hi' ? 'सत्यापित रक्त केंद्र' : 'Verified Blood Centers' }}
         </span>
         <h1 class="text-3xl sm:text-5xl font-extrabold tracking-tight mb-4 bg-gradient-to-r from-white via-slate-100 to-slate-300 bg-clip-text text-transparent py-2 leading-tight">
-            {{ $locale === 'hi' ? 'आपातकालीन ब्लड बैंक व रक्त समूह खोजें' : 'Find Emergency Blood Banks & Availability' }}
+            {{ $hasCity ? "Find Blood Banks in {$seoCity}" : 'Find Blood Banks Near You' }}
         </h1>
         <p class="max-w-2xl mx-auto text-slate-300 text-base sm:text-lg leading-relaxed">
             {{ $locale === 'hi' ? 'सत्यापित और लाइसेंस प्राप्त ब्लड बैंक खोजें। रक्त उपलब्धता तेजी से बदल सकती है, इसलिए जाने से पहले कॉल करके पुष्टि करें।' : 'Find verified, licensed blood banks. Blood availability can change quickly, so please call to confirm before visiting.' }}
@@ -19,12 +31,18 @@
     </div>
 </header>
 
+<section class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 mt-6">
+    <p class="text-sm text-slate-600">
+        Blood availability changes quickly. Please call the blood bank to confirm current availability before visiting.
+    </p>
+</section>
+
 <!-- Filter Bar -->
 <section class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 -mt-8 relative z-20 w-full mb-12">
     <form action="{{ route('blood_banks.index') }}" method="GET" class="bg-white rounded-2xl shadow-xl border border-slate-200/80 p-5 sm:p-6 backdrop-blur-xl">
-        <div class="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-12 gap-4 items-stretch">
+        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 items-stretch">
             <!-- Search Input -->
-            <div class="relative xl:col-span-4">
+            <div class="relative">
                 <i data-lucide="search" class="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-slate-400"></i>
                 <input
                     type="text"
@@ -36,7 +54,7 @@
             </div>
 
             <!-- Blood Group Filter -->
-            <div class="xl:col-span-2">
+            <div>
                 @php $bgVal = request('blood_group', $filters['blood_group'] ?? 'All'); @endphp
                 <select
                     name="blood_group"
@@ -50,7 +68,7 @@
             </div>
 
             <!-- Facility Filter -->
-            <div class="xl:col-span-3">
+            <div>
                 @php $facVal = request('facility', $filters['facility'] ?? 'All'); @endphp
                 <select
                     name="facility"
@@ -65,7 +83,7 @@
             </div>
 
             <!-- City Filter -->
-            <div class="xl:col-span-3">
+            <div>
                 @php $cityVal = request('city', $filters['city'] ?? 'All'); @endphp
                 <select
                     name="city"
@@ -295,3 +313,4 @@
     }
 </script>
 @endpush
+

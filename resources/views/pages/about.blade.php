@@ -33,7 +33,7 @@
                 {{ $locale === 'hi' ? '100% सत्यापित व प्रामाणिक' : '100% Verified & Authentic' }}
             </h3>
             <p class="text-slate-600 text-base leading-relaxed flex-1">
-                {{ $locale === 'hi' ? 'हमारी निर्देशिका में सूचीबद्ध प्रत्येक डॉक्टर और अस्पताल की चिकित्सा परिषद पंजीकरण और प्रमाणन की कठोरता से जांच की जाती है। आपके स्वास्थ्य के लिए पूर्ण सुरक्षा।' : 'Every doctor and hospital listed undergoes rigorous background credential and medical council verification. Ensuring complete trust and patient safety.' }}
+                {{ $locale === 'hi' ? 'हम उपलब्ध सार्वजनिक स्रोतों और समय-समय पर समीक्षा के माध्यम से प्रदाता जानकारी को सटीक और उपयोगी बनाए रखने का प्रयास करते हैं। समय और संपर्क विवरण बदल सकते हैं, इसलिए जाने से पहले सीधे कॉल करें।' : 'We work to keep provider information accurate and useful through available public sources and periodic review. Timings and contact details may change, so please call providers directly before visiting.' }}
             </p>
         </div>
 
@@ -63,7 +63,7 @@
                 {{ $locale === 'hi' ? 'अत्याधुनिक एआई तकनीक' : 'State-of-the-Art AI' }}
             </h3>
             <p class="text-slate-600 text-base leading-relaxed flex-1">
-                {{ $locale === 'hi' ? 'हमारा उन्नत एआई चैटबॉट आपके लक्षणों का तुरंत विश्लेषण करता है और आपको सही चिकित्सा विभाग और निकटतम विशेषज्ञ से मिलाता है। स्वास्थ्य खोज को बेहद आसान बनाना।' : 'Our advanced AI Chatbot instantly analyzes your symptoms using semantic vector embeddings, matching you with the correct medical department and specialist seamlessly.' }}
+                {{ $locale === 'hi' ? 'हमारा एआई असिस्टेंट आपकी बात को सरल भाषा में समझकर संबंधित विभाग या प्रदाता श्रेणी सुझाता है। यह निदान या दवा की सलाह नहीं देता। चिकित्सकीय सलाह के लिए योग्य डॉक्टर से परामर्श करें।' : 'Our AI assistant understands your symptoms in simple language and suggests relevant departments or provider categories. It does not diagnose or prescribe treatment. Please consult a qualified healthcare professional for medical advice.' }}
             </p>
         </div>
     </div>
