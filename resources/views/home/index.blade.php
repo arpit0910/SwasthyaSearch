@@ -46,7 +46,7 @@
                     <i data-lucide="search"
                         class="absolute left-4 sm:left-6 w-5 h-5 sm:w-6 sm:h-6 text-slate-400 pointer-events-none"></i>
                     <input type="text" id="omni-search-input" oninput="handleOmniSearch(this.value)"
-                        placeholder="{{ $locale === 'hi' ? 'खोजें: \"पेट दर्द\", \"हड्डी का टूटना\", या डॉक्टर का नाम...' : 'Search: Bone fracture or Doctor name...' }}"
+                        placeholder="{{ $locale === 'hi' ? 'खोजें: हड्डी का टूटना, या डॉक्टर का नाम...' : 'Search: Bone fracture or Doctor name...' }}"
                         class="w-full pl-11 sm:pl-16 pr-4 py-3.5 sm:py-4 text-slate-800 bg-transparent text-base sm:text-lg font-medium placeholder:text-slate-400 focus:outline-none" />
                     <button id="clear-search-btn" onclick="clearOmniSearch()"
                         class="hidden mr-3 px-3 py-1.5 text-xs text-slate-400 hover:text-slate-600 bg-slate-100 rounded-xl transition-all duration-200">
@@ -304,6 +304,55 @@
                 </div>
             </div>
 
+            <!-- How It Works Section -->
+            <div>
+                <div class="mb-8">
+                    <div
+                        class="inline-flex items-center space-x-2 text-indigo-600 font-bold text-sm uppercase tracking-wider mb-2">
+                        <i data-lucide="workflow" class="w-4 h-4"></i>
+                        <span>{{ $locale === 'hi' ? 'कैसे काम करता है' : 'How It Works' }}</span>
+                    </div>
+                    <h2 class="text-2xl sm:text-3xl font-bold tracking-tight text-slate-900">
+                        {{ $locale === 'hi' ? 'सही डॉक्टर तक पहुँचने के 3 आसान चरण' : '3 Simple Steps to Reach the Right Doctor' }}
+                    </h2>
+                </div>
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                    <article class="bg-white rounded-3xl p-6 border border-slate-200/80 shadow-sm">
+                        <div class="w-11 h-11 rounded-2xl bg-indigo-100 text-indigo-700 flex items-center justify-center mb-4">
+                            <i data-lucide="message-square-text" class="w-5 h-5"></i>
+                        </div>
+                        <h3 class="text-lg font-bold text-slate-900 mb-2">
+                            {{ $locale === 'hi' ? '1. लक्षण लिखें' : '1. Enter Symptoms' }}
+                        </h3>
+                        <p class="text-sm text-slate-600">
+                            {{ $locale === 'hi' ? 'अपनी समस्या सामान्य भाषा में लिखें, जैसे छाती में दर्द या बुखार।' : 'Type your concern in plain language like chest pain or fever.' }}
+                        </p>
+                    </article>
+                    <article class="bg-white rounded-3xl p-6 border border-slate-200/80 shadow-sm">
+                        <div class="w-11 h-11 rounded-2xl bg-teal-100 text-teal-700 flex items-center justify-center mb-4">
+                            <i data-lucide="brain-circuit" class="w-5 h-5"></i>
+                        </div>
+                        <h3 class="text-lg font-bold text-slate-900 mb-2">
+                            {{ $locale === 'hi' ? '2. विभाग सुझाव पाएँ' : '2. Get Department Match' }}
+                        </h3>
+                        <p class="text-sm text-slate-600">
+                            {{ $locale === 'hi' ? 'AI आपके लक्षणों को संबंधित मेडिकल विभाग से जोड़ता है।' : 'AI maps your symptoms to the most relevant medical specialty.' }}
+                        </p>
+                    </article>
+                    <article class="bg-white rounded-3xl p-6 border border-slate-200/80 shadow-sm">
+                        <div class="w-11 h-11 rounded-2xl bg-amber-100 text-amber-700 flex items-center justify-center mb-4">
+                            <i data-lucide="phone-call" class="w-5 h-5"></i>
+                        </div>
+                        <h3 class="text-lg font-bold text-slate-900 mb-2">
+                            {{ $locale === 'hi' ? '3. डॉक्टर से जुड़ें' : '3. Connect with Doctors' }}
+                        </h3>
+                        <p class="text-sm text-slate-600">
+                            {{ $locale === 'hi' ? 'अपने शहर के सत्यापित डॉक्टर/अस्पताल चुनें और तुरंत संपर्क करें।' : 'Choose verified doctors and hospitals in your city and contact them directly.' }}
+                        </p>
+                    </article>
+                </div>
+            </div>
+
             <!-- Articles Section -->
             <div>
                 <div class="flex justify-between items-end mb-8">
@@ -446,20 +495,21 @@
                                     <label class="block text-xs font-bold text-slate-300 uppercase tracking-wider mb-2">
                                         {{ $locale === 'hi' ? 'रेटिंग' : 'Rating' }}
                                     </label>
-                                    <input type="hidden" id="feedback-rating-input" name="rating" value="5" />
+                                    <input type="hidden" id="feedback-rating-input" name="rating" value="" />
                                     <div class="flex items-center space-x-1.5 py-1.5" id="star-rating-container">
                                         @for ($s = 1; $s <= 5; $s++)
                                             <button type="button" onclick="setFeedbackRating({{ $s }})"
-                                                onmouseover="hoverFeedbackRating({{ $s }})"
-                                                onmouseout="resetFeedbackRatingHover()"
                                                 class="p-2 rounded-xl bg-slate-900/80 hover:bg-slate-900 border border-slate-700/80 hover:border-amber-400/50 transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-amber-400/50 shadow-inner"
                                                 title="{{ $s }} Star">
                                                 <i data-lucide="star"
-                                                    class="w-6 h-6 text-amber-400 fill-amber-400 transition-colors duration-200"
+                                                    class="w-6 h-6 text-slate-600 fill-transparent transition-colors duration-200"
                                                     id="star-icon-{{ $s }}"></i>
                                             </button>
                                         @endfor
                                     </div>
+                                    <p class="text-[11px] text-slate-400 mt-1" id="rating-label-text">
+                                        {{ $locale === 'hi' ? 'रेटिंग चुनने के लिए स्टार क्लिक करें' : 'Click a star to select your rating' }}
+                                    </p>
                                 </div>
                             </div>
 
@@ -804,7 +854,7 @@
             }
         }
 
-        let selectedRating = 5;
+        let selectedRating = 0;
 
         function setFeedbackRating(stars) {
             selectedRating = stars;
@@ -812,15 +862,7 @@
             updateStarsDisplay(stars);
         }
 
-        function hoverFeedbackRating(stars) {
-            updateStarsDisplay(stars, true);
-        }
-
-        function resetFeedbackRatingHover() {
-            updateStarsDisplay(selectedRating);
-        }
-
-        function updateStarsDisplay(stars, isHover = false) {
+        function updateStarsDisplay(stars) {
             for (let s = 1; s <= 5; s++) {
                 const icon = document.getElementById(`star-icon-${s}`);
                 if (icon) {
@@ -834,6 +876,32 @@
                 }
             }
             const label = document.getElementById('rating-label-text');
+            if (label) {
+                const labels = {
+                    0: currentLocale === 'hi' ? 'रेटिंग चुनने के लिए स्टार क्लिक करें' :
+                        'Click a star to select your rating',
+                    1: currentLocale === 'hi' ? '1 स्टार • बहुत खराब' : '1 Star • Very Poor',
+                    2: currentLocale === 'hi' ? '2 स्टार • सुधार की जरूरत' : '2 Stars • Needs Improvement',
+                    3: currentLocale === 'hi' ? '3 स्टार • ठीक-ठाक' : '3 Stars • Average',
+                    4: currentLocale === 'hi' ? '4 स्टार • बहुत अच्छा' : '4 Stars • Very Good',
+                    5: currentLocale === 'hi' ? '5 स्टार • उत्कृष्ट' : '5 Stars • Excellent',
+                };
+                label.textContent = labels[stars] ?? labels[0];
+            }
         }
+
+        const feedbackForm = document.querySelector('form[action="{{ route('feedback.submit') }}"]');
+        if (feedbackForm) {
+            feedbackForm.addEventListener('submit', function(e) {
+                const ratingValue = Number(document.getElementById('feedback-rating-input')?.value || 0);
+                if (!ratingValue) {
+                    e.preventDefault();
+                    alert(currentLocale === 'hi' ? 'कृपया पहले स्टार रेटिंग चुनें।' :
+                        'Please select a star rating before submitting.');
+                }
+            });
+        }
+
+        updateStarsDisplay(0);
     </script>
 @endpush

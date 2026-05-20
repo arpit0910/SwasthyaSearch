@@ -26,11 +26,12 @@ class ChatbotController extends Controller
             'session_token' => 'nullable|string',
             'message' => 'required|string',
             'city' => 'nullable|string|max:120',
+            'locale' => 'nullable|in:en,hi',
         ]);
 
         $sessionToken = $validated['session_token'] ?? Str::random(32);
         $userMessage = trim($validated['message']);
-        $locale = app()->getLocale();
+        $locale = $validated['locale'] ?? app()->getLocale();
 
         $chatSession = ChatSession::firstOrCreate(
             ['session_token' => $sessionToken],
@@ -39,25 +40,35 @@ class ChatbotController extends Controller
 
         $messages = $chatSession->messages ?? [];
 
+        $cityOptions = Hospital::where('is_verified', true)
+            ->whereNotNull('city')
+            ->distinct()
+            ->orderBy('city')
+            ->pluck('city')
+            ->filter()
+            ->values()
+            ->all();
+
         $selectedCity = trim((string) ($validated['city'] ?? ''));
         if ($selectedCity === '') {
             $lastCityMessage = collect($messages)->reverse()->first(fn ($msg) => !empty($msg['city']));
             $selectedCity = (string) ($lastCityMessage['city'] ?? '');
         }
 
-        if ($selectedCity === '') {
+        if ($selectedCity === '' || !in_array($selectedCity, $cityOptions, true)) {
             $cityPrompt = $locale === 'hi'
-                ? 'कृपया पहले अपना शहर चुनें ताकि मैं आपके शहर के डॉक्टर और अस्पताल दिखा सकूं।'
-                : 'Please select your city first so I can show doctors and hospitals in your city.';
+                ? 'कृपया सूची में से अपना शहर चुनें ताकि मैं सही डॉक्टर और अस्पताल दिखा सकूं।'
+                : 'Please choose your city from the list so I can show accurate doctors and hospitals.';
 
             $messages[] = ['sender' => 'user', 'text' => $userMessage, 'timestamp' => now()->toIso8601String()];
-            $messages[] = ['sender' => 'bot', 'text' => $cityPrompt, 'needs_city' => true, 'timestamp' => now()->toIso8601String()];
+            $messages[] = ['sender' => 'bot', 'text' => $cityPrompt, 'needs_city' => true, 'city_options' => $cityOptions, 'timestamp' => now()->toIso8601String()];
             $chatSession->update(['messages' => $messages]);
 
             return response()->json([
                 'session_token' => $sessionToken,
                 'reply' => $cityPrompt,
                 'needs_city' => true,
+                'city_options' => $cityOptions,
                 'history' => $messages,
             ]);
         }
@@ -66,6 +77,7 @@ class ChatbotController extends Controller
             'sender' => 'user',
             'text' => $userMessage,
             'city' => $selectedCity,
+            'locale' => $locale,
             'timestamp' => now()->toIso8601String(),
         ];
 
@@ -80,15 +92,12 @@ class ChatbotController extends Controller
         $departmentInfo = null;
 
         $doctors = collect();
-        $hospitals = collect();
 
         if (DB::getDriverName() === 'pgsql') {
             try {
                 $stringObj = Str::of($userMessage);
                 $userEmbedding = method_exists($stringObj, 'toEmbeddings') ? $stringObj->toEmbeddings() : json_encode(array_fill(0, 1536, 0.01));
-                $diseases = Disease::whereVectorSimilarTo('symptoms_embedding', $userEmbedding)
-                    ->with(['department'])
-                    ->get();
+                $diseases = Disease::whereVectorSimilarTo('symptoms_embedding', $userEmbedding)->with(['department'])->get();
 
                 if ($diseases->isNotEmpty()) {
                     $firstMatch = $diseases->first();
@@ -132,32 +141,6 @@ class ChatbotController extends Controller
             }
         }
 
-        if (! $matchedDeptId) {
-            $words = array_filter(explode(' ', $userMessage), fn ($w) => mb_strlen($w) > 3);
-            foreach ($words as $word) {
-                $diseaseMatch = Disease::where('name_en', 'LIKE', "%{$word}%")
-                    ->orWhere('name_hi', 'LIKE', "%{$word}%")
-                    ->with('department')
-                    ->first();
-
-                if ($diseaseMatch) {
-                    $matchedDeptId = $diseaseMatch->department_id;
-                    $matchedDiseaseNameEn = $diseaseMatch->name_en;
-                    $matchedDiseaseNameHi = $diseaseMatch->name_hi;
-                    break;
-                }
-
-                $deptMatch = Department::where('name_en', 'LIKE', "%{$word}%")
-                    ->orWhere('name_hi', 'LIKE', "%{$word}%")
-                    ->first();
-
-                if ($deptMatch) {
-                    $matchedDeptId = $deptMatch->id;
-                    break;
-                }
-            }
-        }
-
         if ($matchedDeptId) {
             $dept = Department::find($matchedDeptId);
             $deptNameEn = $dept?->name_en ?? '';
@@ -168,7 +151,7 @@ class ChatbotController extends Controller
                 $disName = $locale === 'hi' ? ($matchedDiseaseNameHi ?: $matchedDiseaseNameEn) : $matchedDiseaseNameEn;
                 $departmentInfo = $locale === 'hi'
                     ? "'{$disName}' के लिए '{$deptName}' विभाग उपयुक्त है।"
-                    : "For '{$disName}', the '{$deptName}' department is recommended.";
+                    : "For '{$disName}', '{$deptName}' department is recommended.";
             } else {
                 $departmentInfo = $locale === 'hi'
                     ? "आपकी समस्या के आधार पर '{$deptName}' विभाग उपयुक्त है।"
@@ -178,9 +161,7 @@ class ChatbotController extends Controller
             $doctors = Doctor::where('department_id', $matchedDeptId)
                 ->with(['department', 'hospitals'])
                 ->where('is_verified', true)
-                ->whereHas('hospitals', function ($q) use ($selectedCity) {
-                    $q->where('city', $selectedCity);
-                })
+                ->whereHas('hospitals', fn ($q) => $q->where('city', $selectedCity))
                 ->take(3)
                 ->get();
         }
@@ -192,9 +173,7 @@ class ChatbotController extends Controller
             })
             ->with(['department', 'hospitals'])
             ->where('is_verified', true)
-            ->whereHas('hospitals', function ($q) use ($selectedCity) {
-                $q->where('city', $selectedCity);
-            })
+            ->whereHas('hospitals', fn ($q) => $q->where('city', $selectedCity))
             ->take(3)
             ->get();
         }
@@ -211,11 +190,7 @@ class ChatbotController extends Controller
             ->get();
 
         if ($hospitals->isEmpty()) {
-            $hospitals = Hospital::where('is_verified', true)
-                ->where('city', $selectedCity)
-                ->latest()
-                ->take(3)
-                ->get();
+            $hospitals = Hospital::where('is_verified', true)->where('city', $selectedCity)->latest()->take(3)->get();
         }
 
         $articles = Article::where('is_published', true)
@@ -238,8 +213,8 @@ class ChatbotController extends Controller
 
         if ($qaAnswer && ($qaAnswer['source'] ?? '') === 'emergency_rule') {
             $botReply = $locale === 'hi'
-                ? 'यह संभवतः आपातकाल हो सकता है। अगर सीने में दर्द है तो तुरंत इमरजेंसी सेवा पर कॉल करें और नजदीकी इमरजेंसी में जाएं। खुद गाड़ी न चलाएं।'
-                : 'This may be an emergency. For chest pain, call emergency services immediately and go to the nearest emergency room. Do not drive yourself.';
+                ? 'यह संभवतः आपातकाल हो सकता है। यदि सीने में दर्द है तो तुरंत इमरजेंसी सेवा पर कॉल करें और नजदीकी इमरजेंसी में जाएं।'
+                : 'This may be an emergency. If there is chest pain, call emergency services immediately and go to the nearest emergency room.';
         } elseif ($qaAnswer) {
             $botReply = (string) $qaAnswer['answer'];
         } elseif ($departmentInfo) {
@@ -256,6 +231,7 @@ class ChatbotController extends Controller
             'sender' => 'bot',
             'text' => $botReply,
             'city' => $selectedCity,
+            'locale' => $locale,
             'qa_answer' => $qaAnswer,
             'department_info' => $departmentInfo,
             'doctors' => $doctors,
@@ -272,6 +248,8 @@ class ChatbotController extends Controller
             'session_token' => $sessionToken,
             'reply' => $botReply,
             'city' => $selectedCity,
+            'city_options' => $cityOptions,
+            'locale' => $locale,
             'qa_answer' => $qaAnswer,
             'department_info' => $departmentInfo,
             'doctors' => $doctors,
