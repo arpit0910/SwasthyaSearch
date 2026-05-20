@@ -26,18 +26,18 @@
     <section class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 -mt-8 relative z-20 w-full mb-12">
         <form action="{{ route('hospitals.index') }}" method="GET"
             class="bg-white rounded-2xl shadow-xl border border-slate-200/80 p-5 sm:p-6 backdrop-blur-xl">
-            <div class="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-5 gap-4 items-stretch">
+            <div class="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-12 gap-4 items-stretch">
                 <!-- Search Input -->
-                <div class="relative xl:col-span-2">
+                <div class="relative xl:col-span-4">
                     <i data-lucide="search" class="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-slate-400"></i>
                     <input type="text" name="search"
-                        placeholder="{{ $locale === 'hi' ? 'अस्पताल का नाम या पता खोजें...' : 'Search hospital name or address...' }}"
+                        placeholder="{{ $locale === 'hi' ? 'अस्पताल, क्लिनिक, पता या शहर खोजें...' : 'Search hospitals, clinics, address, city...' }}"
                         value="{{ request('search', $filters['search'] ?? '') }}"
-                        class="h-12 w-full pl-11 pr-4 bg-slate-50 border border-slate-200 rounded-xl text-sm focus:outline-none focus:border-teal-50-border focus:ring-2 focus:ring-teal-500/20 transition-all duration-200 font-medium" />
+                        class="h-12 w-full pl-11 pr-4 bg-slate-50 border border-slate-200 rounded-xl text-sm focus:outline-none focus:border-teal-500 focus:ring-2 focus:ring-teal-500/20 transition-all duration-200 font-medium" />
                 </div>
 
                 <!-- Type Filter -->
-                <div>
+                <div class="xl:col-span-2">
                     @php $typeVal = request('type', $filters['type'] ?? 'All'); @endphp
                     <select name="type"
                         class="h-12 w-full px-4 bg-slate-50 border border-slate-200 rounded-xl text-sm focus:outline-none focus:border-teal-500 focus:ring-2 focus:ring-teal-500/20 transition-all duration-200 font-medium text-slate-700">
@@ -51,7 +51,7 @@
                 </div>
 
                 <!-- City Filter -->
-                <div>
+                <div class="xl:col-span-3">
                     @php $cityVal = request('city', $filters['city'] ?? 'All'); @endphp
                     <select name="city"
                         class="h-12 w-full px-4 bg-slate-50 border border-slate-200 rounded-xl text-sm focus:outline-none focus:border-teal-500 focus:ring-2 focus:ring-teal-500/20 transition-all duration-200 font-medium text-slate-700">
@@ -65,7 +65,7 @@
                 </div>
 
                 <!-- Benefit Filter -->
-                <div>
+                <div class="xl:col-span-3">
                     @php $benefitVal = request('benefit', $filters['benefit'] ?? 'All'); @endphp
                     <select name="benefit"
                         class="h-12 w-full px-4 bg-slate-50 border border-slate-200 rounded-xl text-sm focus:outline-none focus:border-teal-500 focus:ring-2 focus:ring-teal-500/20 transition-all duration-200 font-medium text-slate-700">
@@ -273,6 +273,9 @@
 
                         <!-- Card Footer -->
                         <div class="p-6 pt-0 bg-white">
+                            <p class="text-[11px] text-amber-800 bg-amber-50 border border-amber-200 rounded-lg px-2.5 py-1.5 mb-2.5">
+                                {{ $locale === 'hi' ? 'जाने से पहले कृपया कॉल करें।' : 'Please call before visiting.' }}
+                            </p>
                             <a href="tel:{{ $h->emergency_phone }}"
                                 class="w-full bg-gradient-to-tr from-teal-500 to-indigo-600 hover:from-teal-600 hover:to-indigo-700 text-white font-bold py-3 rounded-xl shadow-md hover:shadow-lg transition-all duration-200 text-xs uppercase tracking-wider flex items-center justify-center space-x-2 transform active:scale-98">
                                 <i data-lucide="phone-call" class="w-4 h-4 text-white"></i>

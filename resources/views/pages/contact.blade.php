@@ -167,7 +167,7 @@
                         name="message"
                         placeholder="{{ $locale === 'hi' ? 'अपना संदेश यहाँ विस्तार से लिखें...' : 'Write your message here in detail...' }}"
                         required
-                        class="w-full px-4 py-3 bg-slate-50 border rounded-xl text-sm focus:outline-none focus:ring-2 transition-all duration-200 font-medium @error('message') border-rose-300 focus:border-rose-50-border focus:ring-rose-500/20 bg-rose-50/30 @else border-slate-200 focus:border-teal-500 focus:ring-teal-500/20 @enderror"
+                        class="w-full px-4 py-3 bg-slate-50 border rounded-xl text-sm focus:outline-none focus:ring-2 transition-all duration-200 font-medium @error('message') border-rose-300 focus:border-rose-500 focus:ring-rose-500/20 bg-rose-50/30 @else border-slate-200 focus:border-teal-500 focus:ring-teal-500/20 @enderror"
                     >{{ old('message') }}</textarea>
                     @error('message')
                         <p class="mt-1.5 text-xs text-rose-500 flex items-center space-x-1 font-semibold">

@@ -11,32 +11,18 @@
     @endphp
 
     <!-- Hero Section -->
-    <header
-        class="relative overflow-hidden py-16 lg:py-24 mb-6 bg-gradient-to-b from-indigo-900 via-indigo-950 to-slate-900 text-white">
-        <div
-            class="absolute inset-0 opacity-10 bg-[radial-gradient(#4A90E2_1px,transparent_1px)] [background-size:16px_16px]">
-        </div>
-
+    <header class="relative overflow-hidden py-14 lg:py-20 mb-6 bg-gradient-to-b from-slate-950 via-slate-900 to-indigo-950 text-white">
+        <div class="absolute inset-0 opacity-20 bg-[radial-gradient(#67e8f9_1px,transparent_1px)] [background-size:18px_18px]"></div>
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10 text-center">
-            <div
-                class="inline-flex items-center space-x-2 px-4 py-2 rounded-full bg-teal-500/10 border border-teal-500/30 text-teal-300 mb-8 shadow-inner">
-                <i data-lucide="sparkles" class="w-4 h-4 text-teal-400 animate-spin"></i>
-                <span class="text-xs font-semibold tracking-wider uppercase">
-                    {{ $locale === 'hi' ? 'स्मार्ट लक्षण-आधारित खोज' : 'Smart Symptom-Based Search' }}
-                </span>
+            <div class="inline-flex items-center space-x-2 px-4 py-2 rounded-full bg-teal-400/10 border border-teal-300/30 text-teal-200 mb-7 shadow-inner">
+                <i data-lucide="shield-check" class="w-4 h-4 text-teal-300"></i>
+                <span class="text-xs font-semibold tracking-wider uppercase">{{ $locale === 'hi' ? 'भरोसेमंद हेल्थकेयर खोज' : 'Trusted Healthcare Discovery' }}</span>
             </div>
-
-            <h1
-                class="text-4xl sm:text-6xl font-extrabold tracking-tight max-w-4xl mx-auto py-4 leading-[1.4] sm:leading-[1.35] text-white drop-shadow-md mb-6">
-                @if ($locale === 'hi')
-                    अपनी बीमारी के <span class="text-teal-400">लक्षणों</span> से सही डॉक्टर खोजें
-                @else
-                    Find the Right Specialist by Your <span class="text-teal-400">Symptoms</span>
-                @endif
+            <h1 class="text-4xl sm:text-6xl font-extrabold tracking-tight max-w-5xl mx-auto py-4 leading-[1.3] text-white drop-shadow-md mb-5">
+                {{ $locale === 'hi' ? 'अपने पास भरोसेमंद डॉक्टर, अस्पताल और ब्लड बैंक खोजें' : 'Find trusted doctors, hospitals, and blood banks near you' }}
             </h1>
-
-            <p class="text-lg sm:text-xl text-slate-300 max-w-3xl sm:max-w-4xl mx-auto font-normal leading-[1.7] sm:leading-[1.8] mb-8">
-                {{ $locale === 'hi' ? 'अब जटिल मेडिकल शब्दों की चिंता नहीं। अपनी परेशानी या बीमारी का नाम लिखें और तुरंत सही डॉक्टर का पता लगाएं।' : 'Skip the medical jargon. Simply type what is bothering you, and our intelligent directory will connect you with the right verified healthcare providers instantly.' }}
+            <p class="text-lg sm:text-xl text-slate-200 max-w-4xl mx-auto font-normal leading-[1.7] mb-7">
+                {{ $locale === 'hi' ? 'लक्षण, विभाग, अस्पताल, ब्लड बैंक या शहर से खोजें। बिना विज्ञापन और बिना बिचौलियों के सीधे संपर्क करें।' : 'Search by symptoms, department, hospital, blood bank, or city. Connect directly without ads or intermediaries.' }}
             </p>
 
             <!-- Omni-Search Box -->
@@ -46,7 +32,7 @@
                     <i data-lucide="search"
                         class="absolute left-4 sm:left-6 w-5 h-5 sm:w-6 sm:h-6 text-slate-400 pointer-events-none"></i>
                     <input type="text" id="omni-search-input" oninput="handleOmniSearch(this.value)"
-                        placeholder="{{ $locale === 'hi' ? 'खोजें: हड्डी का टूटना, या डॉक्टर का नाम...' : 'Search: Bone fracture or Doctor name...' }}"
+                        placeholder="{{ $locale === 'hi' ? 'डॉक्टर, अस्पताल, ब्लड बैंक, लक्षण खोजें...' : 'Search doctors, hospitals, blood banks, symptoms...' }}"
                         class="w-full pl-11 sm:pl-16 pr-4 py-3.5 sm:py-4 text-slate-800 bg-transparent text-base sm:text-lg font-medium placeholder:text-slate-400 focus:outline-none" />
                     <button id="clear-search-btn" onclick="clearOmniSearch()"
                         class="hidden mr-3 px-3 py-1.5 text-xs text-slate-400 hover:text-slate-600 bg-slate-100 rounded-xl transition-all duration-200">
@@ -54,32 +40,28 @@
                     </button>
                 </div>
 
-                <!-- Quick Specialty Shortcuts -->
                 <div class="mt-8 pt-6 border-t border-white/10 max-w-4xl mx-auto text-center">
-                    <p class="text-xs font-bold uppercase tracking-widest text-teal-300 mb-4">
-                        {{ $locale === 'hi' ? 'प्रमुख चिकित्सा विभाग व विशेषज्ञ खोजें' : 'Explore Top Medical Specialties' }}
-                    </p>
-                    <div class="flex flex-wrap justify-center gap-2 sm:gap-2.5 items-center">
-                        @foreach ($departments->random(4) as $dept)
-                            @php
-                                $dName =
-                                    $locale === 'hi'
-                                        ? ($dept['name']['hi'] ?:
-                                        $dept['name']['en'])
-                                        : $dept['name']['en'];
-                            @endphp
-                            <button onclick="handleOmniSearch('{{ addslashes($dName) }}')"
-                                class="px-4 py-2 rounded-2xl bg-white/10 hover:bg-white/20 border border-white/10 text-xs sm:text-sm font-semibold transition-all duration-200 backdrop-blur-md shadow-sm hover:shadow-md flex items-center space-x-1.5 group">
-                                <i data-lucide="stethoscope"
-                                    class="w-3.5 h-3.5 text-teal-400 group-hover:scale-110 transition-transform"></i>
-                                <span>{{ $dName }}</span>
-                            </button>
-                        @endforeach
+                    <div class="flex flex-wrap justify-center gap-2.5 items-center">
+                        <a href="{{ route('doctors.index') }}" class="px-4 py-2 rounded-2xl bg-white/10 hover:bg-white/20 border border-white/10 text-xs sm:text-sm font-semibold">Find Doctor</a>
+                        <a href="{{ route('hospitals.index') }}" class="px-4 py-2 rounded-2xl bg-white/10 hover:bg-white/20 border border-white/10 text-xs sm:text-sm font-semibold">Find Hospital</a>
+                        <a href="{{ route('blood_banks.index') }}" class="px-4 py-2 rounded-2xl bg-white/10 hover:bg-white/20 border border-white/10 text-xs sm:text-sm font-semibold">Find Blood Bank</a>
+                        <button type="button" onclick="toggleChatbot()" class="px-4 py-2 rounded-2xl bg-teal-500 hover:bg-teal-400 border border-teal-300/40 text-xs sm:text-sm font-semibold text-slate-950">Ask AI Assistant</button>
                     </div>
                 </div>
             </div>
         </div>
     </header>
+
+    <section class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 mb-4">
+        <div class="rounded-2xl border border-amber-200 bg-amber-50 px-4 py-3 sm:px-6 sm:py-4 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
+            <p class="text-sm sm:text-base font-semibold text-amber-900">{{ $locale === 'hi' ? 'तुरंत मदद चाहिए? नजदीकी अस्पताल और ब्लड बैंक जल्दी खोजें।' : 'Need urgent help? Quickly find nearby hospitals and blood banks.' }}</p>
+            <div class="flex flex-wrap gap-2">
+                <a href="{{ route('hospitals.index') }}" class="text-xs sm:text-sm px-3 py-2 rounded-xl bg-white border border-amber-300 text-amber-900 font-semibold">Find Hospitals</a>
+                <a href="{{ route('blood_banks.index') }}" class="text-xs sm:text-sm px-3 py-2 rounded-xl bg-white border border-amber-300 text-amber-900 font-semibold">Find Blood Banks</a>
+                <button type="button" onclick="toggleChatbot()" class="text-xs sm:text-sm px-3 py-2 rounded-xl bg-amber-900 text-white font-semibold">Ask AI Assistant</button>
+            </div>
+        </div>
+    </section>
 
     <!-- Main Content Area -->
     <main class="flex-1 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16 w-full">

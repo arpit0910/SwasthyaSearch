@@ -14,7 +14,7 @@
             {{ $locale === 'hi' ? 'आपातकालीन ब्लड बैंक व रक्त समूह खोजें' : 'Find Emergency Blood Banks & Availability' }}
         </h1>
         <p class="max-w-2xl mx-auto text-slate-300 text-base sm:text-lg leading-relaxed">
-            {{ $locale === 'hi' ? 'राजस्थान के 100% सत्यापित व लाइसेंस प्राप्त ब्लड बैंक। वास्तविक समय में रक्त समूह की उपलब्धता और सीधे संपर्क सूत्र।' : 'Explore our comprehensive directory of 100% verified, licensed blood banks. Real-time blood group availability with direct emergency contact numbers.' }}
+            {{ $locale === 'hi' ? 'सत्यापित और लाइसेंस प्राप्त ब्लड बैंक खोजें। रक्त उपलब्धता तेजी से बदल सकती है, इसलिए जाने से पहले कॉल करके पुष्टि करें।' : 'Find verified, licensed blood banks. Blood availability can change quickly, so please call to confirm before visiting.' }}
         </p>
     </div>
 </header>
@@ -22,9 +22,9 @@
 <!-- Filter Bar -->
 <section class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 -mt-8 relative z-20 w-full mb-12">
     <form action="{{ route('blood_banks.index') }}" method="GET" class="bg-white rounded-2xl shadow-xl border border-slate-200/80 p-5 sm:p-6 backdrop-blur-xl">
-        <div class="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-5 gap-4 items-stretch">
+        <div class="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-12 gap-4 items-stretch">
             <!-- Search Input -->
-            <div class="relative xl:col-span-2">
+            <div class="relative xl:col-span-4">
                 <i data-lucide="search" class="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-slate-400"></i>
                 <input
                     type="text"
@@ -36,7 +36,7 @@
             </div>
 
             <!-- Blood Group Filter -->
-            <div>
+            <div class="xl:col-span-2">
                 @php $bgVal = request('blood_group', $filters['blood_group'] ?? 'All'); @endphp
                 <select
                     name="blood_group"
@@ -50,7 +50,7 @@
             </div>
 
             <!-- Facility Filter -->
-            <div>
+            <div class="xl:col-span-3">
                 @php $facVal = request('facility', $filters['facility'] ?? 'All'); @endphp
                 <select
                     name="facility"
@@ -65,7 +65,7 @@
             </div>
 
             <!-- City Filter -->
-            <div>
+            <div class="xl:col-span-3">
                 @php $cityVal = request('city', $filters['city'] ?? 'All'); @endphp
                 <select
                     name="city"
@@ -188,6 +188,9 @@
                                     <span class="text-xs text-slate-400 italic">{{ $locale === 'hi' ? 'जानकारी उपलब्ध नहीं' : 'Stock info unavailable' }}</span>
                                 @endif
                             </div>
+                            <p class="text-[11px] text-amber-800 bg-amber-50 border border-amber-200 rounded-xl px-2.5 py-1.5">
+                                {{ $locale === 'hi' ? 'रक्त उपलब्धता तेजी से बदल सकती है। कृपया जाने से पहले कॉल से पुष्टि करें।' : 'Blood availability can change quickly. Please call to confirm before visiting.' }}
+                            </p>
                         </div>
 
                         <!-- Mobile Accordion Toggle Button -->

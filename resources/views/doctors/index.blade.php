@@ -22,21 +22,21 @@
 <!-- Filter Bar -->
 <section class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 -mt-8 relative z-20 w-full mb-12">
     <form action="{{ route('doctors.index') }}" method="GET" class="bg-white rounded-2xl shadow-xl border border-slate-200/80 p-5 sm:p-6 backdrop-blur-xl">
-        <div class="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-5 gap-4 items-stretch">
+        <div class="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-12 gap-4 items-stretch">
             <!-- Search Input -->
-            <div class="relative xl:col-span-2">
+            <div class="relative xl:col-span-4">
                 <i data-lucide="search" class="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-slate-400"></i>
                 <input
                     type="text"
                     name="search"
-                    placeholder="{{ $locale === 'hi' ? 'डॉक्टर का नाम या लक्षण खोजें...' : 'Search doctor name or keywords...' }}"
+                    placeholder="{{ $locale === 'hi' ? 'डॉक्टर, विभाग, लक्षण खोजें...' : 'Search doctors, departments, symptoms...' }}"
                     value="{{ request('search', $filters['search'] ?? '') }}"
                     class="h-12 w-full pl-11 pr-4 bg-slate-50 border border-slate-200 rounded-xl text-sm focus:outline-none focus:border-teal-500 focus:ring-2 focus:ring-teal-500/20 transition-all duration-200 font-medium"
                 />
             </div>
 
             <!-- Department Filter -->
-            <div>
+            <div class="xl:col-span-3">
                 <select
                     name="department"
                     class="h-12 w-full px-4 bg-slate-50 border border-slate-200 rounded-xl text-sm focus:outline-none focus:border-teal-500 focus:ring-2 focus:ring-teal-500/20 transition-all duration-200 font-medium text-slate-700"
@@ -58,7 +58,7 @@
             </div>
 
             <!-- Experience Filter -->
-            <div>
+            <div class="xl:col-span-2">
                 @php $expVal = request('experience', $filters['experience'] ?? 'All'); @endphp
                 <select
                     name="experience"
@@ -73,7 +73,7 @@
             </div>
 
             <!-- City Filter -->
-            <div>
+            <div class="xl:col-span-3">
                 @php $cityVal = request('city', $filters['city'] ?? 'All'); @endphp
                 <select
                     name="city"
@@ -117,9 +117,9 @@
             <h3 class="text-2xl font-bold text-slate-900 mb-2">
                 {{ $locale === 'hi' ? 'कोई डॉक्टर नहीं मिला' : 'No Doctors Found' }}
             </h3>
-            <p class="text-slate-500 text-base mb-8 leading-relaxed">
-                {{ $locale === 'hi' ? 'आपके द्वारा चुने गए फ़िल्टर से मेल खाने वाला कोई डॉक्टर नहीं मिला। कृपया अपनी खोज मानदंड बदलें।' : 'We could not find any doctors matching your selected filters. Please try modifying your search criteria.' }}
-            </p>
+                <p class="text-slate-500 text-base mb-8 leading-relaxed">
+                    {{ $locale === 'hi' ? 'कोई परिणाम नहीं मिला। कृपया शहर, विभाग या खोज शब्द बदलकर देखें।' : 'No results found. Try another city, department, or keyword.' }}
+                </p>
             <a
                 href="{{ route('doctors.index') }}"
                 class="bg-slate-900 hover:bg-slate-800 text-white font-bold px-8 py-3 rounded-xl shadow transition-all duration-200 text-sm inline-flex items-center space-x-2"
@@ -322,7 +322,7 @@
                                             @if(!empty($hPhone))
                                                 <a href="tel:{{ $hPhone }}" class="inline-flex items-center space-x-1 text-xs text-teal-600 hover:text-teal-700 font-bold bg-teal-50 hover:bg-teal-100/80 px-2.5 py-1 rounded-lg border border-teal-100 transition-all shadow-2xs">
                                                     <i data-lucide="phone-call" class="w-3 h-3 text-teal-600"></i>
-                                                    <span>{{ $locale === 'hi' ? 'अस्पताल संपर्क' : 'Hospital Tel' }}: {{ $hPhone }}</span>
+                                                    <span>{{ (isset($h->type) && str_contains(strtolower((string) $h->type), 'clinic')) ? 'Call Clinic' : 'Call Hospital' }}</span>
                                                 </a>
                                             @else
                                                 <span class="text-[10px] text-slate-400 italic">{{ $locale === 'hi' ? 'संपर्क उपलब्ध नहीं' : 'Tel Unlisted' }}</span>
@@ -345,25 +345,54 @@
 
                     <!-- Card Footer -->
                     <div class="p-6 pt-0 bg-white flex flex-col sm:flex-row gap-2.5 sm:gap-3">
-                        @if(!empty($doc->phone))
-                            <a
-                                href="tel:{{ $doc->phone }}"
-                                class="w-full sm:flex-1 bg-teal-600 hover:bg-teal-700 text-white font-bold py-3 px-4 rounded-xl shadow-md hover:shadow-lg transition-all duration-200 text-xs uppercase tracking-wider flex items-center justify-center space-x-2"
-                            >
+                        @php
+                            $doctorPhone = !empty($doc->phone) ? $doc->phone : '';
+                            $clinicPhone = '';
+                            if (!empty($doc->hospitals) && count($doc->hospitals) > 0) {
+                                foreach ($doc->hospitals as $hospForPhone) {
+                                    $hfp = is_array($hospForPhone) ? (object) $hospForPhone : $hospForPhone;
+                                    $candidate = !empty($hfp->emergency_phone) ? $hfp->emergency_phone : (!empty($hfp->phone) ? $hfp->phone : '');
+                                    if (!empty($candidate)) {
+                                        $clinicPhone = $candidate;
+                                        break;
+                                    }
+                                }
+                            }
+                            $hasDoctorPhone = !empty($doctorPhone);
+                            $hasClinicPhone = !empty($clinicPhone);
+                            $hasDistinctBoth = $hasDoctorPhone && $hasClinicPhone && $doctorPhone !== $clinicPhone;
+                        @endphp
+
+                        @if($hasDistinctBoth)
+                            <a href="tel:{{ $doctorPhone }}" class="w-full sm:flex-1 bg-teal-600 hover:bg-teal-700 text-white font-bold py-3 px-4 rounded-xl shadow-md hover:shadow-lg transition-all duration-200 text-xs uppercase tracking-wider flex items-center justify-center space-x-2">
                                 <i data-lucide="phone" class="w-4 h-4 text-teal-100"></i>
-                                <span>{{ $locale === 'hi' ? 'डॉक्टर / क्लिनिक को कॉल करें' : 'Call Doctor / Clinic' }}</span>
+                                <span>Call Doctor</span>
+                            </a>
+                            <a href="tel:{{ $clinicPhone }}" class="w-full sm:flex-1 bg-indigo-600 hover:bg-indigo-700 text-white font-bold py-3 px-4 rounded-xl shadow-md hover:shadow-lg transition-all duration-200 text-xs uppercase tracking-wider flex items-center justify-center space-x-2">
+                                <i data-lucide="phone-call" class="w-4 h-4 text-indigo-100"></i>
+                                <span>Call Clinic</span>
+                            </a>
+                        @elseif($hasDoctorPhone)
+                            <a href="tel:{{ $doctorPhone }}" class="w-full sm:flex-1 bg-teal-600 hover:bg-teal-700 text-white font-bold py-3 px-4 rounded-xl shadow-md hover:shadow-lg transition-all duration-200 text-xs uppercase tracking-wider flex items-center justify-center space-x-2">
+                                <i data-lucide="phone" class="w-4 h-4 text-teal-100"></i>
+                                <span>Call Doctor</span>
+                            </a>
+                        @elseif($hasClinicPhone)
+                            <a href="tel:{{ $clinicPhone }}" class="w-full sm:flex-1 bg-indigo-600 hover:bg-indigo-700 text-white font-bold py-3 px-4 rounded-xl shadow-md hover:shadow-lg transition-all duration-200 text-xs uppercase tracking-wider flex items-center justify-center space-x-2">
+                                <i data-lucide="phone-call" class="w-4 h-4 text-indigo-100"></i>
+                                <span>Call Clinic</span>
                             </a>
                         @else
                             <button
                                 type="button"
-                                onclick="alert('{{ $locale === 'hi' ? 'डॉक्टर का सीधा नंबर उपलब्ध नहीं है। कृपया ऊपर दिए गए अस्पताल संपर्क नंबरों का उपयोग करें।' : 'Direct doctor mobile/clinic number is unlisted. Please use the hospital contact numbers listed above.' }}')"
+                                onclick="alert('{{ $locale === 'hi' ? '?????? ?? ??????? ?? ???? ???? ?????? ???? ??? ????? ??? ??? ?? ??????? ?????? ?????? ?? ????? ?????' : 'Direct doctor or clinic number is unlisted. Please use the hospital contact numbers listed above.' }}')"
                                 class="w-full sm:flex-1 bg-slate-100 text-slate-400 font-bold py-3 px-4 rounded-xl border border-slate-200 text-xs uppercase tracking-wider flex items-center justify-center space-x-2 cursor-not-allowed"
                             >
                                 <i data-lucide="phone-off" class="w-4 h-4 text-slate-400"></i>
-                                <span>{{ $locale === 'hi' ? 'डॉक्टर संपर्क उपलब्ध नहीं' : 'Doctor Tel Unlisted' }}</span>
+                                <span>{{ $locale === 'hi' ? '?????? ?????? ?????? ????' : 'Doctor Tel Unlisted' }}</span>
                             </button>
                         @endif
-                        @if (!empty($doc->website))
+@if (!empty($doc->website))
                             <a
                                 href="{{ str_starts_with($doc->website, 'http') ? $doc->website : 'https://' . $doc->website }}"
                                 target="_blank"
