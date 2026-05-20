@@ -31,5 +31,18 @@ class FaqSeeder extends Seeder
                 'category' => 'Technology',
             ]
         );
+
+        $medicalEntries = config('medical_qa.entries', []);
+        foreach ($medicalEntries as $entry) {
+            Faq::firstOrCreate(
+                ['question_en' => $entry['question_en']],
+                [
+                    'question_hi' => $entry['question_hi'] ?? $entry['question_en'],
+                    'answer_en' => $entry['answer_en'] ?? '',
+                    'answer_hi' => $entry['answer_hi'] ?? ($entry['answer_en'] ?? ''),
+                    'category' => $entry['category'] ?? 'General Medical',
+                ]
+            );
+        }
     }
 }

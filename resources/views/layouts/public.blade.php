@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="{{ str_replace('_', '-', app()->getLocale()) }}">
 <head>
     <meta charset="utf-8">
@@ -49,22 +49,22 @@
 
                     <div class="hidden md:flex items-center space-x-1 lg:space-x-2">
                         <a href="{{ route('doctors.index') }}" class="px-3 py-2 rounded-xl text-sm font-semibold transition-all duration-200 {{ request()->routeIs('doctors.*') ? 'bg-teal-50 text-teal-700 border border-teal-100/80 shadow-2xs' : 'text-slate-600 hover:text-slate-900 hover:bg-slate-50' }}">
-                            {{ $locale === 'hi' ? 'डॉक्टर खोजें' : 'Doctors' }}
+                            {{ $locale === 'hi' ? 'à¤¡à¥‰à¤•à¥à¤Ÿà¤° à¤–à¥‹à¤œà¥‡à¤‚' : 'Doctors' }}
                         </a>
                         <a href="{{ route('hospitals.index') }}" class="px-3 py-2 rounded-xl text-sm font-semibold transition-all duration-200 {{ request()->routeIs('hospitals.*') ? 'bg-teal-50 text-teal-700 border border-teal-100/80 shadow-2xs' : 'text-slate-600 hover:text-slate-900 hover:bg-slate-50' }}">
-                            {{ $locale === 'hi' ? 'अस्पताल व क्लीनिक' : 'Hospitals' }}
+                            {{ $locale === 'hi' ? 'à¤…à¤¸à¥à¤ªà¤¤à¤¾à¤² à¤µ à¤•à¥à¤²à¥€à¤¨à¤¿à¤•' : 'Hospitals' }}
                         </a>
                         <a href="{{ route('blood_banks.index') }}" class="px-3 py-2 rounded-xl text-sm font-semibold transition-all duration-200 {{ request()->routeIs('blood_banks.*') ? 'bg-teal-50 text-teal-700 border border-teal-100/80 shadow-2xs' : 'text-slate-600 hover:text-slate-900 hover:bg-slate-50' }}">
-                            {{ $locale === 'hi' ? 'ब्लड बैंक' : 'Blood Banks' }}
+                            {{ $locale === 'hi' ? 'à¤¬à¥à¤²à¤¡ à¤¬à¥ˆà¤‚à¤•' : 'Blood Banks' }}
                         </a>
                         <a href="{{ route('articles.index') }}" class="px-3 py-2 rounded-xl text-sm font-semibold transition-all duration-200 {{ request()->routeIs('articles.*') ? 'bg-teal-50 text-teal-700 border border-teal-100/80 shadow-2xs' : 'text-slate-600 hover:text-slate-900 hover:bg-slate-50' }}">
-                            {{ $locale === 'hi' ? 'स्वास्थ्य लेख' : 'Articles' }}
+                            {{ $locale === 'hi' ? 'à¤¸à¥à¤µà¤¾à¤¸à¥à¤¥à¥à¤¯ à¤²à¥‡à¤–' : 'Articles' }}
                         </a>
                         <a href="{{ route('about') }}" class="px-3 py-2 rounded-xl text-sm font-semibold transition-all duration-200 {{ request()->routeIs('about') ? 'bg-teal-50 text-teal-700 border border-teal-100/80 shadow-2xs' : 'text-slate-600 hover:text-slate-900 hover:bg-slate-50' }}">
-                            {{ $locale === 'hi' ? 'हमारे बारे में' : 'About Us' }}
+                            {{ $locale === 'hi' ? 'à¤¹à¤®à¤¾à¤°à¥‡ à¤¬à¤¾à¤°à¥‡ à¤®à¥‡à¤‚' : 'About Us' }}
                         </a>
                         <a href="{{ route('contact') }}" class="px-3 py-2 rounded-xl text-sm font-semibold transition-all duration-200 {{ request()->routeIs('contact') ? 'bg-teal-50 text-teal-700 border border-teal-100/80 shadow-2xs' : 'text-slate-600 hover:text-slate-900 hover:bg-slate-50' }}">
-                            {{ $locale === 'hi' ? 'संपर्क करें' : 'Contact Us' }}
+                            {{ $locale === 'hi' ? 'à¤¸à¤‚à¤ªà¤°à¥à¤• à¤•à¤°à¥‡à¤‚' : 'Contact Us' }}
                         </a>
                     </div>
                 </div>
@@ -84,7 +84,7 @@
                             <input type="hidden" name="locale" value="hi">
                             <button type="submit" class="flex items-center space-x-1 sm:space-x-1.5 px-2 sm:px-3 py-1.5 rounded-lg text-xs sm:text-sm font-medium transition-all duration-200 {{ $locale === 'hi' ? 'bg-white text-indigo-900 shadow-sm font-semibold' : 'text-slate-600 hover:text-slate-900' }}">
                                 <i data-lucide="globe" class="w-3.5 h-3.5 sm:w-4 sm:h-4 text-teal-600"></i>
-                                <span><span class="hidden sm:inline">हिंदी</span><span class="sm:hidden font-bold">HI</span></span>
+                                <span><span class="hidden sm:inline">à¤¹à¤¿à¤‚à¤¦à¥€</span><span class="sm:hidden font-bold">HI</span></span>
                             </button>
                         </form>
                     </div>
@@ -104,7 +104,7 @@
                 <i data-lucide="message-square" class="w-6 h-6 text-white"></i>
             </div>
             <span class="font-bold text-base tracking-wide whitespace-nowrap leading-none pt-0.5">
-                {{ $locale === 'hi' ? 'स्वास्थ्या एआई से पूछें' : 'Ask Swasthya AI' }}
+                {{ $locale === 'hi' ? 'à¤¸à¥à¤µà¤¾à¤¸à¥à¤¥à¥à¤¯à¤¾ à¤à¤†à¤ˆ à¤¸à¥‡ à¤ªà¥‚à¤›à¥‡à¤‚' : 'Ask Swasthya AI' }}
             </span>
         </button>
 
@@ -120,7 +120,7 @@
                         <h3 class="font-bold text-lg leading-tight">Swasthya AI Assistant</h3>
                         <p class="text-xs text-teal-300 flex items-center space-x-1 mt-0.5">
                             <span class="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse"></span>
-                            <span>{{ $locale === 'hi' ? 'लक्षण से डॉक्टर खोजें' : 'Symptom-to-Doctor AI' }}</span>
+                            <span>{{ $locale === 'hi' ? 'à¤²à¤•à¥à¤·à¤£ à¤¸à¥‡ à¤¡à¥‰à¤•à¥à¤Ÿà¤° à¤–à¥‹à¤œà¥‡à¤‚' : 'Symptom-to-Doctor AI' }}</span>
                         </p>
                     </div>
                 </div>
@@ -138,7 +138,7 @@
                             <i data-lucide="bot" class="w-4 h-4"></i>
                         </div>
                         <div class="p-3.5 rounded-2xl text-sm shadow-sm leading-relaxed bg-white text-slate-800 border border-slate-200/60 rounded-tl-none">
-                            {{ $locale === 'hi' ? 'नमस्ते! मैं स्वास्थ्या एआई हूँ। आप अपनी बीमारी के लक्षण (जैसे "पेट दर्द" या "बुखार") या डॉक्टर का नाम बता सकते हैं।' : 'Hello! I am Swasthya AI. You can tell me your symptoms (e.g. "stomach ache" or "fever") or a doctor\'s name, and I will find the right specialist for you.' }}
+                            {{ $locale === 'hi' ? 'à¤¨à¤®à¤¸à¥à¤¤à¥‡! à¤®à¥ˆà¤‚ à¤¸à¥à¤µà¤¾à¤¸à¥à¤¥à¥à¤¯à¤¾ à¤à¤†à¤ˆ à¤¹à¥‚à¤à¥¤ à¤†à¤ª à¤…à¤ªà¤¨à¥€ à¤¬à¥€à¤®à¤¾à¤°à¥€ à¤•à¥‡ à¤²à¤•à¥à¤·à¤£ (à¤œà¥ˆà¤¸à¥‡ "à¤ªà¥‡à¤Ÿ à¤¦à¤°à¥à¤¦" à¤¯à¤¾ "à¤¬à¥à¤–à¤¾à¤°") à¤¯à¤¾ à¤¡à¥‰à¤•à¥à¤Ÿà¤° à¤•à¤¾ à¤¨à¤¾à¤® à¤¬à¤¤à¤¾ à¤¸à¤•à¤¤à¥‡ à¤¹à¥ˆà¤‚à¥¤' : 'Hello! I am Swasthya AI. You can tell me your symptoms (e.g. "stomach ache" or "fever") or a doctor\'s name, and I will find the right specialist for you.' }}
                         </div>
                     </div>
                 </div>
@@ -147,12 +147,19 @@
             <!-- Loading Indicator -->
             <div id="chatbot-loading" class="hidden px-4 py-2 flex space-x-2 items-center text-slate-400 text-sm italic bg-slate-50/50">
                 <i data-lucide="bot" class="w-5 h-5 text-teal-500 animate-spin"></i>
-                <span>{{ $locale === 'hi' ? 'स्वास्थ्या एआई सोच रहा है...' : 'Swasthya AI is thinking...' }}</span>
+                <span>{{ $locale === 'hi' ? 'à¤¸à¥à¤µà¤¾à¤¸à¥à¤¥à¥à¤¯à¤¾ à¤à¤†à¤ˆ à¤¸à¥‹à¤š à¤°à¤¹à¤¾ à¤¹à¥ˆ...' : 'Swasthya AI is thinking...' }}</span>
+            </div>
+
+            <div class="px-3 pb-2 bg-white border-t border-slate-200/80">
+                <input type="text" id="chatbot-city" placeholder="{{ $locale === 'hi' ? 'अपना शहर लिखें (जैसे Jaipur)' : 'Enter your city (e.g. Jaipur)' }}" class="w-full bg-slate-100 border border-slate-200/80 rounded-2xl px-4 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-500/80 transition-all duration-200">
             </div>
 
             <!-- Input Footer -->
             <form id="chatbot-form" onsubmit="handleChatbotSubmit(event)" class="p-3 bg-white border-t border-slate-200/80 flex items-center space-x-2 shadow-lg">
                 <input type="text" id="chatbot-input" placeholder="{{ $locale === 'hi' ? 'लक्षण या डॉक्टर का नाम लिखें...' : 'Type a symptom or doctor name...' }}" class="flex-1 bg-slate-100 border border-slate-200/80 rounded-2xl px-4 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-500/80 transition-all duration-200">
+                <button type="button" id="chatbot-voice-btn" onclick="toggleVoiceTyping()" class="bg-teal-600 hover:bg-teal-500 text-white p-2.5 rounded-2xl shadow-md transition-all duration-200 transform active:scale-95" title="{{ $locale === 'hi' ? 'वॉइस टाइपिंग चालू/बंद करें' : 'Start/Stop voice typing' }}">
+                    <i data-lucide="mic" class="w-5 h-5"></i>
+                </button>
                 <button type="submit" class="bg-indigo-600 hover:bg-indigo-500 text-white p-2.5 rounded-2xl shadow-md transition-all duration-200 transform active:scale-95">
                     <i data-lucide="send" class="w-5 h-5"></i>
                 </button>
@@ -173,12 +180,12 @@
             </div>
 
             <p class="text-sm text-slate-400 text-center md:text-left">
-                {{ $locale === 'hi' ? '© 2026 स्वास्थ्या सर्च। मरीजों के लिए पूर्णतः निःशुल्क और विज्ञापन-मुक्त स्वास्थ्य निर्देशिका।' : '© 2026 SwasthyaSearch. 100% free, ad-free healthcare directory connecting patients directly to providers.' }}
+                {{ $locale === 'hi' ? 'Â© 2026 à¤¸à¥à¤µà¤¾à¤¸à¥à¤¥à¥à¤¯à¤¾ à¤¸à¤°à¥à¤šà¥¤ à¤®à¤°à¥€à¤œà¥‹à¤‚ à¤•à¥‡ à¤²à¤¿à¤ à¤ªà¥‚à¤°à¥à¤£à¤¤à¤ƒ à¤¨à¤¿à¤ƒà¤¶à¥à¤²à¥à¤• à¤”à¤° à¤µà¤¿à¤œà¥à¤žà¤¾à¤ªà¤¨-à¤®à¥à¤•à¥à¤¤ à¤¸à¥à¤µà¤¾à¤¸à¥à¤¥à¥à¤¯ à¤¨à¤¿à¤°à¥à¤¦à¥‡à¤¶à¤¿à¤•à¤¾à¥¤' : 'Â© 2026 SwasthyaSearch. 100% free, ad-free healthcare directory connecting patients directly to providers.' }}
             </p>
 
             <div class="flex space-x-6 text-sm text-slate-400">
-                <a href="{{ route('privacy.policy') }}" class="hover:text-white transition-colors">{{ $locale === 'hi' ? 'गोपनीयता नीति' : 'Privacy Policy' }}</a>
-                <a href="{{ route('terms.service') }}" class="hover:text-white transition-colors">{{ $locale === 'hi' ? 'सेवा की शर्तें' : 'Terms of Service' }}</a>
+                <a href="{{ route('privacy.policy') }}" class="hover:text-white transition-colors">{{ $locale === 'hi' ? 'à¤—à¥‹à¤ªà¤¨à¥€à¤¯à¤¤à¤¾ à¤¨à¥€à¤¤à¤¿' : 'Privacy Policy' }}</a>
+                <a href="{{ route('terms.service') }}" class="hover:text-white transition-colors">{{ $locale === 'hi' ? 'à¤¸à¥‡à¤µà¤¾ à¤•à¥€ à¤¶à¤°à¥à¤¤à¥‡à¤‚' : 'Terms of Service' }}</a>
             </div>
         </div>
     </footer>
@@ -192,6 +199,9 @@
         let chatbotOpen = false;
         let chatbotSessionToken = null;
         const currentLocale = "{{ $locale }}";
+        let chatbotCity = '';
+        let speechRecognition = null;
+        let isVoiceTyping = false;
 
         function toggleChatbot() {
             chatbotOpen = !chatbotOpen;
@@ -218,12 +228,85 @@
             if (typeof field === 'string') return field;
             return field[currentLocale] || field.en || fallback;
         }
+        function getSpeechLocale() {
+            return currentLocale === 'hi' ? 'hi-IN' : 'en-US';
+        }
+
+        function updateVoiceButtonState() {
+            const btn = document.getElementById('chatbot-voice-btn');
+            if (!btn) return;
+
+            if (isVoiceTyping) {
+                btn.classList.remove('bg-teal-600', 'hover:bg-teal-500');
+                btn.classList.add('bg-rose-600', 'hover:bg-rose-500');
+                btn.title = currentLocale === 'hi' ? 'वॉइस टाइपिंग रोकें' : 'Stop voice typing';
+            } else {
+                btn.classList.remove('bg-rose-600', 'hover:bg-rose-500');
+                btn.classList.add('bg-teal-600', 'hover:bg-teal-500');
+                btn.title = currentLocale === 'hi' ? 'वॉइस टाइपिंग चालू करें' : 'Start voice typing';
+            }
+        }
+
+        function toggleVoiceTyping() {
+            const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+
+            if (!SpeechRecognition) {
+                appendMessage('bot', currentLocale === 'hi'
+                    ? 'आपके ब्राउज़र में वॉइस टाइपिंग समर्थित नहीं है। कृपया Chrome/Edge का उपयोग करें।'
+                    : 'Voice typing is not supported in your browser. Please use Chrome or Edge.');
+                return;
+            }
+
+            if (!speechRecognition) {
+                speechRecognition = new SpeechRecognition();
+                speechRecognition.lang = getSpeechLocale();
+                speechRecognition.interimResults = true;
+                speechRecognition.continuous = false;
+
+                speechRecognition.onresult = function(event) {
+                    let transcript = '';
+                    for (let i = event.resultIndex; i < event.results.length; i++) {
+                        transcript += event.results[i][0].transcript;
+                    }
+                    document.getElementById('chatbot-input').value = transcript.trim();
+                };
+
+                speechRecognition.onerror = function() {
+                    isVoiceTyping = false;
+                    updateVoiceButtonState();
+                };
+
+                speechRecognition.onend = function() {
+                    isVoiceTyping = false;
+                    updateVoiceButtonState();
+                };
+            }
+
+            if (isVoiceTyping) {
+                speechRecognition.stop();
+                isVoiceTyping = false;
+                updateVoiceButtonState();
+                return;
+            }
+
+            speechRecognition.lang = getSpeechLocale();
+            speechRecognition.start();
+            isVoiceTyping = true;
+            updateVoiceButtonState();
+        }
 
         async function handleChatbotSubmit(e) {
             e.preventDefault();
             const input = document.getElementById('chatbot-input');
+            const cityInput = document.getElementById('chatbot-city');
+            chatbotCity = (cityInput?.value || '').trim();
             const message = input.value.trim();
             if (!message) return;
+            if (!chatbotCity) {
+                appendMessage('bot', currentLocale === 'hi' ? 'कृपया पहले शहर दर्ज करें।' : 'Please enter your city first.');
+                cityInput?.focus();
+                return;
+            }
 
             input.value = '';
             appendMessage('user', message);
@@ -242,6 +325,7 @@
                     body: JSON.stringify({
                         session_token: chatbotSessionToken,
                         message: message,
+                        city: chatbotCity,
                     }),
                 });
 
@@ -263,7 +347,7 @@
             } catch (error) {
                 console.error('Chatbot error:', error);
                 loadingDiv.classList.add('hidden');
-                appendMessage('bot', currentLocale === 'hi' ? 'क्षमा करें, कोई तकनीकी समस्या आ गई है।' : 'Sorry, a technical error occurred.');
+                appendMessage('bot', currentLocale === 'hi' ? 'à¤•à¥à¤·à¤®à¤¾ à¤•à¤°à¥‡à¤‚, à¤•à¥‹à¤ˆ à¤¤à¤•à¤¨à¥€à¤•à¥€ à¤¸à¤®à¤¸à¥à¤¯à¤¾ à¤† à¤—à¤ˆ à¤¹à¥ˆà¥¤' : 'Sorry, a technical error occurred.');
             }
         }
 
@@ -294,7 +378,7 @@
                     <div class="bg-teal-50 border border-teal-200 p-3.5 rounded-2xl text-teal-950 text-xs shadow-2xs mt-2 flex items-start space-x-2.5">
                         <i data-lucide="info" class="w-4 h-4 text-teal-600 shrink-0 mt-0.5 animate-pulse"></i>
                         <div>
-                            <span class="font-extrabold block text-teal-900 mb-0.5">${currentLocale === 'hi' ? 'अनुशंसित विभाग / परामर्श:' : 'Recommended Department / Action:'}</span>
+                            <span class="font-extrabold block text-teal-900 mb-0.5">${currentLocale === 'hi' ? 'à¤…à¤¨à¥à¤¶à¤‚à¤¸à¤¿à¤¤ à¤µà¤¿à¤­à¤¾à¤— / à¤ªà¤°à¤¾à¤®à¤°à¥à¤¶:' : 'Recommended Department / Action:'}</span>
                             <span class="leading-relaxed font-medium">${msg.department_info}</span>
                         </div>
                     </div>
@@ -302,7 +386,7 @@
             }
 
             if (msg.doctors && msg.doctors.length > 0) {
-                html += `<div class="space-y-2 pt-2"><h5 class="text-xs font-bold text-slate-400 uppercase tracking-wider">${currentLocale === 'hi' ? 'विशेषज्ञ डॉक्टर' : 'Specialist Doctors'}</h5>`;
+                html += `<div class="space-y-2 pt-2"><h5 class="text-xs font-bold text-slate-400 uppercase tracking-wider">${currentLocale === 'hi' ? 'à¤µà¤¿à¤¶à¥‡à¤·à¤œà¥à¤ž à¤¡à¥‰à¤•à¥à¤Ÿà¤°' : 'Specialist Doctors'}</h5>`;
                 msg.doctors.forEach(doc => {
                     const fullName = `Dr. ${doc.first_name} ${doc.last_name}`;
                     const deptName = doc.department ? getLocalizedText(doc.department.name) : '';
@@ -317,7 +401,7 @@
                                     ${doc.is_verified ? '<i data-lucide="check-circle-2" class="w-3.5 h-3.5 text-teal-600 inline"></i>' : ''}
                                 </h4>
                                 <span class="text-xs bg-indigo-50 text-indigo-700 px-2 py-0.5 rounded-lg font-medium">
-                                    ${doc.experience_years} ${currentLocale === 'hi' ? 'वर्ष अनुभव' : 'yrs exp'}
+                                    ${doc.experience_years} ${currentLocale === 'hi' ? 'à¤µà¤°à¥à¤· à¤…à¤¨à¥à¤­à¤µ' : 'yrs exp'}
                                 </span>
                             </div>
                             <div class="mt-2 space-y-1 text-xs text-slate-600">
@@ -335,7 +419,7 @@
                             ${emergencyPhone ? `
                                 <div class="mt-2 pt-2 border-t border-slate-100 flex justify-end">
                                     <a href="tel:${emergencyPhone}" class="text-xs bg-teal-50 hover:bg-teal-600 hover:text-white text-teal-700 font-medium px-3 py-1 rounded-xl shadow-sm transition-all duration-200">
-                                        ${currentLocale === 'hi' ? 'कॉल करें' : 'Call Doctor'}
+                                        ${currentLocale === 'hi' ? 'à¤•à¥‰à¤² à¤•à¤°à¥‡à¤‚' : 'Call Doctor'}
                                     </a>
                                 </div>
                             ` : ''}
@@ -346,7 +430,7 @@
             }
 
             if (msg.hospitals && msg.hospitals.length > 0) {
-                html += `<div class="space-y-2 pt-2 border-t border-slate-100"><h5 class="text-xs font-bold text-slate-400 uppercase tracking-wider">${currentLocale === 'hi' ? 'अस्पताल व क्लीनिक' : 'Hospitals & Clinics'}</h5>`;
+                html += `<div class="space-y-2 pt-2 border-t border-slate-100"><h5 class="text-xs font-bold text-slate-400 uppercase tracking-wider">${currentLocale === 'hi' ? 'à¤…à¤¸à¥à¤ªà¤¤à¤¾à¤² à¤µ à¤•à¥à¤²à¥€à¤¨à¤¿à¤•' : 'Hospitals & Clinics'}</h5>`;
                 msg.hospitals.forEach(hosp => {
                     const hospName = getLocalizedText(hosp.name);
                     const emergencyPhone = hosp.emergency_phone || '';
@@ -371,18 +455,37 @@
                                 <div class="mt-2 pt-2 border-t border-slate-100 flex justify-end">
                                     <a href="tel:${emergencyPhone}" class="text-xs bg-teal-50 hover:bg-teal-600 hover:text-white text-teal-700 font-medium px-3 py-1 rounded-xl shadow-sm transition-all duration-200 flex items-center space-x-1">
                                         <i data-lucide="phone-call" class="w-3 h-3"></i>
-                                        <span>${currentLocale === 'hi' ? 'कॉल करें' : 'Call Emergency'}</span>
+                                        <span>${currentLocale === 'hi' ? 'à¤•à¥‰à¤² à¤•à¤°à¥‡à¤‚' : 'Call Emergency'}</span>
                                     </a>
                                 </div>
                             ` : ''}
                         </div>
                     `;
                 });
+                if (msg.see_all_hospitals_url) {
+                    html += `
+                        <div class="pt-1">
+                            <a href="${msg.see_all_hospitals_url}" class="inline-flex items-center space-x-1 text-xs bg-indigo-50 hover:bg-indigo-600 hover:text-white text-indigo-700 font-medium px-3 py-1 rounded-xl shadow-sm transition-all duration-200">
+                                <span>${currentLocale === 'hi' ? 'सभी अस्पताल देखें' : 'See all hospitals'}</span>
+                            </a>
+                        </div>
+                    `;
+                }
                 html += `</div>`;
             }
 
+            if (msg.doctors && msg.doctors.length > 0 && msg.see_all_doctors_url) {
+                html += `
+                    <div class="pt-1">
+                        <a href="${msg.see_all_doctors_url}" class="inline-flex items-center space-x-1 text-xs bg-teal-50 hover:bg-teal-600 hover:text-white text-teal-700 font-medium px-3 py-1 rounded-xl shadow-sm transition-all duration-200">
+                            <span>${currentLocale === 'hi' ? 'सभी डॉक्टर देखें' : 'See all doctors'}</span>
+                        </a>
+                    </div>
+                `;
+            }
+
             if (msg.articles && msg.articles.length > 0) {
-                html += `<div class="space-y-2 pt-2 border-t border-slate-100"><h5 class="text-xs font-bold text-slate-400 uppercase tracking-wider">${currentLocale === 'hi' ? 'स्वास्थ्य लेख' : 'Health Articles'}</h5>`;
+                html += `<div class="space-y-2 pt-2 border-t border-slate-100"><h5 class="text-xs font-bold text-slate-400 uppercase tracking-wider">${currentLocale === 'hi' ? 'à¤¸à¥à¤µà¤¾à¤¸à¥à¤¥à¥à¤¯ à¤²à¥‡à¤–' : 'Health Articles'}</h5>`;
                 msg.articles.forEach(art => {
                     const artTitle = getLocalizedText(art.title);
                     const artExcerpt = getLocalizedText(art.excerpt) || (getLocalizedText(art.content) || '').substring(0, 80) + '...';
@@ -393,7 +496,7 @@
                             <p class="text-xs text-slate-600 mt-1 line-clamp-2">${artExcerpt}</p>
                             <div class="mt-2 pt-2 border-t border-slate-100 flex justify-end">
                                 <a href="/articles/${art.id}" target="_blank" class="text-xs bg-indigo-50 hover:bg-indigo-600 hover:text-white text-indigo-700 font-medium px-3 py-1 rounded-xl shadow-sm transition-all duration-200 flex items-center space-x-1">
-                                    <span>${currentLocale === 'hi' ? 'पूरा लेख पढ़ें' : 'Read Article'}</span>
+                                    <span>${currentLocale === 'hi' ? 'à¤ªà¥‚à¤°à¤¾ à¤²à¥‡à¤– à¤ªà¤¢à¤¼à¥‡à¤‚' : 'Read Article'}</span>
                                     <i data-lucide="external-link" class="w-3 h-3"></i>
                                 </a>
                             </div>
@@ -415,3 +518,4 @@
     @stack('scripts')
 </body>
 </html>
+

@@ -178,6 +178,12 @@
         <a href="{{ route('admin.faqs') }}" class="nav-link {{ request()->routeIs('admin.faqs') ? 'active' : '' }}">
             <i class="fa-solid fa-circle-question"></i> FAQs
         </a>
+        <a href="{{ route('admin.general_qa') }}" class="nav-link {{ request()->routeIs('admin.general_qa*') ? 'active' : '' }}">
+            <i class="fa-solid fa-notes-medical"></i> General Medical Q&A
+        </a>
+        <a href="{{ route('admin.cached_medical_questions') }}" class="nav-link {{ request()->routeIs('admin.cached_medical_questions*') ? 'active' : '' }}">
+            <i class="fa-solid fa-database"></i> Cached Medical Questions
+        </a>
     </aside>
 
     <!-- Main Content Area -->

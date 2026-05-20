@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Article;
 use App\Models\BloodBank;
+use App\Models\CachedMedicalQuestion;
 use App\Models\Department;
 use App\Models\Disease;
 use App\Models\Doctor;
@@ -1170,5 +1171,126 @@ class AdminDashboardController extends Controller
     {
         $faq->delete();
         return back()->with('success', 'FAQ deleted successfully.');
+    }
+
+    // --- GENERAL MEDICAL Q&A CRUD ---
+    public function generalQa(Request $request)
+    {
+        $query = Faq::query()->where('category', 'General Medical');
+        if ($search = $request->query('search')) {
+            $query->where(function ($q) use ($search) {
+                $q->where('question_en', 'like', "%{$search}%")
+                    ->orWhere('question_hi', 'like', "%{$search}%")
+                    ->orWhere('answer_en', 'like', "%{$search}%")
+                    ->orWhere('answer_hi', 'like', "%{$search}%");
+            });
+        }
+
+        $faqs = $query->latest()->get();
+        return view('admin.general_qa.index', compact('faqs'));
+    }
+
+    public function storeGeneralQa(Request $request)
+    {
+        $data = $request->validate([
+            'question_en' => 'required|string|max:255',
+            'question_hi' => 'required|string|max:255',
+            'answer_en' => 'required|string',
+            'answer_hi' => 'required|string',
+        ]);
+
+        Faq::create([
+            'question_en' => $data['question_en'],
+            'question_hi' => $data['question_hi'],
+            'answer_en' => $data['answer_en'],
+            'answer_hi' => $data['answer_hi'],
+            'category' => 'General Medical',
+        ]);
+
+        return back()->with('success', 'General medical Q&A created successfully.');
+    }
+
+    public function updateGeneralQa(Request $request, Faq $faq)
+    {
+        abort_unless($faq->category === 'General Medical', 404);
+
+        $data = $request->validate([
+            'question_en' => 'required|string|max:255',
+            'question_hi' => 'required|string|max:255',
+            'answer_en' => 'required|string',
+            'answer_hi' => 'required|string',
+        ]);
+
+        $faq->update([
+            'question_en' => $data['question_en'],
+            'question_hi' => $data['question_hi'],
+            'answer_en' => $data['answer_en'],
+            'answer_hi' => $data['answer_hi'],
+            'category' => 'General Medical',
+        ]);
+
+        return back()->with('success', 'General medical Q&A updated successfully.');
+    }
+
+    public function destroyGeneralQa(Faq $faq)
+    {
+        abort_unless($faq->category === 'General Medical', 404);
+
+        $faq->delete();
+        return back()->with('success', 'General medical Q&A deleted successfully.');
+    }
+
+    // --- CACHED MEDICAL QUESTIONS CRUD ---
+    public function cachedMedicalQuestions(Request $request)
+    {
+        $query = CachedMedicalQuestion::query();
+        if ($search = $request->query('search')) {
+            $query->where(function ($q) use ($search) {
+                $q->where('question_en', 'like', "%{$search}%")
+                    ->orWhere('question_hi', 'like', "%{$search}%")
+                    ->orWhere('answer_en', 'like', "%{$search}%")
+                    ->orWhere('answer_hi', 'like', "%{$search}%")
+                    ->orWhere('category', 'like', "%{$search}%");
+            });
+        }
+
+        $questions = $query->latest()->get();
+        return view('admin.cached_medical_questions.index', compact('questions'));
+    }
+
+    public function storeCachedMedicalQuestion(Request $request)
+    {
+        $data = $request->validate([
+            'question_en' => 'required|string|max:255',
+            'question_hi' => 'required|string|max:255',
+            'answer_en' => 'required|string',
+            'answer_hi' => 'required|string',
+            'category' => 'required|string|max:255',
+        ]);
+
+        CachedMedicalQuestion::create($data);
+
+        return back()->with('success', 'Cached medical question created successfully.');
+    }
+
+    public function updateCachedMedicalQuestion(Request $request, CachedMedicalQuestion $cachedMedicalQuestion)
+    {
+        $data = $request->validate([
+            'question_en' => 'required|string|max:255',
+            'question_hi' => 'required|string|max:255',
+            'answer_en' => 'required|string',
+            'answer_hi' => 'required|string',
+            'category' => 'required|string|max:255',
+        ]);
+
+        $cachedMedicalQuestion->update($data);
+
+        return back()->with('success', 'Cached medical question updated successfully.');
+    }
+
+    public function destroyCachedMedicalQuestion(CachedMedicalQuestion $cachedMedicalQuestion)
+    {
+        $cachedMedicalQuestion->delete();
+        return back()->with('success', 'Cached medical question deleted successfully.');
     }
 }
