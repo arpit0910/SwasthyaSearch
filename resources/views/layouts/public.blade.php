@@ -319,20 +319,19 @@
         <!-- Chat Window -->
         <div id="chatbot-window" class="hidden w-[94vw] sm:w-[420px] h-[74vh] max-h-[680px] min-h-[520px] bg-white rounded-3xl shadow-2xl border border-slate-300/90 flex flex-col overflow-hidden animate-in fade-in duration-300 chatbot-window">
             <!-- Header -->
-            <div class="bg-gradient-to-r from-slate-900 via-indigo-900 to-slate-900 text-white p-4 flex justify-between items-center shadow-md">
-                <div class="flex items-center space-x-3">
+            <div class="bg-gradient-to-r from-slate-900 via-indigo-900 to-slate-900 text-white p-4 flex justify-between items-start shadow-md">
+                <div class="flex items-start space-x-3 min-w-0 pr-2">
                     <div class="p-2 bg-teal-500/20 rounded-2xl border border-teal-500/30">
                         <i data-lucide="bot" class="w-6 h-6 text-teal-400"></i>
                     </div>
-                    <div>
-                        <h3 class="font-bold text-lg leading-tight">Swasthya AI Assistant</h3>
-                        <p class="text-xs text-teal-300 flex items-center space-x-1 mt-0.5">
-                            <span class="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse"></span>
-                            <span>{{ $locale === 'hi' ? 'डॉक्टर, अस्पताल और ब्लड बैंक खोजें' : 'Find doctors, hospitals, blood banks, or departments' }}</span>
+                    <div class="min-w-0">
+                        <h3 class="font-bold text-[17px] leading-tight text-white">Swasthya AI Assistant</h3>
+                        <p class="text-xs sm:text-[12px] text-teal-200 leading-snug mt-1 break-words">
+                            {{ $locale === 'hi' ? 'डॉक्टर, अस्पताल, ब्लड बैंक या विभाग खोजें' : 'Find doctors, hospitals, blood banks, or departments' }}
                         </p>
                     </div>
                 </div>
-                <div class="flex items-center space-x-2">
+                <div class="flex items-center space-x-2 shrink-0">
                     <select id="chatbot-language" class="text-xs bg-white text-slate-900 border border-white/40 rounded-lg px-2 py-1 focus:outline-none focus:ring-2 focus:ring-teal-400/60">
                         <option value="en" {{ $locale === 'en' ? 'selected' : '' }}>EN</option>
                         <option value="hi" {{ $locale === 'hi' ? 'selected' : '' }}>HI</option>
@@ -347,17 +346,20 @@
             </div>
 
             <div class="px-3 pb-2 bg-white border-t border-slate-200/80">
-                <div class="flex flex-nowrap items-center justify-between gap-3 mb-2 min-h-[22px]">
-                    <label class="block text-[11px] font-semibold text-slate-500 leading-none whitespace-nowrap">{{ $locale === 'hi' ? 'शहर चुनें' : 'Select your city' }}</label>
-                    <button type="button" id="chatbot-change-city-btn" onclick="enableCitySelection()" class="hidden shrink-0 text-[11px] font-semibold text-indigo-600 hover:text-indigo-700 whitespace-nowrap leading-none">
-                        {{ $locale === 'hi' ? 'शहर बदलें' : 'Change city' }}
-                    </button>
+                <div class="flex items-center gap-1.5 mb-2">
+                    <i data-lucide="map-pin" class="w-3.5 h-3.5 text-slate-600"></i>
+                    <label class="text-[12px] font-semibold text-slate-700 leading-none">{{ $locale === 'hi' ? 'शहर चुनें' : 'Select your city' }}</label>
                 </div>
-                <div id="chatbot-city-selected-card" class="hidden items-center rounded-full border border-teal-200 bg-teal-50/70 px-3 py-1.5 w-fit max-w-full">
-                    <div class="flex items-center gap-2 text-sm text-teal-900">
-                        <i data-lucide="map-pin" class="w-4 h-4 text-teal-700"></i>
-                        <span id="chatbot-selected-city-label" class="font-semibold truncate"></span>
+                <div class="flex items-center gap-2 mb-2 min-h-[34px]">
+                    <div id="chatbot-city-selected-card" class="hidden items-center rounded-full border border-teal-300 bg-teal-100 px-3 py-1.5 w-fit max-w-[72%]">
+                        <div class="flex items-center gap-2 text-sm text-teal-900 min-w-0">
+                            <i data-lucide="map-pin" class="w-4 h-4 text-teal-700 shrink-0"></i>
+                            <span id="chatbot-selected-city-label" class="font-semibold truncate"></span>
+                        </div>
                     </div>
+                    <button type="button" id="chatbot-change-city-btn" onclick="enableCitySelection()" class="hidden shrink-0 text-[11px] font-semibold text-indigo-700 hover:text-indigo-800 bg-indigo-50 border border-indigo-200 rounded-full px-2.5 py-1 leading-none">
+                        {{ $locale === 'hi' ? 'शहर बदलें' : 'Change City' }}
+                    </button>
                 </div>
                 <div id="chatbot-city-pill-wrap" class="flex flex-wrap gap-1.5 max-h-20 overflow-y-auto pr-1">
                     @foreach($chatbotCityPills as $city)
@@ -369,7 +371,7 @@
             </div>
 
             <!-- Messages Body -->
-            <div id="chatbot-messages" class="flex-1 p-4 overflow-y-auto space-y-4 bg-gradient-to-b from-slate-50/60 to-white">
+            <div id="chatbot-messages" class="flex-1 p-4 overflow-y-auto space-y-4 bg-gradient-to-b from-cyan-50/50 via-white to-indigo-50/30">
                 <!-- Initial Bot Message -->
                 <div class="flex justify-start">
                     <div class="flex space-x-2 max-w-[85%] flex-row">
@@ -377,18 +379,23 @@
                             <i data-lucide="bot" class="w-4 h-4"></i>
                         </div>
                         <div id="chatbot-initial-message" class="p-3.5 rounded-2xl text-sm shadow-sm leading-relaxed bg-white text-slate-800 border border-slate-200/60 rounded-tl-none">
-                            {{ $locale === 'hi' ? 'नमस्ते, मैं Swasthya AI Assistant हूँ। मैं आपकी जरूरत के अनुसार विभाग, डॉक्टर, अस्पताल या ब्लड बैंक खोजने में मदद कर सकता हूँ।' : 'Hi, I’m Swasthya AI Assistant. I can help you find the right department, doctor, hospital, or blood bank based on your need.' }}
+                            {{ $locale === 'hi' ? 'नमस्ते, मैं Swasthya AI Assistant हूँ। मैं लक्षण, विभाग, डॉक्टर, अस्पताल और ब्लड बैंक खोजने में मदद करता हूँ।' : 'Hi, I’m Swasthya AI Assistant. I help you find departments, doctors, hospitals, and blood banks based on your needs.' }}
                         </div>
                     </div>
+                </div>
+                <div class="ml-9 max-w-[85%] rounded-xl border border-teal-100 bg-teal-50/80 px-3 py-2">
+                    <p class="text-[11px] font-semibold text-teal-900">
+                        {{ $locale === 'hi' ? 'उदाहरण: "Jaipur में cardiologist", "नजदीकी hospital", "A+ blood bank"' : 'Try: "cardiologist in Jaipur", "nearby hospital", "A+ blood bank"' }}
+                    </p>
                 </div>
 
                 <div class="hidden" id="chatbot-quick-prompts-wrap">
                     <div class="ml-9 max-w-[85%]">
-                        <div class="mb-2 rounded-xl border border-indigo-100 bg-indigo-50/70 px-3 py-2">
-                            <p class="text-[11px] font-bold text-indigo-900">
+                        <div class="mb-2 rounded-xl border border-cyan-200 bg-cyan-50 px-3 py-2">
+                            <p class="text-[11px] font-bold text-cyan-900">
                                 {{ $locale === 'hi' ? 'त्वरित रोग/लक्षण विकल्प' : 'Quick Disease/Symptom Options' }}
                             </p>
-                            <p class="text-[10px] text-indigo-700 mt-0.5">
+                            <p class="text-[10px] text-cyan-800 mt-0.5">
                                 {{ $locale === 'hi' ? 'नीचे विकल्प चुनें। यह सहायक निदान नहीं करता, केवल खोज में मदद करता है।' : 'Choose an option below. This assistant does not diagnose; it helps with healthcare discovery.' }}
                             </p>
                         </div>
@@ -406,18 +413,30 @@
             </div>
 
             <!-- Loading Indicator -->
-            <div id="chatbot-loading" class="hidden px-4 py-2.5 flex space-x-2.5 items-center text-slate-500 text-sm bg-slate-50/80 border-y border-slate-100">
+            <div id="chatbot-loading" class="hidden px-4 py-2.5 flex space-x-2.5 items-center text-slate-700 text-sm bg-indigo-50/70 border-y border-indigo-100">
                 <div class="typing-dots" aria-hidden="true">
                     <span></span><span></span><span></span>
                 </div>
                 <span>{{ $locale === 'hi' ? 'स्वास्थ्य AI सोच रहा है...' : 'Swasthya AI is thinking...' }}</span>
             </div>
-            <div class="px-3 pb-2 text-[11px] text-slate-500 bg-slate-50 border-t border-slate-200">
-                {{ $locale === 'hi' ? 'यह सहायक निदान या उपचार नहीं देता। यह उपयुक्त स्वास्थ्य सेवा प्रदाता खोजने में मदद करता है।' : 'This assistant does not provide diagnosis or treatment. It helps you find relevant healthcare providers.' }}
+            <div class="px-3 pb-2 bg-amber-50 border-t border-amber-200">
+                <button
+                    type="button"
+                    id="chatbot-important-toggle"
+                    onclick="toggleChatbotImportant()"
+                    class="inline-flex items-center gap-1.5 text-[11px] font-semibold text-amber-900 bg-white border border-amber-300 rounded-full px-2.5 py-1"
+                    aria-label="Show important assistant details"
+                >
+                    <span class="inline-flex items-center justify-center w-4 h-4 rounded-full bg-amber-600 text-white text-[10px] font-bold">i</span>
+                    <span>{{ $locale === 'hi' ? 'महत्वपूर्ण जानकारी' : 'Important details' }}</span>
+                </button>
+                <div id="chatbot-important-details" class="hidden mt-2 text-[11px] leading-relaxed text-amber-950 bg-white border border-amber-200 rounded-xl px-3 py-2">
+                    {{ $locale === 'hi' ? 'यह सहायक निदान या उपचार नहीं देता। गंभीर या आपातकालीन लक्षण होने पर तुरंत नजदीकी अस्पताल जाएँ और योग्य चिकित्सा विशेषज्ञ से सलाह लें।' : 'This assistant does not provide diagnosis or treatment. For severe or urgent symptoms, visit the nearest hospital immediately and consult a qualified healthcare professional.' }}
+                </div>
             </div>
             <!-- Input Footer -->
-            <form id="chatbot-form" onsubmit="handleChatbotSubmit(event)" class="p-3 bg-white border-t border-slate-200/80 flex items-center space-x-2 shadow-lg">
-                <input type="text" id="chatbot-input" placeholder="{{ $locale === 'hi' ? 'लक्षण बताएं या डॉक्टर, अस्पताल, ब्लड बैंक खोजें...' : 'Describe symptoms or search doctors, hospitals, blood banks...' }}" class="flex-1 bg-slate-100 border border-slate-200/80 rounded-2xl px-4 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-500/80 transition-all duration-200">
+            <form id="chatbot-form" onsubmit="handleChatbotSubmit(event)" class="p-3 bg-slate-50 border-t border-slate-200/80 flex items-center space-x-2 shadow-lg">
+                <input type="text" id="chatbot-input" placeholder="{{ $locale === 'hi' ? 'लक्षण लिखें या डॉक्टर, अस्पताल, ब्लड बैंक खोजें...' : 'Describe symptoms or search doctors, hospitals, blood banks...' }}" class="flex-1 bg-white border border-slate-300/80 rounded-2xl px-4 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-500/80 transition-all duration-200">
                 <button type="button" id="chatbot-voice-btn" onclick="toggleVoiceTyping()" class="bg-teal-600 hover:bg-teal-500 text-white p-2.5 rounded-2xl shadow-md transition-all duration-200 transform active:scale-95" title="{{ $locale === 'hi' ? 'वॉइस टाइपिंग चालू/बंद करें' : 'Start/Stop voice typing' }}">
                     <i data-lucide="mic" class="w-5 h-5"></i>
                 </button>
@@ -689,6 +708,8 @@
                 if (loadingDiv) loadingDiv.classList.add('hidden');
                 const input = document.getElementById('chatbot-input');
                 if (input) input.value = '';
+                const details = document.getElementById('chatbot-important-details');
+                if (details) details.classList.add('hidden');
                 btn.classList.remove('hidden');
                 win.classList.add('hidden');
                 overlay?.classList.add('hidden');
@@ -717,6 +738,11 @@
                         : 'Chat cleared. Please choose a city to continue.')
             );
             refreshChatbotCityUI();
+        }
+        function toggleChatbotImportant() {
+            const details = document.getElementById('chatbot-important-details');
+            if (!details) return;
+            details.classList.toggle('hidden');
         }
         async function useQuickPrompt(btn) {
             const msg = btn?.dataset?.message || '';
@@ -1117,46 +1143,49 @@
         }
         .chatbot-window {
             box-shadow: 0 24px 64px rgba(15, 23, 42, 0.24);
+            background: linear-gradient(180deg, #ffffff 0%, #f8fafc 100%);
+            border-color: #cbd5e1;
         }
         .chatbot-chip {
-            background: #f1f5f9;
-            color: #334155;
-            border: 1px solid #e2e8f0;
+            background: linear-gradient(180deg, #ffffff 0%, #f0f9ff 100%);
+            color: #0f172a;
+            border: 1px solid #bae6fd;
             border-radius: 9999px;
-            padding: 0.3rem 0.65rem;
+            padding: 0.36rem 0.72rem;
             font-size: 11px;
-            font-weight: 600;
+            font-weight: 700;
             transition: all 0.2s ease;
         }
         .chatbot-chip:hover {
-            background: #e0f2fe;
+            background: linear-gradient(180deg, #ecfeff 0%, #dbeafe 100%);
             border-color: #7dd3fc;
-            color: #0f172a;
+            color: #0c4a6e;
+            transform: translateY(-1px);
         }
         .chatbot-chip-danger {
-            background: #fff1f2;
-            border-color: #fecdd3;
+            background: linear-gradient(180deg, #fff1f2 0%, #ffe4e6 100%);
+            border-color: #fda4af;
             color: #9f1239;
         }
         .chatbot-chip-danger:hover {
-            background: #ffe4e6;
-            border-color: #fda4af;
+            background: linear-gradient(180deg, #ffe4e6 0%, #fecdd3 100%);
+            border-color: #fb7185;
             color: #881337;
         }
         .chatbot-city-pill {
-            background: #f8fafc;
-            color: #334155;
-            border: 1px solid #e2e8f0;
+            background: #ffffff;
+            color: #0f172a;
+            border: 1px solid #94a3b8;
             border-radius: 9999px;
-            padding: 0.28rem 0.7rem;
+            padding: 0.3rem 0.75rem;
             font-size: 11px;
             font-weight: 700;
             transition: all 0.2s ease;
         }
         .chatbot-city-pill:hover {
-            background: #eef2ff;
-            border-color: #c7d2fe;
-            color: #1e1b4b;
+            background: #f0f9ff;
+            border-color: #38bdf8;
+            color: #0c4a6e;
         }
         .chatbot-city-pill.active {
             background: linear-gradient(120deg, #14b8a6, #4f46e5);
@@ -1233,6 +1262,9 @@
         #chatbot-messages::-webkit-scrollbar-thumb {
             background: #cbd5e1;
             border-radius: 9999px;
+        }
+        #chatbot-window .bg-gradient-to-r.from-slate-900.via-indigo-900.to-slate-900 {
+            background-image: linear-gradient(90deg, #0f172a 0%, #1e1b4b 50%, #0f172a 100%);
         }
         a:focus-visible,
         button:focus-visible,
