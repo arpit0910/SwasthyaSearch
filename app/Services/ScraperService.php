@@ -78,7 +78,22 @@ class ScraperService
         $service = self::getServiceForCity($city);
 
         if ($service) {
-            return $service::scrapeBloodBanks($city, $forceFallback, $customUrl, $cacheKey);
+            $bloodBanks = $service::scrapeBloodBanks($city, $forceFallback, $customUrl, $cacheKey);
+            
+            $syncedIds = [];
+            foreach ($bloodBanks as $bb) {
+                $record = \App\Models\BloodBank::updateOrCreate(
+                    ['name_en' => $bb['name_en'], 'city' => $bb['city']],
+                    $bb
+                );
+                $syncedIds[] = $record->id;
+            }
+
+            if (!empty($bloodBanks) && !empty($syncedIds)) {
+                \App\Models\BloodBank::where('city', 'LIKE', "%{$city}%")->whereNotIn('id', $syncedIds)->delete();
+            }
+
+            return $bloodBanks;
         }
 
         Log::warning("No specific scraper service implemented yet for city: {$city}");

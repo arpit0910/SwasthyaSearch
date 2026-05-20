@@ -30,6 +30,9 @@ class HealthcareSyncService
             'errors' => [],
         ];
 
+        $syncedHospitalIds = [];
+        $syncedDoctorIds = [];
+
         if ($cacheKey) {
             Cache::put($cacheKey, [
                 'status' => 'running',
@@ -54,7 +57,8 @@ class HealthcareSyncService
 
             foreach ($chunk as $hospData) {
                 try {
-                    self::syncHospital($hospData, $defaultCity);
+                    $hospital = self::syncHospital($hospData, $defaultCity);
+                    $syncedHospitalIds[] = $hospital->id;
                     $results['hospitals_synced']++;
                 } catch (Exception $e) {
                     Log::error("Hospital Sync Error: " . $e->getMessage(), ['data' => $hospData]);
@@ -88,6 +92,7 @@ class HealthcareSyncService
             foreach ($chunk as $docData) {
                 try {
                     $syncResult = self::syncDoctor($docData, $defaultCity);
+                    $syncedDoctorIds[] = $syncResult['doctor']->id;
                     $results['doctors_synced']++;
                     if ($syncResult['new_department']) {
                         $results['departments_created']++;
@@ -105,6 +110,15 @@ class HealthcareSyncService
             }
 
             usleep(250000); // 250ms sleep
+        }
+
+        if ($defaultCity) {
+            if (!empty($hospitalsBatch) && !empty($syncedHospitalIds)) {
+                Hospital::where('city', 'LIKE', "%{$defaultCity}%")->whereNotIn('id', $syncedHospitalIds)->delete();
+            }
+            if (!empty($doctorsBatch) && !empty($syncedDoctorIds)) {
+                Doctor::where('city', 'LIKE', "%{$defaultCity}%")->whereNotIn('id', $syncedDoctorIds)->delete();
+            }
         }
 
         if ($cacheKey) {
@@ -445,57 +459,7 @@ class HealthcareSyncService
             ];
         }
 
-        $query = trim("{$addressLine1}, {$city}, {$state}, {$pincode}");
-        $apiKey = config('services.google_maps.key');
-
-        if (!empty($apiKey)) {
-            try {
-                $response = Http::retry(3, function ($attempt) {
-                    return $attempt * 1000;
-                })->timeout(5)->get('https://maps.googleapis.com/maps/api/geocode/json', [
-                    'address' => $query,
-                    'key' => $apiKey,
-                ]);
-
-                if ($response->successful() && $response->json('status') === 'OK') {
-                    $location = $response->json('results.0.geometry.location');
-                    return [
-                        'latitude' => (float)$location['lat'],
-                        'longitude' => (float)$location['lng'],
-                    ];
-                }
-            } catch (Exception $e) {
-                Log::warning("Google Maps Geocoding API failed: " . $e->getMessage() . ". Falling back to OpenStreetMap/Deterministic Geocoding.");
-            }
-        }
-
-        try {
-            $response = Http::withoutVerifying()->retry(3, function ($attempt) {
-                return $attempt * 1000;
-            })->withHeaders([
-                'User-Agent' => 'SwasthyaSearch GeoSyncService/1.0 (hello@swasthyasearch.com)',
-            ])->timeout(3)->get('https://nominatim.openstreetmap.org/search', [
-                'q' => "{$city}, {$state}, India",
-                'format' => 'json',
-                'limit' => 1,
-            ]);
-
-            if ($response->successful() && !empty($response->json())) {
-                $result = $response->json(0);
-                $hash = crc32($query);
-                $latOffset = (($hash % 100) - 50) / 15000;
-                $lngOffset = ((($hash / 100) % 100) - 50) / 15000;
-
-                return [
-                    'latitude' => (float)$result['lat'] + $latOffset,
-                    'longitude' => (float)$result['lon'] + $lngOffset,
-                ];
-            }
-        } catch (Exception $e) {
-            Log::warning("OSM Nominatim Geocoding API failed: " . $e->getMessage() . ". Using nullable fallback.");
-        }
-
-        // Return null coordinates if geocoding fails to avoid inventing guessed coordinates
+        // Return null coordinates to ensure no live network lookups occur, relying solely on local data.
         return [
             'latitude' => null,
             'longitude' => null,
