@@ -151,6 +151,7 @@ Route::get('/sitemap.xml', function () {
 // Doctors & Hospitals Directory Routes
 Route::get('/doctors', [DoctorController::class, 'index'])->name('doctors.index');
 Route::get('/hospitals', [HospitalController::class, 'index'])->name('hospitals.index');
+Route::get('/hospitals/{hospital}/doctors', [HospitalController::class, 'doctors'])->name('hospitals.doctors');
 Route::get('/blood-banks', [BloodBankController::class, 'index'])->name('blood_banks.index');
 
 // Articles Routes

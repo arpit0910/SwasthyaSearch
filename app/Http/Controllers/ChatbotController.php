@@ -31,6 +31,7 @@ class ChatbotController extends Controller
 
         $sessionToken = $validated['session_token'] ?? Str::random(32);
         $userMessage = trim($validated['message']);
+        $searchTokens = $this->extractSearchTokens($userMessage);
         $locale = $validated['locale'] ?? app()->getLocale();
 
         $chatSession = ChatSession::firstOrCreate(
@@ -167,26 +168,50 @@ class ChatbotController extends Controller
         }
 
         if ($doctors->isEmpty()) {
-            $doctors = Doctor::where(function ($query) use ($userMessage) {
-                $query->where('first_name', 'LIKE', "%{$userMessage}%")
-                    ->orWhere('last_name', 'LIKE', "%{$userMessage}%");
-            })
-            ->with(['department', 'hospitals'])
-            ->where('is_verified', true)
-            ->whereHas('hospitals', fn ($q) => $q->where('city', $selectedCity))
-            ->take(3)
-            ->get();
+            $doctors = Doctor::with(['department', 'hospitals'])
+                ->where('is_verified', true)
+                ->whereHas('hospitals', fn ($q) => $q->where('city', $selectedCity))
+                ->where(function ($query) use ($userMessage, $searchTokens) {
+                    if (! empty($searchTokens)) {
+                        foreach ($searchTokens as $token) {
+                            $query->orWhere('first_name', 'LIKE', "%{$token}%")
+                                ->orWhere('last_name', 'LIKE', "%{$token}%")
+                                ->orWhereRaw("CONCAT(first_name, ' ', last_name) LIKE ?", ["%{$token}%"])
+                                ->orWhere('about_en', 'LIKE', "%{$token}%")
+                                ->orWhere('about_hi', 'LIKE', "%{$token}%")
+                                ->orWhereHas('hospitals', function ($hq) use ($token) {
+                                    $hq->where('name_en', 'LIKE', "%{$token}%")
+                                        ->orWhere('name_hi', 'LIKE', "%{$token}%");
+                                });
+                        }
+                    } else {
+                        $query->where('first_name', 'LIKE', "%{$userMessage}%")
+                            ->orWhere('last_name', 'LIKE', "%{$userMessage}%")
+                            ->orWhereRaw("CONCAT(first_name, ' ', last_name) LIKE ?", ["%{$userMessage}%"]);
+                    }
+                })
+                ->take(5)
+                ->get();
         }
 
         $hospitals = Hospital::where('is_verified', true)
             ->where('city', $selectedCity)
-            ->where(function ($query) use ($userMessage) {
-                $query->where('name_en', 'LIKE', "%{$userMessage}%")
-                    ->orWhere('name_hi', 'LIKE', "%{$userMessage}%")
-                    ->orWhere('address', 'LIKE', "%{$userMessage}%")
-                    ->orWhere('type', 'LIKE', "%{$userMessage}%");
+            ->where(function ($query) use ($userMessage, $searchTokens) {
+                if (! empty($searchTokens)) {
+                    foreach ($searchTokens as $token) {
+                        $query->orWhere('name_en', 'LIKE', "%{$token}%")
+                            ->orWhere('name_hi', 'LIKE', "%{$token}%")
+                            ->orWhere('address', 'LIKE', "%{$token}%")
+                            ->orWhere('type', 'LIKE', "%{$token}%");
+                    }
+                } else {
+                    $query->where('name_en', 'LIKE', "%{$userMessage}%")
+                        ->orWhere('name_hi', 'LIKE', "%{$userMessage}%")
+                        ->orWhere('address', 'LIKE', "%{$userMessage}%")
+                        ->orWhere('type', 'LIKE', "%{$userMessage}%");
+                }
             })
-            ->take(3)
+            ->take(5)
             ->get();
 
         if ($hospitals->isEmpty()) {
@@ -259,5 +284,29 @@ class ChatbotController extends Controller
             'see_all_hospitals_url' => $seeAllHospitalsUrl,
             'history' => $messages,
         ]);
+    }
+
+    private function extractSearchTokens(string $message): array
+    {
+        $normalized = mb_strtolower(trim($message));
+        if ($normalized === '') {
+            return [];
+        }
+
+        $normalized = preg_replace('/[^\p{L}\p{N}\s]+/u', ' ', $normalized) ?? $normalized;
+        $parts = preg_split('/\s+/u', $normalized, -1, PREG_SPLIT_NO_EMPTY) ?: [];
+
+        $stopwords = [
+            'dr', 'doctor', 'doctors', 'hospital', 'hospitals', 'clinic', 'clinics',
+            'find', 'near', 'nearby', 'in', 'at', 'for', 'the', 'a', 'an',
+            'show', 'me', 'need', 'please', 'search',
+            'डॉक्टर', 'डॉ', 'अस्पताल', 'क्लिनिक', 'खोजें', 'में', 'पास', 'मुझे', 'चाहिए', 'कृपया',
+        ];
+
+        $tokens = array_values(array_unique(array_filter($parts, function ($part) use ($stopwords) {
+            return mb_strlen($part) >= 2 && ! in_array($part, $stopwords, true);
+        })));
+
+        return array_slice($tokens, 0, 8);
     }
 }

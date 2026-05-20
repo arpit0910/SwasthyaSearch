@@ -76,4 +76,51 @@ class HospitalController extends Controller
             'filters' => $request->only(['type', 'city', 'search', 'benefit']),
         ]);
     }
+
+    public function doctors(Hospital $hospital)
+    {
+        $hospital->load(['doctors.department', 'doctors.hospitals']);
+
+        $doctors = $hospital->doctors
+            ->where('is_verified', true)
+            ->sortByDesc('experience_years')
+            ->values()
+            ->map(function ($doctor) {
+                return [
+                    'id' => $doctor->id,
+                    'first_name' => $doctor->first_name,
+                    'last_name' => $doctor->last_name,
+                    'experience_years' => $doctor->experience_years,
+                    'is_verified' => $doctor->is_verified,
+                    'phone' => $doctor->phone,
+                    'about_en' => $doctor->about_en,
+                    'about_hi' => $doctor->about_hi,
+                    'education_degrees' => $doctor->education_degrees,
+                    'department' => $doctor->department ? [
+                        'name_en' => $doctor->department->name_en,
+                        'name_hi' => $doctor->department->name_hi,
+                    ] : null,
+                    'consultation_fee' => optional($doctor->pivot)->consultation_fee,
+                ];
+            });
+
+        $hospitalData = [
+            'id' => $hospital->id,
+            'name_en' => $hospital->name_en,
+            'name_hi' => $hospital->name_hi,
+            'city' => $hospital->city,
+            'type' => $hospital->type,
+            'emergency_phone' => $hospital->emergency_phone,
+            'address_line1' => $hospital->address_line1,
+            'address_line2' => $hospital->address_line2,
+            'state' => $hospital->state,
+            'pincode' => $hospital->pincode,
+            'address' => $hospital->address,
+        ];
+
+        return view('hospitals.doctors', [
+            'hospital' => $hospitalData,
+            'doctors' => $doctors,
+        ]);
+    }
 }

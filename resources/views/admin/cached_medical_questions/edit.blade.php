@@ -26,6 +26,14 @@
                             <label class="form-label fw-semibold">Answer (Hindi)</label>
                             <textarea name="answer_hi" class="form-control" rows="4" required>{{ $question->answer_hi }}</textarea>
                         </div>
+                        <div class="col-md-6">
+                            <label class="form-label fw-semibold">Detailed Answer (English)</label>
+                            <textarea name="detailed_answer_en" class="form-control" rows="4" placeholder="Optional expanded answer for chatbot details toggle">{{ $question->detailed_answer_en }}</textarea>
+                        </div>
+                        <div class="col-md-6">
+                            <label class="form-label fw-semibold">Detailed Answer (Hindi)</label>
+                            <textarea name="detailed_answer_hi" class="form-control" rows="4" placeholder="Optional expanded answer for chatbot details toggle">{{ $question->detailed_answer_hi }}</textarea>
+                        </div>
                         <div class="col-12">
                             <label class="form-label fw-semibold">Category</label>
                             <input type="text" name="category" class="form-control" value="{{ $question->category }}" required>
@@ -40,4 +48,3 @@
         </div>
     </div>
 </div>
-

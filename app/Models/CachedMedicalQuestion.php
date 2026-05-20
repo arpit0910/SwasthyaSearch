@@ -15,7 +15,8 @@ class CachedMedicalQuestion extends Model
         'question_hi',
         'answer_en',
         'answer_hi',
+        'detailed_answer_en',
+        'detailed_answer_hi',
         'category',
     ];
 }
-

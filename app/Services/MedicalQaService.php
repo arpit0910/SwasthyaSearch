@@ -10,7 +10,7 @@ use Illuminate\Support\Str;
 class MedicalQaService
 {
     /**
-     * @return array{question:string,answer:string,category:string,source:string,confidence:float}|null
+     * @return array{question:string,answer:string,category:string,source:string,confidence:float,detailed_answer_en:?string,detailed_answer_hi:?string,detailed_answer:?string}|null
      */
     public function findBestAnswer(string $message, string $locale = 'en'): ?array
     {
@@ -56,12 +56,21 @@ class MedicalQaService
             ? ($best['question_hi'] ?: $best['question_en'])
             : ($best['question_en'] ?: $best['question_hi']);
 
+        $detailedAnswerEn = isset($best['detailed_answer_en']) ? trim((string) $best['detailed_answer_en']) : '';
+        $detailedAnswerHi = isset($best['detailed_answer_hi']) ? trim((string) $best['detailed_answer_hi']) : '';
+        $detailedAnswer = $locale === 'hi'
+            ? ($detailedAnswerHi !== '' ? $detailedAnswerHi : ($detailedAnswerEn !== '' ? $detailedAnswerEn : null))
+            : ($detailedAnswerEn !== '' ? $detailedAnswerEn : ($detailedAnswerHi !== '' ? $detailedAnswerHi : null));
+
         return [
             'question' => (string) $question,
             'answer' => (string) $answer,
             'category' => (string) ($best['category'] ?? 'General Medical'),
             'source' => (string) ($best['source'] ?? 'faq_dataset'),
             'confidence' => round($bestScore, 2),
+            'detailed_answer_en' => $detailedAnswerEn !== '' ? $detailedAnswerEn : null,
+            'detailed_answer_hi' => $detailedAnswerHi !== '' ? $detailedAnswerHi : null,
+            'detailed_answer' => $detailedAnswer,
         ];
     }
 
@@ -162,6 +171,8 @@ class MedicalQaService
                     'question_hi' => $qa->question_hi,
                     'answer_en' => $qa->answer_en,
                     'answer_hi' => $qa->answer_hi,
+                    'detailed_answer_en' => $qa->detailed_answer_en,
+                    'detailed_answer_hi' => $qa->detailed_answer_hi,
                     'category' => $qa->category ?? 'General Medical',
                     'keywords' => [],
                     'source' => 'cached_medical_questions',

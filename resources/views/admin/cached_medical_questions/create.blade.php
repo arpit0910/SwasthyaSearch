@@ -25,6 +25,14 @@
                             <label class="form-label fw-semibold">Answer (Hindi)</label>
                             <textarea name="answer_hi" class="form-control" rows="4" required></textarea>
                         </div>
+                        <div class="col-md-6">
+                            <label class="form-label fw-semibold">Detailed Answer (English)</label>
+                            <textarea name="detailed_answer_en" class="form-control" rows="4" placeholder="Optional expanded answer for chatbot details toggle"></textarea>
+                        </div>
+                        <div class="col-md-6">
+                            <label class="form-label fw-semibold">Detailed Answer (Hindi)</label>
+                            <textarea name="detailed_answer_hi" class="form-control" rows="4" placeholder="Optional expanded answer for chatbot details toggle"></textarea>
+                        </div>
                         <div class="col-12">
                             <label class="form-label fw-semibold">Category</label>
                             <input type="text" name="category" class="form-control" required placeholder="General Medical / Cardiology / Neurology">
@@ -39,4 +47,3 @@
         </div>
     </div>
 </div>
-

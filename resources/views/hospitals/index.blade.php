@@ -292,13 +292,20 @@
                         <!-- Card Footer -->
                         <div class="p-6 pt-0 bg-white">
                             <p class="text-[11px] text-amber-800 bg-amber-50 border border-amber-200 rounded-lg px-2.5 py-1.5 mb-2.5">
-                                {{ $locale === 'hi' ? 'जाने से पहले कृपया कॉल करें।' : 'Please call before visiting.' }}
+                                {{ $locale === 'hi' ? 'कृपया जाने से पहले कॉल करें।' : 'Please call before visiting.' }}
                             </p>
-                            <a href="tel:{{ $h->emergency_phone }}"
-                                class="w-full bg-gradient-to-tr from-teal-500 to-indigo-600 hover:from-teal-600 hover:to-indigo-700 text-white font-bold py-3 rounded-xl shadow-md hover:shadow-lg transition-all duration-200 text-xs uppercase tracking-wider flex items-center justify-center space-x-2 transform active:scale-98">
-                                <i data-lucide="phone-call" class="w-4 h-4 text-white"></i>
-                                <span>{{ $locale === 'hi' ? 'तुरंत कॉल करें' : 'Call Emergency Now' }}</span>
-                            </a>
+                            <div class="grid grid-cols-1 sm:grid-cols-2 gap-2.5">
+                                <a href="{{ route('hospitals.doctors', $h->id) }}"
+                                    class="w-full bg-slate-900 hover:bg-slate-800 text-white font-bold py-3 rounded-xl shadow-md hover:shadow-lg transition-all duration-200 text-xs uppercase tracking-wider flex items-center justify-center space-x-2 transform active:scale-98">
+                                    <i data-lucide="users" class="w-4 h-4 text-teal-300"></i>
+                                    <span>{{ $locale === 'hi' ? 'डॉक्टर देखें' : 'View Doctors' }}</span>
+                                </a>
+                                <a href="tel:{{ $h->emergency_phone }}"
+                                    class="w-full bg-gradient-to-tr from-teal-500 to-indigo-600 hover:from-teal-600 hover:to-indigo-700 text-white font-bold py-3 rounded-xl shadow-md hover:shadow-lg transition-all duration-200 text-xs uppercase tracking-wider flex items-center justify-center space-x-2 transform active:scale-98">
+                                    <i data-lucide="phone-call" class="w-4 h-4 text-white"></i>
+                                    <span>{{ $locale === 'hi' ? 'अभी कॉल करें' : 'Call Now' }}</span>
+                                </a>
+                            </div>
                         </div>
                     </div>
                 @endforeach
@@ -329,4 +336,5 @@
         }
     </script>
 @endpush
+
 

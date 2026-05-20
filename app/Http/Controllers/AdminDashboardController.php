@@ -1265,6 +1265,8 @@ class AdminDashboardController extends Controller
             'question_hi' => 'required|string|max:255',
             'answer_en' => 'required|string',
             'answer_hi' => 'required|string',
+            'detailed_answer_en' => 'nullable|string',
+            'detailed_answer_hi' => 'nullable|string',
             'category' => 'required|string|max:255',
         ]);
 
@@ -1280,6 +1282,8 @@ class AdminDashboardController extends Controller
             'question_hi' => 'required|string|max:255',
             'answer_en' => 'required|string',
             'answer_hi' => 'required|string',
+            'detailed_answer_en' => 'nullable|string',
+            'detailed_answer_hi' => 'nullable|string',
             'category' => 'required|string|max:255',
         ]);
 

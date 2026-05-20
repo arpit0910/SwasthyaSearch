@@ -18,9 +18,10 @@ return new class extends Migration
             $table->text('answer_en');
             $table->text('answer_hi');
             $table->string('category')->nullable();
+            $table->text('detailed_answer_en')->nullable();
+            $table->text('detailed_answer_hi')->nullable();
             $table->timestamps();
             $table->softDeletes();
-
             $table->unique('question_en');
         });
     }

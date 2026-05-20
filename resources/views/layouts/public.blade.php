@@ -511,6 +511,7 @@
         let isSubmittingChat = false;
         let pendingChatAbortController = null;
         let hasCityPromptVisible = false;
+        let chatbotDetailBlockCounter = 0;
         const CHATBOT_CITY_STORAGE_KEY = 'swasthya_selected_city';
         const LEGACY_CHATBOT_CITY_STORAGE_KEY = 'swasthyasearch_chatbot_city';
 
@@ -557,6 +558,29 @@
             const fromStorage = normalizeCityValue(localStorage.getItem(CHATBOT_CITY_STORAGE_KEY) || localStorage.getItem(LEGACY_CHATBOT_CITY_STORAGE_KEY));
             if (fromStorage) return fromStorage;
             return '';
+        }
+        function escapeHtml(value) {
+            return String(value ?? '')
+                .replace(/&/g, '&amp;')
+                .replace(/</g, '&lt;')
+                .replace(/>/g, '&gt;')
+                .replace(/"/g, '&quot;')
+                .replace(/'/g, '&#39;');
+        }
+        function formatDetailedAnswer(value) {
+            return escapeHtml(value).replace(/\n/g, '<br>');
+        }
+        function toggleChatbotDetails(buttonId, contentId) {
+            const button = document.getElementById(buttonId);
+            const content = document.getElementById(contentId);
+            if (!button || !content) return;
+
+            const isOpen = button.getAttribute('aria-expanded') === 'true';
+            button.setAttribute('aria-expanded', isOpen ? 'false' : 'true');
+            button.dataset.moreLabel = button.dataset.moreLabel || (chatbotLocale === 'hi' ? 'इसके बारे में और जानें' : 'Know more about this');
+            button.dataset.lessLabel = button.dataset.lessLabel || (chatbotLocale === 'hi' ? 'कम दिखाएं' : 'Show less');
+            button.innerText = isOpen ? button.dataset.moreLabel : button.dataset.lessLabel;
+            content.classList.toggle('hidden', isOpen);
         }
 
         function collapseMobileFab() {
@@ -948,6 +972,40 @@
                             </div>
                             ${!isUser ? `<button type="button" onclick="speakText('${spoken}')" class="inline-flex items-center gap-1 text-[11px] text-slate-500 hover:text-teal-600 text-left px-2 py-1 rounded-lg hover:bg-teal-50 transition-all">🔊 ${chatbotLocale === 'hi' ? 'सुनें' : 'Listen'}</button>` : ''}
             `;
+
+            const detailedAnswerRaw = !isUser
+                ? (chatbotLocale === 'hi'
+                    ? (msg?.qa_answer?.detailed_answer_hi || msg?.qa_answer?.detailed_answer_en || '')
+                    : (msg?.qa_answer?.detailed_answer_en || msg?.qa_answer?.detailed_answer_hi || ''))
+                : '';
+            const detailedAnswer = String(detailedAnswerRaw || '').trim();
+            if (detailedAnswer !== '') {
+                chatbotDetailBlockCounter += 1;
+                const buttonId = `chatbot-detail-toggle-${chatbotDetailBlockCounter}`;
+                const contentId = `chatbot-detail-content-${chatbotDetailBlockCounter}`;
+                const moreLabel = chatbotLocale === 'hi' ? 'इसके बारे में और जानें' : 'Know more about this';
+                const lessLabel = chatbotLocale === 'hi' ? 'कम दिखाएं' : 'Show less';
+                html += `
+                    <div class="pt-1">
+                        <button
+                            id="${buttonId}"
+                            type="button"
+                            aria-expanded="false"
+                            aria-controls="${contentId}"
+                            data-more-label="${moreLabel}"
+                            data-less-label="${lessLabel}"
+                            onclick="toggleChatbotDetails('${buttonId}','${contentId}')"
+                            class="inline-flex items-center gap-1 text-[11px] font-semibold text-indigo-700 hover:text-indigo-900 border border-indigo-200 hover:border-indigo-300 bg-white hover:bg-indigo-50 rounded-full px-3 py-1 transition-all"
+                        >
+                            <i data-lucide="info" class="w-3 h-3"></i>
+                            <span>${moreLabel}</span>
+                        </button>
+                        <div id="${contentId}" class="hidden mt-2 rounded-xl border border-indigo-100 bg-indigo-50/70 p-3 text-xs leading-relaxed text-slate-700">
+                            ${formatDetailedAnswer(detailedAnswer)}
+                        </div>
+                    </div>
+                `;
+            }
 
             if (msg.department_info) {
                 html += `
