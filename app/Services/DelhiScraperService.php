@@ -34,7 +34,7 @@ class DelhiScraperService extends BaseScraperService
                 'source_name' => 'e-RaktKosh',
                 'source_url' => 'https://www.eraktkosh.in',
                 'source_confidence_score' => 99,
-                'source_verification_status' => 'verified_active',
+                'source_verification' => 'verified_active',
             ],
             [
                 'name_en' => 'AIIMS Main Blood Bank',
@@ -54,7 +54,7 @@ class DelhiScraperService extends BaseScraperService
                 'source_name' => 'e-RaktKosh',
                 'source_url' => 'https://www.eraktkosh.in',
                 'source_confidence_score' => 99,
-                'source_verification_status' => 'verified_active',
+                'source_verification' => 'verified_active',
             ],
             [
                 'name_en' => 'Safdarjung Hospital Blood Bank',
@@ -74,7 +74,7 @@ class DelhiScraperService extends BaseScraperService
                 'source_name' => 'e-RaktKosh',
                 'source_url' => 'https://www.eraktkosh.in',
                 'source_confidence_score' => 99,
-                'source_verification_status' => 'verified_active',
+                'source_verification' => 'verified_active',
             ],
             [
                 'name_en' => 'Indian Red Cross Society Blood Bank',
@@ -94,7 +94,7 @@ class DelhiScraperService extends BaseScraperService
                 'source_name' => 'e-RaktKosh',
                 'source_url' => 'https://www.eraktkosh.in',
                 'source_confidence_score' => 99,
-                'source_verification_status' => 'verified_active',
+                'source_verification' => 'verified_active',
             ],
     
             [
@@ -129,7 +129,7 @@ class DelhiScraperService extends BaseScraperService
                 'source_name' => 'e-RaktKosh / AIIMS Registry',
                 'source_url' => 'https://aiims.edu',
                 'source_confidence_score' => 99,
-                'source_verification_status' => 'verified_active',
+                'source_verification' => 'verified_active',
             ],
             [
                 'name_en' => 'Indian Red Cross Society Blood Bank Delhi',
@@ -163,7 +163,7 @@ class DelhiScraperService extends BaseScraperService
                 'source_name' => 'e-RaktKosh / Red Cross Registry',
                 'source_url' => 'https://indianredcross.org',
                 'source_confidence_score' => 99,
-                'source_verification_status' => 'verified_active',
+                'source_verification' => 'verified_active',
             ],
             [
                 'name_en' => 'Rotary Blood Bank Tughlakabad',
@@ -197,7 +197,7 @@ class DelhiScraperService extends BaseScraperService
                 'source_name' => 'e-RaktKosh / Rotary Registry',
                 'source_url' => 'https://rotarybloodbank.org',
                 'source_confidence_score' => 98,
-                'source_verification_status' => 'verified_active',
+                'source_verification' => 'verified_active',
             ],
             [
                 'name_en' => 'Sir Ganga Ram Hospital Blood Bank',
@@ -231,7 +231,7 @@ class DelhiScraperService extends BaseScraperService
                 'source_name' => 'e-RaktKosh / SGRH Registry',
                 'source_url' => 'https://sgrh.com',
                 'source_confidence_score' => 99,
-                'source_verification_status' => 'verified_active',
+                'source_verification' => 'verified_active',
             ],
             [
                 'name_en' => 'LNJP Hospital Blood Bank',
@@ -265,7 +265,7 @@ class DelhiScraperService extends BaseScraperService
                 'source_name' => 'e-RaktKosh / LNJP Registry',
                 'source_url' => 'https://health.delhi.gov.in',
                 'source_confidence_score' => 99,
-                'source_verification_status' => 'verified_active',
+                'source_verification' => 'verified_active',
             ],
             [
                 'name_en' => 'RML Hospital Blood Bank',
@@ -299,7 +299,7 @@ class DelhiScraperService extends BaseScraperService
                 'source_name' => 'e-RaktKosh / RML Registry',
                 'source_url' => 'https://rmlh.nic.in',
                 'source_confidence_score' => 99,
-                'source_verification_status' => 'verified_active',
+                'source_verification' => 'verified_active',
             ],
             [
                 'name_en' => 'Safdarjung Hospital Blood Bank',
@@ -333,7 +333,7 @@ class DelhiScraperService extends BaseScraperService
                 'source_name' => 'e-RaktKosh / Safdarjung Registry',
                 'source_url' => 'https://vmmc-sjh.nic.in',
                 'source_confidence_score' => 99,
-                'source_verification_status' => 'verified_active',
+                'source_verification' => 'verified_active',
             ],
             [
                 'name_en' => 'Guru Teg Bahadur (GTB) Hospital Blood Bank',
@@ -367,7 +367,7 @@ class DelhiScraperService extends BaseScraperService
                 'source_name' => 'e-RaktKosh / GTB Registry',
                 'source_url' => 'https://health.delhi.gov.in',
                 'source_confidence_score' => 99,
-                'source_verification_status' => 'verified_active',
+                'source_verification' => 'verified_active',
             ],
             [
                 'name_en' => 'Deen Dayal Upadhyay (DDU) Hospital Blood Bank',
@@ -401,7 +401,7 @@ class DelhiScraperService extends BaseScraperService
                 'source_name' => 'e-RaktKosh / DDU Registry',
                 'source_url' => 'https://health.delhi.gov.in',
                 'source_confidence_score' => 99,
-                'source_verification_status' => 'verified_active',
+                'source_verification' => 'verified_active',
             ],
             [
                 'name_en' => 'BLK-Max Super Speciality Hospital Blood Bank',
@@ -435,7 +435,7 @@ class DelhiScraperService extends BaseScraperService
                 'source_name' => 'e-RaktKosh / BLK Registry',
                 'source_url' => 'https://blkmaxhospital.com',
                 'source_confidence_score' => 98,
-                'source_verification_status' => 'verified_active',
+                'source_verification' => 'verified_active',
             ],
             [
                 'name_en' => 'Indraprastha Apollo Hospital Blood Bank',
@@ -469,7 +469,7 @@ class DelhiScraperService extends BaseScraperService
                 'source_name' => 'e-RaktKosh / Apollo Registry',
                 'source_url' => 'https://apollohospitals.com',
                 'source_confidence_score' => 99,
-                'source_verification_status' => 'verified_active',
+                'source_verification' => 'verified_active',
             ],
             [
                 'name_en' => 'Fortis Escorts Heart Institute Blood Bank',
@@ -503,7 +503,7 @@ class DelhiScraperService extends BaseScraperService
                 'source_name' => 'e-RaktKosh / Fortis Registry',
                 'source_url' => 'https://fortishealthcare.com',
                 'source_confidence_score' => 99,
-                'source_verification_status' => 'verified_active',
+                'source_verification' => 'verified_active',
             ],
             [
                 'name_en' => 'Max Super Speciality Hospital Saket Blood Bank',
@@ -537,7 +537,7 @@ class DelhiScraperService extends BaseScraperService
                 'source_name' => 'e-RaktKosh / Max Registry',
                 'source_url' => 'https://maxhealthcare.in',
                 'source_confidence_score' => 99,
-                'source_verification_status' => 'verified_active',
+                'source_verification' => 'verified_active',
             ],
             [
                 'name_en' => 'Rajiv Gandhi Cancer Institute Blood Bank',
@@ -571,7 +571,7 @@ class DelhiScraperService extends BaseScraperService
                 'source_name' => 'e-RaktKosh / RGCIRC Registry',
                 'source_url' => 'https://rgcirc.org',
                 'source_confidence_score' => 99,
-                'source_verification_status' => 'verified_active',
+                'source_verification' => 'verified_active',
             ],
             [
                 'name_en' => 'St. Stephen\'s Hospital Blood Bank',
@@ -605,7 +605,7 @@ class DelhiScraperService extends BaseScraperService
                 'source_name' => 'e-RaktKosh / St. Stephen Registry',
                 'source_url' => 'https://ststephenshospital.org',
                 'source_confidence_score' => 98,
-                'source_verification_status' => 'verified_active',
+                'source_verification' => 'verified_active',
             ],
             [
                 'name_en' => 'Moolchand Hospital Blood Bank',
@@ -639,7 +639,7 @@ class DelhiScraperService extends BaseScraperService
                 'source_name' => 'e-RaktKosh / Moolchand Registry',
                 'source_url' => 'https://moolchandhealthcare.com',
                 'source_confidence_score' => 98,
-                'source_verification_status' => 'verified_active',
+                'source_verification' => 'verified_active',
             ],
             [
                 'name_en' => 'Kalawati Saran Children\'s Hospital Blood Bank',
@@ -673,7 +673,7 @@ class DelhiScraperService extends BaseScraperService
                 'source_name' => 'e-RaktKosh / KSCH Registry',
                 'source_url' => 'https://dghs.gov.in',
                 'source_confidence_score' => 99,
-                'source_verification_status' => 'verified_active',
+                'source_verification' => 'verified_active',
             ],
             [
                 'name_en' => 'GB Pant Hospital Blood Bank',
@@ -707,7 +707,7 @@ class DelhiScraperService extends BaseScraperService
                 'source_name' => 'e-RaktKosh / GB Pant Registry',
                 'source_url' => 'https://gbpant.delhigovt.nic.in',
                 'source_confidence_score' => 99,
-                'source_verification_status' => 'verified_active',
+                'source_verification' => 'verified_active',
             ],
             [
                 'name_en' => 'Venkateshwar Hospital Blood Bank',
@@ -741,7 +741,7 @@ class DelhiScraperService extends BaseScraperService
                 'source_name' => 'e-RaktKosh / Venkateshwar Registry',
                 'source_url' => 'https://venkateshwarhospitals.com',
                 'source_confidence_score' => 98,
-                'source_verification_status' => 'verified_active',
+                'source_verification' => 'verified_active',
             ],
             [
                 'name_en' => 'Manipal Hospital Blood Bank',
@@ -775,7 +775,7 @@ class DelhiScraperService extends BaseScraperService
                 'source_name' => 'e-RaktKosh / Manipal Registry',
                 'source_url' => 'https://manipalhospitals.com',
                 'source_confidence_score' => 98,
-                'source_verification_status' => 'verified_active',
+                'source_verification' => 'verified_active',
             ],
         ];
 

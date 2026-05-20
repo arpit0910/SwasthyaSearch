@@ -34,7 +34,7 @@ class HyderabadScraperService extends BaseScraperService
                 'source_name' => 'e-RaktKosh',
                 'source_url' => 'https://www.eraktkosh.in',
                 'source_confidence_score' => 99,
-                'source_verification_status' => 'verified_active',
+                'source_verification' => 'verified_active',
             ],
             [
                 'name_en' => 'Indian Red Cross Society Blood Bank',
@@ -54,7 +54,7 @@ class HyderabadScraperService extends BaseScraperService
                 'source_name' => 'e-RaktKosh',
                 'source_url' => 'https://www.eraktkosh.in',
                 'source_confidence_score' => 99,
-                'source_verification_status' => 'verified_active',
+                'source_verification' => 'verified_active',
             ],
             [
                 'name_en' => 'NIMS Blood Bank',
@@ -74,7 +74,7 @@ class HyderabadScraperService extends BaseScraperService
                 'source_name' => 'e-RaktKosh',
                 'source_url' => 'https://www.eraktkosh.in',
                 'source_confidence_score' => 99,
-                'source_verification_status' => 'verified_active',
+                'source_verification' => 'verified_active',
             ],
             [
                 'name_en' => 'Osmania General Hospital Blood Bank',
@@ -94,7 +94,7 @@ class HyderabadScraperService extends BaseScraperService
                 'source_name' => 'e-RaktKosh',
                 'source_url' => 'https://www.eraktkosh.in',
                 'source_confidence_score' => 99,
-                'source_verification_status' => 'verified_active',
+                'source_verification' => 'verified_active',
             ],
 
             [
@@ -129,7 +129,7 @@ class HyderabadScraperService extends BaseScraperService
                 'source_name' => 'e-RaktKosh / Chiranjeevi Registry',
                 'source_url' => 'https://chiranjeevibloodbank.com',
                 'source_confidence_score' => 99,
-                'source_verification_status' => 'verified_active',
+                'source_verification' => 'verified_active',
             ],
             [
                 'name_en' => 'Osmania General Hospital Blood Bank',
@@ -163,7 +163,7 @@ class HyderabadScraperService extends BaseScraperService
                 'source_name' => 'e-RaktKosh / Osmania Registry',
                 'source_url' => 'https://osmaniageneralhospital.org',
                 'source_confidence_score' => 99,
-                'source_verification_status' => 'verified_active',
+                'source_verification' => 'verified_active',
             ],
             [
                 'name_en' => 'Gandhi Hospital Blood Bank',
@@ -197,7 +197,7 @@ class HyderabadScraperService extends BaseScraperService
                 'source_name' => 'e-RaktKosh / Gandhi Registry',
                 'source_url' => 'https://gandhihospital.org',
                 'source_confidence_score' => 99,
-                'source_verification_status' => 'verified_active',
+                'source_verification' => 'verified_active',
             ],
             [
                 'name_en' => 'NIMS Blood Bank (Nizam\'s Institute of Medical Sciences)',
@@ -231,7 +231,7 @@ class HyderabadScraperService extends BaseScraperService
                 'source_name' => 'e-RaktKosh / NIMS Registry',
                 'source_url' => 'https://nims.edu.in',
                 'source_confidence_score' => 99,
-                'source_verification_status' => 'verified_active',
+                'source_verification' => 'verified_active',
             ],
             [
                 'name_en' => 'Lions Club of Hyderabad Blood Bank',
@@ -265,7 +265,7 @@ class HyderabadScraperService extends BaseScraperService
                 'source_name' => 'e-RaktKosh / Lions Registry',
                 'source_url' => 'https://lionsbloodbankhyderabad.org',
                 'source_confidence_score' => 98,
-                'source_verification_status' => 'verified_active',
+                'source_verification' => 'verified_active',
             ],
             [
                 'name_en' => 'Apollo Hospitals Blood Bank Jubilee Hills',
@@ -299,7 +299,7 @@ class HyderabadScraperService extends BaseScraperService
                 'source_name' => 'e-RaktKosh / Apollo JH Registry',
                 'source_url' => 'https://apollohospitals.com',
                 'source_confidence_score' => 99,
-                'source_verification_status' => 'verified_active',
+                'source_verification' => 'verified_active',
             ],
             [
                 'name_en' => 'Yashoda Hospitals Blood Bank Secunderabad',
@@ -333,7 +333,7 @@ class HyderabadScraperService extends BaseScraperService
                 'source_name' => 'e-RaktKosh / Yashoda Sec Registry',
                 'source_url' => 'https://yashodahospitals.com',
                 'source_confidence_score' => 99,
-                'source_verification_status' => 'verified_active',
+                'source_verification' => 'verified_active',
             ],
             [
                 'name_en' => 'AIG Hospitals Blood Bank Gachibowli',
@@ -367,7 +367,7 @@ class HyderabadScraperService extends BaseScraperService
                 'source_name' => 'e-RaktKosh / AIG Registry',
                 'source_url' => 'https://aighospitals.com',
                 'source_confidence_score' => 99,
-                'source_verification_status' => 'verified_active',
+                'source_verification' => 'verified_active',
             ],
             [
                 'name_en' => 'CARE Hospitals Blood Bank Banjara Hills',
@@ -401,7 +401,7 @@ class HyderabadScraperService extends BaseScraperService
                 'source_name' => 'e-RaktKosh / CARE BH Registry',
                 'source_url' => 'https://carehospitals.com',
                 'source_confidence_score' => 98,
-                'source_verification_status' => 'verified_active',
+                'source_verification' => 'verified_active',
             ],
             [
                 'name_en' => 'KIMS Hospitals Blood Bank Secunderabad',
@@ -435,7 +435,7 @@ class HyderabadScraperService extends BaseScraperService
                 'source_name' => 'e-RaktKosh / KIMS Registry',
                 'source_url' => 'https://kimshospitals.com',
                 'source_confidence_score' => 99,
-                'source_verification_status' => 'verified_active',
+                'source_verification' => 'verified_active',
             ],
             [
                 'name_en' => 'NTR Memorial Trust Blood Bank',
@@ -469,7 +469,7 @@ class HyderabadScraperService extends BaseScraperService
                 'source_name' => 'e-RaktKosh / NTR Trust Registry',
                 'source_url' => 'https://ntrtrust.org',
                 'source_confidence_score' => 99,
-                'source_verification_status' => 'verified_active',
+                'source_verification' => 'verified_active',
             ],
             [
                 'name_en' => 'Institute of Preventive Medicine (IPM) Blood Bank',
@@ -503,7 +503,7 @@ class HyderabadScraperService extends BaseScraperService
                 'source_name' => 'e-RaktKosh / IPM Registry',
                 'source_url' => 'https://telangana.gov.in',
                 'source_confidence_score' => 99,
-                'source_verification_status' => 'verified_active',
+                'source_verification' => 'verified_active',
             ],
             [
                 'name_en' => 'Basavatarakam Indo American Cancer Hospital Blood Bank',
@@ -537,7 +537,7 @@ class HyderabadScraperService extends BaseScraperService
                 'source_name' => 'e-RaktKosh / Basavatarakam Registry',
                 'source_url' => 'https://indocancer.com',
                 'source_confidence_score' => 98,
-                'source_verification_status' => 'verified_active',
+                'source_verification' => 'verified_active',
             ],
             [
                 'name_en' => 'Medicover Hospitals Blood Bank',
@@ -571,7 +571,7 @@ class HyderabadScraperService extends BaseScraperService
                 'source_name' => 'e-RaktKosh / Medicover Registry',
                 'source_url' => 'https://medicoverhospitals.in',
                 'source_confidence_score' => 98,
-                'source_verification_status' => 'verified_active',
+                'source_verification' => 'verified_active',
             ],
             [
                 'name_en' => 'Sunshine Hospitals Blood Bank',
@@ -605,7 +605,7 @@ class HyderabadScraperService extends BaseScraperService
                 'source_name' => 'e-RaktKosh / Sunshine Registry',
                 'source_url' => 'https://sunshinehospitals.com',
                 'source_confidence_score' => 98,
-                'source_verification_status' => 'verified_active',
+                'source_verification' => 'verified_active',
             ],
             [
                 'name_en' => 'Continental Hospitals Blood Bank',
@@ -639,7 +639,7 @@ class HyderabadScraperService extends BaseScraperService
                 'source_name' => 'e-RaktKosh / Continental Registry',
                 'source_url' => 'https://continentalhospitals.com',
                 'source_confidence_score' => 98,
-                'source_verification_status' => 'verified_active',
+                'source_verification' => 'verified_active',
             ],
         ];
 

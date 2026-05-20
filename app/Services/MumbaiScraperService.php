@@ -47,7 +47,7 @@ class MumbaiScraperService extends BaseScraperService
                 'source_name' => 'e-RaktKosh / KEM Registry',
                 'source_url' => 'https://kemedu.org',
                 'source_confidence_score' => 99,
-                'source_verification_status' => 'verified_active',
+                'source_verification' => 'verified_active',
             ],
             [
                 'name_en' => 'Tata Memorial Hospital Blood Bank',
@@ -81,7 +81,7 @@ class MumbaiScraperService extends BaseScraperService
                 'source_name' => 'e-RaktKosh / TMC Registry',
                 'source_url' => 'https://tmc.gov.in',
                 'source_confidence_score' => 99,
-                'source_verification_status' => 'verified_active',
+                'source_verification' => 'verified_active',
             ],
             [
                 'name_en' => 'Hinduja Hospital Blood Bank',
@@ -115,7 +115,7 @@ class MumbaiScraperService extends BaseScraperService
                 'source_name' => 'e-RaktKosh / Hinduja Registry',
                 'source_url' => 'https://hindujahospital.com',
                 'source_confidence_score' => 98,
-                'source_verification_status' => 'verified_active',
+                'source_verification' => 'verified_active',
             ],
             [
                 'name_en' => 'Kokilaben Dhirubhai Ambani Hospital Blood Bank',
@@ -149,7 +149,7 @@ class MumbaiScraperService extends BaseScraperService
                 'source_name' => 'e-RaktKosh / KDAH Registry',
                 'source_url' => 'https://kokilabenhospital.com',
                 'source_confidence_score' => 99,
-                'source_verification_status' => 'verified_active',
+                'source_verification' => 'verified_active',
             ],
             [
                 'name_en' => 'Lilavati Hospital Blood Bank',
@@ -183,7 +183,7 @@ class MumbaiScraperService extends BaseScraperService
                 'source_name' => 'e-RaktKosh / Lilavati Registry',
                 'source_url' => 'https://lilavatihospital.com',
                 'source_confidence_score' => 99,
-                'source_verification_status' => 'verified_active',
+                'source_verification' => 'verified_active',
             ],
             [
                 'name_en' => 'Nanavati Max Hospital Blood Bank',
@@ -217,7 +217,7 @@ class MumbaiScraperService extends BaseScraperService
                 'source_name' => 'e-RaktKosh / Nanavati Registry',
                 'source_url' => 'https://nanavatimaxhospital.org',
                 'source_confidence_score' => 98,
-                'source_verification_status' => 'verified_active',
+                'source_verification' => 'verified_active',
             ],
             [
                 'name_en' => 'Bombay Hospital Blood Bank',
@@ -251,7 +251,7 @@ class MumbaiScraperService extends BaseScraperService
                 'source_name' => 'e-RaktKosh / Bombay Hospital Registry',
                 'source_url' => 'https://bombayhospital.com',
                 'source_confidence_score' => 98,
-                'source_verification_status' => 'verified_active',
+                'source_verification' => 'verified_active',
             ],
             [
                 'name_en' => 'Breach Candy Hospital Blood Bank',
@@ -285,7 +285,7 @@ class MumbaiScraperService extends BaseScraperService
                 'source_name' => 'e-RaktKosh / Breach Candy Registry',
                 'source_url' => 'https://breachcandyhospital.org',
                 'source_confidence_score' => 98,
-                'source_verification_status' => 'verified_active',
+                'source_verification' => 'verified_active',
             ],
             [
                 'name_en' => 'Jaslok Hospital Blood Bank',
@@ -319,7 +319,7 @@ class MumbaiScraperService extends BaseScraperService
                 'source_name' => 'e-RaktKosh / Jaslok Registry',
                 'source_url' => 'https://jaslokhospital.net',
                 'source_confidence_score' => 98,
-                'source_verification_status' => 'verified_active',
+                'source_verification' => 'verified_active',
             ],
             [
                 'name_en' => 'Sion Hospital Blood Bank (LTMGH)',
@@ -353,7 +353,7 @@ class MumbaiScraperService extends BaseScraperService
                 'source_name' => 'e-RaktKosh / LTMGH Registry',
                 'source_url' => 'https://ltmgh.com',
                 'source_confidence_score' => 99,
-                'source_verification_status' => 'verified_active',
+                'source_verification' => 'verified_active',
             ],
             [
                 'name_en' => 'Sir J. J. Group of Hospitals Blood Bank',
@@ -387,7 +387,7 @@ class MumbaiScraperService extends BaseScraperService
                 'source_name' => 'e-RaktKosh / J. J. Registry',
                 'source_url' => 'https://jjhospital.org',
                 'source_confidence_score' => 99,
-                'source_verification_status' => 'verified_active',
+                'source_verification' => 'verified_active',
             ],
             [
                 'name_en' => 'Hiranandani Hospital Blood Bank',
@@ -421,7 +421,7 @@ class MumbaiScraperService extends BaseScraperService
                 'source_name' => 'e-RaktKosh / Hiranandani Registry',
                 'source_url' => 'https://hiranandanihospital.org',
                 'source_confidence_score' => 98,
-                'source_verification_status' => 'verified_active',
+                'source_verification' => 'verified_active',
             ],
             [
                 'name_en' => 'Fortis Hospital Mulund Blood Bank',
@@ -455,7 +455,7 @@ class MumbaiScraperService extends BaseScraperService
                 'source_name' => 'e-RaktKosh / Fortis Registry',
                 'source_url' => 'https://fortishealthcare.com',
                 'source_confidence_score' => 99,
-                'source_verification_status' => 'verified_active',
+                'source_verification' => 'verified_active',
             ],
             [
                 'name_en' => 'Wockhardt Hospital Mumbai Central Blood Bank',
@@ -489,7 +489,7 @@ class MumbaiScraperService extends BaseScraperService
                 'source_name' => 'e-RaktKosh / Wockhardt Registry',
                 'source_url' => 'https://wockhardthospitals.com',
                 'source_confidence_score' => 98,
-                'source_verification_status' => 'verified_active',
+                'source_verification' => 'verified_active',
             ],
             [
                 'name_en' => 'Global Hospital Parel Blood Bank',
@@ -523,7 +523,7 @@ class MumbaiScraperService extends BaseScraperService
                 'source_name' => 'e-RaktKosh / Global Registry',
                 'source_url' => 'https://globalhospitalsindia.com',
                 'source_confidence_score' => 98,
-                'source_verification_status' => 'verified_active',
+                'source_verification' => 'verified_active',
             ],
             [
                 'name_en' => 'Nair Hospital Blood Bank (BYL Nair)',
@@ -557,7 +557,7 @@ class MumbaiScraperService extends BaseScraperService
                 'source_name' => 'e-RaktKosh / Nair Registry',
                 'source_url' => 'https://bylnair.edu',
                 'source_confidence_score' => 99,
-                'source_verification_status' => 'verified_active',
+                'source_verification' => 'verified_active',
             ],
             [
                 'name_en' => 'Wockhardt Hospital Blood Bank',
@@ -591,7 +591,7 @@ class MumbaiScraperService extends BaseScraperService
                 'source_name' => 'e-RaktKosh / Wockhardt Registry',
                 'source_url' => 'https://wockhardthospitals.com',
                 'source_confidence_score' => 98,
-                'source_verification_status' => 'verified_active',
+                'source_verification' => 'verified_active',
             ],
         ];
 
@@ -2467,7 +2467,7 @@ class MumbaiScraperService extends BaseScraperService
             ],
             [
                 'name_en' => 'Kaya Kalp International Sex & Health Clinics',
-                'name_hi' => 'कय कल्प इंतॆर्नतिऒनल सॆक्स & हॆअल्� क्लिनिकस अस्पताल (मुंबई)',
+                'name_hi' => 'कय कल्प इंतॆर्नतिऒनल सॆक्स & हॆअल्� क्लिनिकस अस्पताल (मुंबई)',
                 'type' => 'Clinic',
                 'address' => 'Main Medical Avenue, Mumbai, Mumbai, Rajasthan',
                 'address_line1' => 'Main Medical Avenue',
@@ -2947,7 +2947,7 @@ class MumbaiScraperService extends BaseScraperService
             ],
             [
                 'name_en' => 'Thunga STH Hospital',
-                'name_hi' => 'थुन्ग स्� अस्पताल अस्पताल (मुंबई)',
+                'name_hi' => 'थुन्ग स्� अस्पताल अस्पताल (मुंबई)',
                 'type' => 'Clinic',
                 'address' => 'Main Medical Avenue, Mumbai, Mumbai, Rajasthan',
                 'address_line1' => 'Main Medical Avenue',
@@ -4461,7 +4461,7 @@ class MumbaiScraperService extends BaseScraperService
                 'medical_council' => 'Medical Council of India',
                 'registration_number' => 'REG-C19236A4EC',
                 'about_en' => 'Highly experienced specialist in Ophthalmologist practicing in Mumbai.',
-                'about_hi' => 'मुंबई में अभ्यास करने वाले Ophthalmologist के अत्यधिक अनुभवी विशेषज्ञ डॉक्टर डॉ. सौमिल शॆ�।',
+                'about_hi' => 'मुंबई में अभ्यास करने वाले Ophthalmologist के अत्यधिक अनुभवी विशेषज्ञ डॉक्टर डॉ. सौमिल शॆ�।',
                 'gender' => 'Unspecified',
                 'phone' => null,
                 'is_verified' => true,
@@ -4680,7 +4680,7 @@ class MumbaiScraperService extends BaseScraperService
                 'department_name_en' => 'Gynecologist/Obstetrician',
                 'department_name_hi' => 'Gynecologist/Obstetrician',
                 'hospital_name_en' => 'Thunga STH Hospital',
-                'hospital_name_hi' => 'थुन्ग स्� अस्पताल अस्पताल (मुंबई)',
+                'hospital_name_hi' => 'थुन्ग स्� अस्पताल अस्पताल (मुंबई)',
                 'address' => null,
                 'address_line1' => 'Main Medical Avenue',
                 'address_line2' => 'Mumbai',

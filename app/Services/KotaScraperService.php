@@ -34,7 +34,7 @@ class KotaScraperService extends BaseScraperService
                 'source_name' => 'e-RaktKosh',
                 'source_url' => 'https://www.eraktkosh.in',
                 'source_confidence_score' => 99,
-                'source_verification_status' => 'verified_active',
+                'source_verification' => 'verified_active',
             ],
             [
                 'name_en' => 'New Medical College Hospital (NMCH) Blood Bank',
@@ -54,7 +54,7 @@ class KotaScraperService extends BaseScraperService
                 'source_name' => 'e-RaktKosh',
                 'source_url' => 'https://www.eraktkosh.in',
                 'source_confidence_score' => 99,
-                'source_verification_status' => 'verified_active',
+                'source_verification' => 'verified_active',
             ],
             [
                 'name_en' => 'Indian Red Cross Society Blood Bank',
@@ -74,7 +74,7 @@ class KotaScraperService extends BaseScraperService
                 'source_name' => 'e-RaktKosh',
                 'source_url' => 'https://www.eraktkosh.in',
                 'source_confidence_score' => 98,
-                'source_verification_status' => 'verified_active',
+                'source_verification' => 'verified_active',
             ],
 
             [
@@ -109,7 +109,7 @@ class KotaScraperService extends BaseScraperService
                 'source_name' => 'e-RaktKosh / MBS Registry',
                 'source_url' => 'https://education.rajasthan.gov.in/gmc-kota',
                 'source_confidence_score' => 99,
-                'source_verification_status' => 'verified_active',
+                'source_verification' => 'verified_active',
             ],
             [
                 'name_en' => 'Jaykay Lon Hospital Blood Bank',
@@ -143,7 +143,7 @@ class KotaScraperService extends BaseScraperService
                 'source_name' => 'e-RaktKosh / JK Lon Registry',
                 'source_url' => 'https://education.rajasthan.gov.in/gmc-kota',
                 'source_confidence_score' => 99,
-                'source_verification_status' => 'verified_active',
+                'source_verification' => 'verified_active',
             ],
             [
                 'name_en' => 'Sudha Hospital Blood Bank',
@@ -177,7 +177,7 @@ class KotaScraperService extends BaseScraperService
                 'source_name' => 'e-RaktKosh / Sudha Registry',
                 'source_url' => 'https://sudhahospital.com',
                 'source_confidence_score' => 98,
-                'source_verification_status' => 'verified_active',
+                'source_verification' => 'verified_active',
             ],
             [
                 'name_en' => 'Kota Heart Institute Blood Bank',
@@ -211,7 +211,7 @@ class KotaScraperService extends BaseScraperService
                 'source_name' => 'e-RaktKosh / Kota Heart Registry',
                 'source_url' => 'https://kotaheart.com',
                 'source_confidence_score' => 98,
-                'source_verification_status' => 'verified_active',
+                'source_verification' => 'verified_active',
             ],
             [
                 'name_en' => 'Bharat Vikas Parishad Blood Bank Kota',
@@ -245,7 +245,7 @@ class KotaScraperService extends BaseScraperService
                 'source_name' => 'e-RaktKosh / BVP Registry',
                 'source_url' => 'https://bvpbloodbankkota.org',
                 'source_confidence_score' => 98,
-                'source_verification_status' => 'verified_active',
+                'source_verification' => 'verified_active',
             ],
             [
                 'name_en' => 'Maitri Hospital Blood Bank',
@@ -279,7 +279,7 @@ class KotaScraperService extends BaseScraperService
                 'source_name' => 'e-RaktKosh / Maitri Registry',
                 'source_url' => 'https://maitrihospital.com',
                 'source_confidence_score' => 98,
-                'source_verification_status' => 'verified_active',
+                'source_verification' => 'verified_active',
             ],
             [
                 'name_en' => 'Jai Hospital Blood Bank',
@@ -313,7 +313,7 @@ class KotaScraperService extends BaseScraperService
                 'source_name' => 'e-RaktKosh / Jai Registry',
                 'source_url' => 'https://jaihospital.com',
                 'source_confidence_score' => 98,
-                'source_verification_status' => 'verified_active',
+                'source_verification' => 'verified_active',
             ],
             [
                 'name_en' => 'Choudhary Hospital Blood Bank',
@@ -347,7 +347,7 @@ class KotaScraperService extends BaseScraperService
                 'source_name' => 'e-RaktKosh / Choudhary Registry',
                 'source_url' => 'https://choudharyhospital.com',
                 'source_confidence_score' => 98,
-                'source_verification_status' => 'verified_active',
+                'source_verification' => 'verified_active',
             ],
             [
                 'name_en' => 'NMCH Blood Bank',
@@ -381,7 +381,7 @@ class KotaScraperService extends BaseScraperService
                 'source_name' => 'e-RaktKosh / NMCH Registry',
                 'source_url' => 'https://education.rajasthan.gov.in/gmc-kota',
                 'source_confidence_score' => 99,
-                'source_verification_status' => 'verified_active',
+                'source_verification' => 'verified_active',
             ],
             [
                 'name_en' => 'ASG Blood Bank & Component Centre Kota',
@@ -415,7 +415,7 @@ class KotaScraperService extends BaseScraperService
                 'source_name' => 'e-RaktKosh / ASG Registry',
                 'source_url' => 'https://asgeyehospital.com',
                 'source_confidence_score' => 98,
-                'source_verification_status' => 'verified_active',
+                'source_verification' => 'verified_active',
             ],
             [
                 'name_en' => 'Kota Trauma Society Blood Bank',
@@ -449,7 +449,7 @@ class KotaScraperService extends BaseScraperService
                 'source_name' => 'e-RaktKosh / Kota Trauma Registry',
                 'source_url' => 'https://kotatrauma.com',
                 'source_confidence_score' => 98,
-                'source_verification_status' => 'verified_active',
+                'source_verification' => 'verified_active',
             ],
             [
                 'name_en' => 'Suvin Hospital Blood Bank',
@@ -483,7 +483,7 @@ class KotaScraperService extends BaseScraperService
                 'source_name' => 'e-RaktKosh / Suvin Registry',
                 'source_url' => 'https://suvinhospital.com',
                 'source_confidence_score' => 98,
-                'source_verification_status' => 'verified_active',
+                'source_verification' => 'verified_active',
             ],
             [
                 'name_en' => 'Global Health Blood Bank Kota',
@@ -517,7 +517,7 @@ class KotaScraperService extends BaseScraperService
                 'source_name' => 'e-RaktKosh / Global Health Registry',
                 'source_url' => 'https://globalhealthkota.com',
                 'source_confidence_score' => 98,
-                'source_verification_status' => 'verified_active',
+                'source_verification' => 'verified_active',
             ],
             [
                 'name_en' => 'Radiant Hospital Blood Bank',
@@ -551,7 +551,7 @@ class KotaScraperService extends BaseScraperService
                 'source_name' => 'e-RaktKosh / Radiant Registry',
                 'source_url' => 'https://radianthospital.com',
                 'source_confidence_score' => 98,
-                'source_verification_status' => 'verified_active',
+                'source_verification' => 'verified_active',
             ],
             [
                 'name_en' => 'Arogyam Blood Bank Kota',
@@ -585,7 +585,7 @@ class KotaScraperService extends BaseScraperService
                 'source_name' => 'e-RaktKosh / Arogyam Registry',
                 'source_url' => 'https://arogyamkota.com',
                 'source_confidence_score' => 98,
-                'source_verification_status' => 'verified_active',
+                'source_verification' => 'verified_active',
             ],
             [
                 'name_en' => 'JK Lone Hospital Blood Bank',
@@ -619,7 +619,7 @@ class KotaScraperService extends BaseScraperService
                 'source_name' => 'e-RaktKosh / JK Lone Registry',
                 'source_url' => 'https://education.rajasthan.gov.in',
                 'source_confidence_score' => 99,
-                'source_verification_status' => 'verified_active',
+                'source_verification' => 'verified_active',
             ],
             [
                 'name_en' => 'New Medical College Hospital Blood Bank (NMCH)',
@@ -653,7 +653,7 @@ class KotaScraperService extends BaseScraperService
                 'source_name' => 'e-RaktKosh / NMCH Registry',
                 'source_url' => 'https://education.rajasthan.gov.in',
                 'source_confidence_score' => 99,
-                'source_verification_status' => 'verified_active',
+                'source_verification' => 'verified_active',
             ],
             [
                 'name_en' => 'Bharat Vikas Parishad Hospital Blood Bank',
@@ -687,7 +687,7 @@ class KotaScraperService extends BaseScraperService
                 'source_name' => 'e-RaktKosh / BVP Registry',
                 'source_url' => 'https://bvphospital.org',
                 'source_confidence_score' => 98,
-                'source_verification_status' => 'verified_active',
+                'source_verification' => 'verified_active',
             ],
         ];
 

@@ -34,7 +34,7 @@ class BangaloreScraperService extends BaseScraperService
                 'source_name' => 'e-RaktKosh',
                 'source_url' => 'https://www.eraktkosh.in',
                 'source_confidence_score' => 99,
-                'source_verification_status' => 'verified_active',
+                'source_verification' => 'verified_active',
             ],
             [
                 'name_en' => 'Lions Blood Bank',
@@ -54,7 +54,7 @@ class BangaloreScraperService extends BaseScraperService
                 'source_name' => 'e-RaktKosh',
                 'source_url' => 'https://www.eraktkosh.in',
                 'source_confidence_score' => 98,
-                'source_verification_status' => 'verified_active',
+                'source_verification' => 'verified_active',
             ],
             [
                 'name_en' => 'Victoria Hospital Blood Bank',
@@ -74,7 +74,7 @@ class BangaloreScraperService extends BaseScraperService
                 'source_name' => 'State Registry',
                 'source_url' => 'https://www.eraktkosh.in',
                 'source_confidence_score' => 99,
-                'source_verification_status' => 'verified_active',
+                'source_verification' => 'verified_active',
             ],
             [
                 'name_en' => 'St. John\'s Hospital Blood Bank',
@@ -94,7 +94,7 @@ class BangaloreScraperService extends BaseScraperService
                 'source_name' => 'Hospital Registry',
                 'source_url' => 'https://stjohns.in',
                 'source_confidence_score' => 98,
-                'source_verification_status' => 'verified_active',
+                'source_verification' => 'verified_active',
             ],
 
             [
@@ -129,7 +129,7 @@ class BangaloreScraperService extends BaseScraperService
                 'source_name' => 'e-RaktKosh / NIMHANS Registry',
                 'source_url' => 'https://nimhans.ac.in',
                 'source_confidence_score' => 99,
-                'source_verification_status' => 'verified_active',
+                'source_verification' => 'verified_active',
             ],
             [
                 'name_en' => 'Victoria Hospital Blood Bank (BMCRI)',
@@ -163,7 +163,7 @@ class BangaloreScraperService extends BaseScraperService
                 'source_name' => 'e-RaktKosh / Victoria Registry',
                 'source_url' => 'https://bmcri.org',
                 'source_confidence_score' => 99,
-                'source_verification_status' => 'verified_active',
+                'source_verification' => 'verified_active',
             ],
             [
                 'name_en' => 'Manipal Hospital Blood Bank Old Airport Road',
@@ -197,7 +197,7 @@ class BangaloreScraperService extends BaseScraperService
                 'source_name' => 'e-RaktKosh / Manipal OAR Registry',
                 'source_url' => 'https://manipalhospitals.com',
                 'source_confidence_score' => 99,
-                'source_verification_status' => 'verified_active',
+                'source_verification' => 'verified_active',
             ],
             [
                 'name_en' => 'St. John\'s Medical College Blood Bank',
@@ -231,7 +231,7 @@ class BangaloreScraperService extends BaseScraperService
                 'source_name' => 'e-RaktKosh / St Johns Registry',
                 'source_url' => 'https://stjohns.in',
                 'source_confidence_score' => 99,
-                'source_verification_status' => 'verified_active',
+                'source_verification' => 'verified_active',
             ],
             [
                 'name_en' => 'Fortis Hospital Blood Bank Bannerghatta',
@@ -265,7 +265,7 @@ class BangaloreScraperService extends BaseScraperService
                 'source_name' => 'e-RaktKosh / Fortis BG Registry',
                 'source_url' => 'https://fortishealthcare.com',
                 'source_confidence_score' => 98,
-                'source_verification_status' => 'verified_active',
+                'source_verification' => 'verified_active',
             ],
             [
                 'name_en' => 'Apollo Hospitals Blood Bank Bannerghatta',
@@ -299,7 +299,7 @@ class BangaloreScraperService extends BaseScraperService
                 'source_name' => 'e-RaktKosh / Apollo BG Registry',
                 'source_url' => 'https://apollohospitals.com',
                 'source_confidence_score' => 98,
-                'source_verification_status' => 'verified_active',
+                'source_verification' => 'verified_active',
             ],
             [
                 'name_en' => 'Rotary Bangalore TTK Blood Bank',
@@ -333,7 +333,7 @@ class BangaloreScraperService extends BaseScraperService
                 'source_name' => 'e-RaktKosh / Rotary TTK Registry',
                 'source_url' => 'https://rotaryttkbloodbank.org',
                 'source_confidence_score' => 98,
-                'source_verification_status' => 'verified_active',
+                'source_verification' => 'verified_active',
             ],
             [
                 'name_en' => 'Lions Blood Bank Bangalore',
@@ -367,7 +367,7 @@ class BangaloreScraperService extends BaseScraperService
                 'source_name' => 'e-RaktKosh / Lions Registry',
                 'source_url' => 'https://lionsbloodbankbangalore.org',
                 'source_confidence_score' => 98,
-                'source_verification_status' => 'verified_active',
+                'source_verification' => 'verified_active',
             ],
             [
                 'name_en' => 'Bowring & Lady Curzon Hospital Blood Bank',
@@ -401,7 +401,7 @@ class BangaloreScraperService extends BaseScraperService
                 'source_name' => 'e-RaktKosh / Bowring Registry',
                 'source_url' => 'https://bmcri.org',
                 'source_confidence_score' => 98,
-                'source_verification_status' => 'verified_active',
+                'source_verification' => 'verified_active',
             ],
             [
                 'name_en' => 'Sakra World Hospital Blood Bank',
@@ -435,7 +435,7 @@ class BangaloreScraperService extends BaseScraperService
                 'source_name' => 'e-RaktKosh / Sakra Registry',
                 'source_url' => 'https://sakraworldhospital.com',
                 'source_confidence_score' => 98,
-                'source_verification_status' => 'verified_active',
+                'source_verification' => 'verified_active',
             ],
             [
                 'name_en' => 'KC General Hospital Blood Bank',
@@ -469,7 +469,7 @@ class BangaloreScraperService extends BaseScraperService
                 'source_name' => 'e-RaktKosh / Government Registry',
                 'source_url' => 'https://karnataka.gov.in',
                 'source_confidence_score' => 98,
-                'source_verification_status' => 'verified_active',
+                'source_verification' => 'verified_active',
             ],
             [
                 'name_en' => 'Rashtrotthana Blood Bank',
@@ -503,7 +503,7 @@ class BangaloreScraperService extends BaseScraperService
                 'source_name' => 'e-RaktKosh / Rashtrotthana Registry',
                 'source_url' => 'https://rashtrotthana.org',
                 'source_confidence_score' => 99,
-                'source_verification_status' => 'verified_active',
+                'source_verification' => 'verified_active',
             ],
             [
                 'name_en' => 'Narayana Health City Blood Bank',
@@ -537,7 +537,7 @@ class BangaloreScraperService extends BaseScraperService
                 'source_name' => 'e-RaktKosh / Narayana Registry',
                 'source_url' => 'https://narayanahealth.org',
                 'source_confidence_score' => 99,
-                'source_verification_status' => 'verified_active',
+                'source_verification' => 'verified_active',
             ],
             [
                 'name_en' => 'MS Ramaiah Memorial Hospital Blood Bank',
@@ -571,7 +571,7 @@ class BangaloreScraperService extends BaseScraperService
                 'source_name' => 'e-RaktKosh / Ramaiah Registry',
                 'source_url' => 'https://msrmh.com',
                 'source_confidence_score' => 98,
-                'source_verification_status' => 'verified_active',
+                'source_verification' => 'verified_active',
             ],
             [
                 'name_en' => 'BGS Gleneagles Global Hospital Blood Bank',
@@ -605,7 +605,7 @@ class BangaloreScraperService extends BaseScraperService
                 'source_name' => 'e-RaktKosh / Gleneagles Registry',
                 'source_url' => 'https://globalhospitalsindia.com',
                 'source_confidence_score' => 98,
-                'source_verification_status' => 'verified_active',
+                'source_verification' => 'verified_active',
             ],
             [
                 'name_en' => 'Aster CMI Hospital Blood Bank',
@@ -639,7 +639,7 @@ class BangaloreScraperService extends BaseScraperService
                 'source_name' => 'e-RaktKosh / Aster Registry',
                 'source_url' => 'https://asterhospitals.in',
                 'source_confidence_score' => 99,
-                'source_verification_status' => 'verified_active',
+                'source_verification' => 'verified_active',
             ],
         ];
 

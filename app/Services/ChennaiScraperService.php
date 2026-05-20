@@ -34,7 +34,7 @@ class ChennaiScraperService extends BaseScraperService
                 'source_name' => 'e-RaktKosh',
                 'source_url' => 'https://www.eraktkosh.in',
                 'source_confidence_score' => 99,
-                'source_verification_status' => 'verified_active',
+                'source_verification' => 'verified_active',
             ],
             [
                 'name_en' => 'Lions Blood Bank Chennai',
@@ -54,7 +54,7 @@ class ChennaiScraperService extends BaseScraperService
                 'source_name' => 'e-RaktKosh',
                 'source_url' => 'https://www.eraktkosh.in',
                 'source_confidence_score' => 98,
-                'source_verification_status' => 'verified_active',
+                'source_verification' => 'verified_active',
             ],
 
             [
@@ -89,7 +89,7 @@ class ChennaiScraperService extends BaseScraperService
                 'source_name' => 'e-RaktKosh / RGGGH Registry',
                 'source_url' => 'https://mmc.ac.in',
                 'source_confidence_score' => 99,
-                'source_verification_status' => 'verified_active',
+                'source_verification' => 'verified_active',
             ],
             [
                 'name_en' => 'Stanley Medical College Blood Bank',
@@ -123,7 +123,7 @@ class ChennaiScraperService extends BaseScraperService
                 'source_name' => 'e-RaktKosh / Stanley Registry',
                 'source_url' => 'https://stanleymedicalcollege.in',
                 'source_confidence_score' => 99,
-                'source_verification_status' => 'verified_active',
+                'source_verification' => 'verified_active',
             ],
             [
                 'name_en' => 'Kilpauk Medical College Blood Bank',
@@ -157,7 +157,7 @@ class ChennaiScraperService extends BaseScraperService
                 'source_name' => 'e-RaktKosh / Kilpauk Registry',
                 'source_url' => 'https://gkmc.in',
                 'source_confidence_score' => 99,
-                'source_verification_status' => 'verified_active',
+                'source_verification' => 'verified_active',
             ],
             [
                 'name_en' => 'Apollo Hospitals Blood Bank Greams Road',
@@ -191,7 +191,7 @@ class ChennaiScraperService extends BaseScraperService
                 'source_name' => 'e-RaktKosh / Apollo Greams Registry',
                 'source_url' => 'https://apollohospitals.com',
                 'source_confidence_score' => 99,
-                'source_verification_status' => 'verified_active',
+                'source_verification' => 'verified_active',
             ],
             [
                 'name_en' => 'Jeevan Blood Bank and Research Centre',
@@ -225,7 +225,7 @@ class ChennaiScraperService extends BaseScraperService
                 'source_name' => 'e-RaktKosh / Jeevan Registry',
                 'source_url' => 'https://jeevanbloodbank.org',
                 'source_confidence_score' => 99,
-                'source_verification_status' => 'verified_active',
+                'source_verification' => 'verified_active',
             ],
             [
                 'name_en' => 'Rotary Central Margaret Sidney Blood Bank',
@@ -259,7 +259,7 @@ class ChennaiScraperService extends BaseScraperService
                 'source_name' => 'e-RaktKosh / Rotary Chennai Registry',
                 'source_url' => 'https://rotarybloodbankchennai.org',
                 'source_confidence_score' => 98,
-                'source_verification_status' => 'verified_active',
+                'source_verification' => 'verified_active',
             ],
             [
                 'name_en' => 'Kauvery Hospital Blood Bank Alwarpet',
@@ -293,7 +293,7 @@ class ChennaiScraperService extends BaseScraperService
                 'source_name' => 'e-RaktKosh / Kauvery Registry',
                 'source_url' => 'https://kauveryhospital.com',
                 'source_confidence_score' => 98,
-                'source_verification_status' => 'verified_active',
+                'source_verification' => 'verified_active',
             ],
             [
                 'name_en' => 'MGM Healthcare Blood Bank Aminjikarai',
@@ -327,7 +327,7 @@ class ChennaiScraperService extends BaseScraperService
                 'source_name' => 'e-RaktKosh / MGM Registry',
                 'source_url' => 'https://mgmhealthcare.in',
                 'source_confidence_score' => 99,
-                'source_verification_status' => 'verified_active',
+                'source_verification' => 'verified_active',
             ],
             [
                 'name_en' => 'MIOT International Blood Bank Manapakkam',
@@ -361,7 +361,7 @@ class ChennaiScraperService extends BaseScraperService
                 'source_name' => 'e-RaktKosh / MIOT Registry',
                 'source_url' => 'https://miotinternational.com',
                 'source_confidence_score' => 98,
-                'source_verification_status' => 'verified_active',
+                'source_verification' => 'verified_active',
             ],
             [
                 'name_en' => 'Sri Ramachandra Medical Centre Blood Bank (SRMC)',
@@ -395,7 +395,7 @@ class ChennaiScraperService extends BaseScraperService
                 'source_name' => 'e-RaktKosh / SRMC Registry',
                 'source_url' => 'https://sriramachandra.edu.in',
                 'source_confidence_score' => 99,
-                'source_verification_status' => 'verified_active',
+                'source_verification' => 'verified_active',
             ],
             [
                 'name_en' => 'Tamil Nadu Dr. M.G.R. Medical University Blood Bank',
@@ -429,7 +429,7 @@ class ChennaiScraperService extends BaseScraperService
                 'source_name' => 'e-RaktKosh / MGR University Registry',
                 'source_url' => 'https://tnmgrmu.ac.in',
                 'source_confidence_score' => 99,
-                'source_verification_status' => 'verified_active',
+                'source_verification' => 'verified_active',
             ],
             [
                 'name_en' => 'VHS Hospital Blood Bank',
@@ -463,7 +463,7 @@ class ChennaiScraperService extends BaseScraperService
                 'source_name' => 'e-RaktKosh / VHS Registry',
                 'source_url' => 'https://vhschennai.org',
                 'source_confidence_score' => 98,
-                'source_verification_status' => 'verified_active',
+                'source_verification' => 'verified_active',
             ],
             [
                 'name_en' => 'SIMS Hospital Blood Bank',
@@ -497,7 +497,7 @@ class ChennaiScraperService extends BaseScraperService
                 'source_name' => 'e-RaktKosh / SIMS Registry',
                 'source_url' => 'https://simshospitals.com',
                 'source_confidence_score' => 98,
-                'source_verification_status' => 'verified_active',
+                'source_verification' => 'verified_active',
             ],
             [
                 'name_en' => 'Fortis Malar Hospital Blood Bank',
@@ -531,7 +531,7 @@ class ChennaiScraperService extends BaseScraperService
                 'source_name' => 'e-RaktKosh / Fortis Malar Registry',
                 'source_url' => 'https://fortishealthcare.com',
                 'source_confidence_score' => 98,
-                'source_verification_status' => 'verified_active',
+                'source_verification' => 'verified_active',
             ],
             [
                 'name_en' => 'Vijaya Hospital Blood Bank',
@@ -565,7 +565,7 @@ class ChennaiScraperService extends BaseScraperService
                 'source_name' => 'e-RaktKosh / Vijaya Registry',
                 'source_url' => 'https://vijayahospital.org',
                 'source_confidence_score' => 98,
-                'source_verification_status' => 'verified_active',
+                'source_verification' => 'verified_active',
             ],
             [
                 'name_en' => 'Billroth Hospitals Blood Bank',
@@ -599,7 +599,7 @@ class ChennaiScraperService extends BaseScraperService
                 'source_name' => 'e-RaktKosh / Billroth Registry',
                 'source_url' => 'https://billrothhospitals.com',
                 'source_confidence_score' => 98,
-                'source_verification_status' => 'verified_active',
+                'source_verification' => 'verified_active',
             ],
             [
                 'name_en' => 'Dr. Rela Institute & Medical Centre Blood Bank',
@@ -633,7 +633,7 @@ class ChennaiScraperService extends BaseScraperService
                 'source_name' => 'e-RaktKosh / Chennai Registry',
                 'source_url' => 'https://dr.relainstitute&medicalcentre.com',
                 'source_confidence_score' => 99,
-                'source_verification_status' => 'verified_active',
+                'source_verification' => 'verified_active',
             ],
             [
                 'name_en' => 'Gleneagles Global Health City Blood Bank',
@@ -667,7 +667,7 @@ class ChennaiScraperService extends BaseScraperService
                 'source_name' => 'e-RaktKosh / Chennai Registry',
                 'source_url' => 'https://gleneaglesglobalhealthcity.com',
                 'source_confidence_score' => 99,
-                'source_verification_status' => 'verified_active',
+                'source_verification' => 'verified_active',
             ],
             [
                 'name_en' => 'Chettinad Health City Blood Bank',
@@ -701,7 +701,7 @@ class ChennaiScraperService extends BaseScraperService
                 'source_name' => 'e-RaktKosh / Chennai Registry',
                 'source_url' => 'https://chettinadhealthcity.com',
                 'source_confidence_score' => 99,
-                'source_verification_status' => 'verified_active',
+                'source_verification' => 'verified_active',
             ],
             [
                 'name_en' => 'Fortis Malar Hospital Adyar Blood Bank',
@@ -735,7 +735,7 @@ class ChennaiScraperService extends BaseScraperService
                 'source_name' => 'e-RaktKosh / Chennai Registry',
                 'source_url' => 'https://fortismalarhospitaladyar.com',
                 'source_confidence_score' => 99,
-                'source_verification_status' => 'verified_active',
+                'source_verification' => 'verified_active',
             ],
             [
                 'name_en' => 'Kauvery Hospital Alwarpet Blood Bank',
@@ -769,7 +769,7 @@ class ChennaiScraperService extends BaseScraperService
                 'source_name' => 'e-RaktKosh / Chennai Registry',
                 'source_url' => 'https://kauveryhospitalalwarpet.com',
                 'source_confidence_score' => 99,
-                'source_verification_status' => 'verified_active',
+                'source_verification' => 'verified_active',
             ],
         ];
 

@@ -5,7 +5,7 @@
 Only records with all conditions are considered reliable:
 
 - `is_verified = true`
-- `source_verification_status = verified`
+- `source_verification = verified`
 - `source_confidence_score >= 85`
 - critical fields present (city, name, contact, address)
 

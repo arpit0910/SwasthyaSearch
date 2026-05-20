@@ -34,7 +34,7 @@ class AhmedabadScraperService extends BaseScraperService
                 'source_name' => 'e-RaktKosh',
                 'source_url' => 'https://www.eraktkosh.in',
                 'source_confidence_score' => 97,
-                'source_verification_status' => 'verified_active',
+                'source_verification' => 'verified_active',
             ],
             [
                 'name_en' => 'Karnavati Blood Bank',
@@ -54,7 +54,7 @@ class AhmedabadScraperService extends BaseScraperService
                 'source_name' => 'e-RaktKosh',
                 'source_url' => 'https://www.eraktkosh.in',
                 'source_confidence_score' => 96,
-                'source_verification_status' => 'verified_active',
+                'source_verification' => 'verified_active',
             ],
             [
                 'name_en' => 'Sola Civil Hospital Blood Bank',
@@ -74,7 +74,7 @@ class AhmedabadScraperService extends BaseScraperService
                 'source_name' => 'State Registry',
                 'source_url' => 'https://www.eraktkosh.in',
                 'source_confidence_score' => 99,
-                'source_verification_status' => 'verified_active',
+                'source_verification' => 'verified_active',
             ],
 
 
@@ -96,7 +96,7 @@ class AhmedabadScraperService extends BaseScraperService
                 'source_name' => 'e-RaktKosh',
                 'source_url' => 'https://www.eraktkosh.in',
                 'source_confidence_score' => 99,
-                'source_verification_status' => 'verified_active',
+                'source_verification' => 'verified_active',
             ],
             [
                 'name_en' => 'Indian Red Cross Society Blood Bank Ahmedabad',
@@ -116,7 +116,7 @@ class AhmedabadScraperService extends BaseScraperService
                 'source_name' => 'e-RaktKosh',
                 'source_url' => 'https://www.eraktkosh.in',
                 'source_confidence_score' => 98,
-                'source_verification_status' => 'verified_active',
+                'source_verification' => 'verified_active',
             ],
             [
                 'name_en' => 'SVP Hospital Blood Bank',
@@ -136,7 +136,7 @@ class AhmedabadScraperService extends BaseScraperService
                 'source_name' => 'e-RaktKosh',
                 'source_url' => 'https://www.eraktkosh.in',
                 'source_confidence_score' => 99,
-                'source_verification_status' => 'verified_active',
+                'source_verification' => 'verified_active',
             ],
             [
                 'name_en' => 'UN Mehta Institute Blood Bank',
@@ -156,7 +156,7 @@ class AhmedabadScraperService extends BaseScraperService
                 'source_name' => 'Hospital Registry',
                 'source_url' => 'https://unmicrc.org',
                 'source_confidence_score' => 98,
-                'source_verification_status' => 'verified_active',
+                'source_verification' => 'verified_active',
             ],
 
             [
@@ -191,7 +191,7 @@ class AhmedabadScraperService extends BaseScraperService
                 'source_name' => 'e-RaktKosh / Civil Registry',
                 'source_url' => 'https://bjmcabd.edu.in',
                 'source_confidence_score' => 99,
-                'source_verification_status' => 'verified_active',
+                'source_verification' => 'verified_active',
             ],
             [
                 'name_en' => 'Red Cross Blood Bank Ahmedabad',
@@ -225,7 +225,7 @@ class AhmedabadScraperService extends BaseScraperService
                 'source_name' => 'e-RaktKosh / Red Cross Registry',
                 'source_url' => 'https://redcrossahmedabad.org',
                 'source_confidence_score' => 99,
-                'source_verification_status' => 'verified_active',
+                'source_verification' => 'verified_active',
             ],
             [
                 'name_en' => 'SVP Hospital Blood Bank (Sardar Vallabhbhai Patel Hospital)',
@@ -259,7 +259,7 @@ class AhmedabadScraperService extends BaseScraperService
                 'source_name' => 'e-RaktKosh / SVP Registry',
                 'source_url' => 'https://svphospital.com',
                 'source_confidence_score' => 99,
-                'source_verification_status' => 'verified_active',
+                'source_verification' => 'verified_active',
             ],
             [
                 'name_en' => 'Zydus Hospital Blood Bank',
@@ -293,7 +293,7 @@ class AhmedabadScraperService extends BaseScraperService
                 'source_name' => 'e-RaktKosh / Zydus Registry',
                 'source_url' => 'https://zydushospitals.com',
                 'source_confidence_score' => 99,
-                'source_verification_status' => 'verified_active',
+                'source_verification' => 'verified_active',
             ],
             [
                 'name_en' => 'Marengo CIMS Hospital Blood Bank',
@@ -327,7 +327,7 @@ class AhmedabadScraperService extends BaseScraperService
                 'source_name' => 'e-RaktKosh / Marengo CIMS Registry',
                 'source_url' => 'https://marengocims.com',
                 'source_confidence_score' => 98,
-                'source_verification_status' => 'verified_active',
+                'source_verification' => 'verified_active',
             ],
             [
                 'name_en' => 'Apollo Hospitals Blood Bank Bhat',
@@ -361,7 +361,7 @@ class AhmedabadScraperService extends BaseScraperService
                 'source_name' => 'e-RaktKosh / Apollo Bhat Registry',
                 'source_url' => 'https://apollohospitals.com',
                 'source_confidence_score' => 99,
-                'source_verification_status' => 'verified_active',
+                'source_verification' => 'verified_active',
             ],
             [
                 'name_en' => 'Sterling Hospital Blood Bank',
@@ -395,7 +395,7 @@ class AhmedabadScraperService extends BaseScraperService
                 'source_name' => 'e-RaktKosh / Sterling Registry',
                 'source_url' => 'https://sterlinghospitals.com',
                 'source_confidence_score' => 98,
-                'source_verification_status' => 'verified_active',
+                'source_verification' => 'verified_active',
             ],
             [
                 'name_en' => 'KD Hospital Blood Bank (Kusum Dhirajlal Hospital)',
@@ -429,7 +429,7 @@ class AhmedabadScraperService extends BaseScraperService
                 'source_name' => 'e-RaktKosh / KD Hospital Registry',
                 'source_url' => 'https://kdhospital.co.in',
                 'source_confidence_score' => 98,
-                'source_verification_status' => 'verified_active',
+                'source_verification' => 'verified_active',
             ],
             [
                 'name_en' => 'Shalby Hospital Blood Bank SG Highway',
@@ -463,7 +463,7 @@ class AhmedabadScraperService extends BaseScraperService
                 'source_name' => 'e-RaktKosh / Shalby SG Registry',
                 'source_url' => 'https://shalby.org',
                 'source_confidence_score' => 98,
-                'source_verification_status' => 'verified_active',
+                'source_verification' => 'verified_active',
             ],
             [
                 'name_en' => 'CIMS Hospital Blood Bank (Marengo CIMS Hospital)',
@@ -497,7 +497,7 @@ class AhmedabadScraperService extends BaseScraperService
                 'source_name' => 'e-RaktKosh / CIMS Registry',
                 'source_url' => 'https://cims.org',
                 'source_confidence_score' => 99,
-                'source_verification_status' => 'verified_active',
+                'source_verification' => 'verified_active',
             ],
             [
                 'name_en' => 'GCS Medical College Blood Bank (Gujarat Cancer Society)',
@@ -531,7 +531,7 @@ class AhmedabadScraperService extends BaseScraperService
                 'source_name' => 'e-RaktKosh / GCS Registry',
                 'source_url' => 'https://gcsmc.org',
                 'source_confidence_score' => 98,
-                'source_verification_status' => 'verified_active',
+                'source_verification' => 'verified_active',
             ],
             [
                 'name_en' => 'Shardaben Hospital Blood Bank',
@@ -565,7 +565,7 @@ class AhmedabadScraperService extends BaseScraperService
                 'source_name' => 'e-RaktKosh / Municipal Registry',
                 'source_url' => 'https://ahmedabadcity.gov.in',
                 'source_confidence_score' => 98,
-                'source_verification_status' => 'verified_active',
+                'source_verification' => 'verified_active',
             ],
             [
                 'name_en' => 'L.G. Hospital Blood Bank',
@@ -599,7 +599,7 @@ class AhmedabadScraperService extends BaseScraperService
                 'source_name' => 'e-RaktKosh / LG Municipal Registry',
                 'source_url' => 'https://ahmedabadcity.gov.in',
                 'source_confidence_score' => 99,
-                'source_verification_status' => 'verified_active',
+                'source_verification' => 'verified_active',
             ],
             [
                 'name_en' => 'Jivraj Mehta Hospital Blood Bank',
@@ -633,7 +633,7 @@ class AhmedabadScraperService extends BaseScraperService
                 'source_name' => 'e-RaktKosh / Jivraj Mehta Registry',
                 'source_url' => 'https://jivrajmehtahospital.org',
                 'source_confidence_score' => 98,
-                'source_verification_status' => 'verified_active',
+                'source_verification' => 'verified_active',
             ],
             [
                 'name_en' => 'Rajasthan Hospital Blood Bank',
@@ -667,7 +667,7 @@ class AhmedabadScraperService extends BaseScraperService
                 'source_name' => 'e-RaktKosh / Rajasthan Hospital Registry',
                 'source_url' => 'https://rajasthanhospitals.org',
                 'source_confidence_score' => 98,
-                'source_verification_status' => 'verified_active',
+                'source_verification' => 'verified_active',
             ],
         ];
 

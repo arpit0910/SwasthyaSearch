@@ -382,7 +382,7 @@ class JaipurScraperService extends BaseScraperService
             }
 
             $row['source_confidence_score'] = $row['source_confidence_score'] ?? $score;
-            $row['source_verification_status'] = $row['source_verification_status'] ?? ($score >= 85 ? 'verified_active' : 'scraped_unverified');
+            $row['source_verification'] = $row['source_verification'] ?? ($score >= 85 ? 'verified_active' : 'scraped_unverified');
             $row['source_last_seen_at'] = $row['source_last_seen_at'] ?? now();
             $row['is_verified'] = $score >= 85;
             $accepted[] = $row;
@@ -518,7 +518,7 @@ class JaipurScraperService extends BaseScraperService
                 'source_name' => 'e-RaktKosh',
                 'source_url' => 'https://www.eraktkosh.in',
                 'source_confidence_score' => 99,
-                'source_verification_status' => 'verified_active',
+                'source_verification' => 'verified_active',
             ],
             [
                 'name_en' => 'Swasthya Kalyan Blood Bank',
@@ -538,7 +538,7 @@ class JaipurScraperService extends BaseScraperService
                 'source_name' => 'e-RaktKosh',
                 'source_url' => 'https://www.eraktkosh.in',
                 'source_confidence_score' => 98,
-                'source_verification_status' => 'verified_active',
+                'source_verification' => 'verified_active',
             ],
             [
                 'name_en' => 'Heart and General Hospital Blood Bank',
@@ -558,7 +558,7 @@ class JaipurScraperService extends BaseScraperService
                 'source_name' => 'Hospital Registry',
                 'source_url' => 'https://www.eraktkosh.in',
                 'source_confidence_score' => 97,
-                'source_verification_status' => 'verified_active',
+                'source_verification' => 'verified_active',
             ],
             [
                 'name_en' => 'Zanana Hospital Blood Bank',
@@ -578,7 +578,7 @@ class JaipurScraperService extends BaseScraperService
                 'source_name' => 'e-RaktKosh',
                 'source_url' => 'https://www.eraktkosh.in',
                 'source_confidence_score' => 99,
-                'source_verification_status' => 'verified_active',
+                'source_verification' => 'verified_active',
             ],
 
             [
@@ -604,7 +604,7 @@ class JaipurScraperService extends BaseScraperService
                 'source_name' => 'e-RaktKosh / Private Registry',
                 'source_url' => 'https://www.eraktkosh.in',
                 'source_confidence_score' => 97,
-                'source_verification_status' => 'verified_active',
+                'source_verification' => 'verified_active',
             ],
             [
                 'name_en' => 'S. R. Kalla Memorial Hospital Blood Bank',
@@ -624,7 +624,7 @@ class JaipurScraperService extends BaseScraperService
                 'source_name' => 'e-RaktKosh / Hospital Registry',
                 'source_url' => 'https://www.eraktkosh.in',
                 'source_confidence_score' => 98,
-                'source_verification_status' => 'verified_active',
+                'source_verification' => 'verified_active',
             ],
             [
                 'name_en' => 'Sanjeevani Hospital Blood Bank',
@@ -644,7 +644,7 @@ class JaipurScraperService extends BaseScraperService
                 'source_name' => 'e-RaktKosh / Hospital Registry',
                 'source_url' => 'https://www.eraktkosh.in',
                 'source_confidence_score' => 96,
-                'source_verification_status' => 'verified_active',
+                'source_verification' => 'verified_active',
             ],
 
             [
@@ -670,7 +670,7 @@ class JaipurScraperService extends BaseScraperService
                 'source_name' => 'e-RaktKosh / State Registry',
                 'source_url' => 'https://www.eraktkosh.in',
                 'source_confidence_score' => 99,
-                'source_verification_status' => 'verified_active',
+                'source_verification' => 'verified_active',
             ],
             [
                 'name_en' => 'JK Lone Hospital Blood Bank',
@@ -695,7 +695,7 @@ class JaipurScraperService extends BaseScraperService
                 'source_name' => 'e-RaktKosh / State Registry',
                 'source_url' => 'https://www.eraktkosh.in',
                 'source_confidence_score' => 99,
-                'source_verification_status' => 'verified_active',
+                'source_verification' => 'verified_active',
             ],
             [
                 'name_en' => 'Kanwatia Hospital Blood Bank',
@@ -720,7 +720,7 @@ class JaipurScraperService extends BaseScraperService
                 'source_name' => 'e-RaktKosh / State Registry',
                 'source_url' => 'https://www.eraktkosh.in',
                 'source_confidence_score' => 96,
-                'source_verification_status' => 'verified_active',
+                'source_verification' => 'verified_active',
             ],
             [
                 'name_en' => 'Sawai Man Singh (SMS) Hospital Blood Bank',
@@ -754,7 +754,7 @@ class JaipurScraperService extends BaseScraperService
                 'source_name' => 'e-RaktKosh / NACO State Registry',
                 'source_url' => 'https://www.eraktkosh.in/BLDAHIMS/bloodbank/transactions/bbpublicindex.html',
                 'source_confidence_score' => 99,
-                'source_verification_status' => 'verified_active',
+                'source_verification' => 'verified_active',
             ],
             [
                 'name_en' => 'Santokba Durlabhji Memorial Hospital (SDMH) Blood Bank',
@@ -788,7 +788,7 @@ class JaipurScraperService extends BaseScraperService
                 'source_name' => 'e-RaktKosh / SDMH Registry',
                 'source_url' => 'https://sdmh.in/blood-bank',
                 'source_confidence_score' => 98,
-                'source_verification_status' => 'verified_active',
+                'source_verification' => 'verified_active',
             ],
             [
                 'name_en' => 'Bhagwan Mahaveer Cancer Hospital Blood Bank',
@@ -822,7 +822,7 @@ class JaipurScraperService extends BaseScraperService
                 'source_name' => 'e-RaktKosh / BMCHRC Official Registry',
                 'source_url' => 'https://bmchrc.org',
                 'source_confidence_score' => 98,
-                'source_verification_status' => 'verified_active',
+                'source_verification' => 'verified_active',
             ],
             [
                 'name_en' => 'Rotary Club Jaipur Blood Bank',
@@ -856,7 +856,7 @@ class JaipurScraperService extends BaseScraperService
                 'source_name' => 'e-RaktKosh / Rotary Official Registry',
                 'source_url' => 'https://rotarybloodbankjaipur.org',
                 'source_confidence_score' => 97,
-                'source_verification_status' => 'verified_active',
+                'source_verification' => 'verified_active',
             ],
             [
                 'name_en' => 'Indian Red Cross Society Blood Bank',
@@ -890,7 +890,7 @@ class JaipurScraperService extends BaseScraperService
                 'source_name' => 'e-RaktKosh / Red Cross Official Registry',
                 'source_url' => 'https://indianredcross.org',
                 'source_confidence_score' => 99,
-                'source_verification_status' => 'verified_active',
+                'source_verification' => 'verified_active',
             ],
             [
                 'name_en' => 'Fortis Escorts Hospital Blood Bank',
@@ -924,7 +924,7 @@ class JaipurScraperService extends BaseScraperService
                 'source_name' => 'e-RaktKosh / Fortis Official Registry',
                 'source_url' => 'https://fortishealthcare.com',
                 'source_confidence_score' => 99,
-                'source_verification_status' => 'verified_active',
+                'source_verification' => 'verified_active',
             ],
             [
                 'name_en' => 'Mahatma Gandhi Hospital Blood Bank',
@@ -958,7 +958,7 @@ class JaipurScraperService extends BaseScraperService
                 'source_name' => 'e-RaktKosh / MGUMST Official Registry',
                 'source_url' => 'https://mgumst.org',
                 'source_confidence_score' => 99,
-                'source_verification_status' => 'verified_active',
+                'source_verification' => 'verified_active',
             ],
             [
                 'name_en' => 'Rukmani Birla Hospital (RBH) Blood Bank',
@@ -992,7 +992,7 @@ class JaipurScraperService extends BaseScraperService
                 'source_name' => 'e-RaktKosh / RBH Official Registry',
                 'source_url' => 'https://rbh.in',
                 'source_confidence_score' => 99,
-                'source_verification_status' => 'verified_active',
+                'source_verification' => 'verified_active',
             ],
             [
                 'name_en' => 'Swasthya Kalyan Blood Bank',
@@ -1026,7 +1026,7 @@ class JaipurScraperService extends BaseScraperService
                 'source_name' => 'e-RaktKosh / Swasthya Kalyan Registry',
                 'source_url' => 'https://swasthyakalyan.org',
                 'source_confidence_score' => 98,
-                'source_verification_status' => 'verified_active',
+                'source_verification' => 'verified_active',
             ],
             [
                 'name_en' => 'Jain Social Group Blood Bank',
@@ -1060,7 +1060,7 @@ class JaipurScraperService extends BaseScraperService
                 'source_name' => 'e-RaktKosh / JSG Official Registry',
                 'source_url' => 'https://jsgbloodbank.com',
                 'source_confidence_score' => 97,
-                'source_verification_status' => 'verified_active',
+                'source_verification' => 'verified_active',
             ],
             [
                 'name_en' => 'Paras Blood Bank',
@@ -1094,7 +1094,7 @@ class JaipurScraperService extends BaseScraperService
                 'source_name' => 'e-RaktKosh / Paras Registry',
                 'source_url' => 'https://parasbloodbank.in',
                 'source_confidence_score' => 97,
-                'source_verification_status' => 'verified_active',
+                'source_verification' => 'verified_active',
             ],
             [
                 'name_en' => 'Apex Hospital Blood Bank',
@@ -1128,7 +1128,7 @@ class JaipurScraperService extends BaseScraperService
                 'source_name' => 'e-RaktKosh / Apex Registry',
                 'source_url' => 'https://apexhospitals.com',
                 'source_confidence_score' => 99,
-                'source_verification_status' => 'verified_active',
+                'source_verification' => 'verified_active',
             ],
             [
                 'name_en' => 'Manipal Hospital Blood Bank',
@@ -1162,7 +1162,7 @@ class JaipurScraperService extends BaseScraperService
                 'source_name' => 'e-RaktKosh / Manipal Registry',
                 'source_url' => 'https://manipalhospitals.com',
                 'source_confidence_score' => 99,
-                'source_verification_status' => 'verified_active',
+                'source_verification' => 'verified_active',
             ],
             [
                 'name_en' => 'Narayana Multispeciality Hospital Blood Bank',
@@ -1196,7 +1196,7 @@ class JaipurScraperService extends BaseScraperService
                 'source_name' => 'e-RaktKosh / Narayana Registry',
                 'source_url' => 'https://narayanahealth.org',
                 'source_confidence_score' => 99,
-                'source_verification_status' => 'verified_active',
+                'source_verification' => 'verified_active',
             ],
             [
                 'name_en' => 'CK Birla Hospital Blood Bank',
@@ -1230,7 +1230,7 @@ class JaipurScraperService extends BaseScraperService
                 'source_name' => 'e-RaktKosh / CK Birla Registry',
                 'source_url' => 'https://ckbirlahospitals.com',
                 'source_confidence_score' => 99,
-                'source_verification_status' => 'verified_active',
+                'source_verification' => 'verified_active',
             ],
             [
                 'name_en' => 'Shalby Hospital Blood Bank',
@@ -1264,7 +1264,7 @@ class JaipurScraperService extends BaseScraperService
                 'source_name' => 'e-RaktKosh / Shalby Registry',
                 'source_url' => 'https://shalby.org',
                 'source_confidence_score' => 99,
-                'source_verification_status' => 'verified_active',
+                'source_verification' => 'verified_active',
             ],
             [
                 'name_en' => 'Monilek Hospital Blood Bank',
@@ -1298,7 +1298,7 @@ class JaipurScraperService extends BaseScraperService
                 'source_name' => 'e-RaktKosh / Monilek Registry',
                 'source_url' => 'https://monilekhospital.com',
                 'source_confidence_score' => 98,
-                'source_verification_status' => 'verified_active',
+                'source_verification' => 'verified_active',
             ],
             [
                 'name_en' => 'Amar Jain Hospital Blood Bank',
@@ -1332,7 +1332,7 @@ class JaipurScraperService extends BaseScraperService
                 'source_name' => 'e-RaktKosh / Amar Jain Registry',
                 'source_url' => 'https://amarjainhospital.com',
                 'source_confidence_score' => 97,
-                'source_verification_status' => 'verified_active',
+                'source_verification' => 'verified_active',
             ],
             [
                 'name_en' => 'Marudhar Hospital Blood Bank',
@@ -1366,7 +1366,7 @@ class JaipurScraperService extends BaseScraperService
                 'source_name' => 'e-RaktKosh / Marudhar Registry',
                 'source_url' => 'https://marudharhospital.com',
                 'source_confidence_score' => 98,
-                'source_verification_status' => 'verified_active',
+                'source_verification' => 'verified_active',
             ],
             [
                 'name_en' => 'Surya Hospital Blood Bank',
@@ -1400,7 +1400,7 @@ class JaipurScraperService extends BaseScraperService
                 'source_name' => 'e-RaktKosh / Surya Registry',
                 'source_url' => 'https://suryahospitals.com',
                 'source_confidence_score' => 98,
-                'source_verification_status' => 'verified_active',
+                'source_verification' => 'verified_active',
             ],
             [
                 'name_en' => 'SMS Hospital Blood Bank',
@@ -1434,7 +1434,7 @@ class JaipurScraperService extends BaseScraperService
                 'source_name' => 'e-RaktKosh / SMS Registry',
                 'source_url' => 'https://education.rajasthan.gov.in/smsmcjaipur',
                 'source_confidence_score' => 99,
-                'source_verification_status' => 'verified_active',
+                'source_verification' => 'verified_active',
             ],
             [
                 'name_en' => 'Rotary Blood Bank Jaipur',
@@ -1468,7 +1468,7 @@ class JaipurScraperService extends BaseScraperService
                 'source_name' => 'e-RaktKosh / Rotary Jaipur Registry',
                 'source_url' => 'https://rotarybloodbankjaipur.org',
                 'source_confidence_score' => 97,
-                'source_verification_status' => 'verified_active',
+                'source_verification' => 'verified_active',
             ],
             [
                 'name_en' => 'Eternal Hospital (EHCC) Blood Bank',
@@ -1502,7 +1502,7 @@ class JaipurScraperService extends BaseScraperService
                 'source_name' => 'e-RaktKosh / Jaipur Registry',
                 'source_url' => 'https://eternalhospital(ehcc).com',
                 'source_confidence_score' => 99,
-                'source_verification_status' => 'verified_active',
+                'source_verification' => 'verified_active',
             ],
             [
                 'name_en' => 'Fortis Escorts Hospital Jaipur Blood Bank',
@@ -1536,7 +1536,7 @@ class JaipurScraperService extends BaseScraperService
                 'source_name' => 'e-RaktKosh / Jaipur Registry',
                 'source_url' => 'https://fortisescortshospitaljaipur.com',
                 'source_confidence_score' => 99,
-                'source_verification_status' => 'verified_active',
+                'source_verification' => 'verified_active',
             ],
             [
                 'name_en' => 'Manipal Hospital Vidhyadhar Nagar Blood Bank',
@@ -1570,7 +1570,7 @@ class JaipurScraperService extends BaseScraperService
                 'source_name' => 'e-RaktKosh / Jaipur Registry',
                 'source_url' => 'https://manipalhospitalvidhyadharnagar.com',
                 'source_confidence_score' => 99,
-                'source_verification_status' => 'verified_active',
+                'source_verification' => 'verified_active',
             ],
             [
                 'name_en' => 'Narayana Multispeciality Hospital Jaipur Blood Bank',
@@ -1604,7 +1604,7 @@ class JaipurScraperService extends BaseScraperService
                 'source_name' => 'e-RaktKosh / Jaipur Registry',
                 'source_url' => 'https://narayanamultispecialityhospitaljaipur.com',
                 'source_confidence_score' => 99,
-                'source_verification_status' => 'verified_active',
+                'source_verification' => 'verified_active',
             ],
             [
                 'name_en' => 'Apex Hospitals Malviya Nagar Blood Bank',
@@ -1638,7 +1638,7 @@ class JaipurScraperService extends BaseScraperService
                 'source_name' => 'e-RaktKosh / Jaipur Registry',
                 'source_url' => 'https://apexhospitalsmalviyanagar.com',
                 'source_confidence_score' => 99,
-                'source_verification_status' => 'verified_active',
+                'source_verification' => 'verified_active',
             ],
         ];
 

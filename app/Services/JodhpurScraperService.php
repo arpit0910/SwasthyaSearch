@@ -47,7 +47,7 @@ class JodhpurScraperService extends BaseScraperService
                 'source_name' => 'e-RaktKosh / AIIMS Registry',
                 'source_url' => 'https://aiimsjodhpur.edu.in',
                 'source_confidence_score' => 99,
-                'source_verification_status' => 'verified_active',
+                'source_verification' => 'verified_active',
             ],
             [
                 'name_en' => 'MDM Hospital Blood Bank',
@@ -81,7 +81,7 @@ class JodhpurScraperService extends BaseScraperService
                 'source_name' => 'e-RaktKosh / MDM Registry',
                 'source_url' => 'https://education.rajasthan.gov.in/snmcjodhpur',
                 'source_confidence_score' => 99,
-                'source_verification_status' => 'verified_active',
+                'source_verification' => 'verified_active',
             ],
             [
                 'name_en' => 'Umaid Hospital Blood Bank',
@@ -115,7 +115,7 @@ class JodhpurScraperService extends BaseScraperService
                 'source_name' => 'e-RaktKosh / Umaid Registry',
                 'source_url' => 'https://education.rajasthan.gov.in/snmcjodhpur',
                 'source_confidence_score' => 99,
-                'source_verification_status' => 'verified_active',
+                'source_verification' => 'verified_active',
             ],
             [
                 'name_en' => 'Rotary Blood Bank Jodhpur',
@@ -149,7 +149,7 @@ class JodhpurScraperService extends BaseScraperService
                 'source_name' => 'e-RaktKosh / Rotary Registry',
                 'source_url' => 'https://rotarybloodbankjodhpur.org',
                 'source_confidence_score' => 98,
-                'source_verification_status' => 'verified_active',
+                'source_verification' => 'verified_active',
             ],
             [
                 'name_en' => 'Goyal Hospital Blood Bank',
@@ -183,7 +183,7 @@ class JodhpurScraperService extends BaseScraperService
                 'source_name' => 'e-RaktKosh / Goyal Registry',
                 'source_url' => 'https://goyalhospital.org',
                 'source_confidence_score' => 98,
-                'source_verification_status' => 'verified_active',
+                'source_verification' => 'verified_active',
             ],
             [
                 'name_en' => 'MG Hospital Blood Bank',
@@ -217,7 +217,7 @@ class JodhpurScraperService extends BaseScraperService
                 'source_name' => 'e-RaktKosh / MG Registry',
                 'source_url' => 'https://education.rajasthan.gov.in/snmcjodhpur',
                 'source_confidence_score' => 99,
-                'source_verification_status' => 'verified_active',
+                'source_verification' => 'verified_active',
             ],
             [
                 'name_en' => 'Medipulse Hospital Blood Bank',
@@ -251,7 +251,7 @@ class JodhpurScraperService extends BaseScraperService
                 'source_name' => 'e-RaktKosh / Medipulse Registry',
                 'source_url' => 'https://medipulse.in',
                 'source_confidence_score' => 98,
-                'source_verification_status' => 'verified_active',
+                'source_verification' => 'verified_active',
             ],
             [
                 'name_en' => 'Vasundhara Hospital Blood Bank',
@@ -285,7 +285,7 @@ class JodhpurScraperService extends BaseScraperService
                 'source_name' => 'e-RaktKosh / Vasundhara Registry',
                 'source_url' => 'https://vasundharahospital.com',
                 'source_confidence_score' => 98,
-                'source_verification_status' => 'verified_active',
+                'source_verification' => 'verified_active',
             ],
             [
                 'name_en' => 'Kamla Nagar Hospital Blood Bank',
@@ -319,7 +319,7 @@ class JodhpurScraperService extends BaseScraperService
                 'source_name' => 'e-RaktKosh / Kamla Nagar Registry',
                 'source_url' => 'https://knhospital.com',
                 'source_confidence_score' => 98,
-                'source_verification_status' => 'verified_active',
+                'source_verification' => 'verified_active',
             ],
             [
                 'name_en' => 'ASG Blood Bank & Component Centre',
@@ -353,7 +353,7 @@ class JodhpurScraperService extends BaseScraperService
                 'source_name' => 'e-RaktKosh / ASG Registry',
                 'source_url' => 'https://asgeyehospital.com',
                 'source_confidence_score' => 98,
-                'source_verification_status' => 'verified_active',
+                'source_verification' => 'verified_active',
             ],
             [
                 'name_en' => 'Shree Ram Hospital Blood Bank',
@@ -387,7 +387,7 @@ class JodhpurScraperService extends BaseScraperService
                 'source_name' => 'e-RaktKosh / Shree Ram Registry',
                 'source_url' => 'https://shreeramhospital.com',
                 'source_confidence_score' => 98,
-                'source_verification_status' => 'verified_active',
+                'source_verification' => 'verified_active',
             ],
             [
                 'name_en' => 'Rajdadisa Hospital Blood Bank',
@@ -421,7 +421,7 @@ class JodhpurScraperService extends BaseScraperService
                 'source_name' => 'e-RaktKosh / Rajdadisa Registry',
                 'source_url' => 'https://rajdadisahospital.com',
                 'source_confidence_score' => 98,
-                'source_verification_status' => 'verified_active',
+                'source_verification' => 'verified_active',
             ],
             [
                 'name_en' => 'Marwar Hospital Blood Bank',
@@ -455,7 +455,7 @@ class JodhpurScraperService extends BaseScraperService
                 'source_name' => 'e-RaktKosh / Marwar Registry',
                 'source_url' => 'https://marwarhospital.com',
                 'source_confidence_score' => 98,
-                'source_verification_status' => 'verified_active',
+                'source_verification' => 'verified_active',
             ],
             [
                 'name_en' => 'Apex Hospital Jodhpur Blood Bank',
@@ -489,7 +489,7 @@ class JodhpurScraperService extends BaseScraperService
                 'source_name' => 'e-RaktKosh / Apex Registry',
                 'source_url' => 'https://apexhospitals.com',
                 'source_confidence_score' => 98,
-                'source_verification_status' => 'verified_active',
+                'source_verification' => 'verified_active',
             ],
             [
                 'name_en' => 'Shri Ramchandra Blood Bank',
@@ -523,7 +523,7 @@ class JodhpurScraperService extends BaseScraperService
                 'source_name' => 'e-RaktKosh / Shri Ramchandra Registry',
                 'source_url' => 'https://shriramchandrahospital.com',
                 'source_confidence_score' => 98,
-                'source_verification_status' => 'verified_active',
+                'source_verification' => 'verified_active',
             ],
             [
                 'name_en' => 'MG Hospital Blood Bank (Mahatma Gandhi Hospital)',
@@ -557,7 +557,7 @@ class JodhpurScraperService extends BaseScraperService
                 'source_name' => 'e-RaktKosh / MG Registry',
                 'source_url' => 'https://education.rajasthan.gov.in',
                 'source_confidence_score' => 99,
-                'source_verification_status' => 'verified_active',
+                'source_verification' => 'verified_active',
             ],
         ];
 
@@ -1541,7 +1541,7 @@ class JodhpurScraperService extends BaseScraperService
             ],
             [
                 'name_en' => 'Sainath Hospital',
-                'name_hi' => 'सैन� अस्पताल अस्पताल (जोधपुर)',
+                'name_hi' => 'सैन� अस्पताल अस्पताल (जोधपुर)',
                 'type' => 'Private Hospital',
                 'address' => 'Main Medical Avenue, Jodhpur, Jodhpur, Rajasthan',
                 'address_line1' => 'Main Medical Avenue',
@@ -1861,7 +1861,7 @@ class JodhpurScraperService extends BaseScraperService
             ],
             [
                 'name_en' => 'Shree IG Hospital & Active Health Centre',
-                'name_hi' => 'श्रॆऎ इग अस्पताल & अच्तिवॆ हॆअल्� चॆंत्रॆ अस्पताल (जोधपुर)',
+                'name_hi' => 'श्रॆऎ इग अस्पताल & अच्तिवॆ हॆअल्� चॆंत्रॆ अस्पताल (जोधपुर)',
                 'type' => 'Private Hospital',
                 'address' => 'Main Medical Avenue, Jodhpur, Jodhpur, Rajasthan',
                 'address_line1' => 'Main Medical Avenue',
@@ -1901,7 +1901,7 @@ class JodhpurScraperService extends BaseScraperService
             ],
             [
                 'name_en' => 'Teeth and Face clinic - Facial Skin, Hair and Dental Center',
-                'name_hi' => 'तॆऎ� अंद फ़चॆ क्लिनिक - फ़चिअल स्किन्, हैर अंद डेंटल चॆंतॆर अस्पताल (जोधपुर)',
+                'name_hi' => 'तॆऎ� अंद फ़चॆ क्लिनिक - फ़चिअल स्किन्, हैर अंद डेंटल चॆंतॆर अस्पताल (जोधपुर)',
                 'type' => 'Clinic',
                 'address' => 'Main Medical Avenue, Jodhpur, Jodhpur, Rajasthan',
                 'address_line1' => 'Main Medical Avenue',

@@ -493,7 +493,7 @@ class BaseScraperService
             }
 
             $row['source_confidence_score'] = $row['source_confidence_score'] ?? $score;
-            $row['source_verification_status'] = $row['source_verification_status'] ?? ($score >= 85 ? 'verified_active' : 'scraped_unverified');
+            $row['source_verification'] = $row['source_verification'] ?? ($score >= 85 ? 'verified_active' : 'scraped_unverified');
             $row['source_last_seen_at'] = $row['source_last_seen_at'] ?? now();
             $row['is_verified'] = $score >= 85;
             $accepted[] = $row;

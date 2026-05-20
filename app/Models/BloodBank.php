@@ -30,7 +30,7 @@ class BloodBank extends Model
         'source_name',
         'source_url',
         'source_confidence_score',
-        'source_verification_status',
+        'source_verification',
         'source_last_seen_at',
         'source_metadata',
         'is_24_7',

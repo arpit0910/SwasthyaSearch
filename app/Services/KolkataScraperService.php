@@ -47,7 +47,7 @@ class KolkataScraperService extends BaseScraperService
                 'source_name' => 'e-RaktKosh / SSKM Registry',
                 'source_url' => 'https://ipgmer.gov.in',
                 'source_confidence_score' => 99,
-                'source_verification_status' => 'verified_active',
+                'source_verification' => 'verified_active',
             ],
             [
                 'name_en' => 'Calcutta Medical College Blood Bank',
@@ -81,7 +81,7 @@ class KolkataScraperService extends BaseScraperService
                 'source_name' => 'e-RaktKosh / Medical College Registry',
                 'source_url' => 'https://mchkolkata.gov.in',
                 'source_confidence_score' => 99,
-                'source_verification_status' => 'verified_active',
+                'source_verification' => 'verified_active',
             ],
             [
                 'name_en' => 'Central Blood Bank Kolkata',
@@ -115,7 +115,7 @@ class KolkataScraperService extends BaseScraperService
                 'source_name' => 'e-RaktKosh / WB Health Registry',
                 'source_url' => 'https://wbhealth.gov.in',
                 'source_confidence_score' => 99,
-                'source_verification_status' => 'verified_active',
+                'source_verification' => 'verified_active',
             ],
             [
                 'name_en' => 'Apollo Multispeciality Hospitals Blood Bank',
@@ -149,7 +149,7 @@ class KolkataScraperService extends BaseScraperService
                 'source_name' => 'e-RaktKosh / Apollo Kolkata Registry',
                 'source_url' => 'https://apollohospitals.com',
                 'source_confidence_score' => 99,
-                'source_verification_status' => 'verified_active',
+                'source_verification' => 'verified_active',
             ],
             [
                 'name_en' => 'AMRI Hospitals Blood Bank Dhakuria',
@@ -183,7 +183,7 @@ class KolkataScraperService extends BaseScraperService
                 'source_name' => 'e-RaktKosh / AMRI Registry',
                 'source_url' => 'https://amrihospitals.in',
                 'source_confidence_score' => 99,
-                'source_verification_status' => 'verified_active',
+                'source_verification' => 'verified_active',
             ],
             [
                 'name_en' => 'Fortis Hospital Blood Bank Anandapur',
@@ -217,7 +217,7 @@ class KolkataScraperService extends BaseScraperService
                 'source_name' => 'e-RaktKosh / Fortis Anandapur Registry',
                 'source_url' => 'https://fortishealthcare.com',
                 'source_confidence_score' => 98,
-                'source_verification_status' => 'verified_active',
+                'source_verification' => 'verified_active',
             ],
             [
                 'name_en' => 'Medica Superspecialty Hospital Blood Bank',
@@ -251,7 +251,7 @@ class KolkataScraperService extends BaseScraperService
                 'source_name' => 'e-RaktKosh / Medica Registry',
                 'source_url' => 'https://medicahospitals.in',
                 'source_confidence_score' => 98,
-                'source_verification_status' => 'verified_active',
+                'source_verification' => 'verified_active',
             ],
             [
                 'name_en' => 'Tata Medical Center Blood Bank Rajarhat',
@@ -285,7 +285,7 @@ class KolkataScraperService extends BaseScraperService
                 'source_name' => 'e-RaktKosh / Tata Medical Registry',
                 'source_url' => 'https://tmckolkata.com',
                 'source_confidence_score' => 99,
-                'source_verification_status' => 'verified_active',
+                'source_verification' => 'verified_active',
             ],
             [
                 'name_en' => 'Lions Blood Bank Kolkata',
@@ -319,7 +319,7 @@ class KolkataScraperService extends BaseScraperService
                 'source_name' => 'e-RaktKosh / Lions Kolkata Registry',
                 'source_url' => 'https://lionsbloodbankkolkata.org',
                 'source_confidence_score' => 98,
-                'source_verification_status' => 'verified_active',
+                'source_verification' => 'verified_active',
             ],
             [
                 'name_en' => 'Ruby General Hospital Blood Bank',
@@ -353,7 +353,7 @@ class KolkataScraperService extends BaseScraperService
                 'source_name' => 'e-RaktKosh / Ruby Registry',
                 'source_url' => 'https://rubyhospital.com',
                 'source_confidence_score' => 98,
-                'source_verification_status' => 'verified_active',
+                'source_verification' => 'verified_active',
             ],
             [
                 'name_en' => 'Belle Vue Clinic Blood Bank',
@@ -387,7 +387,7 @@ class KolkataScraperService extends BaseScraperService
                 'source_name' => 'e-RaktKosh / Belle Vue Registry',
                 'source_url' => 'https://bellevueclinic.com',
                 'source_confidence_score' => 98,
-                'source_verification_status' => 'verified_active',
+                'source_verification' => 'verified_active',
             ],
             [
                 'name_en' => 'Woodlands Hospital Blood Bank',
@@ -421,7 +421,7 @@ class KolkataScraperService extends BaseScraperService
                 'source_name' => 'e-RaktKosh / Woodlands Registry',
                 'source_url' => 'https://woodlandshospital.in',
                 'source_confidence_score' => 98,
-                'source_verification_status' => 'verified_active',
+                'source_verification' => 'verified_active',
             ],
             [
                 'name_en' => 'BM Birla Heart Research Centre Blood Bank',
@@ -455,7 +455,7 @@ class KolkataScraperService extends BaseScraperService
                 'source_name' => 'e-RaktKosh / BM Birla Registry',
                 'source_url' => 'https://bmbirladoctors.org',
                 'source_confidence_score' => 98,
-                'source_verification_status' => 'verified_active',
+                'source_verification' => 'verified_active',
             ],
             [
                 'name_en' => 'Peerless Hospital Blood Bank',
@@ -489,7 +489,7 @@ class KolkataScraperService extends BaseScraperService
                 'source_name' => 'e-RaktKosh / Peerless Registry',
                 'source_url' => 'https://peerlesshospital.com',
                 'source_confidence_score' => 98,
-                'source_verification_status' => 'verified_active',
+                'source_verification' => 'verified_active',
             ],
             [
                 'name_en' => 'Kothari Medical Centre Blood Bank',
@@ -523,7 +523,7 @@ class KolkataScraperService extends BaseScraperService
                 'source_name' => 'e-RaktKosh / Kothari Registry',
                 'source_url' => 'https://kotharimedical.com',
                 'source_confidence_score' => 98,
-                'source_verification_status' => 'verified_active',
+                'source_verification' => 'verified_active',
             ],
             [
                 'name_en' => 'NRS Medical College Blood Bank',
@@ -557,7 +557,7 @@ class KolkataScraperService extends BaseScraperService
                 'source_name' => 'e-RaktKosh / NRS Registry',
                 'source_url' => 'https://nrsmc.edu.in',
                 'source_confidence_score' => 99,
-                'source_verification_status' => 'verified_active',
+                'source_verification' => 'verified_active',
             ],
         ];
 
@@ -1129,7 +1129,7 @@ class KolkataScraperService extends BaseScraperService
             ],
             [
                 'name_en' => 'Institute of Child Health (ICH)',
-                'name_hi' => 'संस्थान ऒफ़ छिल्द हॆअल्� (इछ्) अस्पताल (कोलकाता)',
+                'name_hi' => 'संस्थान ऒफ़ छिल्द हॆअल्� (इछ्) अस्पताल (कोलकाता)',
                 'type' => 'Clinic',
                 'address' => '11, Dr. Biresh Guha Street, Park Circus, Kolkata, West Bengal - 700017',
                 'address_line1' => '11, Dr. Biresh Guha Street',
@@ -1914,7 +1914,7 @@ class KolkataScraperService extends BaseScraperService
                 'department_name_en' => 'Pediatrics',
                 'department_name_hi' => 'बाल रोग विभाग',
                 'hospital_name_en' => 'Institute of Child Health (ICH)',
-                'hospital_name_hi' => 'संस्थान ऒफ़ छिल्द हॆअल्� (इछ्) अस्पताल (कोलकाता)',
+                'hospital_name_hi' => 'संस्थान ऒफ़ छिल्द हॆअल्� (इछ्) अस्पताल (कोलकाता)',
                 'address' => null,
                 'address_line1' => '11, Dr. Biresh Guha Street',
                 'address_line2' => 'Park Circus',
@@ -2028,7 +2028,7 @@ class KolkataScraperService extends BaseScraperService
                 'medical_council' => 'West Bengal Medical Council (WBMC)',
                 'registration_number' => 'WBMC-7077',
                 'about_en' => 'Dr. Baidyanath Chakravarty was the legendary Founder of IRM Kolkata and a pioneer of IVF and reproductive endocrinology in India.',
-                'about_hi' => 'कोलकाता में अभ्यास करने वाले स्त्री रोग विभाग के अत्यधिक अनुभवी विशेषज्ञ डॉक्टर डॉ. बैद्यन� छक्रवर्त्य।',
+                'about_hi' => 'कोलकाता में अभ्यास करने वाले स्त्री रोग विभाग के अत्यधिक अनुभवी विशेषज्ञ डॉक्टर डॉ. बैद्यन� छक्रवर्त्य।',
                 'gender' => 'Male',
                 'phone' => '033-23345555',
                 'is_verified' => true,

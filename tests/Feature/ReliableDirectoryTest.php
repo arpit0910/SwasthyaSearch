@@ -59,7 +59,7 @@ class ReliableDirectoryTest extends TestCase
             'address_hi' => 'जेएलएन मार्ग, जयपुर',
             'phone' => '0141-2560291',
             'is_verified' => true,
-            'source_verification_status' => 'verified_active',
+            'source_verification' => 'verified_active',
         ]);
     }
 

@@ -34,7 +34,7 @@ class PuneScraperService extends BaseScraperService
                 'source_name' => 'e-RaktKosh',
                 'source_url' => 'https://www.eraktkosh.in',
                 'source_confidence_score' => 99,
-                'source_verification_status' => 'verified_active',
+                'source_verification' => 'verified_active',
             ],
             [
                 'name_en' => 'Deenanath Mangeshkar Hospital Blood Bank',
@@ -54,7 +54,7 @@ class PuneScraperService extends BaseScraperService
                 'source_name' => 'e-RaktKosh',
                 'source_url' => 'https://www.eraktkosh.in',
                 'source_confidence_score' => 99,
-                'source_verification_status' => 'verified_active',
+                'source_verification' => 'verified_active',
             ],
             [
                 'name_en' => 'Sassoon General Hospital Blood Bank',
@@ -74,7 +74,7 @@ class PuneScraperService extends BaseScraperService
                 'source_name' => 'e-RaktKosh',
                 'source_url' => 'https://www.eraktkosh.in',
                 'source_confidence_score' => 99,
-                'source_verification_status' => 'verified_active',
+                'source_verification' => 'verified_active',
             ],
 
 
@@ -96,7 +96,7 @@ class PuneScraperService extends BaseScraperService
                 'source_name' => 'e-RaktKosh',
                 'source_url' => 'https://www.eraktkosh.in',
                 'source_confidence_score' => 99,
-                'source_verification_status' => 'verified_active',
+                'source_verification' => 'verified_active',
             ],
     
             [
@@ -131,7 +131,7 @@ class PuneScraperService extends BaseScraperService
                 'source_name' => 'e-RaktKosh / Sassoon Registry',
                 'source_url' => 'https://bjmcpune.org',
                 'source_confidence_score' => 99,
-                'source_verification_status' => 'verified_active',
+                'source_verification' => 'verified_active',
             ],
             [
                 'name_en' => 'Ruby Hall Clinic Blood Bank',
@@ -165,7 +165,7 @@ class PuneScraperService extends BaseScraperService
                 'source_name' => 'e-RaktKosh / Ruby Hall Registry',
                 'source_url' => 'https://rubyhall.com',
                 'source_confidence_score' => 99,
-                'source_verification_status' => 'verified_active',
+                'source_verification' => 'verified_active',
             ],
             [
                 'name_en' => 'Jehangir Hospital Blood Bank',
@@ -199,7 +199,7 @@ class PuneScraperService extends BaseScraperService
                 'source_name' => 'e-RaktKosh / Jehangir Registry',
                 'source_url' => 'https://jehangirhospital.com',
                 'source_confidence_score' => 98,
-                'source_verification_status' => 'verified_active',
+                'source_verification' => 'verified_active',
             ],
             [
                 'name_en' => 'Deenanath Mangeshkar Hospital Blood Bank',
@@ -233,7 +233,7 @@ class PuneScraperService extends BaseScraperService
                 'source_name' => 'e-RaktKosh / DMH Registry',
                 'source_url' => 'https://dmhospital.org',
                 'source_confidence_score' => 99,
-                'source_verification_status' => 'verified_active',
+                'source_verification' => 'verified_active',
             ],
             [
                 'name_en' => 'Sahyadri Super Speciality Hospital Blood Bank',
@@ -267,7 +267,7 @@ class PuneScraperService extends BaseScraperService
                 'source_name' => 'e-RaktKosh / Sahyadri Registry',
                 'source_url' => 'https://sahyadrihospital.com',
                 'source_confidence_score' => 98,
-                'source_verification_status' => 'verified_active',
+                'source_verification' => 'verified_active',
             ],
             [
                 'name_en' => 'Aditya Birla Memorial Hospital Blood Bank',
@@ -301,7 +301,7 @@ class PuneScraperService extends BaseScraperService
                 'source_name' => 'e-RaktKosh / Aditya Birla Registry',
                 'source_url' => 'https://adityabirlahospital.com',
                 'source_confidence_score' => 99,
-                'source_verification_status' => 'verified_active',
+                'source_verification' => 'verified_active',
             ],
             [
                 'name_en' => 'KEM Hospital Pune Blood Bank',
@@ -335,7 +335,7 @@ class PuneScraperService extends BaseScraperService
                 'source_name' => 'e-RaktKosh / KEM Pune Registry',
                 'source_url' => 'https://kempune.org',
                 'source_confidence_score' => 98,
-                'source_verification_status' => 'verified_active',
+                'source_verification' => 'verified_active',
             ],
             [
                 'name_en' => 'Noble Hospital Blood Bank',
@@ -369,7 +369,7 @@ class PuneScraperService extends BaseScraperService
                 'source_name' => 'e-RaktKosh / Noble Registry',
                 'source_url' => 'https://noblehospitalspune.com',
                 'source_confidence_score' => 98,
-                'source_verification_status' => 'verified_active',
+                'source_verification' => 'verified_active',
             ],
             [
                 'name_en' => 'Jupiter Hospital Baner Blood Bank',
@@ -403,7 +403,7 @@ class PuneScraperService extends BaseScraperService
                 'source_name' => 'e-RaktKosh / Jupiter Pune Registry',
                 'source_url' => 'https://jupiterhospital.com',
                 'source_confidence_score' => 98,
-                'source_verification_status' => 'verified_active',
+                'source_verification' => 'verified_active',
             ],
             [
                 'name_en' => 'Bharati Vidyapeeth Medical College Blood Bank',
@@ -437,7 +437,7 @@ class PuneScraperService extends BaseScraperService
                 'source_name' => 'e-RaktKosh / Bharati Vidyapeeth Registry',
                 'source_url' => 'https://bvpmedpune.edu',
                 'source_confidence_score' => 98,
-                'source_verification_status' => 'verified_active',
+                'source_verification' => 'verified_active',
             ],
             [
                 'name_en' => 'Inamdar Multispeciality Hospital Blood Bank',
@@ -471,7 +471,7 @@ class PuneScraperService extends BaseScraperService
                 'source_name' => 'e-RaktKosh / Inamdar Registry',
                 'source_url' => 'https://inamdarhospital.com',
                 'source_confidence_score' => 98,
-                'source_verification_status' => 'verified_active',
+                'source_verification' => 'verified_active',
             ],
             [
                 'name_en' => 'Manipal Hospital Kharadi Blood Bank',
@@ -505,7 +505,7 @@ class PuneScraperService extends BaseScraperService
                 'source_name' => 'e-RaktKosh / Manipal Kharadi Registry',
                 'source_url' => 'https://manipalhospitals.com',
                 'source_confidence_score' => 98,
-                'source_verification_status' => 'verified_active',
+                'source_verification' => 'verified_active',
             ],
             [
                 'name_en' => 'Janakalyan Blood Bank Pune',
@@ -539,7 +539,7 @@ class PuneScraperService extends BaseScraperService
                 'source_name' => 'e-RaktKosh / Janakalyan Registry',
                 'source_url' => 'https://janakalyanbloodbankpune.org',
                 'source_confidence_score' => 98,
-                'source_verification_status' => 'verified_active',
+                'source_verification' => 'verified_active',
             ],
             [
                 'name_en' => 'Poona Hospital & Research Centre Blood Bank',
@@ -573,7 +573,7 @@ class PuneScraperService extends BaseScraperService
                 'source_name' => 'e-RaktKosh / Poona Hospital Registry',
                 'source_url' => 'https://poonahospital.org',
                 'source_confidence_score' => 98,
-                'source_verification_status' => 'verified_active',
+                'source_verification' => 'verified_active',
             ],
             [
                 'name_en' => 'Surya Mother & Child Super Speciality Hospital Blood Bank',
@@ -607,7 +607,7 @@ class PuneScraperService extends BaseScraperService
                 'source_name' => 'e-RaktKosh / Surya Pune Registry',
                 'source_url' => 'https://suryahospitals.com',
                 'source_confidence_score' => 98,
-                'source_verification_status' => 'verified_active',
+                'source_verification' => 'verified_active',
             ],
         ];
 

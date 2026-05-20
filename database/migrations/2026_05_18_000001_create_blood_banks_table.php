@@ -32,7 +32,7 @@ return new class extends Migration
             $table->string('source_name')->nullable();
             $table->string('source_url', 1024)->nullable();
             $table->unsignedTinyInteger('source_confidence_score')->default(0);
-            $table->string('source_verification_status')->default('needs_manual_review');
+            $table->string('source_verification')->default('needs_manual_review');
             $table->timestamp('source_last_seen_at')->nullable();
             $table->json('source_metadata')->nullable();
             $table->boolean('is_24_7')->default(true);
@@ -44,7 +44,7 @@ return new class extends Migration
             $table->timestamps();
             $table->softDeletes();
 
-            $table->index(['source_verification_status', 'source_confidence_score']);
+            $table->index(['source_verification', 'source_confidence_score']);
         });
     }
 
