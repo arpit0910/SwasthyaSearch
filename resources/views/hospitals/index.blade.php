@@ -307,6 +307,9 @@
                     </div>
                 @endforeach
             </div>
+            <div class="mt-10">
+                {{ $hospitals->onEachSide(1)->links() }}
+            </div>
         @endif
     </main>
 @endsection

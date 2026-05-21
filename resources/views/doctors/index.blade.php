@@ -336,15 +336,7 @@
                                         </div>
 
                                         <div class="pt-2 mt-1 border-t border-slate-200/60 flex items-center justify-between gap-2">
-                                            @php $hPhone = !empty($h->emergency_phone) ? $h->emergency_phone : (!empty($h->phone) ? $h->phone : ''); @endphp
-                                            @if(!empty($hPhone))
-                                                <a href="tel:{{ $hPhone }}" class="inline-flex items-center space-x-1 text-xs text-teal-600 hover:text-teal-700 font-bold bg-teal-50 hover:bg-teal-100/80 px-2.5 py-1 rounded-lg border border-teal-100 transition-all shadow-2xs">
-                                                    <i data-lucide="phone-call" class="w-3 h-3 text-teal-600"></i>
-                                                    <span>{{ (isset($h->type) && str_contains(strtolower((string) $h->type), 'clinic')) ? 'Call Clinic' : 'Call Hospital' }}</span>
-                                                </a>
-                                            @else
-                                                <span class="text-[10px] text-slate-400 italic">{{ $locale === 'hi' ? 'संपर्क उपलब्ध नहीं' : 'Tel Unlisted' }}</span>
-                                            @endif
+                                            <span class="text-[10px] text-slate-400 italic">{{ $locale === 'hi' ? 'दिशा-निर्देश उपलब्ध' : 'Directions available' }}</span>
                                             <a
                                                 href="https://www.google.com/maps/dir/?api=1&destination={{ !empty($h->latitude) ? $h->latitude . ',' . $h->longitude : urlencode(($h->address ?? '') . ', ' . ($h->city ?? 'Jaipur')) }}"
                                                 target="_blank"
@@ -365,40 +357,39 @@
                     <div class="p-6 pt-0 bg-white flex flex-col sm:flex-row gap-2.5 sm:gap-3">
                         @php
                             $doctorPhone = !empty($doc->phone) ? $doc->phone : '';
-                            $clinicPhone = '';
+                            $hospitalPhone = '';
                             if (!empty($doc->hospitals) && count($doc->hospitals) > 0) {
                                 foreach ($doc->hospitals as $hospForPhone) {
                                     $hfp = is_array($hospForPhone) ? (object) $hospForPhone : $hospForPhone;
                                     $candidate = !empty($hfp->emergency_phone) ? $hfp->emergency_phone : (!empty($hfp->phone) ? $hfp->phone : '');
                                     if (!empty($candidate)) {
-                                        $clinicPhone = $candidate;
+                                        $hospitalPhone = $candidate;
                                         break;
                                     }
                                 }
                             }
                             $hasDoctorPhone = !empty($doctorPhone);
-                            $hasClinicPhone = !empty($clinicPhone);
-                            $hasDistinctBoth = $hasDoctorPhone && $hasClinicPhone && $doctorPhone !== $clinicPhone;
+                            $hasHospitalPhone = !empty($hospitalPhone);
                         @endphp
 
-                        @if($hasDistinctBoth)
+                        @if($hasDoctorPhone && $hasHospitalPhone)
                             <a href="tel:{{ $doctorPhone }}" class="w-full sm:flex-1 bg-teal-600 hover:bg-teal-700 text-white font-bold py-3 px-4 rounded-xl shadow-md hover:shadow-lg transition-all duration-200 text-xs uppercase tracking-wider flex items-center justify-center space-x-2">
                                 <i data-lucide="phone" class="w-4 h-4 text-teal-100"></i>
                                 <span>Call Doctor</span>
                             </a>
-                            <a href="tel:{{ $clinicPhone }}" class="w-full sm:flex-1 bg-indigo-600 hover:bg-indigo-700 text-white font-bold py-3 px-4 rounded-xl shadow-md hover:shadow-lg transition-all duration-200 text-xs uppercase tracking-wider flex items-center justify-center space-x-2">
+                            <a href="tel:{{ $hospitalPhone }}" class="w-full sm:flex-1 bg-indigo-600 hover:bg-indigo-700 text-white font-bold py-3 px-4 rounded-xl shadow-md hover:shadow-lg transition-all duration-200 text-xs uppercase tracking-wider flex items-center justify-center space-x-2">
                                 <i data-lucide="phone-call" class="w-4 h-4 text-indigo-100"></i>
-                                <span>Call Clinic</span>
+                                <span>Call Hospital</span>
                             </a>
                         @elseif($hasDoctorPhone)
                             <a href="tel:{{ $doctorPhone }}" class="w-full sm:flex-1 bg-teal-600 hover:bg-teal-700 text-white font-bold py-3 px-4 rounded-xl shadow-md hover:shadow-lg transition-all duration-200 text-xs uppercase tracking-wider flex items-center justify-center space-x-2">
                                 <i data-lucide="phone" class="w-4 h-4 text-teal-100"></i>
                                 <span>Call Doctor</span>
                             </a>
-                        @elseif($hasClinicPhone)
-                            <a href="tel:{{ $clinicPhone }}" class="w-full sm:flex-1 bg-indigo-600 hover:bg-indigo-700 text-white font-bold py-3 px-4 rounded-xl shadow-md hover:shadow-lg transition-all duration-200 text-xs uppercase tracking-wider flex items-center justify-center space-x-2">
+                        @elseif($hasHospitalPhone)
+                            <a href="tel:{{ $hospitalPhone }}" class="w-full sm:flex-1 bg-indigo-600 hover:bg-indigo-700 text-white font-bold py-3 px-4 rounded-xl shadow-md hover:shadow-lg transition-all duration-200 text-xs uppercase tracking-wider flex items-center justify-center space-x-2">
                                 <i data-lucide="phone-call" class="w-4 h-4 text-indigo-100"></i>
-                                <span>Call Clinic</span>
+                                <span>Call Hospital</span>
                             </a>
                         @else
                             <button
@@ -423,6 +414,9 @@
                     </div>
                 </div>
             @endforeach
+        </div>
+        <div class="mt-10 rounded-2xl border border-slate-200 bg-white/90 px-4 py-3 shadow-sm">
+            {{ $doctors->onEachSide(1)->links('pagination::tailwind') }}
         </div>
     @endif
 </main>

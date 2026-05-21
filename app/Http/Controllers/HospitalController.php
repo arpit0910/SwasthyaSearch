@@ -48,29 +48,32 @@ class HospitalController extends Controller
         $types = Hospital::where('is_verified', true)->whereNotNull('type')->distinct()->pluck('type');
 
         return view('hospitals.index', [
-            'hospitals' => $query->get()->map(fn(Hospital $hospital) => [
-                'id' => $hospital->id,
-                'name' => [
-                    'en' => $hospital->name_en,
-                    'hi' => $hospital->name_hi,
-                ],
-                'type' => $hospital->type,
-                'address' => $hospital->address,
-                'address_line1' => $hospital->address_line1,
-                'address_line2' => $hospital->address_line2,
-                'state' => $hospital->state,
-                'pincode' => $hospital->pincode,
-                'city' => $hospital->city,
-                'latitude' => $hospital->latitude,
-                'longitude' => $hospital->longitude,
-                'emergency_phone' => $hospital->emergency_phone,
-                'is_verified' => $hospital->is_verified,
-                'accepts_ayushman' => $hospital->accepts_ayushman,
-                'accepts_janaadhaar' => $hospital->accepts_janaadhaar,
-                'accepts_cghs' => $hospital->accepts_cghs,
-                'is_cashless' => $hospital->is_cashless,
-                'cashless_schemes_list' => $hospital->cashless_schemes_list,
-            ]),
+            'hospitals' => $query
+                ->paginate(12)
+                ->withQueryString()
+                ->through(fn(Hospital $hospital) => [
+                    'id' => $hospital->id,
+                    'name' => [
+                        'en' => $hospital->name_en,
+                        'hi' => $hospital->name_hi,
+                    ],
+                    'type' => $hospital->type,
+                    'address' => $hospital->address,
+                    'address_line1' => $hospital->address_line1,
+                    'address_line2' => $hospital->address_line2,
+                    'state' => $hospital->state,
+                    'pincode' => $hospital->pincode,
+                    'city' => $hospital->city,
+                    'latitude' => $hospital->latitude,
+                    'longitude' => $hospital->longitude,
+                    'emergency_phone' => $hospital->emergency_phone,
+                    'is_verified' => $hospital->is_verified,
+                    'accepts_ayushman' => $hospital->accepts_ayushman,
+                    'accepts_janaadhaar' => $hospital->accepts_janaadhaar,
+                    'accepts_cghs' => $hospital->accepts_cghs,
+                    'is_cashless' => $hospital->is_cashless,
+                    'cashless_schemes_list' => $hospital->cashless_schemes_list,
+                ]),
             'cities' => $cities,
             'types' => $types,
             'filters' => $request->only(['type', 'city', 'search', 'benefit']),

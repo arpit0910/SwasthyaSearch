@@ -287,6 +287,9 @@
                 </div>
             @endforeach
         </div>
+        <div class="mt-10">
+            {{ $bloodBanks->onEachSide(1)->links() }}
+        </div>
     @endif
 </main>
 @endsection

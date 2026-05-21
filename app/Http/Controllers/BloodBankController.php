@@ -52,7 +52,10 @@ class BloodBankController extends Controller
         $bloodGroups = ['A+', 'A-', 'B+', 'B-', 'O+', 'O-', 'AB+', 'AB-'];
 
         return view('blood_banks.index', [
-            'bloodBanks' => $query->get()->map(fn(BloodBank $bank) => $this->formatBloodBank($bank)),
+            'bloodBanks' => $query
+                ->paginate(12)
+                ->withQueryString()
+                ->through(fn(BloodBank $bank) => $this->formatBloodBank($bank)),
             'cities' => $cities,
             'bloodGroups' => $bloodGroups,
             'filters' => $request->only(['city', 'blood_group', 'facility', 'search']),

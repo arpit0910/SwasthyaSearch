@@ -1206,13 +1206,17 @@
                 return;
             }
 
+            const isMobileView = window.innerWidth < 640;
             const observer = new IntersectionObserver((entries, obs) => {
                 entries.forEach(entry => {
                     if (!entry.isIntersecting) return;
                     entry.target.classList.add('in-view');
                     obs.unobserve(entry.target);
                 });
-            }, { threshold: 0.12, rootMargin: '0px 0px -8% 0px' });
+            }, {
+                threshold: isMobileView ? 0.02 : 0.12,
+                rootMargin: isMobileView ? '0px 0px 18% 0px' : '0px 0px -8% 0px'
+            });
 
             requestAnimationFrame(() => {
                 requestAnimationFrame(() => {

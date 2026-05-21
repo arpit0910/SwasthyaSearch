@@ -58,7 +58,10 @@ class DoctorController extends Controller
         $cities = Hospital::where('is_verified', true)->whereNotNull('city')->distinct()->pluck('city');
 
         return view('doctors.index', [
-            'doctors' => $query->get()->map(fn(Doctor $doctor) => $this->formatDoctor($doctor)),
+            'doctors' => $query
+                ->paginate(50)
+                ->withQueryString()
+                ->through(fn(Doctor $doctor) => $this->formatDoctor($doctor)),
             'departments' => $departments->map(fn(Department $department) => $this->formatDepartment($department)),
             'cities' => $cities,
             'filters' => $request->only(['department', 'experience', 'city', 'search']),
