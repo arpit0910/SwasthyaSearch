@@ -291,9 +291,6 @@
 
                         <!-- Card Footer -->
                         <div class="p-6 pt-0 bg-white">
-                            <p class="text-[11px] text-amber-800 bg-amber-50 border border-amber-200 rounded-lg px-2.5 py-1.5 mb-2.5">
-                                {{ $locale === 'hi' ? 'कृपया जाने से पहले कॉल करें।' : 'Please call before visiting.' }}
-                            </p>
                             <div class="grid grid-cols-1 sm:grid-cols-2 gap-2.5">
                                 <a href="{{ route('hospitals.doctors', $h->id) }}"
                                     class="w-full bg-slate-900 hover:bg-slate-800 text-white font-bold py-3 rounded-xl shadow-md hover:shadow-lg transition-all duration-200 text-xs uppercase tracking-wider flex items-center justify-center space-x-2 transform active:scale-98">

@@ -312,7 +312,7 @@
                 <i data-lucide="message-square" class="w-6 h-6 text-white"></i>
             </div>
             <span id="chatbot-fab-label" class="chatbot-fab-label font-bold text-base tracking-wide whitespace-nowrap leading-none pt-0.5">
-                {{ $locale === 'hi' ? 'स्वास्थ्य AI से पूछें' : 'Ask Swasthya AI' }}
+                {{ $locale === 'hi' ? 'स्वास्थ्य साथी से पूछें' : 'Ask Swasthya Saathi' }}
             </span>
         </button>
 
@@ -325,9 +325,9 @@
                         <i data-lucide="bot" class="w-6 h-6 text-teal-400"></i>
                     </div>
                     <div class="min-w-0">
-                        <h3 class="font-bold text-[17px] leading-tight text-white">Swasthya AI Assistant</h3>
+                        <h3 class="font-bold text-[17px] leading-tight text-white">Swasthya Saathi</h3>
                         <p class="text-xs sm:text-[12px] text-teal-200 leading-snug mt-1 break-words">
-                            {{ $locale === 'hi' ? 'डॉक्टर, अस्पताल, ब्लड बैंक या विभाग खोजें' : 'Find doctors, hospitals, blood banks, or departments' }}
+                            {{ $locale === 'hi' ? 'तेज़ हेल्थकेयर खोज' : 'Quick healthcare search' }}
                         </p>
                     </div>
                 </div>
@@ -346,27 +346,29 @@
             </div>
 
             <div class="px-3 pb-2 bg-white border-t border-slate-200/80">
-                <div class="flex items-center gap-1.5 mb-2">
-                    <i data-lucide="map-pin" class="w-3.5 h-3.5 text-slate-600"></i>
-                    <label class="text-[12px] font-semibold text-slate-700 leading-none">{{ $locale === 'hi' ? 'शहर चुनें' : 'Select your city' }}</label>
-                </div>
-                <div class="flex items-center gap-2 mb-2 min-h-[34px]">
-                    <div id="chatbot-city-selected-card" class="hidden items-center rounded-full border border-teal-300 bg-teal-100 px-3 py-1.5 w-fit max-w-[72%]">
-                        <div class="flex items-center gap-2 text-sm text-teal-900 min-w-0">
-                            <i data-lucide="map-pin" class="w-4 h-4 text-teal-700 shrink-0"></i>
-                            <span id="chatbot-selected-city-label" class="font-semibold truncate"></span>
-                        </div>
+                <div class="rounded-2xl border border-slate-200 bg-slate-50/70 p-3 shadow-sm">
+                    <div class="flex items-center gap-1.5 mb-2">
+                        <i data-lucide="map-pin" class="w-3.5 h-3.5 text-slate-600"></i>
+                        <label class="text-[12px] font-semibold text-slate-700 leading-none">{{ $locale === 'hi' ? 'शहर चुनें' : 'Select your city' }}</label>
                     </div>
-                    <button type="button" id="chatbot-change-city-btn" onclick="enableCitySelection()" class="hidden shrink-0 text-[11px] font-semibold text-indigo-700 hover:text-indigo-800 bg-indigo-50 border border-indigo-200 rounded-full px-2.5 py-1 leading-none">
-                        {{ $locale === 'hi' ? 'शहर बदलें' : 'Change City' }}
-                    </button>
-                </div>
-                <div id="chatbot-city-pill-wrap" class="flex flex-wrap gap-1.5 max-h-20 overflow-y-auto pr-1">
+                    <div class="flex items-center justify-between gap-2 mb-2 min-h-[34px]">
+                        <div id="chatbot-city-selected-card" class="hidden items-center rounded-full border border-teal-300 bg-teal-100 px-3 py-1.5 w-fit max-w-[72%]">
+                            <div class="flex items-center gap-2 text-sm text-teal-900 min-w-0">
+                                <i data-lucide="map-pin" class="w-4 h-4 text-teal-700 shrink-0"></i>
+                                <span id="chatbot-selected-city-label" class="font-semibold truncate"></span>
+                            </div>
+                        </div>
+                        <button type="button" id="chatbot-change-city-btn" onclick="enableCitySelection()" class="hidden shrink-0 text-[11px] font-semibold text-indigo-700 hover:text-indigo-800 bg-indigo-50 border border-indigo-200 rounded-full px-2.5 py-1 leading-none">
+                            {{ $locale === 'hi' ? 'शहर बदलें' : 'Change City' }}
+                        </button>
+                    </div>
+                    <div id="chatbot-city-pill-wrap" class="flex flex-wrap gap-1.5 max-h-20 overflow-y-auto pr-1">
                     @foreach($chatbotCityPills as $city)
                         <button type="button" class="chatbot-city-pill" data-city="{{ $city }}" onclick="selectChatbotCity('{{ addslashes($city) }}')">
                             {{ $city }}
                         </button>
                     @endforeach
+                    </div>
                 </div>
             </div>
 
@@ -391,22 +393,21 @@
 
                 <div class="hidden" id="chatbot-quick-prompts-wrap">
                     <div class="ml-9 max-w-[85%]">
-                        <div class="mb-2 rounded-xl border border-cyan-200 bg-cyan-50 px-3 py-2">
-                            <p class="text-[11px] font-bold text-cyan-900">
-                                {{ $locale === 'hi' ? 'त्वरित रोग/लक्षण विकल्प' : 'Quick Disease/Symptom Options' }}
-                            </p>
-                            <p class="text-[10px] text-cyan-800 mt-0.5">
-                                {{ $locale === 'hi' ? 'नीचे विकल्प चुनें। यह सहायक निदान नहीं करता, केवल खोज में मदद करता है।' : 'Choose an option below. This assistant does not diagnose; it helps with healthcare discovery.' }}
-                            </p>
-                        </div>
-                        <div class="flex flex-wrap gap-1.5" id="chatbot-quick-prompts">
+                        <div class="flex flex-wrap gap-1.5 mb-2" id="chatbot-quick-prompts">
                             <button type="button" onclick="handleQuickAction('doctors')" class="chatbot-chip">{{ $locale === 'hi' ? 'डॉक्टर खोजें' : 'Find Doctors' }}</button>
                             <button type="button" onclick="handleQuickAction('hospitals')" class="chatbot-chip">{{ $locale === 'hi' ? 'अस्पताल खोजें' : 'Find Hospitals' }}</button>
                             <button type="button" onclick="handleQuickAction('blood_banks')" class="chatbot-chip">{{ $locale === 'hi' ? 'ब्लड बैंक खोजें' : 'Find Blood Banks' }}</button>
-                            <button type="button" onclick="useQuickPrompt(this)" class="chatbot-chip" data-message="{{ $locale === 'hi' ? 'मेरे लक्षणों के आधार पर विभाग बताएं' : 'Help me find department by symptoms' }}">{{ $locale === 'hi' ? 'लक्षण से खोजें' : 'Search Symptoms' }}</button>
-                            <button type="button" onclick="enableCitySelection()" class="chatbot-chip">{{ $locale === 'hi' ? 'शहर बदलें' : 'Change City' }}</button>
-                            <button type="button" onclick="clearChatConversation()" class="chatbot-chip">{{ $locale === 'hi' ? 'चैट साफ करें' : 'Clear Chat' }}</button>
                             <button type="button" onclick="useQuickPrompt(this)" class="chatbot-chip chatbot-chip-danger" data-message="{{ $locale === 'hi' ? 'मुझे आपातकालीन मदद चाहिए' : 'I need emergency help' }}">{{ $locale === 'hi' ? 'आपातकालीन मदद' : 'Emergency Help' }}</button>
+                        </div>
+                        <div class="rounded-xl border border-cyan-200 bg-cyan-50 px-3 py-2">
+                            <p class="text-[11px] font-bold text-cyan-900 mb-1.5">
+                                {{ $locale === 'hi' ? 'त्वरित लक्षण विकल्प' : 'Quick Symptoms' }}
+                            </p>
+                            <div class="flex flex-wrap gap-1.5">
+                                <button type="button" onclick="useQuickPrompt(this)" class="chatbot-chip" data-message="{{ $locale === 'hi' ? 'मुझे बुखार है' : 'I have fever' }}">{{ $locale === 'hi' ? 'बुखार' : 'Fever' }}</button>
+                                <button type="button" onclick="useQuickPrompt(this)" class="chatbot-chip" data-message="{{ $locale === 'hi' ? 'मुझे खांसी है' : 'I have cough' }}">{{ $locale === 'hi' ? 'खांसी' : 'Cough' }}</button>
+                                <button type="button" onclick="useQuickPrompt(this)" class="chatbot-chip" data-message="{{ $locale === 'hi' ? 'मुझे सिरदर्द है' : 'I have headache' }}">{{ $locale === 'hi' ? 'सिरदर्द' : 'Headache' }}</button>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -1185,6 +1186,46 @@
         initializeChatbotCity();
         setupFabHintCycle();
         collapseMobileFab();
+
+        function initializePageAnimations() {
+            document.body.classList.add('motion-ready');
+
+            const animateTargets = new Set();
+            document.querySelectorAll('header, section.max-w-7xl, main > *, main article, main .grid > div, main .grid > a').forEach(el => {
+                if (el.id === 'chatbot-container' || el.id === 'chatbot-window') return;
+                animateTargets.add(el);
+            });
+
+            animateTargets.forEach((el, idx) => {
+                el.classList.add('animate-on-scroll');
+                el.style.setProperty('--reveal-delay', `${Math.min(idx * 35, 280)}ms`);
+            });
+
+            if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+                animateTargets.forEach(el => el.classList.add('in-view'));
+                return;
+            }
+
+            const observer = new IntersectionObserver((entries, obs) => {
+                entries.forEach(entry => {
+                    if (!entry.isIntersecting) return;
+                    entry.target.classList.add('in-view');
+                    obs.unobserve(entry.target);
+                });
+            }, { threshold: 0.12, rootMargin: '0px 0px -8% 0px' });
+
+            requestAnimationFrame(() => {
+                requestAnimationFrame(() => {
+                    animateTargets.forEach(el => observer.observe(el));
+                });
+            });
+        }
+
+        if (document.readyState === 'loading') {
+            document.addEventListener('DOMContentLoaded', initializePageAnimations);
+        } else {
+            initializePageAnimations();
+        }
     </script>
     <style>
         :root {
@@ -1332,6 +1373,24 @@
             outline: 2px solid #0ea5a6;
             outline-offset: 2px;
         }
+        .motion-ready .animate-on-scroll {
+            opacity: 0;
+            transform: translateY(18px) scale(0.985);
+            transition: opacity 520ms ease, transform 520ms ease;
+            transition-delay: var(--reveal-delay, 0ms);
+            will-change: opacity, transform;
+        }
+        .motion-ready .animate-on-scroll.in-view {
+            opacity: 1;
+            transform: translateY(0) scale(1);
+        }
+        @media (prefers-reduced-motion: reduce) {
+            .motion-ready .animate-on-scroll {
+                opacity: 1 !important;
+                transform: none !important;
+                transition: none !important;
+            }
+        }
         @media (max-width: 639px) {
             .chatbot-fab.fab-collapsed {
                 width: 56px;
@@ -1351,12 +1410,18 @@
                 bottom: calc(0.75rem + env(safe-area-inset-bottom));
             }
             #chatbot-window {
-                width: calc(100vw - 0.75rem);
+                width: calc(100vw - 1rem);
+                max-width: 430px;
                 height: min(86vh, 760px);
                 min-height: 520px;
                 border-bottom-right-radius: 0.5rem;
                 border-bottom-left-radius: 0.5rem;
-                margin-right: 0.35rem;
+                position: fixed;
+                left: 50%;
+                right: auto;
+                transform: translateX(-50%);
+                bottom: calc(0.75rem + env(safe-area-inset-bottom));
+                margin: 0;
             }
         }
     </style>
