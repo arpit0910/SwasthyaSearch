@@ -583,6 +583,16 @@
             button.innerText = isOpen ? button.dataset.moreLabel : button.dataset.lessLabel;
             content.classList.toggle('hidden', isOpen);
         }
+        function toggleChatbotActionPanel(buttonId, panelId) {
+            const button = document.getElementById(buttonId);
+            const panel = document.getElementById(panelId);
+            if (!button || !panel) return;
+
+            const isOpen = !panel.classList.contains('hidden');
+            panel.classList.toggle('hidden', isOpen);
+            button.classList.toggle('active', !isOpen);
+            scrollToChatBottom();
+        }
 
         function collapseMobileFab() {
             const btn = document.getElementById('chatbot-toggle-btn');
@@ -958,6 +968,12 @@
         function appendMessageObj(msg) {
             const messagesDiv = document.getElementById('chatbot-messages');
             const isUser = msg.sender === 'user';
+            const symptomActionMode = !isUser && Boolean(msg.symptom_match);
+            const hasRelatedSections = !isUser && (
+                (msg.doctors && msg.doctors.length > 0) ||
+                (msg.hospitals && msg.hospitals.length > 0) ||
+                (msg.articles && msg.articles.length > 0)
+            );
             
             const spoken = String(msg.text || '').replace(/'/g, '&#39;').replace(/\"/g, '&quot;');
             const isWarning = !isUser && /(emergency|urgent|call|आपात|तुरंत|helpline)/i.test(String(msg.text || ''));
@@ -980,7 +996,7 @@
                     : (msg?.qa_answer?.detailed_answer_en || msg?.qa_answer?.detailed_answer_hi || ''))
                 : '';
             const detailedAnswer = String(detailedAnswerRaw || '').trim();
-            if (detailedAnswer !== '') {
+            if (!symptomActionMode && detailedAnswer !== '') {
                 chatbotDetailBlockCounter += 1;
                 const buttonId = `chatbot-detail-toggle-${chatbotDetailBlockCounter}`;
                 const contentId = `chatbot-detail-content-${chatbotDetailBlockCounter}`;
@@ -1008,19 +1024,313 @@
                 `;
             }
 
+            if (symptomActionMode) {
+                chatbotDetailBlockCounter += 1;
+                const doctorsPanelId = `chatbot-action-doctors-${chatbotDetailBlockCounter}`;
+                const hospitalsPanelId = `chatbot-action-hospitals-${chatbotDetailBlockCounter}`;
+                const detailsPanelId = `chatbot-action-details-${chatbotDetailBlockCounter}`;
+                const doctorsBtnId = `chatbot-action-doctors-btn-${chatbotDetailBlockCounter}`;
+                const hospitalsBtnId = `chatbot-action-hospitals-btn-${chatbotDetailBlockCounter}`;
+                const detailsBtnId = `chatbot-action-details-btn-${chatbotDetailBlockCounter}`;
+
+                html += `<div class="pt-1 flex flex-wrap gap-2">`;
+                if (msg.doctors && msg.doctors.length > 0) {
+                    html += `
+                        <button id="${doctorsBtnId}" type="button" onclick="toggleChatbotActionPanel('${doctorsBtnId}','${doctorsPanelId}')" class="chatbot-action-btn">
+                            ${currentLocale === 'hi' ? 'इसके लिए डॉक्टर देखें' : 'See Doctors for this'}
+                        </button>
+                    `;
+                }
+                if (msg.hospitals && msg.hospitals.length > 0) {
+                    html += `
+                        <button id="${hospitalsBtnId}" type="button" onclick="toggleChatbotActionPanel('${hospitalsBtnId}','${hospitalsPanelId}')" class="chatbot-action-btn">
+                            ${currentLocale === 'hi' ? 'इसके लिए अस्पताल देखें' : 'See Hospitals for this'}
+                        </button>
+                    `;
+                }
+                if (detailedAnswer !== '') {
+                    html += `
+                        <button id="${detailsBtnId}" type="button" onclick="toggleChatbotActionPanel('${detailsBtnId}','${detailsPanelId}')" class="chatbot-action-btn">
+                            ${currentLocale === 'hi' ? 'और जानकारी लें' : 'Get more detail'}
+                        </button>
+                    `;
+                }
+                html += `</div>`;
+
+                if (msg.doctors && msg.doctors.length > 0) {
+                    html += `<div id="${doctorsPanelId}" class="hidden pt-2"><div class="space-y-2"><h5 class="text-xs font-bold text-slate-400 uppercase tracking-wider">${currentLocale === 'hi' ? 'विशेषज्ञ डॉक्टर' : 'Specialist Doctors'}</h5>`;
+                    msg.doctors.forEach(doc => {
+                        const fullName = `Dr. ${doc.first_name} ${doc.last_name}`;
+                        const deptName = doc.department ? getLocalizedText(doc.department.name) : '';
+                        const emergencyPhone = doc.hospitals?.[0]?.emergency_phone || '';
+                        const hospName = doc.hospitals?.[0] ? getLocalizedText(doc.hospitals[0].name) : '';
+
+                        html += `
+                            <div class="bg-white p-3 rounded-2xl border border-indigo-100 shadow-sm hover:shadow transition-all duration-200 text-slate-800">
+                                <div class="flex justify-between items-start">
+                                    <h4 class="font-bold text-sm text-indigo-950 flex items-center space-x-1">
+                                        <span>${fullName}</span>
+                                        ${doc.is_verified ? '<i data-lucide="check-circle-2" class="w-3.5 h-3.5 text-teal-600 inline"></i>' : ''}
+                                    </h4>
+                                    <span class="text-xs bg-indigo-50 text-indigo-700 px-2 py-0.5 rounded-lg font-medium">
+                                        ${doc.experience_years} ${currentLocale === 'hi' ? 'वर्ष अनुभव' : 'yrs exp'}
+                                    </span>
+                                </div>
+                                <div class="mt-2 space-y-1 text-xs text-slate-600">
+                                    <div class="flex items-center space-x-1">
+                                        <i data-lucide="stethoscope" class="w-3.5 h-3.5 text-teal-600 shrink-0"></i>
+                                        <span class="font-medium text-slate-700">${deptName}</span>
+                                    </div>
+                                    ${hospName ? `
+                                        <div class="flex items-start space-x-1 pt-0.5">
+                                            <i data-lucide="map-pin" class="w-3.5 h-3.5 text-indigo-500 shrink-0 mt-0.5"></i>
+                                            <span>${hospName}</span>
+                                        </div>
+                                    ` : ''}
+                                </div>
+                                ${emergencyPhone ? `
+                                    <div class="mt-2 pt-2 border-t border-slate-100 flex justify-end">
+                                        <a href="tel:${emergencyPhone}" class="text-xs bg-teal-50 hover:bg-teal-600 hover:text-white text-teal-700 font-medium px-3 py-1 rounded-xl shadow-sm transition-all duration-200">
+                                            ${currentLocale === 'hi' ? 'कॉल करें' : 'Call Doctor'}
+                                        </a>
+                                    </div>
+                                ` : ''}
+                            </div>
+                        `;
+                    });
+                    if (msg.see_all_doctors_url) {
+                        html += `<div class="pt-1"><a href="${msg.see_all_doctors_url}" class="inline-flex items-center space-x-1 text-xs bg-teal-50 hover:bg-teal-600 hover:text-white text-teal-700 font-medium px-3 py-1 rounded-xl shadow-sm transition-all duration-200"><span>${currentLocale === 'hi' ? 'सभी डॉक्टर देखें' : 'See all doctors'}</span></a></div>`;
+                    }
+                    html += `</div></div>`;
+                }
+
+                if (msg.hospitals && msg.hospitals.length > 0) {
+                    html += `<div id="${hospitalsPanelId}" class="hidden pt-2"><div class="space-y-2"><h5 class="text-xs font-bold text-slate-400 uppercase tracking-wider">${currentLocale === 'hi' ? 'अस्पताल व क्लिनिक' : 'Hospitals & Clinics'}</h5>`;
+                    msg.hospitals.forEach(hosp => {
+                        const hospName = getLocalizedText(hosp.name);
+                        const emergencyPhone = hosp.emergency_phone || '';
+                        const city = hosp.city || '';
+
+                        html += `
+                            <div class="bg-white p-3 rounded-2xl border border-teal-100 shadow-sm hover:shadow transition-all duration-200 text-slate-800">
+                                <div class="flex justify-between items-start gap-2">
+                                    <h4 class="font-bold text-sm text-teal-950 flex items-center space-x-1">
+                                        <span>${hospName}</span>
+                                        ${hosp.is_verified ? '<i data-lucide="check-circle-2" class="w-3.5 h-3.5 text-teal-600 inline shrink-0"></i>' : ''}
+                                    </h4>
+                                    <span class="text-[10px] bg-teal-50 text-teal-700 px-2 py-0.5 rounded-lg font-bold uppercase tracking-wider shrink-0">
+                                        ${hosp.type || 'Hospital'}
+                                    </span>
+                                </div>
+                                <div class="mt-1.5 flex items-start space-x-1 text-xs text-slate-600">
+                                    <i data-lucide="map-pin" class="w-3.5 h-3.5 text-slate-400 shrink-0 mt-0.5"></i>
+                                    <span class="line-clamp-2">${hosp.address || ''} ${city ? ', ' + city : ''}</span>
+                                </div>
+                                ${emergencyPhone ? `
+                                    <div class="mt-2 pt-2 border-t border-slate-100 flex justify-end">
+                                        <a href="tel:${emergencyPhone}" class="text-xs bg-teal-50 hover:bg-teal-600 hover:text-white text-teal-700 font-medium px-3 py-1 rounded-xl shadow-sm transition-all duration-200 flex items-center space-x-1">
+                                            <i data-lucide="phone-call" class="w-3 h-3"></i>
+                                            <span>${currentLocale === 'hi' ? 'कॉल करें' : 'Call Emergency'}</span>
+                                        </a>
+                                    </div>
+                                ` : ''}
+                            </div>
+                        `;
+                    });
+                    if (msg.see_all_hospitals_url) {
+                        html += `<div class="pt-1"><a href="${msg.see_all_hospitals_url}" class="inline-flex items-center space-x-1 text-xs bg-indigo-50 hover:bg-indigo-600 hover:text-white text-indigo-700 font-medium px-3 py-1 rounded-xl shadow-sm transition-all duration-200"><span>${currentLocale === 'hi' ? 'सभी अस्पताल देखें' : 'See all hospitals'}</span></a></div>`;
+                    }
+                    html += `</div></div>`;
+                }
+
+                if (detailedAnswer !== '') {
+                    html += `
+                        <div id="${detailsPanelId}" class="hidden mt-2 rounded-xl border border-indigo-100 bg-indigo-50/70 p-3 text-xs leading-relaxed text-slate-700">
+                            ${formatDetailedAnswer(detailedAnswer)}
+                        </div>
+                    `;
+                }
+            }
+
+            if (hasRelatedSections && !symptomActionMode) {
+                chatbotDetailBlockCounter += 1;
+                const doctorsPanelId = `chatbot-related-doctors-${chatbotDetailBlockCounter}`;
+                const hospitalsPanelId = `chatbot-related-hospitals-${chatbotDetailBlockCounter}`;
+                const articlesPanelId = `chatbot-related-articles-${chatbotDetailBlockCounter}`;
+                const detailsPanelId = `chatbot-related-details-${chatbotDetailBlockCounter}`;
+                const doctorsBtnId = `chatbot-related-doctors-btn-${chatbotDetailBlockCounter}`;
+                const hospitalsBtnId = `chatbot-related-hospitals-btn-${chatbotDetailBlockCounter}`;
+                const articlesBtnId = `chatbot-related-articles-btn-${chatbotDetailBlockCounter}`;
+                const detailsBtnId = `chatbot-related-details-btn-${chatbotDetailBlockCounter}`;
+
+                html += `<div class="pt-1 flex flex-wrap gap-2">`;
+                if (msg.doctors && msg.doctors.length > 0) {
+                    html += `
+                        <button id="${doctorsBtnId}" type="button" onclick="toggleChatbotActionPanel('${doctorsBtnId}','${doctorsPanelId}')" class="chatbot-action-btn">
+                            ${currentLocale === 'hi' ? 'संबंधित डॉक्टर देखें' : 'View Related Doctors'}
+                        </button>
+                    `;
+                }
+                if (msg.hospitals && msg.hospitals.length > 0) {
+                    html += `
+                        <button id="${hospitalsBtnId}" type="button" onclick="toggleChatbotActionPanel('${hospitalsBtnId}','${hospitalsPanelId}')" class="chatbot-action-btn">
+                            ${currentLocale === 'hi' ? 'संबंधित अस्पताल देखें' : 'View Related Hospitals'}
+                        </button>
+                    `;
+                }
+                if (msg.articles && msg.articles.length > 0) {
+                    html += `
+                        <button id="${articlesBtnId}" type="button" onclick="toggleChatbotActionPanel('${articlesBtnId}','${articlesPanelId}')" class="chatbot-action-btn">
+                            ${currentLocale === 'hi' ? 'संबंधित लेख देखें' : 'View Related Articles'}
+                        </button>
+                    `;
+                }
+                if (detailedAnswer !== '') {
+                    html += `
+                        <button id="${detailsBtnId}" type="button" onclick="toggleChatbotActionPanel('${detailsBtnId}','${detailsPanelId}')" class="chatbot-action-btn">
+                            ${currentLocale === 'hi' ? 'और जानकारी लें' : 'Get more detail'}
+                        </button>
+                    `;
+                }
+                html += `</div>`;
+
+                if (msg.doctors && msg.doctors.length > 0) {
+                    html += `<div id="${doctorsPanelId}" class="hidden pt-2"><div class="space-y-2"><h5 class="text-xs font-bold text-slate-400 uppercase tracking-wider">${currentLocale === 'hi' ? 'विशेषज्ञ डॉक्टर' : 'Specialist Doctors'}</h5>`;
+                    msg.doctors.forEach(doc => {
+                        const fullName = `Dr. ${doc.first_name} ${doc.last_name}`;
+                        const deptName = doc.department ? getLocalizedText(doc.department.name) : '';
+                        const emergencyPhone = doc.hospitals?.[0]?.emergency_phone || '';
+                        const hospName = doc.hospitals?.[0] ? getLocalizedText(doc.hospitals[0].name) : '';
+
+                        html += `
+                            <div class="bg-white p-3 rounded-2xl border border-indigo-100 shadow-sm hover:shadow transition-all duration-200 text-slate-800">
+                                <div class="flex justify-between items-start">
+                                    <h4 class="font-bold text-sm text-indigo-950 flex items-center space-x-1">
+                                        <span>${fullName}</span>
+                                        ${doc.is_verified ? '<i data-lucide="check-circle-2" class="w-3.5 h-3.5 text-teal-600 inline"></i>' : ''}
+                                    </h4>
+                                    <span class="text-xs bg-indigo-50 text-indigo-700 px-2 py-0.5 rounded-lg font-medium">
+                                        ${doc.experience_years} ${currentLocale === 'hi' ? 'वर्ष अनुभव' : 'yrs exp'}
+                                    </span>
+                                </div>
+                                <div class="mt-2 space-y-1 text-xs text-slate-600">
+                                    <div class="flex items-center space-x-1">
+                                        <i data-lucide="stethoscope" class="w-3.5 h-3.5 text-teal-600 shrink-0"></i>
+                                        <span class="font-medium text-slate-700">${deptName}</span>
+                                    </div>
+                                    ${hospName ? `
+                                        <div class="flex items-start space-x-1 pt-0.5">
+                                            <i data-lucide="map-pin" class="w-3.5 h-3.5 text-indigo-500 shrink-0 mt-0.5"></i>
+                                            <span>${hospName}</span>
+                                        </div>
+                                    ` : ''}
+                                </div>
+                                ${emergencyPhone ? `
+                                    <div class="mt-2 pt-2 border-t border-slate-100 flex justify-end">
+                                        <a href="tel:${emergencyPhone}" class="text-xs bg-teal-50 hover:bg-teal-600 hover:text-white text-teal-700 font-medium px-3 py-1 rounded-xl shadow-sm transition-all duration-200">
+                                            ${currentLocale === 'hi' ? 'कॉल करें' : 'Call Doctor'}
+                                        </a>
+                                    </div>
+                                ` : ''}
+                            </div>
+                        `;
+                    });
+                    if (msg.see_all_doctors_url) {
+                        html += `<div class="pt-1"><a href="${msg.see_all_doctors_url}" class="inline-flex items-center space-x-1 text-xs bg-teal-50 hover:bg-teal-600 hover:text-white text-teal-700 font-medium px-3 py-1 rounded-xl shadow-sm transition-all duration-200"><span>${currentLocale === 'hi' ? 'सभी डॉक्टर देखें' : 'See all doctors'}</span></a></div>`;
+                    }
+                    html += `</div></div>`;
+                }
+
+                if (msg.hospitals && msg.hospitals.length > 0) {
+                    html += `<div id="${hospitalsPanelId}" class="hidden pt-2"><div class="space-y-2"><h5 class="text-xs font-bold text-slate-400 uppercase tracking-wider">${currentLocale === 'hi' ? 'अस्पताल व क्लिनिक' : 'Hospitals & Clinics'}</h5>`;
+                    msg.hospitals.forEach(hosp => {
+                        const hospName = getLocalizedText(hosp.name);
+                        const emergencyPhone = hosp.emergency_phone || '';
+                        const city = hosp.city || '';
+
+                        html += `
+                            <div class="bg-white p-3 rounded-2xl border border-teal-100 shadow-sm hover:shadow transition-all duration-200 text-slate-800">
+                                <div class="flex justify-between items-start gap-2">
+                                    <h4 class="font-bold text-sm text-teal-950 flex items-center space-x-1">
+                                        <span>${hospName}</span>
+                                        ${hosp.is_verified ? '<i data-lucide="check-circle-2" class="w-3.5 h-3.5 text-teal-600 inline shrink-0"></i>' : ''}
+                                    </h4>
+                                    <span class="text-[10px] bg-teal-50 text-teal-700 px-2 py-0.5 rounded-lg font-bold uppercase tracking-wider shrink-0">
+                                        ${hosp.type || 'Hospital'}
+                                    </span>
+                                </div>
+                                <div class="mt-1.5 flex items-start space-x-1 text-xs text-slate-600">
+                                    <i data-lucide="map-pin" class="w-3.5 h-3.5 text-slate-400 shrink-0 mt-0.5"></i>
+                                    <span class="line-clamp-2">${hosp.address || ''} ${city ? ', ' + city : ''}</span>
+                                </div>
+                                ${emergencyPhone ? `
+                                    <div class="mt-2 pt-2 border-t border-slate-100 flex justify-end">
+                                        <a href="tel:${emergencyPhone}" class="text-xs bg-teal-50 hover:bg-teal-600 hover:text-white text-teal-700 font-medium px-3 py-1 rounded-xl shadow-sm transition-all duration-200 flex items-center space-x-1">
+                                            <i data-lucide="phone-call" class="w-3 h-3"></i>
+                                            <span>${currentLocale === 'hi' ? 'कॉल करें' : 'Call Emergency'}</span>
+                                        </a>
+                                    </div>
+                                ` : ''}
+                            </div>
+                        `;
+                    });
+                    if (msg.see_all_hospitals_url) {
+                        html += `<div class="pt-1"><a href="${msg.see_all_hospitals_url}" class="inline-flex items-center space-x-1 text-xs bg-indigo-50 hover:bg-indigo-600 hover:text-white text-indigo-700 font-medium px-3 py-1 rounded-xl shadow-sm transition-all duration-200"><span>${currentLocale === 'hi' ? 'सभी अस्पताल देखें' : 'See all hospitals'}</span></a></div>`;
+                    }
+                    html += `</div></div>`;
+                }
+
+                if (msg.articles && msg.articles.length > 0) {
+                    html += `<div id="${articlesPanelId}" class="hidden pt-2"><div class="space-y-2"><h5 class="text-xs font-bold text-slate-400 uppercase tracking-wider">${currentLocale === 'hi' ? 'स्वास्थ्य लेख' : 'Health Articles'}</h5>`;
+                    msg.articles.forEach(art => {
+                        const artTitle = getLocalizedText(art.title);
+                        const artExcerpt = getLocalizedText(art.excerpt) || (getLocalizedText(art.content) || '').substring(0, 80) + '...';
+
+                        html += `
+                            <div class="bg-white p-3 rounded-2xl border border-indigo-100 shadow-sm hover:shadow transition-all duration-200 text-slate-800">
+                                <h4 class="font-bold text-sm text-slate-900 line-clamp-1">${artTitle}</h4>
+                                <p class="text-xs text-slate-600 mt-1 line-clamp-2">${artExcerpt}</p>
+                                <div class="mt-2 pt-2 border-t border-slate-100 flex justify-end">
+                                    <a href="/articles/${art.id}" target="_blank" class="text-xs bg-indigo-50 hover:bg-indigo-600 hover:text-white text-indigo-700 font-medium px-3 py-1 rounded-xl shadow-sm transition-all duration-200 flex items-center space-x-1">
+                                        <span>${currentLocale === 'hi' ? 'पूरा लेख पढ़ें' : 'Read Article'}</span>
+                                        <i data-lucide="external-link" class="w-3 h-3"></i>
+                                    </a>
+                                </div>
+                            </div>
+                        `;
+                    });
+                    html += `</div></div>`;
+                }
+
+                if (detailedAnswer !== '') {
+                    html += `
+                        <div id="${detailsPanelId}" class="hidden mt-2 rounded-xl border border-indigo-100 bg-indigo-50/70 p-3 text-xs leading-relaxed text-slate-700">
+                            ${formatDetailedAnswer(detailedAnswer)}
+                        </div>
+                    `;
+                }
+            }
+
             if (msg.department_info) {
+                chatbotDetailBlockCounter += 1;
+                const deptPanelId = `chatbot-department-panel-${chatbotDetailBlockCounter}`;
+                const deptBtnId = `chatbot-department-btn-${chatbotDetailBlockCounter}`;
                 html += `
-                    <div class="bg-teal-50 border border-teal-200 p-3.5 rounded-2xl text-teal-950 text-xs shadow-2xs mt-2 flex items-start space-x-2.5">
-                        <i data-lucide="info" class="w-4 h-4 text-teal-600 shrink-0 mt-0.5 animate-pulse"></i>
-                        <div>
-                            <span class="font-extrabold block text-teal-900 mb-0.5">${currentLocale === 'hi' ? 'अनुशंसित विभाग / परामर्श:' : 'Recommended Department / Action:'}</span>
-                            <span class="leading-relaxed font-medium">${msg.department_info}</span>
+                    <div class="mt-2">
+                        <button id="${deptBtnId}" type="button" onclick="toggleChatbotActionPanel('${deptBtnId}','${deptPanelId}')" class="chatbot-action-btn">
+                            ${currentLocale === 'hi' ? 'अनुशंसित विभाग / परामर्श' : 'Recommended Department / Action'}
+                        </button>
+                        <div id="${deptPanelId}" class="hidden bg-teal-50 border border-teal-200 p-3.5 rounded-2xl text-teal-950 text-xs shadow-2xs mt-2 flex items-start space-x-2.5">
+                            <i data-lucide="info" class="w-4 h-4 text-teal-600 shrink-0 mt-0.5 animate-pulse"></i>
+                            <div>
+                                <span class="leading-relaxed font-medium">${msg.department_info}</span>
+                            </div>
                         </div>
                     </div>
                 `;
             }
 
-            if (msg.doctors && msg.doctors.length > 0) {
+            if (!symptomActionMode && !hasRelatedSections && msg.doctors && msg.doctors.length > 0) {
                 html += `<div class="space-y-2 pt-2"><h5 class="text-xs font-bold text-slate-400 uppercase tracking-wider">${currentLocale === 'hi' ? 'विशेषज्ञ डॉक्टर' : 'Specialist Doctors'}</h5>`;
                 msg.doctors.forEach(doc => {
                     const fullName = `Dr. ${doc.first_name} ${doc.last_name}`;
@@ -1064,7 +1374,7 @@
                 html += `</div>`;
             }
 
-            if (msg.hospitals && msg.hospitals.length > 0) {
+            if (!symptomActionMode && !hasRelatedSections && msg.hospitals && msg.hospitals.length > 0) {
                 html += `<div class="space-y-2 pt-2 border-t border-slate-100"><h5 class="text-xs font-bold text-slate-400 uppercase tracking-wider">${currentLocale === 'hi' ? 'अस्पताल व क्लिनिक' : 'Hospitals & Clinics'}</h5>`;
                 msg.hospitals.forEach(hosp => {
                     const hospName = getLocalizedText(hosp.name);
@@ -1109,7 +1419,7 @@
                 html += `</div>`;
             }
 
-            if (msg.doctors && msg.doctors.length > 0 && msg.see_all_doctors_url) {
+            if (!symptomActionMode && !hasRelatedSections && msg.doctors && msg.doctors.length > 0 && msg.see_all_doctors_url) {
                 html += `
                     <div class="pt-1">
                         <a href="${msg.see_all_doctors_url}" class="inline-flex items-center space-x-1 text-xs bg-teal-50 hover:bg-teal-600 hover:text-white text-teal-700 font-medium px-3 py-1 rounded-xl shadow-sm transition-all duration-200">
@@ -1119,7 +1429,7 @@
                 `;
             }
 
-            if (msg.articles && msg.articles.length > 0) {
+            if (!hasRelatedSections && msg.articles && msg.articles.length > 0) {
                 html += `<div class="space-y-2 pt-2 border-t border-slate-100"><h5 class="text-xs font-bold text-slate-400 uppercase tracking-wider">${currentLocale === 'hi' ? 'स्वास्थ्य लेख' : 'Health Articles'}</h5>`;
                 msg.articles.forEach(art => {
                     const artTitle = getLocalizedText(art.title);
@@ -1296,6 +1606,26 @@
             color: #fff;
             box-shadow: 0 10px 20px rgba(79, 70, 229, 0.2);
         }
+        .chatbot-action-btn {
+            background: #ffffff;
+            border: 1px solid #c7d2fe;
+            color: #3730a3;
+            border-radius: 9999px;
+            font-size: 11px;
+            font-weight: 700;
+            padding: 0.3rem 0.7rem;
+            transition: all 0.2s ease;
+        }
+        .chatbot-action-btn:hover {
+            background: #eef2ff;
+            border-color: #a5b4fc;
+            color: #312e81;
+        }
+        .chatbot-action-btn.active {
+            background: #4f46e5;
+            border-color: #4f46e5;
+            color: #ffffff;
+        }
         #chatbot-form input:disabled {
             opacity: 0.7;
             cursor: not-allowed;
@@ -1360,7 +1690,7 @@
             40% { transform: translateY(-4px); opacity: 1; }
         }
         #chatbot-messages::-webkit-scrollbar {
-            width: 8px;
+            width: 5px;
         }
         #chatbot-messages::-webkit-scrollbar-thumb {
             background: #cbd5e1;

@@ -113,13 +113,22 @@ class ChatbotController extends Controller
         if (! $matchedDeptId) {
             $allDiseases = Disease::with('department')->get();
             foreach ($allDiseases as $disease) {
-                if (! empty($disease->name_en) && stripos($userMessage, $disease->name_en) !== false) {
+                $diseaseNameEn = trim((string) $disease->name_en);
+                $diseaseNameHi = trim((string) ($disease->name_hi ?? ''));
+
+                if (
+                    $diseaseNameEn !== '' &&
+                    (stripos($userMessage, $diseaseNameEn) !== false || stripos($diseaseNameEn, $userMessage) !== false)
+                ) {
                     $matchedDeptId = $disease->department_id;
                     $matchedDiseaseNameEn = $disease->name_en;
                     $matchedDiseaseNameHi = $disease->name_hi;
                     break;
                 }
-                if (! empty($disease->name_hi) && mb_stripos($userMessage, $disease->name_hi) !== false) {
+                if (
+                    $diseaseNameHi !== '' &&
+                    (mb_stripos($userMessage, $diseaseNameHi) !== false || mb_stripos($diseaseNameHi, $userMessage) !== false)
+                ) {
                     $matchedDeptId = $disease->department_id;
                     $matchedDiseaseNameEn = $disease->name_en;
                     $matchedDiseaseNameHi = $disease->name_hi;
@@ -131,11 +140,20 @@ class ChatbotController extends Controller
         if (! $matchedDeptId) {
             $allDepartments = Department::where('is_active', true)->get();
             foreach ($allDepartments as $dept) {
-                if (! empty($dept->name_en) && stripos($userMessage, $dept->name_en) !== false) {
+                $deptNameEn = trim((string) $dept->name_en);
+                $deptNameHi = trim((string) ($dept->name_hi ?? ''));
+
+                if (
+                    $deptNameEn !== '' &&
+                    (stripos($userMessage, $deptNameEn) !== false || stripos($deptNameEn, $userMessage) !== false)
+                ) {
                     $matchedDeptId = $dept->id;
                     break;
                 }
-                if (! empty($dept->name_hi) && mb_stripos($userMessage, $dept->name_hi) !== false) {
+                if (
+                    $deptNameHi !== '' &&
+                    (mb_stripos($userMessage, $deptNameHi) !== false || mb_stripos($deptNameHi, $userMessage) !== false)
+                ) {
                     $matchedDeptId = $dept->id;
                     break;
                 }
@@ -190,7 +208,7 @@ class ChatbotController extends Controller
                             ->orWhereRaw("CONCAT(first_name, ' ', last_name) LIKE ?", ["%{$userMessage}%"]);
                     }
                 })
-                ->take(5)
+                ->take(3)
                 ->get();
         }
 
@@ -211,7 +229,7 @@ class ChatbotController extends Controller
                         ->orWhere('type', 'LIKE', "%{$userMessage}%");
                 }
             })
-            ->take(5)
+            ->take(3)
             ->get();
 
         if ($hospitals->isEmpty()) {
@@ -235,6 +253,7 @@ class ChatbotController extends Controller
         $deptForFilter = $matchedDeptId ?: (optional($doctors->first())->department_id ?? 'All');
         $seeAllDoctorsUrl = route('doctors.index', ['city' => $selectedCity, 'department' => $deptForFilter ?: 'All']);
         $seeAllHospitalsUrl = route('hospitals.index', ['city' => $selectedCity]);
+        $symptomMatch = (bool) $qaAnswer && in_array(($qaAnswer['source'] ?? ''), ['cached_medical_questions', 'medical_qa_config'], true);
 
         if ($qaAnswer && ($qaAnswer['source'] ?? '') === 'emergency_rule') {
             $botReply = $locale === 'hi'
@@ -258,6 +277,7 @@ class ChatbotController extends Controller
             'city' => $selectedCity,
             'locale' => $locale,
             'qa_answer' => $qaAnswer,
+            'symptom_match' => $symptomMatch,
             'department_info' => $departmentInfo,
             'doctors' => $doctors,
             'hospitals' => $hospitals,
@@ -276,6 +296,7 @@ class ChatbotController extends Controller
             'city_options' => $cityOptions,
             'locale' => $locale,
             'qa_answer' => $qaAnswer,
+            'symptom_match' => $symptomMatch,
             'department_info' => $departmentInfo,
             'doctors' => $doctors,
             'hospitals' => $hospitals,

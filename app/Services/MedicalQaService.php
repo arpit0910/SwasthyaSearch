@@ -24,6 +24,11 @@ class MedicalQaService
             return $emergencyAnswer;
         }
 
+        $likeMatch = $this->findLikeMatch($message, $locale);
+        if ($likeMatch) {
+            return $likeMatch;
+        }
+
         $entries = $this->buildKnowledgeEntries();
         if ($entries->isEmpty()) {
             return null;
@@ -68,6 +73,104 @@ class MedicalQaService
             'category' => (string) ($best['category'] ?? 'General Medical'),
             'source' => (string) ($best['source'] ?? 'faq_dataset'),
             'confidence' => round($bestScore, 2),
+            'detailed_answer_en' => $detailedAnswerEn !== '' ? $detailedAnswerEn : null,
+            'detailed_answer_hi' => $detailedAnswerHi !== '' ? $detailedAnswerHi : null,
+            'detailed_answer' => $detailedAnswer,
+        ];
+    }
+
+    /**
+     * Direct %LIKE%-style matching to handle short symptom/disease prompts
+     * such as "HIV", "AIDS", and slash/variant forms like "HIV/AIDS".
+     *
+     * @return array{question:string,answer:string,category:string,source:string,confidence:float,detailed_answer_en:?string,detailed_answer_hi:?string,detailed_answer:?string}|null
+     */
+    private function findLikeMatch(string $message, string $locale): ?array
+    {
+        $raw = trim($message);
+        if ($raw === '') {
+            return null;
+        }
+
+        $terms = $this->expandSearchTerms($raw);
+        if (empty($terms)) {
+            return null;
+        }
+
+        $query = CachedMedicalQuestion::query();
+        $query->where(function ($outer) use ($terms) {
+            foreach ($terms as $term) {
+                $outer->orWhere(function ($inner) use ($term) {
+                    $inner->where('question_en', 'like', "%{$term}%")
+                        ->orWhere('question_hi', 'like', "%{$term}%")
+                        ->orWhere('answer_en', 'like', "%{$term}%")
+                        ->orWhere('answer_hi', 'like', "%{$term}%")
+                        ->orWhere('detailed_answer_en', 'like', "%{$term}%")
+                        ->orWhere('detailed_answer_hi', 'like', "%{$term}%")
+                        ->orWhere('category', 'like', "%{$term}%");
+                });
+            }
+        });
+
+        $candidates = $query->limit(50)->get();
+        if ($candidates->isEmpty()) {
+            return null;
+        }
+
+        $normalizedMessage = $this->normalize($message);
+        $best = null;
+        $bestScore = -1.0;
+
+        foreach ($candidates as $candidate) {
+            $score = $this->scoreMatch(
+                $normalizedMessage,
+                $this->normalize((string) $candidate->question_en),
+                $this->normalize((string) $candidate->question_hi),
+                []
+            );
+
+            foreach ($terms as $term) {
+                $termNorm = $this->normalize($term);
+                if ($termNorm !== '' && (
+                    str_contains($this->normalize((string) $candidate->question_en), $termNorm) ||
+                    str_contains($this->normalize((string) $candidate->question_hi), $termNorm) ||
+                    str_contains($this->normalize((string) $candidate->answer_en), $termNorm) ||
+                    str_contains($this->normalize((string) $candidate->answer_hi), $termNorm)
+                )) {
+                    $score += 12;
+                }
+            }
+
+            if ($score > $bestScore) {
+                $bestScore = $score;
+                $best = $candidate;
+            }
+        }
+
+        if (! $best) {
+            return null;
+        }
+
+        $answer = $locale === 'hi'
+            ? ($best->answer_hi ?: $best->answer_en)
+            : ($best->answer_en ?: $best->answer_hi);
+
+        $question = $locale === 'hi'
+            ? ($best->question_hi ?: $best->question_en)
+            : ($best->question_en ?: $best->question_hi);
+
+        $detailedAnswerEn = trim((string) ($best->detailed_answer_en ?? ''));
+        $detailedAnswerHi = trim((string) ($best->detailed_answer_hi ?? ''));
+        $detailedAnswer = $locale === 'hi'
+            ? ($detailedAnswerHi !== '' ? $detailedAnswerHi : ($detailedAnswerEn !== '' ? $detailedAnswerEn : null))
+            : ($detailedAnswerEn !== '' ? $detailedAnswerEn : ($detailedAnswerHi !== '' ? $detailedAnswerHi : null));
+
+        return [
+            'question' => (string) $question,
+            'answer' => (string) $answer,
+            'category' => (string) ($best->category ?? 'General Medical'),
+            'source' => 'cached_medical_questions_like',
+            'confidence' => round(min(100, max(60, $bestScore)), 2),
             'detailed_answer_en' => $detailedAnswerEn !== '' ? $detailedAnswerEn : null,
             'detailed_answer_hi' => $detailedAnswerHi !== '' ? $detailedAnswerHi : null,
             'detailed_answer' => $detailedAnswer,
@@ -255,6 +358,41 @@ class MedicalQaService
         $text = preg_replace('/[^\p{L}\p{N}\s]/u', ' ', $text) ?? $text;
         $text = preg_replace('/\s+/u', ' ', $text) ?? $text;
         return trim($text);
+    }
+
+    /**
+     * @return string[]
+     */
+    private function expandSearchTerms(string $message): array
+    {
+        $raw = trim($message);
+        $normalized = $this->normalize($raw);
+        $tokens = $this->tokenize($normalized);
+
+        $terms = collect([$raw, $normalized])
+            ->merge($tokens)
+            ->filter(fn ($term) => trim((string) $term) !== '')
+            ->values();
+
+        $aliases = [
+            'hiv' => ['aids', 'hiv aids', 'hiv/aids'],
+            'aids' => ['hiv', 'hiv aids', 'hiv/aids'],
+            'hiv aids' => ['hiv', 'aids', 'hiv/aids'],
+        ];
+
+        foreach ($terms as $term) {
+            $key = $this->normalize((string) $term);
+            if (isset($aliases[$key])) {
+                $terms = $terms->merge($aliases[$key]);
+            }
+        }
+
+        return $terms
+            ->map(fn ($term) => trim((string) $term))
+            ->filter(fn ($term) => $term !== '')
+            ->unique()
+            ->values()
+            ->all();
     }
 
     /**
