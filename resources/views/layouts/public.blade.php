@@ -235,13 +235,13 @@
     <!-- Header Navbar -->
     <nav class="sticky top-0 z-50 glass-panel shadow-sm transition-all duration-300">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div class="flex justify-between h-16 items-center gap-4">
+            <div class="flex justify-between min-h-16 py-2 items-center gap-2 sm:gap-4">
                 <div class="flex items-center min-w-0">
-                    <a href="{{ route('home') }}" class="flex items-center space-x-2 sm:space-x-3 group mr-2 sm:mr-6 shrink-0">
-                        <div class="p-2.5 bg-gradient-to-tr from-teal-500 to-indigo-600 rounded-2xl shadow-md group-hover:shadow-lg transition-all duration-300 transform group-hover:-translate-y-0.5">
+                    <a href="{{ route('home') }}" class="flex items-center space-x-1.5 sm:space-x-3 group mr-1 sm:mr-6 shrink min-w-0">
+                        <div class="p-2 sm:p-2.5 bg-gradient-to-tr from-teal-500 to-indigo-600 rounded-2xl shadow-md group-hover:shadow-lg transition-all duration-300 transform group-hover:-translate-y-0.5 shrink-0">
                             <i data-lucide="heart-pulse" class="w-6 h-6 text-white animate-pulse"></i>
                         </div>
-                        <span class="text-xl sm:text-2xl font-bold bg-gradient-to-r from-slate-800 to-indigo-900 dark:from-slate-100 dark:to-indigo-300 bg-clip-text text-transparent tracking-tight py-1 leading-normal">
+                        <span class="brand-wordmark text-lg sm:text-2xl font-bold bg-gradient-to-r from-slate-800 to-indigo-900 dark:from-slate-100 dark:to-indigo-300 bg-clip-text text-transparent tracking-tight py-1 leading-normal truncate">
                             Swasthya<span class="text-teal-600 dark:text-teal-400">Search</span>
                         </span>
                     </a>
@@ -268,7 +268,7 @@
                     </div>
                 </div>
 
-                <div class="flex items-center gap-2 shrink-0">
+                <div class="flex items-center gap-1.5 sm:gap-2 shrink-0">
                     <div class="flex items-center bg-slate-100 dark:bg-slate-800 p-1 rounded-xl border border-slate-200/60 dark:border-slate-700/60 shadow-inner">
                         <form action="{{ route('switch.locale') }}" method="POST" class="inline">
                             @csrf
@@ -2629,6 +2629,12 @@
 
         .mobile-nav-item.active i {
             color: #0d9488;
+        }
+
+        @media (max-width: 420px) {
+            .brand-wordmark {
+                display: none;
+            }
         }
 
         @keyframes typingDot {

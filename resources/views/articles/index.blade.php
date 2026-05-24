@@ -22,7 +22,7 @@
 </header>
 
 <!-- Filter Bar -->
-<section class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 -mt-8 relative z-20 w-full mb-12">
+<section class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 mt-4 sm:-mt-8 relative z-20 w-full mb-12">
     <form action="{{ route('articles.index') }}" method="GET" data-auto-filter class="bg-white rounded-2xl shadow-xl border border-slate-200/80 p-5 sm:p-6 backdrop-blur-xl">
         <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 xl:grid-cols-12 gap-4 items-stretch">
             <!-- Search Input -->
@@ -59,7 +59,8 @@
             >
                 <i data-lucide="rotate-ccw" class="w-4 h-4"></i>
                 <span>{{ $locale === 'hi' ? 'रीसेट करें' : 'Reset Filters' }}</span>
-            </a>`r`n        </div>
+            </a>
+        </div>
     </form>
 </section>
 
@@ -152,5 +153,4 @@
     @endif
 </main>
 @endsection
-
 

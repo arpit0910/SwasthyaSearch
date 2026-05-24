@@ -22,7 +22,7 @@
                 @if ($paginator->onFirstPage())
                     <span class="px-3 py-2 rounded-xl text-xs font-bold text-slate-400 cursor-not-allowed">Prev</span>
                 @else
-                    <a href="{{ $paginator->previousPageUrl() }}" rel="prev" class="px-3 py-2 rounded-xl text-xs font-bold text-slate-700 dark:text-slate-200 hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors">Prev</a>
+                    <a href="{{ $paginator->previousPageUrl() }}" rel="prev" class="px-3 py-2 rounded-xl text-xs font-bold text-slate-700 dark:text-slate-200 bg-slate-50 dark:bg-slate-800/70 border border-slate-200 dark:border-slate-700 hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors">Prev</a>
                 @endif
 
                 @php $prevPage = null; @endphp
@@ -45,7 +45,7 @@
                 @endforeach
 
                 @if ($paginator->hasMorePages())
-                    <a href="{{ $paginator->nextPageUrl() }}" rel="next" class="px-3 py-2 rounded-xl text-xs font-bold text-slate-700 dark:text-slate-200 hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors">Next</a>
+                    <a href="{{ $paginator->nextPageUrl() }}" rel="next" class="px-3 py-2 rounded-xl text-xs font-bold text-slate-700 dark:text-slate-200 bg-slate-50 dark:bg-slate-800/70 border border-slate-200 dark:border-slate-700 hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors">Next</a>
                 @else
                     <span class="px-3 py-2 rounded-xl text-xs font-bold text-slate-400 cursor-not-allowed">Next</span>
                 @endif
@@ -56,7 +56,7 @@
             @if ($paginator->onFirstPage())
                 <span class="w-1/3 text-center px-3 py-2 rounded-xl text-xs font-bold text-slate-400 bg-slate-100 dark:bg-slate-800">Prev</span>
             @else
-                <a href="{{ $paginator->previousPageUrl() }}" rel="prev" class="w-1/3 text-center px-3 py-2 rounded-xl text-xs font-bold text-slate-700 dark:text-slate-200 bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-700">Prev</a>
+                <a href="{{ $paginator->previousPageUrl() }}" rel="prev" class="w-1/3 text-center px-3 py-2 rounded-xl text-xs font-bold text-slate-700 dark:text-slate-200 bg-slate-50 dark:bg-slate-800/70 border border-slate-200 dark:border-slate-700">Prev</a>
             @endif
 
             <span class="w-1/3 text-center text-xs font-bold text-slate-700 dark:text-slate-200">
@@ -64,11 +64,10 @@
             </span>
 
             @if ($paginator->hasMorePages())
-                <a href="{{ $paginator->nextPageUrl() }}" rel="next" class="w-1/3 text-center px-3 py-2 rounded-xl text-xs font-bold text-slate-700 dark:text-slate-200 bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-700">Next</a>
+                <a href="{{ $paginator->nextPageUrl() }}" rel="next" class="w-1/3 text-center px-3 py-2 rounded-xl text-xs font-bold text-slate-700 dark:text-slate-200 bg-slate-50 dark:bg-slate-800/70 border border-slate-200 dark:border-slate-700">Next</a>
             @else
                 <span class="w-1/3 text-center px-3 py-2 rounded-xl text-xs font-bold text-slate-400 bg-slate-100 dark:bg-slate-800">Next</span>
             @endif
         </div>
     </nav>
 @endif
-

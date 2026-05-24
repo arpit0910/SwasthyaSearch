@@ -30,7 +30,7 @@
     </header>
 
     <!-- Filter Bar -->
-    <section class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 -mt-8 relative z-20 w-full mb-10">
+    <section class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 mt-4 sm:-mt-8 relative z-20 w-full mb-10">
         <form action="{{ route('diseases.index') }}" method="GET" data-auto-filter
             class="bg-white rounded-2xl shadow-xl border border-slate-200/80 p-6 backdrop-blur-xl">
             <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
