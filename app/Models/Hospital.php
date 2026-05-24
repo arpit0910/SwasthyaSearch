@@ -17,6 +17,7 @@ class Hospital extends Model
         'address',
         'address_line1',
         'address_line2',
+        'landmark',
         'city',
         'state',
         'pincode',
@@ -36,7 +37,7 @@ class Hospital extends Model
         'rgahs_approved',
     ];
 
-    protected $appends = ['name'];
+    protected $appends = ['name', 'display_address'];
 
     protected $casts = [
         'is_verified' => 'boolean',
@@ -88,12 +89,35 @@ class Hospital extends Model
         ];
     }
 
+    public function getDisplayAddressAttribute(): string
+    {
+        $parts = array_filter([
+            $this->address_line1,
+            $this->address_line2,
+            $this->city,
+            $this->state,
+        ], fn($value) => !empty(trim((string)$value)));
+
+        $address = implode(', ', $parts);
+        if (!empty($this->pincode)) {
+            $address .= ($address !== '' ? ' - ' : '') . $this->pincode;
+        }
+
+        return $address;
+    }
+
     public function setNameAttribute($value)
     {
         if (is_array($value)) {
             $this->attributes['name_en'] = $value['en'] ?? null;
             $this->attributes['name_hi'] = $value['hi'] ?? null;
         }
+    }
+
+    public function setAddressAttribute($value): void
+    {
+        // Prevent using denormalized display address as canonical source.
+        $this->attributes['address'] = null;
     }
 
     public function getTranslation(string $field, string $locale): ?string

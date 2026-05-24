@@ -38,11 +38,6 @@
                             <input type="text" name="city" class="form-control" value="{{ $hospital->city }}"
                                 required>
                         </div>
-                        <div class="col-12">
-                            <label class="form-label fw-semibold">Complete Address (Display)</label>
-                            <input type="text" name="address" class="form-control" value="{{ $hospital->address }}"
-                                required>
-                        </div>
                         <div class="col-md-6">
                             <label class="form-label fw-semibold">Address Line 1</label>
                             <input type="text" name="address_line1" class="form-control"
@@ -52,6 +47,11 @@
                             <label class="form-label fw-semibold">Address Line 2</label>
                             <input type="text" name="address_line2" class="form-control"
                                 value="{{ $hospital->address_line2 }}">
+                        </div>
+                        <div class="col-md-6">
+                            <label class="form-label fw-semibold">Landmark</label>
+                            <input type="text" name="landmark" class="form-control"
+                                value="{{ $hospital->landmark }}" placeholder="Near Metro Station / Mall">
                         </div>
                         <div class="col-md-6">
                             <label class="form-label fw-semibold">State</label>
@@ -75,7 +75,7 @@
                         <div class="col-md-6">
                             <label class="form-label fw-semibold">Emergency Helpline</label>
                             <div class="input-group">
-                                <input type="text" name="emergency_country_code" class="form-control" style="max-width: 80px;" value="{{ $hospital->emergency_country_code ?? '+91' }}" placeholder="+91">
+                                <input type="text" name="emergency_country_code" class="form-control" style="max-width: 80px;" value="{{ !empty($hospital->emergency_country_code) ? ('+' . ltrim($hospital->emergency_country_code, '+')) : '+91' }}" placeholder="+91">
                                 <input type="text" name="emergency_phone" class="form-control" value="{{ $hospital->emergency_phone }}" required placeholder="11 2345 6789">
                             </div>
                         </div>

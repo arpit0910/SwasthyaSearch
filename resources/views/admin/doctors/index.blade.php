@@ -50,6 +50,9 @@
                                         <div class="text-muted fs-7">
                                             {{ is_array($doctor->education_degrees) ? implode(', ', $doctor->education_degrees) : $doctor->education_degrees }}
                                         </div>
+                                        @if(!empty($doctor->landmark))
+                                            <div class="text-muted fs-7">Landmark: {{ $doctor->landmark }}</div>
+                                        @endif
                                     </td>
                                     <td>
                                         @forelse($doctor->departments as $dept)

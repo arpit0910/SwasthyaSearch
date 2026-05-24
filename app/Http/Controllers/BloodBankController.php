@@ -9,6 +9,10 @@ class BloodBankController extends Controller
 {
     public function index(Request $request)
     {
+        $userLat = $request->filled('user_lat') ? (float)$request->input('user_lat') : null;
+        $userLng = $request->filled('user_lng') ? (float)$request->input('user_lng') : null;
+        $hasUserLocation = is_numeric($userLat) && is_numeric($userLng);
+
         $query = BloodBank::where('is_verified', true)->latest();
 
         // Filter by City
@@ -53,16 +57,17 @@ class BloodBankController extends Controller
 
         return view('blood_banks.index', [
             'bloodBanks' => $query
-                ->paginate(12)
+                ->paginate(30)
                 ->withQueryString()
-                ->through(fn(BloodBank $bank) => $this->formatBloodBank($bank)),
+                ->through(fn(BloodBank $bank) => $this->formatBloodBank($bank, $userLat, $userLng)),
             'cities' => $cities,
             'bloodGroups' => $bloodGroups,
-            'filters' => $request->only(['city', 'blood_group', 'facility', 'search']),
+            'filters' => $request->only(['city', 'blood_group', 'facility', 'search', 'user_lat', 'user_lng']),
+            'hasUserLocation' => $hasUserLocation,
         ]);
     }
 
-    private function formatBloodBank(BloodBank $bank): array
+    private function formatBloodBank(BloodBank $bank, ?float $userLat = null, ?float $userLng = null): array
     {
         return [
             'id' => $bank->id,
@@ -92,6 +97,30 @@ class BloodBankController extends Controller
             'apheresis_facility' => $bank->apheresis_facility,
             'available_blood_groups' => $bank->available_blood_groups ?: [],
             'last_updated_stock_at' => $bank->last_updated_stock_at,
+            'distance_km' => $this->calculateDistanceKm($userLat, $userLng, $bank->latitude, $bank->longitude),
         ];
+    }
+
+    private function calculateDistanceKm(?float $userLat, ?float $userLng, $targetLat, $targetLng): ?float
+    {
+        if (!is_numeric($userLat) || !is_numeric($userLng) || !is_numeric($targetLat) || !is_numeric($targetLng)) {
+            return null;
+        }
+
+        $earthRadius = 6371;
+        $latFrom = deg2rad((float)$userLat);
+        $lonFrom = deg2rad((float)$userLng);
+        $latTo = deg2rad((float)$targetLat);
+        $lonTo = deg2rad((float)$targetLng);
+
+        $latDelta = $latTo - $latFrom;
+        $lonDelta = $lonTo - $lonFrom;
+
+        $angle = 2 * asin(sqrt(
+            pow(sin($latDelta / 2), 2) +
+            cos($latFrom) * cos($latTo) * pow(sin($lonDelta / 2), 2)
+        ));
+
+        return round($angle * $earthRadius, 1);
     }
 }

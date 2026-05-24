@@ -35,4 +35,12 @@ return [
         ],
     ],
 
+    'google_places' => [
+        'api_key' => env('GOOGLE_PLACES_API_KEY'),
+    ],
+
+    'free_geo' => [
+        'disable_ssl_verify' => env('FREE_GEO_DISABLE_SSL_VERIFY', false),
+    ],
+
 ];

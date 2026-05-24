@@ -2,6 +2,10 @@
 
 @section('title', ($locale === 'hi' ? 'संपर्क करें' : 'Contact Us') . ' - SwasthyaSearch')
 
+@section('meta_title', $locale === 'hi' ? 'संपर्क करें | SwasthyaSearch' : 'Contact SwasthyaSearch | Support & Listing Corrections')
+@section('meta_description', $locale === 'hi'
+    ? 'SwasthyaSearch सहायता टीम से संपर्क करें। डॉक्टर, अस्पताल और ब्लड बैंक सूचीकरण सुधार, सुझाव और सपोर्ट के लिए संदेश भेजें।'
+    : 'Contact SwasthyaSearch support for listing corrections, suggestions, and assistance related to doctors, hospitals, and blood banks.')
 @section('content')
 <!-- Hero Section -->
 <header class="bg-gradient-to-r from-slate-900 via-indigo-950 to-slate-900 text-white py-16 px-4 sm:px-6 lg:px-8 border-b border-slate-800 shadow-xl relative overflow-hidden">

@@ -1,70 +1,81 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="{{ str_replace('_', '-', app()->getLocale()) }}">
+
 <head>
+    <script>
+        (function() {
+            const theme = localStorage.getItem('theme');
+            if (theme === 'dark' || (!theme && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
+                document.documentElement.classList.add('dark');
+            } else {
+                document.documentElement.classList.remove('dark');
+            }
+        })();
+    </script>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta name="csrf-token" content="{{ csrf_token() }}">
     @php
-        $appName = config('app.name', 'SwasthyaSearch');
-        $siteUrl = rtrim(config('app.url', url('/')), '/');
-        $currentUrl = url()->current();
-        $hasQuery = request()->getQueryString() !== null;
-        $locale = session('locale', app()->getLocale());
-        $isHindi = $locale === 'hi';
+    $appName = config('app.name', 'SwasthyaSearch');
+    $siteUrl = rtrim(config('app.url', url('/')), '/');
+    $currentUrl = url()->current();
+    $hasQuery = request()->getQueryString() !== null;
+    $locale = session('locale', app()->getLocale());
+    $isHindi = $locale === 'hi';
 
-        $defaultTitle = $isHindi
-            ? 'SwasthyaSearch - डॉक्टर, अस्पताल और ब्लड बैंक खोजें'
-            : 'SwasthyaSearch - Find Doctors, Hospitals, and Blood Banks';
-        $defaultDescription = $isHindi
-            ? 'SwasthyaSearch पर अपने शहर में सत्यापित डॉक्टर, अस्पताल, क्लिनिक और ब्लड बैंक खोजें।'
-            : 'Find verified doctors, hospitals, clinics, blood banks, and health articles near you on SwasthyaSearch.';
+    $defaultTitle = $isHindi
+    ? 'SwasthyaSearch - डॉक्टर, अस्पताल और ब्लड बैंक खोजें'
+    : 'SwasthyaSearch - Find Doctors, Hospitals, and Blood Banks';
+    $defaultDescription = $isHindi
+    ? 'SwasthyaSearch पर अपने शहर में सत्यापित डॉक्टर, अस्पताल, क्लिनिक और ब्लड बैंक खोजें।'
+    : 'Find verified doctors, hospitals, clinics, blood banks, and health articles near you on SwasthyaSearch.';
 
-        $routeName = request()->route()?->getName() ?? '';
-        $routeSeo = [
-            'home' => [
-                'title' => $isHindi ? 'SwasthyaSearch - अपने पास विश्वसनीय स्वास्थ्य सेवा खोजें' : 'SwasthyaSearch - Trusted Healthcare Discovery Near You',
-                'description' => $isHindi ? 'लक्षण, विभाग, शहर या नाम से डॉक्टर, अस्पताल और ब्लड बैंक खोजें।' : 'Search doctors, hospitals, blood banks, and departments by symptom, city, or keyword.',
-            ],
-            'doctors.index' => [
-                'title' => $isHindi ? 'डॉक्टर्स डायरेक्टरी | SwasthyaSearch' : 'Doctors Directory | SwasthyaSearch',
-                'description' => $isHindi ? 'अपने शहर में सत्यापित विशेषज्ञ डॉक्टर खोजें।' : 'Browse verified specialist doctors by city, department, and experience.',
-            ],
-            'hospitals.index' => [
-                'title' => $isHindi ? 'अस्पताल और क्लिनिक डायरेक्टरी | SwasthyaSearch' : 'Hospitals & Clinics Directory | SwasthyaSearch',
-                'description' => $isHindi ? 'अपने शहर के अस्पताल और क्लिनिक खोजें।' : 'Find verified hospitals and clinics with location and contact details.',
-            ],
-            'blood_banks.index' => [
-                'title' => $isHindi ? 'ब्लड बैंक डायरेक्टरी | SwasthyaSearch' : 'Blood Banks Directory | SwasthyaSearch',
-                'description' => $isHindi ? 'अपने शहर में ब्लड बैंक खोजें और उपलब्धता फोन पर पुष्टि करें।' : 'Find blood banks by city and blood group. Call to confirm current availability.',
-            ],
-            'articles.index' => [
-                'title' => $isHindi ? 'स्वास्थ्य लेख | SwasthyaSearch' : 'Health Articles | SwasthyaSearch',
-                'description' => $isHindi ? 'स्वास्थ्य, पोषण और वेलनेस पर उपयोगी लेख पढ़ें।' : 'Read useful health, wellness, and medical awareness articles.',
-            ],
-            'about' => [
-                'title' => $isHindi ? 'हमारे बारे में | SwasthyaSearch' : 'About Us | SwasthyaSearch',
-                'description' => $isHindi ? 'SwasthyaSearch का मिशन: भरोसेमंद हेल्थकेयर खोज को सरल बनाना।' : 'Learn about SwasthyaSearch and our mission for transparent healthcare discovery.',
-            ],
-            'contact' => [
-                'title' => $isHindi ? 'संपर्क करें | SwasthyaSearch' : 'Contact Us | SwasthyaSearch',
-                'description' => $isHindi ? 'SwasthyaSearch सहायता और प्रतिक्रिया के लिए संपर्क करें।' : 'Contact SwasthyaSearch for support, corrections, and feedback.',
-            ],
-        ];
-        $computedTitle = $routeSeo[$routeName]['title'] ?? $defaultTitle;
-        $computedDescription = $routeSeo[$routeName]['description'] ?? $defaultDescription;
-        $metaTitle = trim($__env->yieldContent('meta_title', $__env->yieldContent('title', $computedTitle)));
-        $metaDescription = trim($__env->yieldContent('meta_description', $computedDescription));
-        $defaultCanonical = $currentUrl;
-        $filterableRoutes = ['doctors.index', 'hospitals.index', 'blood_banks.index', 'articles.index'];
-        $isFilterRoute = in_array($routeName, $filterableRoutes, true);
-        $canonicalUrl = trim($__env->yieldContent('canonical_url', ($isFilterRoute && $hasQuery) ? route($routeName) : $defaultCanonical));
-        $defaultRobots = ($isFilterRoute && $hasQuery)
-            ? 'noindex,follow,max-image-preview:large,max-snippet:-1,max-video-preview:-1'
-            : 'index,follow,max-image-preview:large,max-snippet:-1,max-video-preview:-1';
-        $metaRobots = trim($__env->yieldContent('meta_robots', $defaultRobots));
-        $metaKeywords = trim($__env->yieldContent('meta_keywords', 'doctors directory, hospitals directory, blood banks, healthcare search, medical specialists'));
-        $ogImage = trim($__env->yieldContent('og_image', $siteUrl . '/favicon.ico'));
-        $ogType = trim($__env->yieldContent('og_type', request()->routeIs('articles.show') ? 'article' : 'website'));
+    $routeName = request()->route()?->getName() ?? '';
+    $routeSeo = [
+    'home' => [
+    'title' => $isHindi ? 'SwasthyaSearch - अपने पास विश्वसनीय स्वास्थ्य सेवा खोजें' : 'SwasthyaSearch - Trusted Healthcare Discovery Near You',
+    'description' => $isHindi ? 'लक्षण, विभाग, शहर या नाम से डॉक्टर, अस्पताल और ब्लड बैंक खोजें।' : 'Search doctors, hospitals, blood banks, and departments by symptom, city, or keyword.',
+    ],
+    'doctors.index' => [
+    'title' => $isHindi ? 'डॉक्टर्स डायरेक्टरी | SwasthyaSearch' : 'Doctors Directory | SwasthyaSearch',
+    'description' => $isHindi ? 'अपने शहर में सत्यापित विशेषज्ञ डॉक्टर खोजें।' : 'Browse verified specialist doctors by city, department, and experience.',
+    ],
+    'hospitals.index' => [
+    'title' => $isHindi ? 'अस्पताल और क्लिनिक डायरेक्टरी | SwasthyaSearch' : 'Hospitals & Clinics Directory | SwasthyaSearch',
+    'description' => $isHindi ? 'अपने शहर के अस्पताल और क्लिनिक खोजें।' : 'Find verified hospitals and clinics with location and contact details.',
+    ],
+    'blood_banks.index' => [
+    'title' => $isHindi ? 'ब्लड बैंक डायरेक्टरी | SwasthyaSearch' : 'Blood Banks Directory | SwasthyaSearch',
+    'description' => $isHindi ? 'अपने शहर में ब्लड बैंक खोजें और उपलब्धता फोन पर पुष्टि करें।' : 'Find blood banks by city and blood group. Call to confirm current availability.',
+    ],
+    'articles.index' => [
+    'title' => $isHindi ? 'स्वास्थ्य लेख | SwasthyaSearch' : 'Health Articles | SwasthyaSearch',
+    'description' => $isHindi ? 'स्वास्थ्य, पोषण और वेलनेस पर उपयोगी लेख पढ़ें।' : 'Read useful health, wellness, and medical awareness articles.',
+    ],
+    'about' => [
+    'title' => $isHindi ? 'हमारे बारे में | SwasthyaSearch' : 'About Us | SwasthyaSearch',
+    'description' => $isHindi ? 'SwasthyaSearch का मिशन: भरोसेमंद हेल्थकेयर खोज को सरल बनाना।' : 'Learn about SwasthyaSearch and our mission for transparent healthcare discovery.',
+    ],
+    'contact' => [
+    'title' => $isHindi ? 'संपर्क करें | SwasthyaSearch' : 'Contact Us | SwasthyaSearch',
+    'description' => $isHindi ? 'SwasthyaSearch सहायता और प्रतिक्रिया के लिए संपर्क करें।' : 'Contact SwasthyaSearch for support, corrections, and feedback.',
+    ],
+    ];
+    $computedTitle = $routeSeo[$routeName]['title'] ?? $defaultTitle;
+    $computedDescription = $routeSeo[$routeName]['description'] ?? $defaultDescription;
+    $metaTitle = trim($__env->yieldContent('meta_title', $__env->yieldContent('title', $computedTitle)));
+    $metaDescription = trim($__env->yieldContent('meta_description', $computedDescription));
+    $defaultCanonical = $currentUrl;
+    $filterableRoutes = ['doctors.index', 'hospitals.index', 'blood_banks.index', 'articles.index'];
+    $isFilterRoute = in_array($routeName, $filterableRoutes, true);
+    $canonicalUrl = trim($__env->yieldContent('canonical_url', ($isFilterRoute && $hasQuery) ? route($routeName) : $defaultCanonical));
+    $defaultRobots = ($isFilterRoute && $hasQuery)
+    ? 'noindex,follow,max-image-preview:large,max-snippet:-1,max-video-preview:-1'
+    : 'index,follow,max-image-preview:large,max-snippet:-1,max-video-preview:-1';
+    $metaRobots = trim($__env->yieldContent('meta_robots', $defaultRobots));
+    $metaKeywords = trim($__env->yieldContent('meta_keywords', 'doctors directory, hospitals directory, blood banks, healthcare search, medical specialists'));
+    $ogImage = trim($__env->yieldContent('og_image', $siteUrl . '/favicon.ico'));
+    $ogType = trim($__env->yieldContent('og_type', request()->routeIs('articles.show') ? 'article' : 'website'));
     @endphp
 
     <title>{{ $metaTitle }}</title>
@@ -91,92 +102,106 @@
     <link rel="alternate" hreflang="x-default" href="{{ $canonicalUrl }}">
 
     <script type="application/ld+json">
-        {!! json_encode([
-            '@context' => 'https://schema.org',
-            '@type' => 'Organization',
-            'name' => $appName,
-            'url' => $siteUrl,
-            'logo' => $siteUrl . '/favicon.ico',
-            'sameAs' => [],
-        ], JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE) !!}
+        {
+            !!json_encode([
+                '@'.
+                'context' => 'https://schema.org',
+                '@type' => 'Organization',
+                'name' => $appName,
+                'url' => $siteUrl,
+                'logo' => $siteUrl.
+                '/favicon.ico',
+                'sameAs' => [],
+            ], JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE) !!
+        }
     </script>
     <script type="application/ld+json">
-        {!! json_encode([
-            '@context' => 'https://schema.org',
-            '@type' => 'WebSite',
-            'name' => $appName,
-            'url' => $siteUrl,
-            'inLanguage' => [$isHindi ? 'hi-IN' : 'en-IN', $isHindi ? 'en-IN' : 'hi-IN'],
-            'potentialAction' => [
-                '@type' => 'SearchAction',
-                'target' => $siteUrl . '/doctors?search={search_term_string}',
-                'query-input' => 'required name=search_term_string',
-            ],
-        ], JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE) !!}
-    </script>
-    <script type="application/ld+json">
-        {!! json_encode([
-            '@context' => 'https://schema.org',
-            '@type' => 'WebPage',
-            'name' => $metaTitle,
-            'description' => $metaDescription,
-            'url' => $canonicalUrl,
-            'inLanguage' => $isHindi ? 'hi-IN' : 'en-IN',
-            'isPartOf' => [
+        {
+            !!json_encode([
+                '@'.
+                'context' => 'https://schema.org',
                 '@type' => 'WebSite',
                 'name' => $appName,
                 'url' => $siteUrl,
-            ],
-        ], JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE) !!}
+                'inLanguage' => [$isHindi ? 'hi-IN' : 'en-IN', $isHindi ? 'en-IN' : 'hi-IN'],
+                'potentialAction' => [
+                    '@type' => 'SearchAction',
+                    'target' => $siteUrl.
+                    '/doctors?search={search_term_string}',
+                    'query-input' => 'required name=search_term_string',
+                ],
+            ], JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE) !!
+        }
+    </script>
+    <script type="application/ld+json">
+        {
+            !!json_encode([
+                '@'.
+                'context' => 'https://schema.org',
+                '@type' => 'WebPage',
+                'name' => $metaTitle,
+                'description' => $metaDescription,
+                'url' => $canonicalUrl,
+                'inLanguage' => $isHindi ? 'hi-IN' : 'en-IN',
+                'isPartOf' => [
+                    '@type' => 'WebSite',
+                    'name' => $appName,
+                    'url' => $siteUrl,
+                ],
+            ], JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE) !!
+        }
     </script>
     @php
-        $breadcrumbItems = [
-            ['name' => $isHindi ? 'होम' : 'Home', 'url' => route('home')],
-        ];
-        $routeCrumbs = [
-            'doctors.index' => $isHindi ? 'डॉक्टर्स' : 'Doctors',
-            'hospitals.index' => $isHindi ? 'अस्पताल' : 'Hospitals',
-            'blood_banks.index' => $isHindi ? 'ब्लड बैंक' : 'Blood Banks',
-            'articles.index' => $isHindi ? 'लेख' : 'Articles',
-            'articles.show' => $isHindi ? 'लेख विवरण' : 'Article',
-            'about' => $isHindi ? 'हमारे बारे में' : 'About',
-            'contact' => $isHindi ? 'संपर्क' : 'Contact',
-            'privacy.policy' => $isHindi ? 'गोपनीयता नीति' : 'Privacy Policy',
-            'terms.service' => $isHindi ? 'सेवा शर्तें' : 'Terms of Service',
-        ];
-        if (isset($routeCrumbs[$routeName])) {
-            $breadcrumbItems[] = ['name' => $routeCrumbs[$routeName], 'url' => $canonicalUrl];
-        }
-        if ($isFilterRoute && request('city') && request('city') !== 'All') {
-            $breadcrumbItems[] = ['name' => request('city'), 'url' => $currentUrl];
-        }
-        $breadcrumbSchema = [
-            '@context' => 'https://schema.org',
-            '@type' => 'BreadcrumbList',
-            'itemListElement' => collect($breadcrumbItems)->values()->map(function ($crumb, $i) {
-                return [
-                    '@type' => 'ListItem',
-                    'position' => $i + 1,
-                    'name' => $crumb['name'],
-                    'item' => $crumb['url'],
-                ];
-            })->all(),
-        ];
+    $breadcrumbItems = [
+    ['name' => $isHindi ? 'होम' : 'Home', 'url' => route('home')],
+    ];
+    $routeCrumbs = [
+    'doctors.index' => $isHindi ? 'डॉक्टर्स' : 'Doctors',
+    'hospitals.index' => $isHindi ? 'अस्पताल' : 'Hospitals',
+    'blood_banks.index' => $isHindi ? 'ब्लड बैंक' : 'Blood Banks',
+    'articles.index' => $isHindi ? 'लेख' : 'Articles',
+    'articles.show' => $isHindi ? 'लेख विवरण' : 'Article',
+    'about' => $isHindi ? 'हमारे बारे में' : 'About',
+    'contact' => $isHindi ? 'संपर्क' : 'Contact',
+    'privacy.policy' => $isHindi ? 'गोपनीयता नीति' : 'Privacy Policy',
+    'terms.service' => $isHindi ? 'सेवा शर्तें' : 'Terms of Service',
+    ];
+    if (isset($routeCrumbs[$routeName])) {
+    $breadcrumbItems[] = ['name' => $routeCrumbs[$routeName], 'url' => $canonicalUrl];
+    }
+    if ($isFilterRoute && request('city') && request('city') !== 'All') {
+    $breadcrumbItems[] = ['name' => request('city'), 'url' => $currentUrl];
+    }
+    $breadcrumbSchema = [
+    '@' . 'context' => 'https://schema.org',
+    '@type' => 'BreadcrumbList',
+    'itemListElement' => collect($breadcrumbItems)->values()->map(function ($crumb, $i) {
+    return [
+    '@type' => 'ListItem',
+    'position' => $i + 1,
+    'name' => $crumb['name'],
+    'item' => $crumb['url'],
+    ];
+    })->all(),
+    ];
     @endphp
     <script type="application/ld+json">
-        {!! json_encode($breadcrumbSchema, JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE) !!}
+        {
+            !!json_encode($breadcrumbSchema, JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE) !!
+        }
     </script>
     @yield('structured_data')
-    
+
     <!-- Google Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&family=Inter:wght@300;400;500;600;700&family=Noto+Sans+Devanagari:wght@400;500;600;700&family=Hind:wght@400;500;600;700&display=swap" rel="stylesheet">
-    
+
     <!-- Tailwind CSS CDN -->
     <script src="https://cdn.tailwindcss.com"></script>
     <script>
         tailwind.config = {
+            darkMode: 'class',
             theme: {
                 extend: {
                     fontFamily: {
@@ -186,28 +211,29 @@
             }
         }
     </script>
-    
+
     <!-- Lucide Icons CDN -->
     <script src="https://unpkg.com/lucide@latest"></script>
 </head>
-<body class="bg-[#F8FAFC] font-sans antialiased text-[#2D3748] min-h-screen flex flex-col selection:bg-teal-500 selection:text-white relative overflow-x-hidden {{ session('locale', app()->getLocale()) === 'hi' ? 'lang-hi' : '' }}">
-    <div class="pointer-events-none fixed inset-0 -z-10">
-        <div class="absolute -top-28 -left-24 w-80 h-80 rounded-full bg-teal-300/25 blur-3xl"></div>
-        <div class="absolute top-1/3 -right-24 w-80 h-80 rounded-full bg-indigo-300/25 blur-3xl"></div>
-        <div class="absolute -bottom-24 left-1/3 w-80 h-80 rounded-full bg-cyan-300/20 blur-3xl"></div>
+
+<body class="bg-[#F8FAFC] dark:bg-slate-950 font-sans antialiased text-[#2D3748] dark:text-slate-100 min-h-screen flex flex-col selection:bg-teal-500 selection:text-white relative overflow-x-hidden {{ session('locale', app()->getLocale()) === 'hi' ? 'lang-hi' : '' }}">
+    <div class="pointer-events-none fixed inset-0 -z-10 overflow-hidden">
+        <div class="absolute -top-40 -left-40 w-[500px] h-[500px] rounded-full bg-gradient-to-tr from-teal-400/20 to-emerald-400/20 dark:from-teal-500/10 dark:to-emerald-500/10 blur-[100px] opacity-75"></div>
+        <div class="absolute top-1/4 -right-40 w-[600px] h-[600px] rounded-full bg-gradient-to-tr from-indigo-400/20 to-purple-400/20 dark:from-indigo-500/10 dark:to-purple-500/10 blur-[120px] opacity-75"></div>
+        <div class="absolute -bottom-40 left-1/4 w-[600px] h-[600px] rounded-full bg-gradient-to-tr from-cyan-400/15 to-teal-400/15 dark:from-cyan-500/5 dark:to-teal-500/5 blur-[100px] opacity-75"></div>
     </div>
     @php
-        $locale = session('locale', app()->getLocale());
-        $chatbotCities = \App\Models\Hospital::where('is_verified', true)
-            ->whereNotNull('city')
-            ->distinct()
-            ->orderBy('city')
-            ->pluck('city');
-        $chatbotCityPills = $chatbotCities->take(18);
+    $locale = session('locale', app()->getLocale());
+    $chatbotCities = \App\Models\Hospital::where('is_verified', true)
+    ->whereNotNull('city')
+    ->distinct()
+    ->orderBy('city')
+    ->pluck('city');
+    $chatbotCityPills = $chatbotCities->take(18);
     @endphp
 
     <!-- Header Navbar -->
-    <nav class="sticky top-0 z-50 bg-white/85 backdrop-blur-xl border-b border-slate-200/80 shadow-sm transition-all duration-300">
+    <nav class="sticky top-0 z-50 glass-panel shadow-sm transition-all duration-300">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div class="flex justify-between h-16 items-center gap-4">
                 <div class="flex items-center min-w-0">
@@ -215,39 +241,39 @@
                         <div class="p-2.5 bg-gradient-to-tr from-teal-500 to-indigo-600 rounded-2xl shadow-md group-hover:shadow-lg transition-all duration-300 transform group-hover:-translate-y-0.5">
                             <i data-lucide="heart-pulse" class="w-6 h-6 text-white animate-pulse"></i>
                         </div>
-                        <span class="text-xl sm:text-2xl font-bold bg-gradient-to-r from-slate-800 to-indigo-900 bg-clip-text text-transparent tracking-tight py-1 leading-normal">
-                            Swasthya<span class="text-teal-600">Search</span>
+                        <span class="text-xl sm:text-2xl font-bold bg-gradient-to-r from-slate-800 to-indigo-900 dark:from-slate-100 dark:to-indigo-300 bg-clip-text text-transparent tracking-tight py-1 leading-normal">
+                            Swasthya<span class="text-teal-600 dark:text-teal-400">Search</span>
                         </span>
                     </a>
 
                     <div class="hidden md:flex items-center space-x-1 lg:space-x-2">
-                        <a href="{{ route('doctors.index') }}" class="px-3 py-2 rounded-xl text-sm font-semibold transition-all duration-200 {{ request()->routeIs('doctors.*') ? 'bg-teal-50 text-teal-700 border border-teal-100/80 shadow-2xs' : 'text-slate-600 hover:text-slate-900 hover:bg-slate-50' }}">
+                        <a href="{{ route('doctors.index') }}" class="px-3 py-2 rounded-xl text-sm font-semibold transition-all duration-200 {{ request()->routeIs('doctors.*') ? 'bg-teal-50 dark:bg-teal-900/40 text-teal-700 dark:text-teal-400 border border-teal-100/80 dark:border-teal-900/50 shadow-2xs' : 'text-slate-600 dark:text-slate-300 hover:text-slate-900 dark:hover:text-white hover:bg-slate-50 dark:hover:bg-slate-800' }}">
                             {{ $locale === 'hi' ? 'डॉक्टर खोजें' : 'Doctors' }}
                         </a>
-                        <a href="{{ route('hospitals.index') }}" class="px-3 py-2 rounded-xl text-sm font-semibold transition-all duration-200 {{ request()->routeIs('hospitals.*') ? 'bg-teal-50 text-teal-700 border border-teal-100/80 shadow-2xs' : 'text-slate-600 hover:text-slate-900 hover:bg-slate-50' }}">
+                        <a href="{{ route('hospitals.index') }}" class="px-3 py-2 rounded-xl text-sm font-semibold transition-all duration-200 {{ request()->routeIs('hospitals.*') ? 'bg-teal-50 dark:bg-teal-900/40 text-teal-700 dark:text-teal-400 border border-teal-100/80 dark:border-teal-900/50 shadow-2xs' : 'text-slate-600 dark:text-slate-300 hover:text-slate-900 dark:hover:text-white hover:bg-slate-50 dark:hover:bg-slate-800' }}">
                             {{ $locale === 'hi' ? 'अस्पताल व क्लिनिक' : 'Hospitals' }}
                         </a>
-                        <a href="{{ route('blood_banks.index') }}" class="px-3 py-2 rounded-xl text-sm font-semibold transition-all duration-200 {{ request()->routeIs('blood_banks.*') ? 'bg-teal-50 text-teal-700 border border-teal-100/80 shadow-2xs' : 'text-slate-600 hover:text-slate-900 hover:bg-slate-50' }}">
+                        <a href="{{ route('blood_banks.index') }}" class="px-3 py-2 rounded-xl text-sm font-semibold transition-all duration-200 {{ request()->routeIs('blood_banks.*') ? 'bg-teal-50 dark:bg-teal-900/40 text-teal-700 dark:text-teal-400 border border-teal-100/80 dark:border-teal-900/50 shadow-2xs' : 'text-slate-600 dark:text-slate-300 hover:text-slate-900 dark:hover:text-white hover:bg-slate-50 dark:hover:bg-slate-800' }}">
                             {{ $locale === 'hi' ? 'ब्लड बैंक' : 'Blood Banks' }}
                         </a>
-                        <a href="{{ route('articles.index') }}" class="px-3 py-2 rounded-xl text-sm font-semibold transition-all duration-200 {{ request()->routeIs('articles.*') ? 'bg-teal-50 text-teal-700 border border-teal-100/80 shadow-2xs' : 'text-slate-600 hover:text-slate-900 hover:bg-slate-50' }}">
+                        <a href="{{ route('articles.index') }}" class="px-3 py-2 rounded-xl text-sm font-semibold transition-all duration-200 {{ request()->routeIs('articles.*') ? 'bg-teal-50 dark:bg-teal-900/40 text-teal-700 dark:text-teal-400 border border-teal-100/80 dark:border-teal-900/50 shadow-2xs' : 'text-slate-600 dark:text-slate-300 hover:text-slate-900 dark:hover:text-white hover:bg-slate-50 dark:hover:bg-slate-800' }}">
                             {{ $locale === 'hi' ? 'स्वास्थ्य लेख' : 'Articles' }}
                         </a>
-                        <a href="{{ route('about') }}" class="px-3 py-2 rounded-xl text-sm font-semibold transition-all duration-200 {{ request()->routeIs('about') ? 'bg-teal-50 text-teal-700 border border-teal-100/80 shadow-2xs' : 'text-slate-600 hover:text-slate-900 hover:bg-slate-50' }}">
+                        <a href="{{ route('about') }}" class="px-3 py-2 rounded-xl text-sm font-semibold transition-all duration-200 {{ request()->routeIs('about') ? 'bg-teal-50 dark:bg-teal-900/40 text-teal-700 dark:text-teal-400 border border-teal-100/80 dark:border-teal-900/50 shadow-2xs' : 'text-slate-600 dark:text-slate-300 hover:text-slate-900 dark:hover:text-white hover:bg-slate-50 dark:hover:bg-slate-800' }}">
                             {{ $locale === 'hi' ? 'हमारे बारे में' : 'About Us' }}
                         </a>
-                        <a href="{{ route('contact') }}" class="px-3 py-2 rounded-xl text-sm font-semibold transition-all duration-200 {{ request()->routeIs('contact') ? 'bg-teal-50 text-teal-700 border border-teal-100/80 shadow-2xs' : 'text-slate-600 hover:text-slate-900 hover:bg-slate-50' }}">
+                        <a href="{{ route('contact') }}" class="px-3 py-2 rounded-xl text-sm font-semibold transition-all duration-200 {{ request()->routeIs('contact') ? 'bg-teal-50 dark:bg-teal-900/40 text-teal-700 dark:text-teal-400 border border-teal-100/80 dark:border-teal-900/50 shadow-2xs' : 'text-slate-600 dark:text-slate-300 hover:text-slate-900 dark:hover:text-white hover:bg-slate-50 dark:hover:bg-slate-800' }}">
                             {{ $locale === 'hi' ? 'संपर्क करें' : 'Contact Us' }}
                         </a>
                     </div>
                 </div>
 
                 <div class="flex items-center gap-2 shrink-0">
-                    <div class="flex items-center bg-slate-100 p-1 rounded-xl border border-slate-200/60 shadow-inner">
+                    <div class="flex items-center bg-slate-100 dark:bg-slate-800 p-1 rounded-xl border border-slate-200/60 dark:border-slate-700/60 shadow-inner">
                         <form action="{{ route('switch.locale') }}" method="POST" class="inline">
                             @csrf
                             <input type="hidden" name="locale" value="en">
-                            <button type="submit" class="flex items-center space-x-1 sm:space-x-1.5 px-2 sm:px-3 py-1.5 rounded-lg text-xs sm:text-sm font-medium transition-all duration-200 {{ $locale === 'en' ? 'bg-white text-indigo-900 shadow-sm font-semibold' : 'text-slate-600 hover:text-slate-900' }}">
+                            <button type="submit" class="flex items-center space-x-1 sm:space-x-1.5 px-2 sm:px-3 py-1.5 rounded-lg text-xs sm:text-sm font-medium transition-all duration-200 {{ $locale === 'en' ? 'bg-white dark:bg-slate-700 text-indigo-900 dark:text-indigo-200 shadow-sm font-semibold' : 'text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white' }}">
                                 <i data-lucide="globe" class="w-3.5 h-3.5 sm:w-4 sm:h-4 text-teal-600"></i>
                                 <span><span class="hidden sm:inline">English</span><span class="sm:hidden font-bold">EN</span></span>
                             </button>
@@ -255,21 +281,26 @@
                         <form action="{{ route('switch.locale') }}" method="POST" class="inline">
                             @csrf
                             <input type="hidden" name="locale" value="hi">
-                            <button type="submit" class="flex items-center space-x-1 sm:space-x-1.5 px-2 sm:px-3 py-1.5 rounded-lg text-xs sm:text-sm font-medium transition-all duration-200 {{ $locale === 'hi' ? 'bg-white text-indigo-900 shadow-sm font-semibold' : 'text-slate-600 hover:text-slate-900' }}">
+                            <button type="submit" class="flex items-center space-x-1 sm:space-x-1.5 px-2 sm:px-3 py-1.5 rounded-lg text-xs sm:text-sm font-medium transition-all duration-200 {{ $locale === 'hi' ? 'bg-white dark:bg-slate-700 text-indigo-900 dark:text-indigo-200 shadow-sm font-semibold' : 'text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white' }}">
                                 <i data-lucide="globe" class="w-3.5 h-3.5 sm:w-4 sm:h-4 text-teal-600"></i>
                                 <span><span class="hidden sm:inline">हिंदी</span><span class="sm:hidden font-bold">HI</span></span>
                             </button>
                         </form>
                     </div>
+                    <button id="theme-toggle" type="button" class="p-2.5 rounded-xl border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 text-slate-700 dark:text-slate-200 hover:bg-slate-50 dark:hover:bg-slate-700 transition-all duration-200 flex items-center justify-center shadow-xs" aria-label="Toggle dark mode">
+                        <i id="theme-toggle-dark-icon" data-lucide="moon" class="w-4 h-4 hidden"></i>
+                        <i id="theme-toggle-light-icon" data-lucide="sun" class="w-4 h-4 hidden"></i>
+                    </button>
                     <button type="button" onclick="toggleMobileMenu()"
                         id="mobile-menu-toggle-btn"
-                        class="md:hidden p-2 rounded-xl border border-slate-200 bg-white text-slate-700 hover:bg-slate-50 transition-colors"
+                        class="md:hidden p-2 rounded-xl border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 text-slate-700 dark:text-slate-200 hover:bg-slate-50 dark:hover:bg-slate-700 transition-colors"
                         aria-label="Open navigation menu">
-                        <i data-lucide="menu" id="mobile-menu-icon" class="w-5 h-5"></i>
+                        <i data-lucide="menu" id="mobile-menu-open-icon" class="w-5 h-5"></i>
+                        <i data-lucide="x" id="mobile-menu-close-icon" class="w-5 h-5 hidden"></i>
                     </button>
                 </div>
             </div>
-            <div id="mobile-nav-menu" class="md:hidden hidden pb-3 pt-2 border-t border-slate-200/80">
+            <div id="mobile-nav-menu" class="md:hidden hidden pb-3 pt-2 border-t border-slate-200/80 dark:border-slate-800/80">
                 <div class="mobile-nav-list">
                     <a href="{{ route('doctors.index') }}" class="mobile-nav-item {{ request()->routeIs('doctors.*') ? 'active' : '' }}">
                         <i data-lucide="stethoscope" class="w-4 h-4"></i>
@@ -317,7 +348,7 @@
         </button>
 
         <!-- Chat Window -->
-        <div id="chatbot-window" class="hidden w-[94vw] sm:w-[420px] h-[74vh] max-h-[680px] min-h-[520px] bg-white rounded-3xl shadow-2xl border border-slate-300/90 flex flex-col overflow-hidden animate-in fade-in duration-300 chatbot-window">
+        <div id="chatbot-window" class="hidden w-[94vw] sm:w-[420px] h-[74vh] max-h-[680px] min-h-[520px] bg-white dark:bg-slate-950 rounded-3xl shadow-2xl border border-slate-300/90 dark:border-slate-800 flex flex-col overflow-hidden animate-in fade-in duration-300 chatbot-window">
             <!-- Header -->
             <div class="bg-gradient-to-r from-slate-900 via-indigo-900 to-slate-900 text-white p-4 flex justify-between items-start shadow-md">
                 <div class="flex items-start space-x-3 min-w-0 pr-2">
@@ -332,7 +363,7 @@
                     </div>
                 </div>
                 <div class="flex items-center space-x-2 shrink-0">
-                    <select id="chatbot-language" class="text-xs bg-white text-slate-900 border border-white/40 rounded-lg px-2 py-1 focus:outline-none focus:ring-2 focus:ring-teal-400/60">
+                    <select id="chatbot-language" class="text-xs bg-white dark:bg-slate-800 text-slate-900 dark:text-slate-100 border border-white/40 rounded-lg px-2 py-1 focus:outline-none focus:ring-2 focus:ring-teal-400/60">
                         <option value="en" {{ $locale === 'en' ? 'selected' : '' }}>EN</option>
                         <option value="hi" {{ $locale === 'hi' ? 'selected' : '' }}>HI</option>
                     </select>
@@ -345,35 +376,35 @@
                 </button>
             </div>
 
-            <div class="px-3 pb-2 bg-white border-t border-slate-200/80">
-                <div class="rounded-2xl border border-slate-200 bg-slate-50/70 p-3 shadow-sm">
-                    <div class="flex items-center gap-1.5 mb-2">
-                        <i data-lucide="map-pin" class="w-3.5 h-3.5 text-slate-600"></i>
-                        <label class="text-[12px] font-semibold text-slate-700 leading-none">{{ $locale === 'hi' ? 'शहर चुनें' : 'Select your city' }}</label>
+            <div class="px-3.5 py-2 bg-slate-50/90 dark:bg-slate-900/90 border-t border-b border-slate-200/80 dark:border-slate-800/80">
+                <div class="flex items-center justify-between gap-2 min-h-[36px] w-full text-xs">
+                    <!-- Dropdown Selection State (visible when not locked) -->
+                    <div id="chatbot-city-select-wrapper" class="flex-1 flex items-center gap-1.5 min-w-0">
+                        <i data-lucide="map-pin" class="w-4 h-4 text-slate-500 shrink-0"></i>
+                        <select id="chatbot-city-selector" onchange="selectChatbotCity(this.value)" class="w-full bg-white dark:bg-slate-800 border border-slate-350 dark:border-slate-700 rounded-lg px-2 py-1.5 text-slate-850 dark:text-slate-100 focus:outline-none focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-500 font-semibold transition-all">
+                            <option value="">{{ $locale === 'hi' ? 'शहर चुनें...' : 'Select city...' }}</option>
+                            @foreach($chatbotCities as $city)
+                            <option value="{{ $city }}">{{ $city }}</option>
+                            @endforeach
+                        </select>
                     </div>
-                    <div class="flex items-center justify-between gap-2 mb-2 min-h-[34px]">
-                        <div id="chatbot-city-selected-card" class="hidden items-center rounded-full border border-teal-300 bg-teal-100 px-3 py-1.5 w-fit max-w-[72%]">
-                            <div class="flex items-center gap-2 text-sm text-teal-900 min-w-0">
-                                <i data-lucide="map-pin" class="w-4 h-4 text-teal-700 shrink-0"></i>
-                                <span id="chatbot-selected-city-label" class="font-semibold truncate"></span>
-                            </div>
+
+                    <!-- Locked Selected State (visible when locked) -->
+                    <div id="chatbot-city-locked-wrapper" class="hidden flex-1 items-center justify-between min-w-0">
+                        <div class="flex items-center gap-1.5 min-w-0">
+                            <i data-lucide="map-pin" class="w-4 h-4 text-teal-600 shrink-0 animate-custom-pulse"></i>
+                            <span class="text-slate-500 mr-1 shrink-0 font-medium">{{ $locale === 'hi' ? 'शहर:' : 'City:' }}</span>
+                            <span id="chatbot-selected-city-label" class="font-extrabold text-slate-900 dark:text-slate-100 truncate"></span>
                         </div>
-                        <button type="button" id="chatbot-change-city-btn" onclick="enableCitySelection()" class="hidden shrink-0 text-[11px] font-semibold text-indigo-700 hover:text-indigo-800 bg-indigo-50 border border-indigo-200 rounded-full px-2.5 py-1 leading-none">
-                            {{ $locale === 'hi' ? 'शहर बदलें' : 'Change City' }}
+                        <button type="button" id="chatbot-change-city-btn" onclick="enableCitySelection()" class="shrink-0 text-[11px] font-bold text-indigo-700 hover:text-indigo-850 dark:text-indigo-400 dark:hover:text-indigo-350 bg-indigo-50 dark:bg-indigo-950/40 hover:bg-indigo-100 dark:hover:bg-indigo-900/60 border border-indigo-200 dark:border-indigo-800 rounded-lg px-2.5 py-1.5 leading-none transition-all">
+                            {{ $locale === 'hi' ? 'बदलें' : 'Change' }}
                         </button>
-                    </div>
-                    <div id="chatbot-city-pill-wrap" class="flex flex-wrap gap-1.5 max-h-20 overflow-y-auto pr-1">
-                    @foreach($chatbotCityPills as $city)
-                        <button type="button" class="chatbot-city-pill" data-city="{{ $city }}" onclick="selectChatbotCity('{{ addslashes($city) }}')">
-                            {{ $city }}
-                        </button>
-                    @endforeach
                     </div>
                 </div>
             </div>
 
             <!-- Messages Body -->
-            <div id="chatbot-messages" class="flex-1 p-4 overflow-y-auto space-y-4 bg-gradient-to-b from-cyan-50/50 via-white to-indigo-50/30">
+            <div id="chatbot-messages" class="flex-1 p-4 overflow-y-auto space-y-4 bg-gradient-to-b from-cyan-50/50 via-white to-indigo-50/30 dark:from-slate-900/40 dark:via-slate-950 dark:to-slate-900/20">
                 <!-- Initial Bot Message -->
                 <div class="flex justify-start">
                     <div class="flex space-x-2 max-w-[85%] flex-row">
@@ -387,7 +418,7 @@
                 </div>
                 <div class="ml-9 max-w-[85%] rounded-xl border border-teal-100 bg-teal-50/80 px-3 py-2">
                     <p class="text-[11px] font-semibold text-teal-900">
-                        {{ $locale === 'hi' ? 'उदाहरण: "Jaipur में cardiologist", "नजदीकी hospital", "A+ blood bank"' : 'Try: "cardiologist in Jaipur", "nearby hospital", "A+ blood bank"' }}
+                        {{ $locale === 'hi' ? 'उदाहरण: "Nearby में cardiologist", "नजदीकी hospital", "A+ blood bank"' : 'Try: "cardiologist near me", "nearby hospital", "A+ blood bank"' }}
                     </p>
                 </div>
 
@@ -418,7 +449,7 @@
                 <div class="typing-dots" aria-hidden="true">
                     <span></span><span></span><span></span>
                 </div>
-                <span>{{ $locale === 'hi' ? 'स्वास्थ्य AI सोच रहा है...' : 'Swasthya AI is thinking...' }}</span>
+                <span id="chatbot-loading-text">{{ $locale === 'hi' ? 'स्वास्थ्य AI सोच रहा है...' : 'Swasthya AI is thinking...' }}</span>
             </div>
             <div class="px-3 pb-2 bg-amber-50 border-t border-amber-200">
                 <button
@@ -426,8 +457,7 @@
                     id="chatbot-important-toggle"
                     onclick="toggleChatbotImportant()"
                     class="inline-flex items-center gap-1.5 text-[11px] font-semibold text-amber-900 bg-white border border-amber-300 rounded-full px-2.5 py-1"
-                    aria-label="Show important assistant details"
-                >
+                    aria-label="Show important assistant details">
                     <span class="inline-flex items-center justify-center w-4 h-4 rounded-full bg-amber-600 text-white text-[10px] font-bold">i</span>
                     <span>{{ $locale === 'hi' ? 'महत्वपूर्ण जानकारी' : 'Important details' }}</span>
                 </button>
@@ -494,15 +524,336 @@
         </div>
     </footer>
 
+    <!-- Compare Dock -->
+    <div id="compare-dock" class="glass-panel py-4 px-6 z-[60] flex flex-col sm:flex-row items-center justify-between gap-4">
+        <div class="flex flex-col sm:flex-row sm:items-center gap-3">
+            <div class="flex items-center gap-2">
+                <div class="w-8 h-8 rounded-lg bg-indigo-650/10 dark:bg-indigo-400/15 flex items-center justify-center text-indigo-600 dark:text-indigo-400 shrink-0">
+                    <i data-lucide="git-compare" class="w-4 h-4"></i>
+                </div>
+                <div>
+                    <h4 class="font-extrabold text-sm text-slate-900 dark:text-white">{{ $locale === 'hi' ? 'अस्पतालों की तुलना' : 'Compare Hospitals' }}</h4>
+                    <p id="compare-count-text" class="text-[11px] text-slate-500 dark:text-slate-400 font-medium">0 hospitals selected</p>
+                </div>
+            </div>
+            <!-- Thumbnails Container -->
+            <div id="compare-thumbs" class="flex items-center gap-1.5 ml-0 sm:ml-4 flex-wrap"></div>
+        </div>
+        <div class="flex items-center gap-2.5 w-full sm:w-auto">
+            <button onclick="clearCompare()" class="w-1/2 sm:w-auto px-4 py-2 border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 text-slate-700 dark:text-slate-200 font-bold text-xs rounded-xl hover:bg-slate-50 dark:hover:bg-slate-755 transition-colors uppercase tracking-wider">
+                {{ $locale === 'hi' ? 'साफ़ करें' : 'Clear All' }}
+            </button>
+            <button onclick="openCompareModal()" class="w-1/2 sm:w-auto px-5 py-2.5 bg-indigo-600 hover:bg-indigo-700 text-white font-extrabold text-xs rounded-xl shadow-lg hover:shadow-indigo-500/20 transition-all uppercase tracking-wider">
+                {{ $locale === 'hi' ? 'तुलना करें' : 'Compare Now' }}
+            </button>
+        </div>
+    </div>
+
+    <!-- Compare Modal -->
+    <div id="compare-modal" class="hidden fixed inset-0 z-[110] flex items-center justify-center p-4">
+        <div class="fixed inset-0 bg-slate-950/60 backdrop-blur-md" onclick="closeCompareModal()"></div>
+        <div class="relative w-full max-w-4xl max-h-[85vh] bg-white dark:bg-slate-900 rounded-3xl border border-slate-200/80 dark:border-slate-800 shadow-2xl overflow-hidden flex flex-col z-10">
+            <!-- Header -->
+            <div class="p-5 border-b border-slate-100 dark:border-slate-800 flex justify-between items-center bg-slate-50 dark:bg-slate-850 shrink-0">
+                <div class="flex items-center gap-2.5">
+                    <div class="p-2 bg-indigo-50 dark:bg-indigo-950/40 text-indigo-600 dark:text-indigo-400 rounded-xl">
+                        <i data-lucide="git-compare" class="w-5 h-5"></i>
+                    </div>
+                    <div>
+                        <h3 class="font-extrabold text-lg text-slate-900 dark:text-white">{{ $locale === 'hi' ? 'विस्तृत तुलना मैट्रिक्स' : 'Detailed Comparison Matrix' }}</h3>
+                        <p class="text-xs text-slate-500 dark:text-slate-400">{{ $locale === 'hi' ? 'सर्वोत्तम विकल्प चुनने के लिए सुविधाओं की तुलना करें' : 'Compare metrics side-by-side to make the best choice' }}</p>
+                    </div>
+                </div>
+                <button onclick="closeCompareModal()" class="p-2 text-slate-500 hover:text-slate-850 dark:text-slate-400 dark:hover:text-white rounded-xl hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors">
+                    <i data-lucide="x" class="w-5 h-5"></i>
+                </button>
+            </div>
+
+            <!-- Table Content (Scrollable) -->
+            <div class="flex-1 overflow-auto p-6 bg-white dark:bg-slate-900">
+                <div class="w-full overflow-x-auto">
+                    <table class="w-full border-collapse">
+                        <thead>
+                            <tr class="border-b border-slate-150 dark:border-slate-800" id="compare-table-head">
+                                <!-- Populated dynamically -->
+                            </tr>
+                        </thead>
+                        <tbody class="divide-y divide-slate-100 dark:divide-slate-800" id="compare-table-body">
+                            <!-- Populated dynamically -->
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+
     <!-- Scripts -->
     <script>
         // Initialize Lucide Icons
         lucide.createIcons();
 
+        // Hospital Compare Controller Logic
+        let comparedHospitals = [];
+
+        function loadComparedHospitals() {
+            try {
+                const stored = localStorage.getItem('comparedHospitals');
+                comparedHospitals = stored ? JSON.parse(stored) : [];
+            } catch (e) {
+                comparedHospitals = [];
+            }
+            updateCompareUI();
+        }
+
+        function toggleCompare(id, name, type, phone, cashless, ayushman, city, address, website) {
+            const index = comparedHospitals.findIndex(h => h.id == id);
+            if (index > -1) {
+                comparedHospitals.splice(index, 1);
+            } else {
+                if (comparedHospitals.length >= 3) {
+                    alert(currentLocale === 'hi' ? 'आप एक बार में केवल 3 अस्पतालों की तुलना कर सकते हैं।' : 'You can only compare up to 3 hospitals at a time.');
+                    return;
+                }
+                comparedHospitals.push({
+                    id,
+                    name,
+                    type,
+                    phone,
+                    cashless,
+                    ayushman,
+                    city,
+                    address,
+                    website
+                });
+            }
+            try {
+                localStorage.setItem('comparedHospitals', JSON.stringify(comparedHospitals));
+            } catch (e) {}
+            updateCompareUI();
+        }
+
+        function removeFromCompare(id) {
+            comparedHospitals = comparedHospitals.filter(h => h.id != id);
+            try {
+                localStorage.setItem('comparedHospitals', JSON.stringify(comparedHospitals));
+            } catch (e) {}
+            updateCompareUI();
+        }
+
+        function clearCompare() {
+            comparedHospitals = [];
+            try {
+                localStorage.removeItem('comparedHospitals');
+            } catch (e) {}
+            updateCompareUI();
+        }
+
+        function updateCompareUI() {
+            const dock = document.getElementById('compare-dock');
+            const countText = document.getElementById('compare-count-text');
+            const thumbsContainer = document.getElementById('compare-thumbs');
+
+            if (!dock || !countText || !thumbsContainer) return;
+
+            // Highlight compare buttons on the page
+            document.querySelectorAll('.compare-btn-card').forEach(btn => {
+                const btnId = btn.getAttribute('data-id');
+                if (comparedHospitals.some(h => h.id == btnId)) {
+                    btn.classList.add('active');
+                    const textSpan = btn.querySelector('span');
+                    if (textSpan) {
+                        textSpan.innerText = currentLocale === 'hi' ? 'हटाएं' : 'Added';
+                    }
+                } else {
+                    btn.classList.remove('active');
+                    const textSpan = btn.querySelector('span');
+                    if (textSpan) {
+                        textSpan.innerText = currentLocale === 'hi' ? 'तुलना करें' : 'Compare';
+                    }
+                }
+            });
+
+            if (comparedHospitals.length > 0) {
+                dock.classList.add('show');
+                countText.innerText = currentLocale === 'hi' ?
+                    `${comparedHospitals.length} अस्पताल चुने गए` :
+                    `${comparedHospitals.length} hospital${comparedHospitals.length > 1 ? 's' : ''} selected`;
+
+                // Render thumbnails
+                thumbsContainer.innerHTML = comparedHospitals.map(h => `
+                    <div class="relative group shrink-0">
+                        <div class="compare-thumb shrink-0 shadow-2xs">${h.name.substring(0, 2).toUpperCase()}</div>
+                        <button onclick="removeFromCompare('${h.id}')" class="absolute -top-1.5 -right-1.5 bg-slate-900 dark:bg-slate-800 text-white rounded-full p-0.5 shadow-md hover:bg-rose-600 transition-colors border border-white dark:border-slate-900">
+                            <i data-lucide="x" class="w-2.5 h-2.5"></i>
+                        </button>
+                    </div>
+                `).join('');
+                lucide.createIcons();
+            } else {
+                dock.classList.remove('show');
+            }
+        }
+
+        function openCompareModal() {
+            if (comparedHospitals.length === 0) return;
+            const modal = document.getElementById('compare-modal');
+            const head = document.getElementById('compare-table-head');
+            const body = document.getElementById('compare-table-body');
+            if (!modal || !head || !body) return;
+
+            modal.classList.remove('hidden');
+
+            // Build header
+            let headHtml = `<th class="p-4 text-left text-xs font-bold text-slate-450 uppercase tracking-wider bg-slate-50 dark:bg-slate-900/50">${currentLocale === 'hi' ? 'विशेषताएं' : 'Features'}</th>`;
+            comparedHospitals.forEach(h => {
+                headHtml += `
+                    <th class="p-4 text-left bg-slate-50 dark:bg-slate-900/50 min-w-[200px]">
+                        <div class="flex items-start gap-2.5">
+                            <div class="compare-thumb shrink-0 shadow-2xs">${h.name.substring(0, 2).toUpperCase()}</div>
+                            <div>
+                                <h4 class="font-extrabold text-sm text-slate-900 dark:text-white line-clamp-2">${h.name}</h4>
+                                <span class="inline-block text-[10px] font-bold text-indigo-700 dark:text-indigo-400 bg-indigo-50 dark:bg-indigo-950/40 px-2 py-0.5 rounded-md mt-1 uppercase tracking-wider">${h.type}</span>
+                            </div>
+                        </div>
+                    </th>
+                `;
+            });
+            head.innerHTML = headHtml;
+
+            // Define comparison fields
+            const fields = [{
+                    labelEn: 'Type',
+                    labelHi: 'प्रकार',
+                    key: 'type'
+                },
+                {
+                    labelEn: 'City / Region',
+                    labelHi: 'शहर / क्षेत्र',
+                    key: 'city'
+                },
+                {
+                    labelEn: 'Cashless Facility',
+                    labelHi: 'कैशलेस सुविधा',
+                    key: 'cashless',
+                    isBadge: true,
+                    yesColor: 'text-emerald-700 bg-emerald-50 dark:text-emerald-400 dark:bg-emerald-950/30'
+                },
+                {
+                    labelEn: 'Ayushman Bharat',
+                    labelHi: 'आयुष्मान भारत',
+                    key: 'ayushman',
+                    isBadge: true,
+                    yesColor: 'text-teal-700 bg-teal-50 dark:text-teal-400 dark:bg-teal-950/30'
+                },
+                {
+                    labelEn: 'Emergency Contact',
+                    labelHi: 'आपातकालीन नंबर',
+                    key: 'phone',
+                    isCall: true
+                },
+                {
+                    labelEn: 'Address',
+                    labelHi: 'पता',
+                    key: 'address'
+                },
+                {
+                    labelEn: 'Action',
+                    labelHi: 'कार्रवाई',
+                    isAction: true
+                }
+            ];
+
+            let bodyHtml = '';
+            fields.forEach(f => {
+                const label = currentLocale === 'hi' ? f.labelHi : f.labelEn;
+                bodyHtml += `<tr class="border-b border-slate-100 dark:border-slate-800/80">`;
+                bodyHtml += `<td class="p-4 text-xs font-bold text-slate-500 dark:text-slate-400 bg-slate-50/50 dark:bg-slate-900/10">${label}</td>`;
+
+                comparedHospitals.forEach(h => {
+                    let cellVal = h[f.key] || '—';
+                    let cellHtml = `<td class="p-4 text-xs text-slate-700 dark:text-slate-300">`;
+
+                    if (f.isBadge) {
+                        const isYes = cellVal === 'Yes' || cellVal === true || cellVal === 1 || cellVal === '1';
+                        const badgeColor = isYes ? f.yesColor : 'text-slate-500 bg-slate-50 dark:bg-slate-800/60 dark:text-slate-450';
+                        const badgeLabel = isYes ? (currentLocale === 'hi' ? 'उपलब्ध' : 'Available') : (currentLocale === 'hi' ? 'उपलब्ध नहीं' : 'Not Available');
+                        cellHtml += `<span class="inline-flex items-center px-2.5 py-1 rounded-lg text-[10px] font-bold ${badgeColor}">${badgeLabel}</span>`;
+                    } else if (f.isCall) {
+                        cellHtml += (cellVal && cellVal !== '—') ?
+                            `<a href="tel:${cellVal}" class="inline-flex items-center space-x-1 font-extrabold text-teal-600 dark:text-teal-400 hover:underline">
+                                <i data-lucide="phone-call" class="w-3.5 h-3.5"></i>
+                                <span>${cellVal}</span>
+                               </a>` :
+                            `<span class="text-slate-400 dark:text-slate-500">Unlisted</span>`;
+                    } else if (f.isAction) {
+                        cellHtml += `
+                            <div class="flex gap-2">
+                                <button onclick="removeFromCompare('${h.id}')" class="px-3 py-1.5 border border-rose-200 dark:border-rose-950/60 hover:bg-rose-50 dark:hover:bg-rose-950/20 text-rose-600 dark:text-rose-450 font-bold text-[10px] rounded-lg transition-colors uppercase tracking-wider">
+                                    ${currentLocale === 'hi' ? 'हटाएं' : 'Remove'}
+                                </button>
+                                ${h.phone && h.phone !== '—' 
+                                    ? `<a href="tel:${h.phone}" class="px-3 py-1.5 bg-teal-600 hover:bg-teal-700 text-white font-bold text-[10px] rounded-lg shadow-sm transition-colors uppercase tracking-wider text-center flex items-center justify-center">
+                                        ${currentLocale === 'hi' ? 'कॉल' : 'Call'}
+                                       </a>` 
+                                    : ''}
+                            </div>
+                        `;
+                    } else {
+                        cellHtml += `<span>${cellVal}</span>`;
+                    }
+                    cellHtml += `</td>`;
+                    bodyHtml += cellHtml;
+                });
+                bodyHtml += `</tr>`;
+            });
+            body.innerHTML = bodyHtml;
+            lucide.createIcons();
+        }
+
+        function closeCompareModal() {
+            const modal = document.getElementById('compare-modal');
+            if (modal) modal.classList.add('hidden');
+        }
+
+        // Theme Toggle Logic
+        const themeToggleBtn = document.getElementById('theme-toggle');
+        const themeToggleDarkIcon = document.getElementById('theme-toggle-dark-icon');
+        const themeToggleLightIcon = document.getElementById('theme-toggle-light-icon');
+
+        function updateThemeUI() {
+            const isDark = document.documentElement.classList.contains('dark');
+            if (isDark) {
+                if (themeToggleLightIcon) themeToggleLightIcon.classList.remove('hidden');
+                if (themeToggleDarkIcon) themeToggleDarkIcon.classList.add('hidden');
+                if (themeToggleBtn) themeToggleBtn.setAttribute('aria-label', 'Switch to light mode');
+            } else {
+                if (themeToggleDarkIcon) themeToggleDarkIcon.classList.remove('hidden');
+                if (themeToggleLightIcon) themeToggleLightIcon.classList.add('hidden');
+                if (themeToggleBtn) themeToggleBtn.setAttribute('aria-label', 'Switch to dark mode');
+            }
+        }
+
+        // Initialize UI icon based on current class
+        updateThemeUI();
+
+        if (themeToggleBtn) {
+            themeToggleBtn.addEventListener('click', function() {
+                const isDark = document.documentElement.classList.contains('dark');
+                if (isDark) {
+                    document.documentElement.classList.remove('dark');
+                    localStorage.setItem('theme', 'light');
+                } else {
+                    document.documentElement.classList.add('dark');
+                    localStorage.setItem('theme', 'dark');
+                }
+                updateThemeUI();
+            });
+        }
+
         // Chatbot Logic
         let chatbotOpen = false;
         let chatbotSessionToken = null;
-        const currentLocale = "{{ $locale }}";
+        let currentLocale = "{{ $locale }}";
         let chatbotLocale = currentLocale === 'hi' ? 'hi' : 'en';
         let chatbotCity = '';
         let isCityLocked = false;
@@ -519,10 +870,12 @@
         function normalizeCityValue(city) {
             return String(city || '').trim().replace(/\s+/g, ' ');
         }
+
         function getCityFromUrl() {
             const params = new URLSearchParams(window.location.search);
             return normalizeCityValue(params.get('city'));
         }
+
         function getCityFromDropdowns() {
             const citySelects = Array.from(document.querySelectorAll('select[name="city"]'));
             for (const select of citySelects) {
@@ -531,12 +884,14 @@
             }
             return '';
         }
+
         function setCityStorage(city) {
             const normalized = normalizeCityValue(city);
             if (!normalized) return;
             localStorage.setItem(CHATBOT_CITY_STORAGE_KEY, normalized);
             localStorage.setItem(LEGACY_CHATBOT_CITY_STORAGE_KEY, normalized);
         }
+
         function syncCityDropdowns(city) {
             const normalized = normalizeCityValue(city);
             if (!normalized) return;
@@ -545,10 +900,13 @@
                 const matchOption = Array.from(select.options).find(opt => normalizeCityValue(opt.value).toLowerCase() === normalized.toLowerCase());
                 if (matchOption) {
                     select.value = matchOption.value;
-                    select.dispatchEvent(new Event('change', { bubbles: true }));
+                    select.dispatchEvent(new Event('change', {
+                        bubbles: true
+                    }));
                 }
             });
         }
+
         function resolveSelectedCity() {
             const fromUrl = getCityFromUrl();
             if (fromUrl) return fromUrl;
@@ -560,6 +918,7 @@
             if (fromStorage) return fromStorage;
             return '';
         }
+
         function escapeHtml(value) {
             return String(value ?? '')
                 .replace(/&/g, '&amp;')
@@ -568,9 +927,93 @@
                 .replace(/"/g, '&quot;')
                 .replace(/'/g, '&#39;');
         }
+
         function formatDetailedAnswer(value) {
-            return escapeHtml(value).replace(/\n/g, '<br>');
+            return formatMessageText(value);
         }
+
+        function formatMessageText(value) {
+            if (!value) return '';
+
+            // First, escape HTML
+            let escaped = escapeHtml(value);
+
+            // Process lines
+            let lines = escaped.split('\n');
+            let inList = false;
+            let listType = null; // 'ul' or 'ol'
+            let resultLines = [];
+
+            for (let i = 0; i < lines.length; i++) {
+                let line = lines[i];
+                let trimmed = line.trim();
+
+                // Match unordered lists: lines starting with *, -, or +
+                let ulMatch = line.match(/^(\s*)[*\-+]\s+(.+)$/);
+                // Match ordered lists: lines starting with digits like 1.
+                let olMatch = line.match(/^(\s*)\d+\.\s+(.+)$/);
+
+                if (ulMatch) {
+                    if (!inList || listType !== 'ul') {
+                        if (inList) {
+                            resultLines.push(`</${listType}>`);
+                        }
+                        resultLines.push('<ul style="list-style-type: disc; padding-left: 1.25rem; margin-top: 0.375rem; margin-bottom: 0.375rem;" class="space-y-1">');
+                        inList = true;
+                        listType = 'ul';
+                    }
+                    let content = processInlineMarkdown(ulMatch[2]);
+                    resultLines.push(`<li>${content}</li>`);
+                } else if (olMatch) {
+                    if (!inList || listType !== 'ol') {
+                        if (inList) {
+                            resultLines.push(`</${listType}>`);
+                        }
+                        resultLines.push('<ol style="list-style-type: decimal; padding-left: 1.25rem; margin-top: 0.375rem; margin-bottom: 0.375rem;" class="space-y-1">');
+                        inList = true;
+                        listType = 'ol';
+                    }
+                    let content = processInlineMarkdown(olMatch[2]);
+                    resultLines.push(`<li>${content}</li>`);
+                } else {
+                    if (inList) {
+                        resultLines.push(`</${listType}>`);
+                        inList = false;
+                        listType = null;
+                    }
+
+                    // Headers: ### Header
+                    let headerMatch = line.match(/^(#{1,6})\s+(.+)$/);
+                    if (headerMatch) {
+                        let level = headerMatch[1].length;
+                        let content = processInlineMarkdown(headerMatch[2]);
+                        let style = 'font-weight: 700; margin-top: 0.5rem; margin-bottom: 0.25rem; display: block;';
+                        let sizeClass = level === 1 ? 'text-base' : 'text-sm';
+                        resultLines.push(`<span class="${sizeClass}" style="${style}">${content}</span>`);
+                    } else if (trimmed === '') {
+                        resultLines.push('<div class="h-2"></div>');
+                    } else {
+                        let content = processInlineMarkdown(line);
+                        resultLines.push(`<p class="mb-1">${content}</p>`);
+                    }
+                }
+            }
+
+            if (inList) {
+                resultLines.push(`</${listType}>`);
+            }
+
+            return resultLines.join('\n');
+        }
+
+        function processInlineMarkdown(text) {
+            return text
+                .replace(/\*\*([^*]+)\*\*/g, '<strong>$1</strong>')
+                .replace(/\*([^*]+)\*/g, '<em>$1</em>')
+                .replace(/_([^_]+)_/g, '<em>$1</em>')
+                .replace(/`([^`]+)`/g, '<code class="bg-slate-100 px-1 rounded text-xs font-mono">$1</code>');
+        }
+
         function toggleChatbotDetails(buttonId, contentId) {
             const button = document.getElementById(buttonId);
             const content = document.getElementById(contentId);
@@ -583,6 +1026,7 @@
             button.innerText = isOpen ? button.dataset.moreLabel : button.dataset.lessLabel;
             content.classList.toggle('hidden', isOpen);
         }
+
         function toggleChatbotActionPanel(buttonId, panelId) {
             const button = document.getElementById(buttonId);
             const panel = document.getElementById(panelId);
@@ -614,28 +1058,38 @@
                 if (!chatbotOpen) collapseMobileFab();
             }, 2800);
         }
+
         function toggleMobileMenu() {
             const menu = document.getElementById('mobile-nav-menu');
             if (!menu) return;
             menu.classList.toggle('hidden');
             updateMobileMenuIcon();
         }
+
         function closeMobileMenu() {
             const menu = document.getElementById('mobile-nav-menu');
             if (!menu) return;
             menu.classList.add('hidden');
             updateMobileMenuIcon();
         }
+
         function updateMobileMenuIcon() {
             const menu = document.getElementById('mobile-nav-menu');
-            const icon = document.getElementById('mobile-menu-icon');
+            const openIcon = document.getElementById('mobile-menu-open-icon');
+            const closeIcon = document.getElementById('mobile-menu-close-icon');
             const btn = document.getElementById('mobile-menu-toggle-btn');
-            if (!menu || !icon || !btn) return;
+            if (!menu || !openIcon || !closeIcon || !btn) return;
             const isOpen = !menu.classList.contains('hidden');
-            icon.setAttribute('data-lucide', isOpen ? 'x' : 'menu');
+            if (isOpen) {
+                openIcon.classList.add('hidden');
+                closeIcon.classList.remove('hidden');
+            } else {
+                openIcon.classList.remove('hidden');
+                closeIcon.classList.add('hidden');
+            }
             btn.setAttribute('aria-label', isOpen ? 'Close navigation menu' : 'Open navigation menu');
-            lucide.createIcons();
         }
+
         function selectChatbotCity(city) {
             const previousCity = chatbotCity;
             chatbotCity = normalizeCityValue(city);
@@ -648,38 +1102,36 @@
             if (chatbotCity !== previousCity) {
                 appendMessage(
                     'bot',
-                    chatbotLocale === 'hi'
-                        ? `बहुत बढ़िया, आपने ${chatbotCity} चुना है। अब लक्षण लिखें या नीचे दिए गए विकल्प चुनें।`
-                        : `Great, you've selected ${chatbotCity}. Now type your symptoms or use the quick options below.`
+                    chatbotLocale === 'hi' ?
+                    `बहुत बढ़िया, आपने ${chatbotCity} चुना है। अब लक्षण लिखें या नीचे दिए गए विकल्प चुनें।` :
+                    `Great, you've selected ${chatbotCity}. Now type your symptoms or use the quick options below.`
                 );
             }
         }
+
         function enableCitySelection() {
             isCityLocked = false;
             refreshChatbotCityUI();
         }
+
         function refreshChatbotCityUI() {
-            const selectedCard = document.getElementById('chatbot-city-selected-card');
+            const selectWrapper = document.getElementById('chatbot-city-select-wrapper');
+            const lockedWrapper = document.getElementById('chatbot-city-locked-wrapper');
             const selectedLabel = document.getElementById('chatbot-selected-city-label');
-            const changeBtn = document.getElementById('chatbot-change-city-btn');
-            const pillWrap = document.getElementById('chatbot-city-pill-wrap');
+            const citySelector = document.getElementById('chatbot-city-selector');
             const quickPromptsWrap = document.getElementById('chatbot-quick-prompts-wrap');
             const input = document.getElementById('chatbot-input');
             const sendBtn = document.querySelector('#chatbot-form button[type="submit"]');
             const voiceBtn = document.getElementById('chatbot-voice-btn');
-            if (!selectedCard || !selectedLabel || !changeBtn || !pillWrap || !quickPromptsWrap) return;
+            if (!selectWrapper || !lockedWrapper || !selectedLabel || !citySelector || !quickPromptsWrap) return;
 
-            Array.from(pillWrap.querySelectorAll('.chatbot-city-pill')).forEach(btn => {
-                const city = (btn.dataset.city || '').trim();
-                btn.classList.toggle('active', city === chatbotCity);
-            });
+            citySelector.value = chatbotCity;
 
             if (isCityLocked && chatbotCity) {
                 selectedLabel.textContent = chatbotCity;
-                selectedCard.classList.remove('hidden');
-                selectedCard.classList.add('flex');
-                pillWrap.classList.add('hidden');
-                changeBtn.classList.remove('hidden');
+                selectWrapper.classList.add('hidden');
+                lockedWrapper.classList.remove('hidden');
+                lockedWrapper.classList.add('flex');
                 quickPromptsWrap.classList.remove('hidden');
                 if (input) {
                     input.disabled = false;
@@ -689,10 +1141,10 @@
                 if (voiceBtn) voiceBtn.disabled = false;
                 scrollToChatBottom();
             } else {
-                selectedCard.classList.add('hidden');
-                selectedCard.classList.remove('flex');
-                pillWrap.classList.remove('hidden');
-                changeBtn.classList.add('hidden');
+                selectedLabel.textContent = '';
+                selectWrapper.classList.remove('hidden');
+                selectWrapper.classList.add('flex');
+                lockedWrapper.classList.add('hidden');
                 quickPromptsWrap.classList.add('hidden');
                 if (input) {
                     input.disabled = true;
@@ -702,6 +1154,7 @@
                 if (voiceBtn) voiceBtn.disabled = true;
             }
         }
+
         function initializeChatbotCity() {
             const selectedCity = resolveSelectedCity();
             if (selectedCity) {
@@ -712,11 +1165,52 @@
             }
             const initialMessage = document.getElementById('chatbot-initial-message');
             if (initialMessage && chatbotCity) {
-                initialMessage.textContent = chatbotLocale === 'hi'
-                    ? `वापस स्वागत है। आपका चुना हुआ शहर ${chatbotCity} है। आप क्या खोजना चाहते हैं?`
-                    : `Welcome back. Your selected city is ${chatbotCity}. What would you like to find?`;
+                initialMessage.textContent = chatbotLocale === 'hi' ?
+                    `वापस स्वागत है। आपका चुना हुआ शहर ${chatbotCity} है। आप क्या खोजना चाहते हैं?` :
+                    `Welcome back. Your selected city is ${chatbotCity}. What would you like to find?`;
             }
             refreshChatbotCityUI();
+        }
+
+        async function initializeChatbot() {
+            initializeChatbotCity();
+
+            if (chatbotSessionToken) {
+                try {
+                    const res = await fetch('/api/chatbot', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                            'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').content,
+                        },
+                        body: JSON.stringify({
+                            session_token: chatbotSessionToken,
+                            message: '',
+                            city: chatbotCity,
+                            locale: chatbotLocale,
+                        }),
+                    });
+                    const data = await res.json();
+                    if (data.history && data.history.length > 0) {
+                        const messagesDiv = document.getElementById('chatbot-messages');
+                        messagesDiv.innerHTML = '';
+                        let lastBotMsgIndex = -1;
+                        for (let i = data.history.length - 1; i >= 0; i--) {
+                            if (data.history[i].sender === 'bot') {
+                                lastBotMsgIndex = i;
+                                break;
+                            }
+                        }
+                        data.history.forEach((msg, idx) => {
+                            appendMessageObj(msg, idx === lastBotMsgIndex, data.history, idx);
+                        });
+                        lucide.createIcons();
+                        scrollToChatBottom();
+                    }
+                } catch (e) {
+                    console.error("Error loading chat history:", e);
+                }
+            }
         }
 
         function toggleChatbot() {
@@ -752,6 +1246,7 @@
                 setupFabHintCycle();
             }
         }
+
         function handleQuickAction(action) {
             const selectedCity = resolveSelectedCity();
             const query = selectedCity ? `?city=${encodeURIComponent(selectedCity)}` : '';
@@ -759,21 +1254,23 @@
             if (action === 'hospitals') window.location.href = `{{ route('hospitals.index') }}${query}`;
             if (action === 'blood_banks') window.location.href = `{{ route('blood_banks.index') }}${query}`;
         }
+
         function clearChatConversation() {
             const messagesDiv = document.getElementById('chatbot-messages');
             if (!messagesDiv) return;
             messagesDiv.innerHTML = '';
             appendMessage('bot',
-                chatbotCity
-                    ? (chatbotLocale === 'hi'
-                        ? `चैट साफ की गई। आपका चुना हुआ शहर ${chatbotCity} है। बताइए क्या खोजना है?`
-                        : `Chat cleared. Your selected city is ${chatbotCity}. What would you like to find?`)
-                    : (chatbotLocale === 'hi'
-                        ? 'चैट साफ की गई। कृपया शहर चुनें और आगे बढ़ें।'
-                        : 'Chat cleared. Please choose a city to continue.')
+                chatbotCity ?
+                (chatbotLocale === 'hi' ?
+                    `चैट साफ की गई। आपका चुना हुआ शहर ${chatbotCity} है। बताइए क्या खोजना है?` :
+                    `Chat cleared. Your selected city is ${chatbotCity}. What would you like to find?`) :
+                (chatbotLocale === 'hi' ?
+                    'चैट साफ की गई। कृपया शहर चुनें और आगे बढ़ें।' :
+                    'Chat cleared. Please choose a city to continue.')
             );
             refreshChatbotCityUI();
         }
+
         function toggleChatbotImportant() {
             const details = document.getElementById('chatbot-important-details');
             if (!details) return;
@@ -796,6 +1293,7 @@
             const lang = chatbotLocale === 'hi' ? 'hi' : 'en';
             return field[lang] || field.en || fallback;
         }
+
         function speakText(text) {
             if (!('speechSynthesis' in window) || !speakEnabled || !text) return;
             window.speechSynthesis.cancel();
@@ -803,12 +1301,14 @@
             utterance.lang = chatbotLocale === 'hi' ? 'hi-IN' : 'en-US';
             window.speechSynthesis.speak(utterance);
         }
+
         function toggleSpeakEnabled() {
             speakEnabled = !speakEnabled;
             const btn = document.getElementById('chatbot-speak-toggle');
             if (!btn) return;
             btn.classList.toggle('text-teal-300', speakEnabled);
         }
+
         function getSpeechLocale() {
             return chatbotLocale === 'hi' ? 'hi-IN' : 'en-US';
         }
@@ -832,9 +1332,9 @@
             const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
 
             if (!SpeechRecognition) {
-                appendMessage('bot', chatbotLocale === 'hi'
-                    ? 'आपके ब्राउज़र में वॉइस टाइपिंग समर्थित नहीं है। कृपया Chrome/Edge का उपयोग करें।'
-                    : 'Voice typing is not supported in your browser. Please use Chrome or Edge.');
+                appendMessage('bot', chatbotLocale === 'hi' ?
+                    'आपके ब्राउज़र में वॉइस टाइपिंग समर्थित नहीं है। कृपया Chrome/Edge का उपयोग करें।' :
+                    'Voice typing is not supported in your browser. Please use Chrome or Edge.');
                 return;
             }
 
@@ -879,6 +1379,7 @@
         async function submitChatbotMessage(message) {
             const languageInput = document.getElementById('chatbot-language');
             chatbotLocale = languageInput?.value === 'hi' ? 'hi' : 'en';
+            currentLocale = chatbotLocale;
             if (isSubmittingChat) return;
             chatbotCity = resolveSelectedCity();
 
@@ -896,7 +1397,7 @@
             const input = document.getElementById('chatbot-input');
             if (input) input.value = '';
             appendMessage('user', message);
-            
+
             const loadingDiv = document.getElementById('chatbot-loading');
             const sendBtn = document.querySelector('#chatbot-form button[type="submit"]');
             loadingDiv.classList.remove('hidden');
@@ -923,7 +1424,7 @@
 
                 const data = await res.json();
                 if (data.session_token) chatbotSessionToken = data.session_token;
-                
+
                 loadingDiv.classList.add('hidden');
                 if (sendBtn) sendBtn.disabled = false;
                 isSubmittingChat = false;
@@ -933,8 +1434,15 @@
                     // Re-render history
                     const messagesDiv = document.getElementById('chatbot-messages');
                     messagesDiv.innerHTML = '';
-                    data.history.forEach(msg => {
-                        appendMessageObj(msg);
+                    let lastBotMsgIndex = -1;
+                    for (let i = data.history.length - 1; i >= 0; i--) {
+                        if (data.history[i].sender === 'bot') {
+                            lastBotMsgIndex = i;
+                            break;
+                        }
+                    }
+                    data.history.forEach((msg, idx) => {
+                        appendMessageObj(msg, idx === lastBotMsgIndex, data.history, idx);
                     });
                     lucide.createIcons();
                     scrollToChatBottom();
@@ -948,6 +1456,120 @@
                 appendMessage('bot', chatbotLocale === 'hi' ? 'कुछ तकनीकी समस्या हुई। कृपया दोबारा प्रयास करें।' : 'Something went wrong. Please try again.');
             }
         }
+
+        function getLoadedResourcesInCurrentTurn(history, currentIndex) {
+            const loaded = { doctors: false, hospitals: false, articles: false };
+            for (let i = currentIndex; i >= 0; i--) {
+                const msg = history[i];
+                if (!msg) continue;
+                if (msg.sender === 'user') {
+                    break;
+                }
+                if (msg.doctors && msg.doctors.length > 0) loaded.doctors = true;
+                if (msg.hospitals && msg.hospitals.length > 0) loaded.hospitals = true;
+                if (msg.articles && msg.articles.length > 0) loaded.articles = true;
+                if (msg.load_type) {
+                    loaded[msg.load_type] = true;
+                }
+            }
+            return loaded;
+        }
+
+        async function loadChatbotResource(type) {
+            if (isSubmittingChat) return;
+            chatbotCity = resolveSelectedCity();
+            if (!chatbotCity) return;
+
+            const loadingDiv = document.getElementById('chatbot-loading');
+            const loadingText = document.getElementById('chatbot-loading-text');
+            const sendBtn = document.querySelector('#chatbot-form button[type="submit"]');
+
+            let loaderMsg = '';
+            if (type === 'doctors') {
+                loaderMsg = chatbotLocale === 'hi'
+                    ? "आपके पास के सर्वश्रेष्ठ विशेषज्ञों की खोज की जा रही है..."
+                    : "Searching for best specialist near you...";
+            } else if (type === 'hospitals') {
+                loaderMsg = chatbotLocale === 'hi'
+                    ? "आपके पास के अस्पतालों की खोज की जा रही है..."
+                    : "Finding hospitals which is near to you...";
+            } else if (type === 'articles') {
+                loaderMsg = chatbotLocale === 'hi'
+                    ? "आपकी सहायता कर सकने वाले लेखों की खोज की जा रही है..."
+                    : "Finding articles which may help you...";
+            }
+
+            if (loadingText) {
+                loadingText.textContent = loaderMsg;
+            }
+            if (loadingDiv) {
+                loadingDiv.classList.remove('hidden');
+            }
+            if (sendBtn) {
+                sendBtn.disabled = true;
+            }
+            isSubmittingChat = true;
+            scrollToChatBottom();
+
+            try {
+                pendingChatAbortController = new AbortController();
+                const res = await fetch('/api/chatbot', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').content,
+                    },
+                    signal: pendingChatAbortController.signal,
+                    body: JSON.stringify({
+                        session_token: chatbotSessionToken,
+                        message: '',
+                        load_type: type,
+                        city: chatbotCity,
+                        locale: chatbotLocale,
+                    }),
+                });
+
+                const data = await res.json();
+                if (data.session_token) chatbotSessionToken = data.session_token;
+
+                if (loadingDiv) loadingDiv.classList.add('hidden');
+                if (sendBtn) sendBtn.disabled = false;
+                isSubmittingChat = false;
+                pendingChatAbortController = null;
+
+                if (loadingText) {
+                    loadingText.textContent = chatbotLocale === 'hi' ? 'स्वास्थ्य AI सोच रहा है...' : 'Swasthya AI is thinking...';
+                }
+
+                if (data.history) {
+                    const messagesDiv = document.getElementById('chatbot-messages');
+                    messagesDiv.innerHTML = '';
+                    let lastBotMsgIndex = -1;
+                    for (let i = data.history.length - 1; i >= 0; i--) {
+                        if (data.history[i].sender === 'bot') {
+                            lastBotMsgIndex = i;
+                            break;
+                        }
+                    }
+                    data.history.forEach((msg, idx) => {
+                        appendMessageObj(msg, idx === lastBotMsgIndex, data.history, idx);
+                    });
+                    lucide.createIcons();
+                    scrollToChatBottom();
+                }
+            } catch (error) {
+                if (error?.name === 'AbortError') return;
+                if (loadingDiv) loadingDiv.classList.add('hidden');
+                if (sendBtn) sendBtn.disabled = false;
+                isSubmittingChat = false;
+                pendingChatAbortController = null;
+                if (loadingText) {
+                    loadingText.textContent = chatbotLocale === 'hi' ? 'स्वास्थ्य AI सोच रहा है...' : 'Swasthya AI is thinking...';
+                }
+                appendMessage('bot', chatbotLocale === 'hi' ? 'कुछ तकनीकी समस्या हुई। कृपया दोबारा प्रयास करें।' : 'Something went wrong. Please try again.');
+            }
+        }
+
         async function handleChatbotSubmit(e) {
             e.preventDefault();
             const input = document.getElementById('chatbot-input');
@@ -960,22 +1582,19 @@
         }
 
         function appendMessage(sender, text) {
-            appendMessageObj({ sender, text });
+            appendMessageObj({
+                sender,
+                text
+            }, true);
             lucide.createIcons();
             scrollToChatBottom();
         }
 
-        function appendMessageObj(msg) {
+        function appendMessageObj(msg, isLastBotMsg = true, history = [], idx = -1) {
             const messagesDiv = document.getElementById('chatbot-messages');
             const isUser = msg.sender === 'user';
-            const symptomActionMode = !isUser && Boolean(msg.symptom_match);
-            const hasRelatedSections = !isUser && (
-                (msg.doctors && msg.doctors.length > 0) ||
-                (msg.hospitals && msg.hospitals.length > 0) ||
-                (msg.articles && msg.articles.length > 0)
-            );
-            
-            const spoken = String(msg.text || '').replace(/'/g, '&#39;').replace(/\"/g, '&quot;');
+
+            const spoken = String(msg.text || '').replace(/\*\*/g, '').replace(/[*_\-`]/g, '').replace(/'/g, '&#39;').replace(/\"/g, '&quot;');
             const isWarning = !isUser && /(emergency|urgent|call|आपात|तुरंत|helpline)/i.test(String(msg.text || ''));
             let html = `
                 <div class="flex ${isUser ? 'justify-end' : 'justify-start'} animate-in fade-in duration-200">
@@ -985,80 +1604,111 @@
                         </div>
                         <div class="space-y-2">
                             <div class="p-3.5 rounded-2xl text-sm shadow-sm leading-relaxed ${isUser ? 'bg-gradient-to-r from-indigo-600 to-indigo-500 text-white rounded-tr-none border border-indigo-400/50' : isWarning ? 'bg-amber-50 text-amber-900 border border-amber-200 rounded-tl-none' : 'bg-white/95 text-slate-800 border border-slate-200/70 rounded-tl-none backdrop-blur-sm'}">
-                                ${msg.text}
+                                ${isUser ? escapeHtml(msg.text) : formatMessageText(msg.text)}
                             </div>
-                            ${!isUser ? `<button type="button" onclick="speakText('${spoken}')" class="inline-flex items-center gap-1 text-[11px] text-slate-500 hover:text-teal-600 text-left px-2 py-1 rounded-lg hover:bg-teal-50 transition-all">🔊 ${chatbotLocale === 'hi' ? 'सुनें' : 'Listen'}</button>` : ''}
+                            <div class="flex flex-wrap gap-2 items-center">
+                                ${!isUser ? `<button type="button" onclick="speakText('${spoken}')" class="inline-flex items-center gap-1 text-[11px] text-slate-500 hover:text-teal-600 text-left px-2.5 py-1 rounded-lg hover:bg-teal-50 border border-slate-200/60 bg-white transition-all">🔊 ${chatbotLocale === 'hi' ? 'सुनें' : 'Listen'}</button>` : ''}
+                                ${(!isUser && msg.suggest_details && isLastBotMsg) ? `<button type="button" onclick="submitChatbotMessage('${chatbotLocale === 'hi' ? 'कृपया विस्तार से समझाएं' : 'Please explain in detail'}')" class="inline-flex items-center gap-1 text-[11px] font-semibold text-indigo-700 hover:text-indigo-900 border border-indigo-200 hover:border-indigo-300 bg-white hover:bg-indigo-50 rounded-lg px-2.5 py-1 transition-all">💬 ${chatbotLocale === 'hi' ? 'विस्तार से समझाएं' : 'Explain in Detail'}</button>` : ''}
+                            </div>
+                            ${(!isUser && msg.show_options && isLastBotMsg && idx >= 0) ? (() => {
+                                const loaded = getLoadedResourcesInCurrentTurn(history, idx);
+                                let optionsHtml = '';
+                                
+                                if (!loaded.doctors) {
+                                    optionsHtml += `
+                                        <button type="button" onclick="loadChatbotResource('doctors')" class="inline-flex items-center gap-1.5 text-[11px] font-bold text-teal-700 hover:text-teal-900 border border-teal-200 hover:border-teal-300 bg-white dark:bg-slate-900 dark:border-slate-800 dark:text-teal-400 dark:hover:bg-slate-800/80 hover:bg-teal-50 rounded-lg px-2.5 py-1.5 transition-all">
+                                            <i data-lucide="stethoscope" class="w-3.5 h-3.5 text-teal-500 shrink-0"></i>
+                                            <span>${chatbotLocale === 'hi' ? 'विशेषज्ञ डॉक्टर' : 'Specialist Doctors'}</span>
+                                        </button>
+                                    `;
+                                }
+                                if (!loaded.hospitals) {
+                                    optionsHtml += `
+                                        <button type="button" onclick="loadChatbotResource('hospitals')" class="inline-flex items-center gap-1.5 text-[11px] font-bold text-indigo-700 hover:text-indigo-900 border border-indigo-200 hover:border-indigo-300 bg-white dark:bg-slate-900 dark:border-slate-800 dark:text-indigo-400 dark:hover:bg-slate-800/80 hover:bg-indigo-50 rounded-lg px-2.5 py-1.5 transition-all">
+                                            <i data-lucide="building-2" class="w-3.5 h-3.5 text-indigo-500 shrink-0"></i>
+                                            <span>${chatbotLocale === 'hi' ? 'अस्पताल व क्लीनिक' : 'Hospitals & Clinics'}</span>
+                                        </button>
+                                    `;
+                                }
+                                if (!loaded.articles) {
+                                    optionsHtml += `
+                                        <button type="button" onclick="loadChatbotResource('articles')" class="inline-flex items-center gap-1.5 text-[11px] font-bold text-amber-700 hover:text-amber-900 border border-amber-200 hover:border-amber-300 bg-white dark:bg-slate-900 dark:border-slate-800 dark:text-amber-400 dark:hover:bg-slate-800/80 hover:bg-amber-50 rounded-lg px-2.5 py-1.5 transition-all">
+                                            <i data-lucide="book-open" class="w-3.5 h-3.5 text-amber-500 shrink-0"></i>
+                                            <span>${chatbotLocale === 'hi' ? 'स्वास्थ्य लेख' : 'Health Articles'}</span>
+                                        </button>
+                                    `;
+                                }
+
+                                if (optionsHtml !== '') {
+                                    return `
+                                        <div class="pt-2 flex flex-wrap gap-2 items-center">
+                                            <span class="text-[10px] font-bold text-slate-400 dark:text-slate-500 uppercase tracking-wider block w-full mb-1">
+                                                ${chatbotLocale === 'hi' ? 'संबंधित विकल्प लोड करें:' : 'Load related options:'}
+                                            </span>
+                                            ${optionsHtml}
+                                        </div>
+                                    `;
+                                }
+                                return '';
+                            })() : ''}
             `;
 
-            const detailedAnswerRaw = !isUser
-                ? (chatbotLocale === 'hi'
-                    ? (msg?.qa_answer?.detailed_answer_hi || msg?.qa_answer?.detailed_answer_en || '')
-                    : (msg?.qa_answer?.detailed_answer_en || msg?.qa_answer?.detailed_answer_hi || ''))
-                : '';
-            const detailedAnswer = String(detailedAnswerRaw || '').trim();
-            if (!symptomActionMode && detailedAnswer !== '') {
-                chatbotDetailBlockCounter += 1;
-                const buttonId = `chatbot-detail-toggle-${chatbotDetailBlockCounter}`;
-                const contentId = `chatbot-detail-content-${chatbotDetailBlockCounter}`;
-                const moreLabel = chatbotLocale === 'hi' ? 'इसके बारे में और जानें' : 'Know more about this';
-                const lessLabel = chatbotLocale === 'hi' ? 'कम दिखाएं' : 'Show less';
-                html += `
-                    <div class="pt-1">
-                        <button
-                            id="${buttonId}"
-                            type="button"
-                            aria-expanded="false"
-                            aria-controls="${contentId}"
-                            data-more-label="${moreLabel}"
-                            data-less-label="${lessLabel}"
-                            onclick="toggleChatbotDetails('${buttonId}','${contentId}')"
-                            class="inline-flex items-center gap-1 text-[11px] font-semibold text-indigo-700 hover:text-indigo-900 border border-indigo-200 hover:border-indigo-300 bg-white hover:bg-indigo-50 rounded-full px-3 py-1 transition-all"
-                        >
-                            <i data-lucide="info" class="w-3 h-3"></i>
-                            <span>${moreLabel}</span>
-                        </button>
-                        <div id="${contentId}" class="hidden mt-2 rounded-xl border border-indigo-100 bg-indigo-50/70 p-3 text-xs leading-relaxed text-slate-700">
-                            ${formatDetailedAnswer(detailedAnswer)}
+            if (!isUser) {
+                // Render Department Recommendation directly under the response bubble if present
+                if (msg.department_info) {
+                    html += `
+                        <div class="bg-teal-50/80 border border-teal-100 p-3.5 rounded-2xl text-teal-950 text-xs shadow-xs mt-2 flex items-start space-x-2.5">
+                            <i data-lucide="info" class="w-4 h-4 text-teal-600 shrink-0 mt-0.5 animate-pulse"></i>
+                            <div>
+                                <span class="leading-relaxed font-medium">${msg.department_info}</span>
+                            </div>
                         </div>
-                    </div>
-                `;
-            }
-
-            if (symptomActionMode) {
-                chatbotDetailBlockCounter += 1;
-                const doctorsPanelId = `chatbot-action-doctors-${chatbotDetailBlockCounter}`;
-                const hospitalsPanelId = `chatbot-action-hospitals-${chatbotDetailBlockCounter}`;
-                const detailsPanelId = `chatbot-action-details-${chatbotDetailBlockCounter}`;
-                const doctorsBtnId = `chatbot-action-doctors-btn-${chatbotDetailBlockCounter}`;
-                const hospitalsBtnId = `chatbot-action-hospitals-btn-${chatbotDetailBlockCounter}`;
-                const detailsBtnId = `chatbot-action-details-btn-${chatbotDetailBlockCounter}`;
-
-                html += `<div class="pt-1 flex flex-wrap gap-2">`;
-                if (msg.doctors && msg.doctors.length > 0) {
-                    html += `
-                        <button id="${doctorsBtnId}" type="button" onclick="toggleChatbotActionPanel('${doctorsBtnId}','${doctorsPanelId}')" class="chatbot-action-btn">
-                            ${currentLocale === 'hi' ? 'इसके लिए डॉक्टर देखें' : 'See Doctors for this'}
-                        </button>
                     `;
                 }
-                if (msg.hospitals && msg.hospitals.length > 0) {
-                    html += `
-                        <button id="${hospitalsBtnId}" type="button" onclick="toggleChatbotActionPanel('${hospitalsBtnId}','${hospitalsPanelId}')" class="chatbot-action-btn">
-                            ${currentLocale === 'hi' ? 'इसके लिए अस्पताल देखें' : 'See Hospitals for this'}
-                        </button>
-                    `;
-                }
+
+                // Collapsible detailed Q&A block if present
+                const detailedAnswerRaw = chatbotLocale === 'hi' ?
+                    (msg?.qa_answer?.detailed_answer_hi || msg?.qa_answer?.detailed_answer_en || '') :
+                    (msg?.qa_answer?.detailed_answer_en || msg?.qa_answer?.detailed_answer_hi || '');
+                const detailedAnswer = String(detailedAnswerRaw || '').trim();
+
                 if (detailedAnswer !== '') {
+                    chatbotDetailBlockCounter += 1;
+                    const buttonId = `chatbot-detail-toggle-${chatbotDetailBlockCounter}`;
+                    const contentId = `chatbot-detail-content-${chatbotDetailBlockCounter}`;
+                    const moreLabel = chatbotLocale === 'hi' ? 'इसके बारे में और जानें' : 'Know more about this';
+                    const lessLabel = chatbotLocale === 'hi' ? 'कम दिखाएं' : 'Show less';
                     html += `
-                        <button id="${detailsBtnId}" type="button" onclick="toggleChatbotActionPanel('${detailsBtnId}','${detailsPanelId}')" class="chatbot-action-btn">
-                            ${currentLocale === 'hi' ? 'और जानकारी लें' : 'Get more detail'}
-                        </button>
+                        <div class="pt-1">
+                            <button
+                                id="${buttonId}"
+                                type="button"
+                                aria-expanded="false"
+                                aria-controls="${contentId}"
+                                data-more-label="${moreLabel}"
+                                data-less-label="${lessLabel}"
+                                onclick="toggleChatbotDetails('${buttonId}','${contentId}')"
+                                class="inline-flex items-center gap-1 text-[11px] font-semibold text-indigo-700 hover:text-indigo-900 border border-indigo-200 hover:border-indigo-300 bg-white hover:bg-indigo-50 rounded-full px-3 py-1 transition-all"
+                            >
+                                <i data-lucide="info" class="w-3 h-3"></i>
+                                <span>${moreLabel}</span>
+                            </button>
+                            <div id="${contentId}" class="hidden mt-2 rounded-xl border border-indigo-100 bg-indigo-50/70 p-3 text-xs leading-relaxed text-slate-700">
+                                ${formatDetailedAnswer(detailedAnswer)}
+                            </div>
+                        </div>
                     `;
                 }
-                html += `</div>`;
 
+                // Render Doctors list directly (visible by default) if present
                 if (msg.doctors && msg.doctors.length > 0) {
-                    html += `<div id="${doctorsPanelId}" class="hidden pt-2"><div class="space-y-2"><h5 class="text-xs font-bold text-slate-400 uppercase tracking-wider">${currentLocale === 'hi' ? 'विशेषज्ञ डॉक्टर' : 'Specialist Doctors'}</h5>`;
+                    html += `
+                        <div class="space-y-2 pt-3 border-t border-slate-100/50 mt-3">
+                            <h5 class="text-xs font-bold text-slate-400 uppercase tracking-wider flex items-center gap-1">
+                                <i data-lucide="stethoscope" class="w-3.5 h-3.5 text-teal-600"></i>
+                                <span>${currentLocale === 'hi' ? 'विशेषज्ञ डॉक्टर' : 'Specialist Doctors'}</span>
+                            </h5>
+                    `;
                     msg.doctors.forEach(doc => {
                         const fullName = `Dr. ${doc.first_name} ${doc.last_name}`;
                         const deptName = doc.department ? getLocalizedText(doc.department.name) : '';
@@ -1066,13 +1716,13 @@
                         const hospName = doc.hospitals?.[0] ? getLocalizedText(doc.hospitals[0].name) : '';
 
                         html += `
-                            <div class="bg-white p-3 rounded-2xl border border-indigo-100 shadow-sm hover:shadow transition-all duration-200 text-slate-800">
+                            <div class="bg-white p-3 rounded-2xl border border-indigo-100 shadow-xs hover:shadow-md transition-all duration-200 text-slate-800">
                                 <div class="flex justify-between items-start">
                                     <h4 class="font-bold text-sm text-indigo-950 flex items-center space-x-1">
                                         <span>${fullName}</span>
                                         ${doc.is_verified ? '<i data-lucide="check-circle-2" class="w-3.5 h-3.5 text-teal-600 inline"></i>' : ''}
                                     </h4>
-                                    <span class="text-xs bg-indigo-50 text-indigo-700 px-2 py-0.5 rounded-lg font-medium">
+                                    <span class="text-[10px] bg-indigo-50 text-indigo-700 px-2 py-0.5 rounded-lg font-medium shrink-0">
                                         ${doc.experience_years} ${currentLocale === 'hi' ? 'वर्ष अनुभव' : 'yrs exp'}
                                     </span>
                                 </div>
@@ -1090,7 +1740,7 @@
                                 </div>
                                 ${emergencyPhone ? `
                                     <div class="mt-2 pt-2 border-t border-slate-100 flex justify-end">
-                                        <a href="tel:${emergencyPhone}" class="text-xs bg-teal-50 hover:bg-teal-600 hover:text-white text-teal-700 font-medium px-3 py-1 rounded-xl shadow-sm transition-all duration-200">
+                                        <a href="tel:${emergencyPhone}" class="text-xs bg-teal-50 hover:bg-teal-600 hover:text-white text-teal-700 font-medium px-3 py-1 rounded-xl shadow-xs transition-all duration-200">
                                             ${currentLocale === 'hi' ? 'कॉल करें' : 'Call Doctor'}
                                         </a>
                                     </div>
@@ -1098,21 +1748,36 @@
                             </div>
                         `;
                     });
+
                     if (msg.see_all_doctors_url) {
-                        html += `<div class="pt-1"><a href="${msg.see_all_doctors_url}" class="inline-flex items-center space-x-1 text-xs bg-teal-50 hover:bg-teal-600 hover:text-white text-teal-700 font-medium px-3 py-1 rounded-xl shadow-sm transition-all duration-200"><span>${currentLocale === 'hi' ? 'सभी डॉक्टर देखें' : 'See all doctors'}</span></a></div>`;
+                        html += `
+                            <div class="pt-1 flex justify-end">
+                                <a href="${msg.see_all_doctors_url}" class="inline-flex items-center space-x-1 text-xs bg-teal-50 hover:bg-teal-600 hover:text-white text-teal-700 font-medium px-3 py-1.5 rounded-xl shadow-xs transition-all duration-200">
+                                    <span>${currentLocale === 'hi' ? 'सभी डॉक्टर देखें' : 'See all doctors'}</span>
+                                    <i data-lucide="arrow-right" class="w-3.5 h-3.5"></i>
+                                </a>
+                            </div>
+                        `;
                     }
-                    html += `</div></div>`;
+                    html += `</div>`;
                 }
 
+                // Render Hospitals list directly (visible by default) if present
                 if (msg.hospitals && msg.hospitals.length > 0) {
-                    html += `<div id="${hospitalsPanelId}" class="hidden pt-2"><div class="space-y-2"><h5 class="text-xs font-bold text-slate-400 uppercase tracking-wider">${currentLocale === 'hi' ? 'अस्पताल व क्लिनिक' : 'Hospitals & Clinics'}</h5>`;
+                    html += `
+                        <div class="space-y-2 pt-3 border-t border-slate-100/50 mt-3">
+                            <h5 class="text-xs font-bold text-slate-400 uppercase tracking-wider flex items-center gap-1">
+                                <i data-lucide="building-2" class="w-3.5 h-3.5 text-teal-600"></i>
+                                <span>${currentLocale === 'hi' ? 'अस्पताल व क्लिनिक' : 'Hospitals & Clinics'}</span>
+                            </h5>
+                    `;
                     msg.hospitals.forEach(hosp => {
                         const hospName = getLocalizedText(hosp.name);
                         const emergencyPhone = hosp.emergency_phone || '';
                         const city = hosp.city || '';
 
                         html += `
-                            <div class="bg-white p-3 rounded-2xl border border-teal-100 shadow-sm hover:shadow transition-all duration-200 text-slate-800">
+                            <div class="bg-white p-3 rounded-2xl border border-teal-100 shadow-xs hover:shadow-md transition-all duration-200 text-slate-800">
                                 <div class="flex justify-between items-start gap-2">
                                     <h4 class="font-bold text-sm text-teal-950 flex items-center space-x-1">
                                         <span>${hospName}</span>
@@ -1128,7 +1793,7 @@
                                 </div>
                                 ${emergencyPhone ? `
                                     <div class="mt-2 pt-2 border-t border-slate-100 flex justify-end">
-                                        <a href="tel:${emergencyPhone}" class="text-xs bg-teal-50 hover:bg-teal-600 hover:text-white text-teal-700 font-medium px-3 py-1 rounded-xl shadow-sm transition-all duration-200 flex items-center space-x-1">
+                                        <a href="tel:${emergencyPhone}" class="text-xs bg-teal-50 hover:bg-teal-600 hover:text-white text-teal-700 font-medium px-3 py-1 rounded-xl shadow-xs transition-all duration-200 flex items-center space-x-1">
                                             <i data-lucide="phone-call" class="w-3 h-3"></i>
                                             <span>${currentLocale === 'hi' ? 'कॉल करें' : 'Call Emergency'}</span>
                                         </a>
@@ -1137,161 +1802,94 @@
                             </div>
                         `;
                     });
+
                     if (msg.see_all_hospitals_url) {
-                        html += `<div class="pt-1"><a href="${msg.see_all_hospitals_url}" class="inline-flex items-center space-x-1 text-xs bg-indigo-50 hover:bg-indigo-600 hover:text-white text-indigo-700 font-medium px-3 py-1 rounded-xl shadow-sm transition-all duration-200"><span>${currentLocale === 'hi' ? 'सभी अस्पताल देखें' : 'See all hospitals'}</span></a></div>`;
-                    }
-                    html += `</div></div>`;
-                }
-
-                if (detailedAnswer !== '') {
-                    html += `
-                        <div id="${detailsPanelId}" class="hidden mt-2 rounded-xl border border-indigo-100 bg-indigo-50/70 p-3 text-xs leading-relaxed text-slate-700">
-                            ${formatDetailedAnswer(detailedAnswer)}
-                        </div>
-                    `;
-                }
-            }
-
-            if (hasRelatedSections && !symptomActionMode) {
-                chatbotDetailBlockCounter += 1;
-                const doctorsPanelId = `chatbot-related-doctors-${chatbotDetailBlockCounter}`;
-                const hospitalsPanelId = `chatbot-related-hospitals-${chatbotDetailBlockCounter}`;
-                const articlesPanelId = `chatbot-related-articles-${chatbotDetailBlockCounter}`;
-                const detailsPanelId = `chatbot-related-details-${chatbotDetailBlockCounter}`;
-                const doctorsBtnId = `chatbot-related-doctors-btn-${chatbotDetailBlockCounter}`;
-                const hospitalsBtnId = `chatbot-related-hospitals-btn-${chatbotDetailBlockCounter}`;
-                const articlesBtnId = `chatbot-related-articles-btn-${chatbotDetailBlockCounter}`;
-                const detailsBtnId = `chatbot-related-details-btn-${chatbotDetailBlockCounter}`;
-
-                html += `<div class="pt-1 flex flex-wrap gap-2">`;
-                if (msg.doctors && msg.doctors.length > 0) {
-                    html += `
-                        <button id="${doctorsBtnId}" type="button" onclick="toggleChatbotActionPanel('${doctorsBtnId}','${doctorsPanelId}')" class="chatbot-action-btn">
-                            ${currentLocale === 'hi' ? 'संबंधित डॉक्टर देखें' : 'View Related Doctors'}
-                        </button>
-                    `;
-                }
-                if (msg.hospitals && msg.hospitals.length > 0) {
-                    html += `
-                        <button id="${hospitalsBtnId}" type="button" onclick="toggleChatbotActionPanel('${hospitalsBtnId}','${hospitalsPanelId}')" class="chatbot-action-btn">
-                            ${currentLocale === 'hi' ? 'संबंधित अस्पताल देखें' : 'View Related Hospitals'}
-                        </button>
-                    `;
-                }
-                if (msg.articles && msg.articles.length > 0) {
-                    html += `
-                        <button id="${articlesBtnId}" type="button" onclick="toggleChatbotActionPanel('${articlesBtnId}','${articlesPanelId}')" class="chatbot-action-btn">
-                            ${currentLocale === 'hi' ? 'संबंधित लेख देखें' : 'View Related Articles'}
-                        </button>
-                    `;
-                }
-                if (detailedAnswer !== '') {
-                    html += `
-                        <button id="${detailsBtnId}" type="button" onclick="toggleChatbotActionPanel('${detailsBtnId}','${detailsPanelId}')" class="chatbot-action-btn">
-                            ${currentLocale === 'hi' ? 'और जानकारी लें' : 'Get more detail'}
-                        </button>
-                    `;
-                }
-                html += `</div>`;
-
-                if (msg.doctors && msg.doctors.length > 0) {
-                    html += `<div id="${doctorsPanelId}" class="hidden pt-2"><div class="space-y-2"><h5 class="text-xs font-bold text-slate-400 uppercase tracking-wider">${currentLocale === 'hi' ? 'विशेषज्ञ डॉक्टर' : 'Specialist Doctors'}</h5>`;
-                    msg.doctors.forEach(doc => {
-                        const fullName = `Dr. ${doc.first_name} ${doc.last_name}`;
-                        const deptName = doc.department ? getLocalizedText(doc.department.name) : '';
-                        const emergencyPhone = doc.hospitals?.[0]?.emergency_phone || '';
-                        const hospName = doc.hospitals?.[0] ? getLocalizedText(doc.hospitals[0].name) : '';
-
                         html += `
-                            <div class="bg-white p-3 rounded-2xl border border-indigo-100 shadow-sm hover:shadow transition-all duration-200 text-slate-800">
-                                <div class="flex justify-between items-start">
-                                    <h4 class="font-bold text-sm text-indigo-950 flex items-center space-x-1">
-                                        <span>${fullName}</span>
-                                        ${doc.is_verified ? '<i data-lucide="check-circle-2" class="w-3.5 h-3.5 text-teal-600 inline"></i>' : ''}
-                                    </h4>
-                                    <span class="text-xs bg-indigo-50 text-indigo-700 px-2 py-0.5 rounded-lg font-medium">
-                                        ${doc.experience_years} ${currentLocale === 'hi' ? 'वर्ष अनुभव' : 'yrs exp'}
-                                    </span>
-                                </div>
-                                <div class="mt-2 space-y-1 text-xs text-slate-600">
-                                    <div class="flex items-center space-x-1">
-                                        <i data-lucide="stethoscope" class="w-3.5 h-3.5 text-teal-600 shrink-0"></i>
-                                        <span class="font-medium text-slate-700">${deptName}</span>
-                                    </div>
-                                    ${hospName ? `
-                                        <div class="flex items-start space-x-1 pt-0.5">
-                                            <i data-lucide="map-pin" class="w-3.5 h-3.5 text-indigo-500 shrink-0 mt-0.5"></i>
-                                            <span>${hospName}</span>
-                                        </div>
-                                    ` : ''}
-                                </div>
-                                ${emergencyPhone ? `
-                                    <div class="mt-2 pt-2 border-t border-slate-100 flex justify-end">
-                                        <a href="tel:${emergencyPhone}" class="text-xs bg-teal-50 hover:bg-teal-600 hover:text-white text-teal-700 font-medium px-3 py-1 rounded-xl shadow-sm transition-all duration-200">
-                                            ${currentLocale === 'hi' ? 'कॉल करें' : 'Call Doctor'}
-                                        </a>
-                                    </div>
-                                ` : ''}
+                            <div class="pt-1 flex justify-end">
+                                <a href="${msg.see_all_hospitals_url}" class="inline-flex items-center space-x-1 text-xs bg-indigo-50 hover:bg-indigo-600 hover:text-white text-indigo-700 font-medium px-3 py-1.5 rounded-xl shadow-xs transition-all duration-200">
+                                    <span>${currentLocale === 'hi' ? 'सभी अस्पताल देखें' : 'See all hospitals'}</span>
+                                    <i data-lucide="arrow-right" class="w-3.5 h-3.5"></i>
+                                </a>
                             </div>
                         `;
-                    });
-                    if (msg.see_all_doctors_url) {
-                        html += `<div class="pt-1"><a href="${msg.see_all_doctors_url}" class="inline-flex items-center space-x-1 text-xs bg-teal-50 hover:bg-teal-600 hover:text-white text-teal-700 font-medium px-3 py-1 rounded-xl shadow-sm transition-all duration-200"><span>${currentLocale === 'hi' ? 'सभी डॉक्टर देखें' : 'See all doctors'}</span></a></div>`;
                     }
-                    html += `</div></div>`;
+                    html += `</div>`;
                 }
 
-                if (msg.hospitals && msg.hospitals.length > 0) {
-                    html += `<div id="${hospitalsPanelId}" class="hidden pt-2"><div class="space-y-2"><h5 class="text-xs font-bold text-slate-400 uppercase tracking-wider">${currentLocale === 'hi' ? 'अस्पताल व क्लिनिक' : 'Hospitals & Clinics'}</h5>`;
-                    msg.hospitals.forEach(hosp => {
-                        const hospName = getLocalizedText(hosp.name);
-                        const emergencyPhone = hosp.emergency_phone || '';
-                        const city = hosp.city || '';
+                // Render Blood Banks list directly (visible by default) if present
+                if (msg.blood_banks && msg.blood_banks.length > 0) {
+                    html += `
+                        <div class="space-y-2 pt-3 border-t border-slate-100/50 mt-3">
+                            <h5 class="text-xs font-bold text-slate-400 uppercase tracking-wider flex items-center gap-1">
+                                <i data-lucide="droplet" class="w-3.5 h-3.5 text-rose-600"></i>
+                                <span>${currentLocale === 'hi' ? 'ब्लड बैंक' : 'Blood Banks'}</span>
+                            </h5>
+                    `;
+                    msg.blood_banks.forEach(bank => {
+                        const bankName = getLocalizedText(bank.name);
+                        const emergencyPhone = bank.emergency_phone || bank.phone || '';
+                        const city = bank.city || '';
+                        const address = bank.address || '';
 
                         html += `
-                            <div class="bg-white p-3 rounded-2xl border border-teal-100 shadow-sm hover:shadow transition-all duration-200 text-slate-800">
+                            <div class="bg-white p-3 rounded-2xl border border-rose-100 shadow-xs hover:shadow-md transition-all duration-200 text-slate-800">
                                 <div class="flex justify-between items-start gap-2">
-                                    <h4 class="font-bold text-sm text-teal-950 flex items-center space-x-1">
-                                        <span>${hospName}</span>
-                                        ${hosp.is_verified ? '<i data-lucide="check-circle-2" class="w-3.5 h-3.5 text-teal-600 inline shrink-0"></i>' : ''}
+                                    <h4 class="font-bold text-sm text-rose-950 flex items-center space-x-1">
+                                        <span>${bankName}</span>
+                                        ${bank.is_verified ? '<i data-lucide="check-circle-2" class="w-3.5 h-3.5 text-rose-600 inline shrink-0"></i>' : ''}
                                     </h4>
-                                    <span class="text-[10px] bg-teal-50 text-teal-700 px-2 py-0.5 rounded-lg font-bold uppercase tracking-wider shrink-0">
-                                        ${hosp.type || 'Hospital'}
+                                    <span class="text-[10px] bg-rose-50 text-rose-700 px-2 py-0.5 rounded-lg font-bold uppercase tracking-wider shrink-0">
+                                        ${currentLocale === 'hi' ? 'सत्यापित' : 'Verified'}
                                     </span>
                                 </div>
                                 <div class="mt-1.5 flex items-start space-x-1 text-xs text-slate-600">
                                     <i data-lucide="map-pin" class="w-3.5 h-3.5 text-slate-400 shrink-0 mt-0.5"></i>
-                                    <span class="line-clamp-2">${hosp.address || ''} ${city ? ', ' + city : ''}</span>
+                                    <span class="line-clamp-2">${address} ${city ? ', ' + city : ''}</span>
                                 </div>
                                 ${emergencyPhone ? `
                                     <div class="mt-2 pt-2 border-t border-slate-100 flex justify-end">
-                                        <a href="tel:${emergencyPhone}" class="text-xs bg-teal-50 hover:bg-teal-600 hover:text-white text-teal-700 font-medium px-3 py-1 rounded-xl shadow-sm transition-all duration-200 flex items-center space-x-1">
+                                        <a href="tel:${emergencyPhone}" class="text-xs bg-rose-50 hover:bg-rose-600 hover:text-white text-rose-700 font-medium px-3 py-1 rounded-xl shadow-xs transition-all duration-200 flex items-center space-x-1">
                                             <i data-lucide="phone-call" class="w-3 h-3"></i>
-                                            <span>${currentLocale === 'hi' ? 'कॉल करें' : 'Call Emergency'}</span>
+                                            <span>${currentLocale === 'hi' ? 'कॉल करें' : 'Call Now'}</span>
                                         </a>
                                     </div>
                                 ` : ''}
                             </div>
                         `;
                     });
-                    if (msg.see_all_hospitals_url) {
-                        html += `<div class="pt-1"><a href="${msg.see_all_hospitals_url}" class="inline-flex items-center space-x-1 text-xs bg-indigo-50 hover:bg-indigo-600 hover:text-white text-indigo-700 font-medium px-3 py-1 rounded-xl shadow-sm transition-all duration-200"><span>${currentLocale === 'hi' ? 'सभी अस्पताल देखें' : 'See all hospitals'}</span></a></div>`;
+
+                    if (msg.see_all_blood_banks_url) {
+                        html += `
+                            <div class="pt-1 flex justify-end">
+                                <a href="${msg.see_all_blood_banks_url}" class="inline-flex items-center space-x-1 text-xs bg-rose-50 hover:bg-rose-600 hover:text-white text-rose-700 font-medium px-3 py-1.5 rounded-xl shadow-xs transition-all duration-200">
+                                    <span>${currentLocale === 'hi' ? 'सभी ब्लड बैंक देखें' : 'See all blood banks'}</span>
+                                    <i data-lucide="arrow-right" class="w-3.5 h-3.5"></i>
+                                </a>
+                            </div>
+                        `;
                     }
-                    html += `</div></div>`;
+                    html += `</div>`;
                 }
 
+                // Render Articles list directly (visible by default) if present
                 if (msg.articles && msg.articles.length > 0) {
-                    html += `<div id="${articlesPanelId}" class="hidden pt-2"><div class="space-y-2"><h5 class="text-xs font-bold text-slate-400 uppercase tracking-wider">${currentLocale === 'hi' ? 'स्वास्थ्य लेख' : 'Health Articles'}</h5>`;
+                    html += `
+                        <div class="space-y-2 pt-3 border-t border-slate-100/50 mt-3">
+                            <h5 class="text-xs font-bold text-slate-400 uppercase tracking-wider flex items-center gap-1">
+                                <i data-lucide="book-open" class="w-3.5 h-3.5 text-teal-600"></i>
+                                <span>${currentLocale === 'hi' ? 'स्वास्थ्य लेख' : 'Health Articles'}</span>
+                            </h5>
+                    `;
                     msg.articles.forEach(art => {
                         const artTitle = getLocalizedText(art.title);
                         const artExcerpt = getLocalizedText(art.excerpt) || (getLocalizedText(art.content) || '').substring(0, 80) + '...';
 
                         html += `
-                            <div class="bg-white p-3 rounded-2xl border border-indigo-100 shadow-sm hover:shadow transition-all duration-200 text-slate-800">
+                            <div class="bg-white p-3 rounded-2xl border border-indigo-100 shadow-xs hover:shadow-md transition-all duration-200 text-slate-800">
                                 <h4 class="font-bold text-sm text-slate-900 line-clamp-1">${artTitle}</h4>
                                 <p class="text-xs text-slate-600 mt-1 line-clamp-2">${artExcerpt}</p>
                                 <div class="mt-2 pt-2 border-t border-slate-100 flex justify-end">
-                                    <a href="/articles/${art.id}" target="_blank" class="text-xs bg-indigo-50 hover:bg-indigo-600 hover:text-white text-indigo-700 font-medium px-3 py-1 rounded-xl shadow-sm transition-all duration-200 flex items-center space-x-1">
+                                    <a href="/articles/${art.id}" target="_blank" class="text-xs bg-indigo-50 hover:bg-indigo-600 hover:text-white text-indigo-700 font-medium px-3 py-1 rounded-xl shadow-xs transition-all duration-200 flex items-center space-x-1">
                                         <span>${currentLocale === 'hi' ? 'पूरा लेख पढ़ें' : 'Read Article'}</span>
                                         <i data-lucide="external-link" class="w-3 h-3"></i>
                                     </a>
@@ -1299,156 +1897,18 @@
                             </div>
                         `;
                     });
-                    html += `</div></div>`;
-                }
-
-                if (detailedAnswer !== '') {
-                    html += `
-                        <div id="${detailsPanelId}" class="hidden mt-2 rounded-xl border border-indigo-100 bg-indigo-50/70 p-3 text-xs leading-relaxed text-slate-700">
-                            ${formatDetailedAnswer(detailedAnswer)}
-                        </div>
-                    `;
-                }
-            }
-
-            if (msg.department_info) {
-                chatbotDetailBlockCounter += 1;
-                const deptPanelId = `chatbot-department-panel-${chatbotDetailBlockCounter}`;
-                const deptBtnId = `chatbot-department-btn-${chatbotDetailBlockCounter}`;
-                html += `
-                    <div class="mt-2">
-                        <button id="${deptBtnId}" type="button" onclick="toggleChatbotActionPanel('${deptBtnId}','${deptPanelId}')" class="chatbot-action-btn">
-                            ${currentLocale === 'hi' ? 'अनुशंसित विभाग / परामर्श' : 'Recommended Department / Action'}
-                        </button>
-                        <div id="${deptPanelId}" class="hidden bg-teal-50 border border-teal-200 p-3.5 rounded-2xl text-teal-950 text-xs shadow-2xs mt-2 flex items-start space-x-2.5">
-                            <i data-lucide="info" class="w-4 h-4 text-teal-600 shrink-0 mt-0.5 animate-pulse"></i>
-                            <div>
-                                <span class="leading-relaxed font-medium">${msg.department_info}</span>
-                            </div>
-                        </div>
-                    </div>
-                `;
-            }
-
-            if (!symptomActionMode && !hasRelatedSections && msg.doctors && msg.doctors.length > 0) {
-                html += `<div class="space-y-2 pt-2"><h5 class="text-xs font-bold text-slate-400 uppercase tracking-wider">${currentLocale === 'hi' ? 'विशेषज्ञ डॉक्टर' : 'Specialist Doctors'}</h5>`;
-                msg.doctors.forEach(doc => {
-                    const fullName = `Dr. ${doc.first_name} ${doc.last_name}`;
-                    const deptName = doc.department ? getLocalizedText(doc.department.name) : '';
-                    const emergencyPhone = doc.hospitals?.[0]?.emergency_phone || '';
-                    const hospName = doc.hospitals?.[0] ? getLocalizedText(doc.hospitals[0].name) : '';
-
-                    html += `
-                        <div class="bg-white p-3 rounded-2xl border border-indigo-100 shadow-sm hover:shadow transition-all duration-200 text-slate-800">
-                            <div class="flex justify-between items-start">
-                                <h4 class="font-bold text-sm text-indigo-950 flex items-center space-x-1">
-                                    <span>${fullName}</span>
-                                    ${doc.is_verified ? '<i data-lucide="check-circle-2" class="w-3.5 h-3.5 text-teal-600 inline"></i>' : ''}
-                                </h4>
-                                <span class="text-xs bg-indigo-50 text-indigo-700 px-2 py-0.5 rounded-lg font-medium">
-                                    ${doc.experience_years} ${currentLocale === 'hi' ? 'वर्ष अनुभव' : 'yrs exp'}
-                                </span>
-                            </div>
-                            <div class="mt-2 space-y-1 text-xs text-slate-600">
-                                <div class="flex items-center space-x-1">
-                                    <i data-lucide="stethoscope" class="w-3.5 h-3.5 text-teal-600 shrink-0"></i>
-                                    <span class="font-medium text-slate-700">${deptName}</span>
-                                </div>
-                                ${hospName ? `
-                                    <div class="flex items-start space-x-1 pt-0.5">
-                                        <i data-lucide="map-pin" class="w-3.5 h-3.5 text-indigo-500 shrink-0 mt-0.5"></i>
-                                        <span>${hospName}</span>
-                                    </div>
-                                ` : ''}
-                            </div>
-                            ${emergencyPhone ? `
-                                <div class="mt-2 pt-2 border-t border-slate-100 flex justify-end">
-                                    <a href="tel:${emergencyPhone}" class="text-xs bg-teal-50 hover:bg-teal-600 hover:text-white text-teal-700 font-medium px-3 py-1 rounded-xl shadow-sm transition-all duration-200">
-                                        ${currentLocale === 'hi' ? 'कॉल करें' : 'Call Doctor'}
-                                    </a>
-                                </div>
-                            ` : ''}
-                        </div>
-                    `;
-                });
-                html += `</div>`;
-            }
-
-            if (!symptomActionMode && !hasRelatedSections && msg.hospitals && msg.hospitals.length > 0) {
-                html += `<div class="space-y-2 pt-2 border-t border-slate-100"><h5 class="text-xs font-bold text-slate-400 uppercase tracking-wider">${currentLocale === 'hi' ? 'अस्पताल व क्लिनिक' : 'Hospitals & Clinics'}</h5>`;
-                msg.hospitals.forEach(hosp => {
-                    const hospName = getLocalizedText(hosp.name);
-                    const emergencyPhone = hosp.emergency_phone || '';
-                    const city = hosp.city || '';
-
-                    html += `
-                        <div class="bg-white p-3 rounded-2xl border border-teal-100 shadow-sm hover:shadow transition-all duration-200 text-slate-800">
-                            <div class="flex justify-between items-start gap-2">
-                                <h4 class="font-bold text-sm text-teal-950 flex items-center space-x-1">
-                                    <span>${hospName}</span>
-                                    ${hosp.is_verified ? '<i data-lucide="check-circle-2" class="w-3.5 h-3.5 text-teal-600 inline shrink-0"></i>' : ''}
-                                </h4>
-                                <span class="text-[10px] bg-teal-50 text-teal-700 px-2 py-0.5 rounded-lg font-bold uppercase tracking-wider shrink-0">
-                                    ${hosp.type || 'Hospital'}
-                                </span>
-                            </div>
-                            <div class="mt-1.5 flex items-start space-x-1 text-xs text-slate-600">
-                                <i data-lucide="map-pin" class="w-3.5 h-3.5 text-slate-400 shrink-0 mt-0.5"></i>
-                                <span class="line-clamp-2">${hosp.address || ''} ${city ? ', ' + city : ''}</span>
-                            </div>
-                            ${emergencyPhone ? `
-                                <div class="mt-2 pt-2 border-t border-slate-100 flex justify-end">
-                                    <a href="tel:${emergencyPhone}" class="text-xs bg-teal-50 hover:bg-teal-600 hover:text-white text-teal-700 font-medium px-3 py-1 rounded-xl shadow-sm transition-all duration-200 flex items-center space-x-1">
-                                        <i data-lucide="phone-call" class="w-3 h-3"></i>
-                                        <span>${currentLocale === 'hi' ? 'कॉल करें' : 'Call Emergency'}</span>
-                                    </a>
-                                </div>
-                            ` : ''}
-                        </div>
-                    `;
-                });
-                if (msg.see_all_hospitals_url) {
-                    html += `
-                        <div class="pt-1">
-                            <a href="${msg.see_all_hospitals_url}" class="inline-flex items-center space-x-1 text-xs bg-indigo-50 hover:bg-indigo-600 hover:text-white text-indigo-700 font-medium px-3 py-1 rounded-xl shadow-sm transition-all duration-200">
-                                <span>${currentLocale === 'hi' ? 'सभी अस्पताल देखें' : 'See all hospitals'}</span>
-                            </a>
-                        </div>
-                    `;
-                }
-                html += `</div>`;
-            }
-
-            if (!symptomActionMode && !hasRelatedSections && msg.doctors && msg.doctors.length > 0 && msg.see_all_doctors_url) {
-                html += `
-                    <div class="pt-1">
-                        <a href="${msg.see_all_doctors_url}" class="inline-flex items-center space-x-1 text-xs bg-teal-50 hover:bg-teal-600 hover:text-white text-teal-700 font-medium px-3 py-1 rounded-xl shadow-sm transition-all duration-200">
-                            <span>${currentLocale === 'hi' ? 'सभी डॉक्टर देखें' : 'See all doctors'}</span>
-                        </a>
-                    </div>
-                `;
-            }
-
-            if (!hasRelatedSections && msg.articles && msg.articles.length > 0) {
-                html += `<div class="space-y-2 pt-2 border-t border-slate-100"><h5 class="text-xs font-bold text-slate-400 uppercase tracking-wider">${currentLocale === 'hi' ? 'स्वास्थ्य लेख' : 'Health Articles'}</h5>`;
-                msg.articles.forEach(art => {
-                    const artTitle = getLocalizedText(art.title);
-                    const artExcerpt = getLocalizedText(art.excerpt) || (getLocalizedText(art.content) || '').substring(0, 80) + '...';
-
-                    html += `
-                        <div class="bg-white p-3 rounded-2xl border border-indigo-100 shadow-sm hover:shadow transition-all duration-200 text-slate-800">
-                            <h4 class="font-bold text-sm text-slate-900 line-clamp-1">${artTitle}</h4>
-                            <p class="text-xs text-slate-600 mt-1 line-clamp-2">${artExcerpt}</p>
-                            <div class="mt-2 pt-2 border-t border-slate-100 flex justify-end">
-                                <a href="/articles/${art.id}" target="_blank" class="text-xs bg-indigo-50 hover:bg-indigo-600 hover:text-white text-indigo-700 font-medium px-3 py-1 rounded-xl shadow-sm transition-all duration-200 flex items-center space-x-1">
-                                    <span>${currentLocale === 'hi' ? 'पूरा लेख पढ़ें' : 'Read Article'}</span>
-                                    <i data-lucide="external-link" class="w-3 h-3"></i>
+                    if (msg.see_all_articles_url) {
+                        html += `
+                            <div class="pt-1 flex justify-end">
+                                <a href="${msg.see_all_articles_url}" class="inline-flex items-center space-x-1 text-xs bg-indigo-50 hover:bg-indigo-600 hover:text-white text-indigo-700 font-medium px-3 py-1.5 rounded-xl shadow-xs transition-all duration-200">
+                                    <span>${currentLocale === 'hi' ? 'सभी लेख देखें' : 'See all articles'}</span>
+                                    <i data-lucide="arrow-right" class="w-3.5 h-3.5"></i>
                                 </a>
                             </div>
-                        </div>
-                    `;
-                });
-                html += `</div>`;
+                        `;
+                    }
+                    html += `</div>`;
+                }
             }
 
             html += `
@@ -1493,12 +1953,36 @@
                 refreshChatbotCityUI();
             });
         });
+        document.getElementById('chatbot-language')?.addEventListener('change', function(e) {
+            chatbotLocale = e.target.value === 'hi' ? 'hi' : 'en';
+            currentLocale = chatbotLocale;
+            refreshChatbotCityUI();
+
+            const initialMsg = document.getElementById('chatbot-initial-message');
+            if (initialMsg) {
+                if (chatbotCity) {
+                    initialMsg.textContent = chatbotLocale === 'hi' ?
+                        `वापस स्वागत है। आपका चुना हुआ शहर ${chatbotCity} है। आप क्या खोजना चाहते हैं?` :
+                        `Welcome back. Your selected city is ${chatbotCity}. What would you like to find?`;
+                } else {
+                    initialMsg.textContent = chatbotLocale === 'hi' ?
+                        'नमस्ते, मैं Swasthya AI Assistant हूँ। मैं लक्षण, विभाग, डॉक्टर, अस्पताल और ब्लड बैंक खोजने में मदद करता हूँ।' :
+                        'Hi, I’m Swasthya AI Assistant. I help you find departments, doctors, hospitals, and blood banks based on your needs.';
+                }
+            }
+        });
         initializeChatbotCity();
         setupFabHintCycle();
         collapseMobileFab();
 
         function initializePageAnimations() {
             document.body.classList.add('motion-ready');
+            document.body.classList.add('preload-anim');
+            requestAnimationFrame(() => {
+                requestAnimationFrame(() => {
+                    document.body.classList.add('page-loaded');
+                });
+            });
 
             const animateTargets = new Set();
             document.querySelectorAll('header, section.max-w-7xl, main > *, main article, main .grid > div, main .grid > a').forEach(el => {
@@ -1540,12 +2024,450 @@
         } else {
             initializePageAnimations();
         }
+
+        function initializeAutoFilterForms() {
+            const forms = document.querySelectorAll('form[data-auto-filter]');
+            if (!forms.length) return;
+
+            forms.forEach(form => {
+                let textDebounce;
+                const textInputs = form.querySelectorAll('input[type="text"], input[type="search"]');
+                const selects = form.querySelectorAll('select');
+
+                selects.forEach(select => {
+                    select.addEventListener('change', () => {
+                        form.submit();
+                    });
+                });
+
+                textInputs.forEach(input => {
+                    input.addEventListener('input', () => {
+                        clearTimeout(textDebounce);
+                        textDebounce = setTimeout(() => form.submit(), 500);
+                    });
+
+                    input.addEventListener('keydown', (event) => {
+                        if (event.key === 'Enter') {
+                            event.preventDefault();
+                            clearTimeout(textDebounce);
+                            form.submit();
+                        }
+                    });
+                });
+            });
+        }
+
+        if (document.readyState === 'loading') {
+            document.addEventListener('DOMContentLoaded', initializeAutoFilterForms);
+        } else {
+            initializeAutoFilterForms();
+        }
+
+        document.addEventListener('DOMContentLoaded', () => {
+            loadComparedHospitals();
+
+            // Shift chatbot container up when footer is visible to prevent overlap
+            const footer = document.querySelector('footer');
+            const chatbotContainer = document.getElementById('chatbot-container');
+            if (footer && chatbotContainer) {
+                const observer = new IntersectionObserver((entries) => {
+                    entries.forEach(entry => {
+                        chatbotContainer.classList.toggle('footer-visible', entry.isIntersecting);
+                    });
+                }, {
+                    threshold: 0,
+                    rootMargin: '0px'
+                });
+                observer.observe(footer);
+            }
+        });
     </script>
     <style>
         :root {
             --brand-teal: #0ea5a6;
             --brand-indigo: #4f46e5;
         }
+
+        /* Smooth Dark/Light transition */
+        body {
+            transition: background-color 300ms ease, color 300ms ease, border-color 300ms ease;
+        }
+
+        /* Glassmorphism Styles */
+        .glass-panel {
+            background: rgba(255, 255, 255, 0.75) !important;
+            backdrop-filter: blur(14px) saturate(120%) !important;
+            -webkit-backdrop-filter: blur(14px) saturate(120%) !important;
+            border: 1px solid rgba(255, 255, 255, 0.3) !important;
+        }
+
+        .dark .glass-panel {
+            background: rgba(15, 23, 42, 0.7) !important;
+            backdrop-filter: blur(14px) saturate(120%) !important;
+            -webkit-backdrop-filter: blur(14px) saturate(120%) !important;
+            border: 1px solid rgba(255, 255, 255, 0.08) !important;
+        }
+
+        .glass-card {
+            background: rgba(255, 255, 255, 0.45) !important;
+            backdrop-filter: blur(10px) !important;
+            -webkit-backdrop-filter: blur(10px) !important;
+            border: 1px solid rgba(255, 255, 255, 0.18) !important;
+            box-shadow: 0 4px 30px rgba(0, 0, 0, 0.02) !important;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1) !important;
+        }
+
+        .glass-card:hover {
+            background: rgba(255, 255, 255, 0.8) !important;
+            transform: translateY(-2px) !important;
+            box-shadow: 0 12px 30px rgba(0, 0, 0, 0.06) !important;
+            border-color: rgba(79, 70, 229, 0.25) !important;
+        }
+
+        .dark .glass-card {
+            background: rgba(15, 23, 42, 0.4) !important;
+            border: 1px solid rgba(255, 255, 255, 0.06) !important;
+        }
+
+        .dark .glass-card:hover {
+            background: rgba(15, 23, 42, 0.7) !important;
+            border-color: rgba(20, 184, 166, 0.25) !important;
+        }
+
+        /* Glow Blobs */
+        .glow-blob {
+            position: absolute;
+            border-radius: 50%;
+            filter: blur(70px);
+            pointer-events: none;
+            z-index: 0;
+            opacity: 0.8;
+        }
+
+        .indian-motif-bg::before {
+            content: "";
+            position: absolute;
+            inset: 0;
+            background:
+                radial-gradient(circle at 15% 20%, rgba(251, 191, 36, 0.16), transparent 28%),
+                radial-gradient(circle at 82% 78%, rgba(56, 189, 248, 0.12), transparent 30%);
+            pointer-events: none;
+        }
+
+        .modern-card {
+            transition: transform 260ms ease, box-shadow 260ms ease, border-color 260ms ease;
+        }
+
+        .modern-card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 14px 30px rgba(2, 6, 23, 0.12);
+        }
+
+        .aurora-border::after {
+            content: "";
+            position: absolute;
+            inset: 0;
+            border-radius: inherit;
+            padding: 1px;
+            background: linear-gradient(120deg, rgba(45, 212, 191, 0.45), rgba(99, 102, 241, 0.45), rgba(14, 165, 233, 0.35));
+            -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+            -webkit-mask-composite: xor;
+            mask-composite: exclude;
+            pointer-events: none;
+            opacity: 0.55;
+        }
+
+        .floating-slow {
+            animation: floatingSlow 7s ease-in-out infinite;
+        }
+
+        .floating-delayed {
+            animation: floatingSlow 8.5s ease-in-out infinite;
+            animation-delay: 1.1s;
+        }
+
+        /* Pulse Animation */
+        @keyframes custom-pulse {
+
+            0%,
+            100% {
+                opacity: 1;
+                transform: scale(1);
+            }
+
+            50% {
+                opacity: 0.5;
+                transform: scale(1.05);
+            }
+        }
+
+        .animate-custom-pulse {
+            animation: custom-pulse 2s infinite;
+        }
+
+        @keyframes floatingSlow {
+            0%,
+            100% {
+                transform: translateY(0);
+            }
+
+            50% {
+                transform: translateY(-10px);
+            }
+        }
+
+        /* --- GLOBAL DARK MODE OVERRIDES --- */
+        .dark body {
+            background-color: #0b0f19 !important;
+            /* deep slate-950 */
+            color: #cbd5e1 !important;
+            /* slate-300 */
+        }
+
+        /* Titles and Headings */
+        .dark h1,
+        .dark h2,
+        .dark h3,
+        .dark h4,
+        .dark h5,
+        .dark h6,
+        .dark .text-slate-900,
+        .dark .text-indigo-950,
+        .dark .text-slate-800,
+        .dark .text-teal-950,
+        .dark .text-slate-950 {
+            color: #f8fafc !important;
+            /* slate-50 */
+        }
+
+        /* Descriptions, metadata and subtexts */
+        .dark p,
+        .dark .text-slate-600,
+        .dark .text-slate-700,
+        .dark .text-slate-500,
+        .dark label,
+        .dark .text-slate-600 *,
+        .dark .text-slate-700 * {
+            color: #94a3b8 !important;
+            /* slate-400 */
+        }
+
+        /* White backgrounds (Pills, inputs, cards) */
+        .dark .bg-white,
+        .dark #omni-search-input,
+        .dark .bg-white\/95 {
+            background-color: #1e293b !important;
+            /* slate-800 */
+            color: #cbd5e1 !important;
+        }
+
+        /* Specific container cards & articles */
+        .dark .bg-white.rounded-3xl,
+        .dark .bg-white.rounded-2xl,
+        .dark .bg-white.rounded-xl,
+        .dark article.bg-white,
+        .dark div.bg-white {
+            background-color: #111827 !important;
+            /* slate-900 */
+            border-color: #1f2937 !important;
+            /* slate-800 */
+        }
+
+        /* Slate sections */
+        .dark .bg-slate-50,
+        .dark .bg-slate-50\/70,
+        .dark .bg-slate-100 {
+            background-color: #1e293b !important;
+            /* slate-800 */
+            color: #cbd5e1 !important;
+        }
+
+        /* Form elements */
+        .dark input,
+        .dark textarea,
+        .dark select {
+            background-color: #1e293b !important;
+            border-color: #334155 !important;
+            color: #f8fafc !important;
+        }
+
+        .dark input::placeholder,
+        .dark textarea::placeholder {
+            color: #64748b !important;
+        }
+
+        /* Global borders */
+        .dark .border-slate-200,
+        .dark .border-slate-200\/80,
+        .dark .border-slate-100,
+        .dark .border-slate-200\/60,
+        .dark .border-slate-300\/80,
+        .dark .border-slate-300\/90,
+        .dark .border-indigo-100,
+        .dark .border-teal-100,
+        .dark .border-slate-200\/50,
+        .dark .border-slate-100\/50 {
+            border-color: #1e293b !important;
+            /* slate-800 */
+        }
+
+        /* Notification boxes (Amber) */
+        .dark .bg-amber-50,
+        .dark .bg-amber-50\/80 {
+            background-color: #451a03 !important;
+            /* amber-950 */
+            border-color: #78350f !important;
+            color: #fef3c7 !important;
+        }
+
+        .dark .text-amber-900,
+        .dark .text-amber-950 {
+            color: #fcd34d !important;
+            /* amber-300 */
+        }
+
+        /* Recommendations / Success boxes (Teal) */
+        .dark .bg-teal-50,
+        .dark .bg-teal-50\/80 {
+            background-color: rgba(4, 47, 46, 0.45) !important;
+            /* teal-950/45 */
+            border-color: rgba(17, 94, 89, 0.4) !important;
+            color: #ccfbf1 !important;
+        }
+
+        .dark .text-teal-950,
+        .dark .text-teal-900,
+        .dark .text-teal-700 {
+            color: #2dd4bf !important;
+        }
+
+        /* Links / Info blocks (Indigo) */
+        .dark .bg-indigo-50,
+        .dark .bg-indigo-50\/70 {
+            background-color: rgba(30, 27, 75, 0.45) !important;
+            /* indigo-950/45 */
+            border-color: rgba(49, 46, 129, 0.4) !important;
+            color: #e0e7ff !important;
+        }
+
+        .dark .text-indigo-900,
+        .dark .text-indigo-950,
+        .dark .text-indigo-700 {
+            color: #a5b4fc !important;
+        }
+
+        /* Switchers / Controls */
+        .dark .bg-white.text-indigo-900 {
+            background-color: #312e81 !important;
+            color: #ffffff !important;
+        }
+
+        .dark #theme-toggle {
+            background-color: #1e293b !important;
+            border-color: #334155 !important;
+            color: #f1f5f9 !important;
+        }
+
+        .dark #theme-toggle:hover {
+            background-color: #334155 !important;
+        }
+
+        /* --- MOBILE MENU DARK MODE --- */
+        .dark .mobile-nav-list {
+            background-color: #111827 !important;
+            border-color: #1f2937 !important;
+        }
+
+        .dark .mobile-nav-item {
+            color: #cbd5e1 !important;
+            border-bottom-color: #1f2937 !important;
+        }
+
+        .dark .mobile-nav-item:hover {
+            background-color: #1e293b !important;
+            color: #ffffff !important;
+        }
+
+        .dark .mobile-nav-item.active {
+            background: linear-gradient(90deg, rgba(20, 184, 166, 0.15), rgba(79, 70, 229, 0.15)) !important;
+            color: #2dd4bf !important;
+        }
+
+        .dark .mobile-nav-item.active i {
+            color: #2dd4bf !important;
+        }
+
+        /* --- CHATBOT WIDGET DARK MODE --- */
+        .dark .chatbot-window {
+            background: linear-gradient(180deg, #111827 0%, #030712 100%) !important;
+            border-color: #1f2937 !important;
+            color: #cbd5e1 !important;
+        }
+
+        .dark #chatbot-messages {
+            background: linear-gradient(180deg, rgba(15, 23, 42, 0.6) 0%, rgba(3, 7, 18, 0.8) 100%) !important;
+        }
+
+        .dark .chatbot-chip {
+            background: linear-gradient(180deg, #1f2937 0%, #111827 100%) !important;
+            color: #cbd5e1 !important;
+            border-color: #374151 !important;
+        }
+
+        .dark .chatbot-chip:hover {
+            background: linear-gradient(180deg, #115e59 0%, #312e81 100%) !important;
+            border-color: #14b8a6 !important;
+            color: #ffffff !important;
+        }
+
+        .dark .chatbot-chip-danger {
+            background: linear-gradient(180deg, #4c0519 0%, #881337 100%) !important;
+            border-color: #9f1239 !important;
+            color: #ffe4e6 !important;
+        }
+
+        .dark .chatbot-chip-danger:hover {
+            background: linear-gradient(180deg, #881337 0%, #be123c 100%) !important;
+            border-color: #f43f5e !important;
+            color: #ffffff !important;
+        }
+
+        .dark .chatbot-city-pill {
+            background: #1f2937 !important;
+            color: #cbd5e1 !important;
+            border-color: #374151 !important;
+        }
+
+        .dark .chatbot-city-pill:hover {
+            background: #374151 !important;
+            border-color: #4b5563 !important;
+            color: #ffffff !important;
+        }
+
+        .dark .chatbot-city-pill.active {
+            background: linear-gradient(120deg, #14b8a6, #4f46e5) !important;
+            border-color: transparent !important;
+            color: #ffffff !important;
+        }
+
+        .dark .chatbot-action-btn {
+            background: #1f2937 !important;
+            border-color: #374151 !important;
+            color: #a5b4fc !important;
+        }
+
+        .dark .chatbot-action-btn:hover {
+            background: #374151 !important;
+            border-color: #4f46e5 !important;
+            color: #ffffff !important;
+        }
+
+        .dark .chatbot-action-btn.active {
+            background: #4f46e5 !important;
+            border-color: #4f46e5 !important;
+            color: #ffffff !important;
+        }
+
         .lang-hi,
         .lang-hi button,
         .lang-hi input,
@@ -1554,11 +2476,13 @@
             font-family: 'Noto Sans Devanagari', 'Hind', 'Outfit', sans-serif;
             letter-spacing: 0;
         }
+
         .chatbot-window {
             box-shadow: 0 24px 64px rgba(15, 23, 42, 0.24);
             background: linear-gradient(180deg, #ffffff 0%, #f8fafc 100%);
             border-color: #cbd5e1;
         }
+
         .chatbot-chip {
             background: linear-gradient(180deg, #ffffff 0%, #f0f9ff 100%);
             color: #0f172a;
@@ -1569,22 +2493,26 @@
             font-weight: 700;
             transition: all 0.2s ease;
         }
+
         .chatbot-chip:hover {
             background: linear-gradient(180deg, #ecfeff 0%, #dbeafe 100%);
             border-color: #7dd3fc;
             color: #0c4a6e;
             transform: translateY(-1px);
         }
+
         .chatbot-chip-danger {
             background: linear-gradient(180deg, #fff1f2 0%, #ffe4e6 100%);
             border-color: #fda4af;
             color: #9f1239;
         }
+
         .chatbot-chip-danger:hover {
             background: linear-gradient(180deg, #ffe4e6 0%, #fecdd3 100%);
             border-color: #fb7185;
             color: #881337;
         }
+
         .chatbot-city-pill {
             background: #ffffff;
             color: #0f172a;
@@ -1595,17 +2523,20 @@
             font-weight: 700;
             transition: all 0.2s ease;
         }
+
         .chatbot-city-pill:hover {
             background: #f0f9ff;
             border-color: #38bdf8;
             color: #0c4a6e;
         }
+
         .chatbot-city-pill.active {
             background: linear-gradient(120deg, #14b8a6, #4f46e5);
             border-color: transparent;
             color: #fff;
             box-shadow: 0 10px 20px rgba(79, 70, 229, 0.2);
         }
+
         .chatbot-action-btn {
             background: #ffffff;
             border: 1px solid #c7d2fe;
@@ -1616,29 +2547,35 @@
             padding: 0.3rem 0.7rem;
             transition: all 0.2s ease;
         }
+
         .chatbot-action-btn:hover {
             background: #eef2ff;
             border-color: #a5b4fc;
             color: #312e81;
         }
+
         .chatbot-action-btn.active {
             background: #4f46e5;
             border-color: #4f46e5;
             color: #ffffff;
         }
+
         #chatbot-form input:disabled {
             opacity: 0.7;
             cursor: not-allowed;
         }
+
         #chatbot-form button:disabled {
             opacity: 0.5;
             cursor: not-allowed;
             transform: none !important;
         }
+
         .typing-dots {
             display: inline-flex;
             gap: 4px;
         }
+
         .typing-dots span {
             width: 6px;
             height: 6px;
@@ -1647,12 +2584,15 @@
             opacity: 0.35;
             animation: typingDot 1.1s infinite ease-in-out;
         }
+
         .typing-dots span:nth-child(2) {
             animation-delay: 0.15s;
         }
+
         .typing-dots span:nth-child(3) {
             animation-delay: 0.3s;
         }
+
         .mobile-nav-list {
             background: #ffffff;
             border: 1px solid #e2e8f0;
@@ -1660,6 +2600,7 @@
             overflow: hidden;
             box-shadow: 0 10px 24px rgba(15, 23, 42, 0.08);
         }
+
         .mobile-nav-item {
             display: flex;
             align-items: center;
@@ -1671,34 +2612,53 @@
             border-bottom: 1px solid #e2e8f0;
             transition: all 0.2s ease;
         }
+
         .mobile-nav-item:last-child {
             border-bottom: 0;
         }
+
         .mobile-nav-item:hover {
             background: #f8fafc;
             color: #0f172a;
         }
+
         .mobile-nav-item.active {
             background: linear-gradient(90deg, #ecfeff, #eef2ff);
             color: #0f766e;
         }
+
         .mobile-nav-item.active i {
             color: #0d9488;
         }
+
         @keyframes typingDot {
-            0%, 80%, 100% { transform: translateY(0); opacity: 0.35; }
-            40% { transform: translateY(-4px); opacity: 1; }
+
+            0%,
+            80%,
+            100% {
+                transform: translateY(0);
+                opacity: 0.35;
+            }
+
+            40% {
+                transform: translateY(-4px);
+                opacity: 1;
+            }
         }
+
         #chatbot-messages::-webkit-scrollbar {
             width: 5px;
         }
+
         #chatbot-messages::-webkit-scrollbar-thumb {
             background: #cbd5e1;
             border-radius: 9999px;
         }
+
         #chatbot-window .bg-gradient-to-r.from-slate-900.via-indigo-900.to-slate-900 {
             background-image: linear-gradient(90deg, #0f172a 0%, #1e1b4b 50%, #0f172a 100%);
         }
+
         a:focus-visible,
         button:focus-visible,
         input:focus-visible,
@@ -1707,6 +2667,7 @@
             outline: 2px solid #0ea5a6;
             outline-offset: 2px;
         }
+
         .motion-ready .animate-on-scroll {
             opacity: 0;
             transform: translateY(18px) scale(0.985);
@@ -1714,17 +2675,80 @@
             transition-delay: var(--reveal-delay, 0ms);
             will-change: opacity, transform;
         }
+
         .motion-ready .animate-on-scroll.in-view {
             opacity: 1;
             transform: translateY(0) scale(1);
         }
+
         @media (prefers-reduced-motion: reduce) {
             .motion-ready .animate-on-scroll {
                 opacity: 1 !important;
                 transform: none !important;
                 transition: none !important;
             }
+
+            .floating-slow,
+            .floating-delayed,
+            .modern-card {
+                animation: none !important;
+                transition: none !important;
+                transform: none !important;
+            }
+
+            body.preload-anim * {
+                animation: none !important;
+                transition: none !important;
+            }
         }
+
+        body.preload-anim nav,
+        body.preload-anim header,
+        body.preload-anim main,
+        body.preload-anim footer {
+            opacity: 0;
+            transform: translateY(14px);
+            transition: opacity 520ms ease, transform 520ms ease;
+        }
+
+        body.preload-anim.page-loaded nav {
+            opacity: 1;
+            transform: translateY(0);
+            transition-delay: 40ms;
+        }
+
+        body.preload-anim.page-loaded header {
+            opacity: 1;
+            transform: translateY(0);
+            transition-delay: 110ms;
+        }
+
+        body.preload-anim.page-loaded main {
+            opacity: 1;
+            transform: translateY(0);
+            transition-delay: 180ms;
+        }
+
+        body.preload-anim.page-loaded footer {
+            opacity: 1;
+            transform: translateY(0);
+            transition-delay: 250ms;
+        }
+
+        #chatbot-container {
+            transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+
+        #chatbot-container.footer-visible {
+            transform: translateY(-85px);
+        }
+
+        @media (max-width: 639px) {
+            #chatbot-container.footer-visible {
+                transform: translateY(-70px);
+            }
+        }
+
         @media (max-width: 639px) {
             .chatbot-fab.fab-collapsed {
                 width: 56px;
@@ -1733,16 +2757,20 @@
                 border-radius: 9999px;
                 justify-content: center;
             }
+
             .chatbot-fab.fab-collapsed .chatbot-fab-label {
                 display: none;
             }
+
             .chatbot-fab.fab-collapsed .chatbot-fab-icon {
                 animation: none;
             }
+
             #chatbot-container {
                 right: 0.75rem;
                 bottom: calc(0.75rem + env(safe-area-inset-bottom));
             }
+
             #chatbot-window {
                 width: calc(100vw - 1rem);
                 max-width: 430px;
@@ -1758,7 +2786,148 @@
                 margin: 0;
             }
         }
+
+
+
+        /* Hospital Compare Custom CSS */
+        #compare-dock {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            z-index: 60;
+            transform: translateY(100%);
+            transition: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+            border-top: 1px solid rgba(226, 232, 240, 0.8);
+            box-shadow: 0 -10px 30px rgba(0, 0, 0, 0.08);
+        }
+
+        #compare-dock.show {
+            transform: translateY(0);
+        }
+
+        .dark #compare-dock {
+            border-top-color: rgba(51, 65, 85, 0.8);
+            box-shadow: 0 -10px 30px rgba(0, 0, 0, 0.35);
+        }
+
+        .compare-thumb {
+            width: 2.25rem;
+            height: 2.25rem;
+            border-radius: 0.75rem;
+            background: linear-gradient(135deg, #14b8a6 0%, #4f46e5 100%);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #ffffff;
+            font-weight: 800;
+            font-size: 0.8rem;
+        }
+
+        .compare-btn-card {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.375rem;
+            font-weight: 700;
+            font-size: 0.75rem;
+            padding: 0.5rem 0.875rem;
+            border-radius: 0.75rem;
+            transition: all 0.2s ease;
+            cursor: pointer;
+            border: 1px solid rgba(226, 232, 240, 0.8);
+            background: #ffffff;
+            color: #475569;
+        }
+
+        .compare-btn-card:hover {
+            background: #f8fafc;
+            border-color: #cbd5e1;
+            transform: translateY(-1px);
+        }
+
+        .compare-btn-card.active {
+            background: #4f46e5 !important;
+            border-color: #4f46e5 !important;
+            color: #ffffff !important;
+            box-shadow: 0 4px 12px rgba(79, 70, 229, 0.25);
+        }
+
+        .dark .compare-btn-card {
+            background: #1e293b;
+            border-color: #334155;
+            color: #94a3b8;
+        }
+
+        .dark .compare-btn-card:hover {
+            background: #334155;
+            border-color: #475569;
+        }
+
+        .dark .compare-btn-card.active {
+            background: #6366f1 !important;
+            border-color: #6366f1 !important;
+            color: #ffffff !important;
+        }
+
+        /* Targeted dark-mode UI fixes for homepage hero search and contrast */
+        .dark #home-hero p.text-slate-200 {
+            color: #e2e8f0 !important;
+        }
+
+        .dark #hero-search-shell {
+            background: linear-gradient(135deg, rgba(15, 23, 42, 0.88), rgba(30, 41, 59, 0.8)) !important;
+            border-color: rgba(148, 163, 184, 0.28) !important;
+            box-shadow: 0 20px 44px rgba(2, 6, 23, 0.45) !important;
+        }
+
+        .dark #hero-search-shell #omni-search-input {
+            background: transparent !important;
+            border: 0 !important;
+            box-shadow: none !important;
+            color: #f8fafc !important;
+        }
+
+        .dark #hero-search-shell #omni-search-input::placeholder {
+            color: #cbd5e1 !important;
+        }
+
+        .dark #hero-search-shell .aurora-border::after,
+        .dark #hero-search-shell.aurora-border::after {
+            opacity: 0.75;
+        }
+
+        .dark #home-hero #clear-search-btn {
+            background-color: rgba(148, 163, 184, 0.14) !important;
+            border-color: rgba(148, 163, 184, 0.24) !important;
+            color: #e2e8f0 !important;
+        }
+
+        .dark #home-hero #clear-search-btn:hover {
+            background-color: rgba(148, 163, 184, 0.22) !important;
+            color: #ffffff !important;
+        }
+
+        .dark #home-hero .bg-white\/10 {
+            border-color: rgba(148, 163, 184, 0.24) !important;
+        }
+
+        .dark #home-hero .bg-white\/10:hover {
+            background-color: rgba(148, 163, 184, 0.2) !important;
+        }
+
+        .dark #home-hero .bg-white\/5 {
+            background-color: rgba(148, 163, 184, 0.08) !important;
+            border-color: rgba(148, 163, 184, 0.2) !important;
+        }
+
+        .dark #home-hero .bg-white\/5:hover {
+            background-color: rgba(148, 163, 184, 0.16) !important;
+            border-color: rgba(148, 163, 184, 0.35) !important;
+        }
+
     </style>
     @stack('scripts')
 </body>
+
 </html>

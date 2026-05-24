@@ -2,6 +2,10 @@
 
 @section('title', ($locale === 'hi' ? 'हमारे बारे में' : 'About Us') . ' - SwasthyaSearch')
 
+@section('meta_title', $locale === 'hi' ? 'हमारे बारे में | SwasthyaSearch' : 'About SwasthyaSearch | Mission, Trust & Transparency')
+@section('meta_description', $locale === 'hi'
+    ? 'SwasthyaSearch के मिशन, 100% विज्ञापन-मुक्त मॉडल, पारदर्शी सूचीकरण और मरीज-केंद्रित स्वास्थ्य खोज दृष्टि के बारे में जानें।'
+    : 'Learn about SwasthyaSearch mission, 100% ad-free model, transparent listings, and patient-first healthcare discovery approach.')
 @section('content')
 <!-- Hero Section -->
 <header class="bg-gradient-to-r from-slate-900 via-indigo-950 to-slate-900 text-white py-20 px-4 sm:px-6 lg:px-8 border-b border-slate-800 shadow-xl relative overflow-hidden">

@@ -6,10 +6,12 @@ use App\Models\Article;
 use App\Models\BloodBank;
 use App\Models\CachedMedicalQuestion;
 use App\Models\Department;
+use App\Models\DirectorySyncHistory;
 use App\Models\Disease;
 use App\Models\Doctor;
 use App\Models\Faq;
 use App\Models\Hospital;
+use App\Services\DirectorySyncService;
 use App\Services\ScraperService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Cache;
@@ -32,7 +34,13 @@ class AdminDashboardController extends Controller
             'data' => $departments->pluck('doctors_count')->toArray(),
         ];
 
-        return view('admin.dashboard', compact('stats', 'chartData'));
+        $supportedCities = ScraperService::getSupportedCities();
+        $syncHistory = DirectorySyncHistory::query()
+            ->latest('id')
+            ->limit(10)
+            ->get();
+
+        return view('admin.dashboard', compact('stats', 'chartData', 'supportedCities', 'syncHistory'));
     }
 
     // --- HOSPITALS CRUD & IMPORT ---
@@ -55,9 +63,10 @@ class AdminDashboardController extends Controller
             'name_hi' => 'required|string|max:255',
             'type' => 'required|string',
             'city' => 'required|string',
-            'address' => 'required|string',
+            'address' => 'nullable|string',
             'address_line1' => 'nullable|string|max:255',
             'address_line2' => 'nullable|string|max:255',
+            'landmark' => 'nullable|string|max:255',
             'state' => 'nullable|string|max:100',
             'pincode' => 'nullable|string|max:20',
             'latitude' => 'nullable|numeric',
@@ -73,21 +82,25 @@ class AdminDashboardController extends Controller
         ]);
 
         $schemesList = !empty($data['cashless_schemes_list']) ? array_map('trim', explode(',', $data['cashless_schemes_list'])) : null;
+        $emergencyPhoneParts = \App\Services\HealthcareSyncService::splitPhone(
+            trim(($data['emergency_country_code'] ?? '+91') . ' ' . ($data['emergency_phone'] ?? ''))
+        );
 
         Hospital::create([
             'name_en' => $data['name_en'],
             'name_hi' => $data['name_hi'],
             'type' => $data['type'],
             'city' => $data['city'],
-            'address' => $data['address'],
+            'address' => null,
             'address_line1' => $data['address_line1'] ?? null,
             'address_line2' => $data['address_line2'] ?? null,
+            'landmark' => $data['landmark'] ?? null,
             'state' => $data['state'] ?? 'Rajasthan',
             'pincode' => $data['pincode'] ?? null,
             'latitude' => $data['latitude'] ?? null,
             'longitude' => $data['longitude'] ?? null,
-            'emergency_country_code' => $data['emergency_country_code'] ?? '+91',
-            'emergency_phone' => $data['emergency_phone'],
+            'emergency_country_code' => $emergencyPhoneParts['country_code'],
+            'emergency_phone' => $emergencyPhoneParts['phone'],
             'is_verified' => $request->boolean('is_verified', true),
             'accepts_ayushman' => $request->boolean('accepts_ayushman', false),
             'accepts_janaadhaar' => $request->boolean('accepts_janaadhaar', false),
@@ -106,9 +119,10 @@ class AdminDashboardController extends Controller
             'name_hi' => 'required|string|max:255',
             'type' => 'required|string',
             'city' => 'required|string',
-            'address' => 'required|string',
+            'address' => 'nullable|string',
             'address_line1' => 'nullable|string|max:255',
             'address_line2' => 'nullable|string|max:255',
+            'landmark' => 'nullable|string|max:255',
             'state' => 'nullable|string|max:100',
             'pincode' => 'nullable|string|max:20',
             'latitude' => 'nullable|numeric',
@@ -124,21 +138,25 @@ class AdminDashboardController extends Controller
         ]);
 
         $schemesList = !empty($data['cashless_schemes_list']) ? array_map('trim', explode(',', $data['cashless_schemes_list'])) : null;
+        $emergencyPhoneParts = \App\Services\HealthcareSyncService::splitPhone(
+            trim(($data['emergency_country_code'] ?? '+91') . ' ' . ($data['emergency_phone'] ?? ''))
+        );
 
         $hospital->update([
             'name_en' => $data['name_en'],
             'name_hi' => $data['name_hi'],
             'type' => $data['type'],
             'city' => $data['city'],
-            'address' => $data['address'],
+            'address' => null,
             'address_line1' => $data['address_line1'] ?? null,
             'address_line2' => $data['address_line2'] ?? null,
+            'landmark' => $data['landmark'] ?? null,
             'state' => $data['state'] ?? 'Rajasthan',
             'pincode' => $data['pincode'] ?? null,
             'latitude' => $data['latitude'] ?? null,
             'longitude' => $data['longitude'] ?? null,
-            'emergency_country_code' => $data['emergency_country_code'] ?? '+91',
-            'emergency_phone' => $data['emergency_phone'],
+            'emergency_country_code' => $emergencyPhoneParts['country_code'],
+            'emergency_phone' => $emergencyPhoneParts['phone'],
             'is_verified' => $request->boolean('is_verified', true),
             'accepts_ayushman' => $request->boolean('accepts_ayushman', false),
             'accepts_janaadhaar' => $request->boolean('accepts_janaadhaar', false),
@@ -177,9 +195,10 @@ class AdminDashboardController extends Controller
                 'city',
                 'state',
                 'pincode',
-                'address',
                 'address_line1',
                 'address_line2',
+                'landmark',
+                'emergency_country_code',
                 'emergency_phone',
                 'is_verified',
                 'accepts_ayushman',
@@ -200,9 +219,10 @@ class AdminDashboardController extends Controller
                     $hospital->city,
                     $hospital->state,
                     $hospital->pincode,
-                    $hospital->address,
                     $hospital->address_line1,
                     $hospital->address_line2,
+                    $hospital->landmark,
+                    $hospital->emergency_country_code,
                     $hospital->emergency_phone,
                     $hospital->is_verified ? 1 : 0,
                     $hospital->accepts_ayushman ? 1 : 0,
@@ -234,6 +254,10 @@ class AdminDashboardController extends Controller
 
             $hospital = !empty($data['id']) ? Hospital::find($data['id']) : Hospital::where('name_en', $data['name_en'])->where('city', $data['city'] ?? 'Jaipur')->first();
 
+            $hospitalPhoneParts = \App\Services\HealthcareSyncService::splitPhone(
+                trim(($data['emergency_country_code'] ?? '+91') . ' ' . ($data['emergency_phone'] ?? ''))
+            );
+
             $updateData = [
                 'name_en' => $data['name_en'],
                 'name_hi' => !empty($data['name_hi']) ? $data['name_hi'] : $data['name_en'],
@@ -241,11 +265,12 @@ class AdminDashboardController extends Controller
                 'city' => !empty($data['city']) ? $data['city'] : 'Jaipur',
                 'state' => !empty($data['state']) ? $data['state'] : 'Rajasthan',
                 'pincode' => !empty($data['pincode']) ? $data['pincode'] : null,
-                'address' => !empty($data['address']) ? $data['address'] : null,
+                'address' => null,
                 'address_line1' => !empty($data['address_line1']) ? $data['address_line1'] : null,
                 'address_line2' => !empty($data['address_line2']) ? $data['address_line2'] : null,
-                'emergency_phone' => !empty($data['emergency_phone']) ? \App\Services\HealthcareSyncService::splitPhone($data['emergency_phone'])['phone'] : null,
-                'emergency_country_code' => !empty($data['emergency_phone']) ? \App\Services\HealthcareSyncService::splitPhone($data['emergency_phone'])['country_code'] : null,
+                'landmark' => !empty($data['landmark']) ? $data['landmark'] : null,
+                'emergency_phone' => $hospitalPhoneParts['phone'],
+                'emergency_country_code' => $hospitalPhoneParts['country_code'],
                 'latitude' => !empty($data['latitude']) ? (float)$data['latitude'] : null,
                 'longitude' => !empty($data['longitude']) ? (float)$data['longitude'] : null,
                 'is_verified' => isset($data['is_verified']) ? filter_var($data['is_verified'], FILTER_VALIDATE_BOOLEAN) : true,
@@ -326,12 +351,16 @@ class AdminDashboardController extends Controller
             'membership_fellowships' => 'nullable|string',
             'address_line1' => 'nullable|string|max:255',
             'address_line2' => 'nullable|string|max:255',
+            'landmark' => 'nullable|string|max:255',
             'city' => 'nullable|string|max:100',
             'state' => 'nullable|string|max:100',
             'pincode' => 'nullable|string|max:20',
             'latitude' => 'nullable|numeric',
             'longitude' => 'nullable|numeric',
         ]);
+        $phoneParts = \App\Services\HealthcareSyncService::splitPhone(
+            trim(($data['country_code'] ?? '+91') . ' ' . ($data['phone'] ?? ''))
+        );
 
         $doctor = Doctor::create([
             'first_name' => $data['first_name'],
@@ -343,8 +372,8 @@ class AdminDashboardController extends Controller
             'about_hi' => $data['about_hi'],
             'is_verified' => $request->boolean('is_verified', true),
             'email' => $data['email'] ?? null,
-            'country_code' => $data['country_code'] ?? '+91',
-            'phone' => $data['phone'] ?? null,
+            'country_code' => $phoneParts['country_code'],
+            'phone' => $phoneParts['phone'],
             'date_of_birth' => $data['date_of_birth'] ?? null,
             'gender' => $data['gender'] ?? null,
             'languages_spoken' => !empty($data['languages_spoken']) ? array_map('trim', explode(',', $data['languages_spoken'])) : null,
@@ -354,6 +383,7 @@ class AdminDashboardController extends Controller
             'membership_fellowships' => !empty($data['membership_fellowships']) ? array_map('trim', explode(',', $data['membership_fellowships'])) : null,
             'address_line1' => $data['address_line1'] ?? null,
             'address_line2' => $data['address_line2'] ?? null,
+            'landmark' => $data['landmark'] ?? null,
             'city' => $data['city'] ?? 'Jaipur',
             'state' => $data['state'] ?? 'Rajasthan',
             'pincode' => $data['pincode'] ?? null,
@@ -392,12 +422,16 @@ class AdminDashboardController extends Controller
             'membership_fellowships' => 'nullable|string',
             'address_line1' => 'nullable|string|max:255',
             'address_line2' => 'nullable|string|max:255',
+            'landmark' => 'nullable|string|max:255',
             'city' => 'nullable|string|max:100',
             'state' => 'nullable|string|max:100',
             'pincode' => 'nullable|string|max:20',
             'latitude' => 'nullable|numeric',
             'longitude' => 'nullable|numeric',
         ]);
+        $phoneParts = \App\Services\HealthcareSyncService::splitPhone(
+            trim(($data['country_code'] ?? '+91') . ' ' . ($data['phone'] ?? ''))
+        );
 
         $doctor->update([
             'first_name' => $data['first_name'],
@@ -409,8 +443,8 @@ class AdminDashboardController extends Controller
             'about_hi' => $data['about_hi'],
             'is_verified' => $request->boolean('is_verified', true),
             'email' => $data['email'] ?? null,
-            'country_code' => $data['country_code'] ?? '+91',
-            'phone' => $data['phone'] ?? null,
+            'country_code' => $phoneParts['country_code'],
+            'phone' => $phoneParts['phone'],
             'date_of_birth' => $data['date_of_birth'] ?? null,
             'gender' => $data['gender'] ?? null,
             'languages_spoken' => !empty($data['languages_spoken']) ? array_map('trim', explode(',', $data['languages_spoken'])) : null,
@@ -420,6 +454,7 @@ class AdminDashboardController extends Controller
             'membership_fellowships' => !empty($data['membership_fellowships']) ? array_map('trim', explode(',', $data['membership_fellowships'])) : null,
             'address_line1' => $data['address_line1'] ?? null,
             'address_line2' => $data['address_line2'] ?? null,
+            'landmark' => $data['landmark'] ?? null,
             'city' => $data['city'] ?? 'Jaipur',
             'state' => $data['state'] ?? 'Rajasthan',
             'pincode' => $data['pincode'] ?? null,
@@ -472,6 +507,7 @@ class AdminDashboardController extends Controller
                 'pincode',
                 'address_line1',
                 'address_line2',
+                'landmark',
                 'languages_spoken',
                 'gender',
                 'is_verified',
@@ -500,6 +536,7 @@ class AdminDashboardController extends Controller
                     $doctor->pincode,
                     $doctor->address_line1,
                     $doctor->address_line2,
+                    $doctor->landmark,
                     is_array($doctor->languages_spoken) ? implode(';', $doctor->languages_spoken) : $doctor->languages_spoken,
                     $doctor->gender,
                     $doctor->is_verified ? 1 : 0,
@@ -539,7 +576,9 @@ class AdminDashboardController extends Controller
                 ]);
             }
 
-            $phoneParts = !empty($data['phone']) ? \App\Services\HealthcareSyncService::splitPhone($data['phone']) : ['country_code' => null, 'phone' => null];
+            $phoneParts = \App\Services\HealthcareSyncService::splitPhone(
+                trim(($data['country_code'] ?? '+91') . ' ' . ($data['phone'] ?? ''))
+            );
 
             $updateData = [
                 'first_name' => $data['first_name'],
@@ -559,6 +598,7 @@ class AdminDashboardController extends Controller
                 'pincode' => !empty($data['pincode']) ? $data['pincode'] : null,
                 'address_line1' => !empty($data['address_line1']) ? $data['address_line1'] : null,
                 'address_line2' => !empty($data['address_line2']) ? $data['address_line2'] : null,
+                'landmark' => !empty($data['landmark']) ? $data['landmark'] : null,
                 'languages_spoken' => !empty($data['languages_spoken']) ? array_map('trim', explode(';', $data['languages_spoken'])) : null,
                 'gender' => !empty($data['gender']) ? $data['gender'] : null,
                 'latitude' => !empty($data['latitude']) ? (float)$data['latitude'] : null,
@@ -626,6 +666,7 @@ class AdminDashboardController extends Controller
             'address_hi' => 'required|string',
             'state' => 'nullable|string|max:100',
             'pincode' => 'nullable|string|max:20',
+            'landmark' => 'nullable|string|max:255',
             'latitude' => 'nullable|numeric',
             'longitude' => 'nullable|numeric',
             'country_code' => 'nullable|string|max:10',
@@ -641,6 +682,12 @@ class AdminDashboardController extends Controller
             'apheresis_facility' => 'boolean',
             'available_blood_groups' => 'nullable|array',
         ]);
+        $phoneParts = \App\Services\HealthcareSyncService::splitPhone(
+            trim(($data['country_code'] ?? '+91') . ' ' . ($data['phone'] ?? ''))
+        );
+        $emergencyPhoneParts = \App\Services\HealthcareSyncService::splitPhone(
+            trim(($data['emergency_country_code'] ?? '+91') . ' ' . ($data['emergency_phone'] ?? ''))
+        );
 
         \App\Models\BloodBank::create([
             'name_en' => $data['name_en'],
@@ -650,12 +697,13 @@ class AdminDashboardController extends Controller
             'address_hi' => $data['address_hi'],
             'state' => $data['state'] ?? 'Rajasthan',
             'pincode' => $data['pincode'] ?? null,
+            'landmark' => $data['landmark'] ?? null,
             'latitude' => $data['latitude'] ?? null,
             'longitude' => $data['longitude'] ?? null,
-            'country_code' => $data['country_code'] ?? '+91',
-            'phone' => $data['phone'] ?? null,
-            'emergency_country_code' => $data['emergency_country_code'] ?? '+91',
-            'emergency_phone' => $data['emergency_phone'] ?? null,
+            'country_code' => $phoneParts['country_code'],
+            'phone' => $phoneParts['phone'],
+            'emergency_country_code' => $emergencyPhoneParts['country_code'],
+            'emergency_phone' => $emergencyPhoneParts['phone'],
             'email' => $data['email'] ?? null,
             'website' => $data['website'] ?? null,
             'is_verified' => $request->boolean('is_verified', true),
@@ -680,6 +728,7 @@ class AdminDashboardController extends Controller
             'address_hi' => 'required|string',
             'state' => 'nullable|string|max:100',
             'pincode' => 'nullable|string|max:20',
+            'landmark' => 'nullable|string|max:255',
             'latitude' => 'nullable|numeric',
             'longitude' => 'nullable|numeric',
             'country_code' => 'nullable|string|max:10',
@@ -695,6 +744,12 @@ class AdminDashboardController extends Controller
             'apheresis_facility' => 'boolean',
             'available_blood_groups' => 'nullable|array',
         ]);
+        $phoneParts = \App\Services\HealthcareSyncService::splitPhone(
+            trim(($data['country_code'] ?? '+91') . ' ' . ($data['phone'] ?? ''))
+        );
+        $emergencyPhoneParts = \App\Services\HealthcareSyncService::splitPhone(
+            trim(($data['emergency_country_code'] ?? '+91') . ' ' . ($data['emergency_phone'] ?? ''))
+        );
 
         $bloodBank->update([
             'name_en' => $data['name_en'],
@@ -704,12 +759,13 @@ class AdminDashboardController extends Controller
             'address_hi' => $data['address_hi'],
             'state' => $data['state'] ?? 'Rajasthan',
             'pincode' => $data['pincode'] ?? null,
+            'landmark' => $data['landmark'] ?? null,
             'latitude' => $data['latitude'] ?? null,
             'longitude' => $data['longitude'] ?? null,
-            'country_code' => $data['country_code'] ?? '+91',
-            'phone' => $data['phone'] ?? null,
-            'emergency_country_code' => $data['emergency_country_code'] ?? '+91',
-            'emergency_phone' => $data['emergency_phone'] ?? null,
+            'country_code' => $phoneParts['country_code'],
+            'phone' => $phoneParts['phone'],
+            'emergency_country_code' => $emergencyPhoneParts['country_code'],
+            'emergency_phone' => $emergencyPhoneParts['phone'],
             'email' => $data['email'] ?? null,
             'website' => $data['website'] ?? null,
             'is_verified' => $request->boolean('is_verified', true),
@@ -750,6 +806,7 @@ class AdminDashboardController extends Controller
                 'city',
                 'state',
                 'pincode',
+                'landmark',
                 'address_en',
                 'address_hi',
                 'country_code',
@@ -776,6 +833,7 @@ class AdminDashboardController extends Controller
                     $bb->city,
                     $bb->state,
                     $bb->pincode,
+                    $bb->landmark,
                     $bb->address_en,
                     $bb->address_hi,
                     $bb->country_code,
@@ -814,8 +872,12 @@ class AdminDashboardController extends Controller
 
             $bb = !empty($data['id']) ? \App\Models\BloodBank::find($data['id']) : \App\Models\BloodBank::where('name_en', $data['name_en'])->where('city', $data['city'] ?? 'Jaipur')->first();
 
-            $phoneParts = !empty($data['phone']) ? \App\Services\HealthcareSyncService::splitPhone($data['phone']) : ['country_code' => '+91', 'phone' => null];
-            $emergPhoneParts = !empty($data['emergency_phone']) ? \App\Services\HealthcareSyncService::splitPhone($data['emergency_phone']) : ['country_code' => '+91', 'phone' => null];
+            $phoneParts = \App\Services\HealthcareSyncService::splitPhone(
+                trim(($data['country_code'] ?? '+91') . ' ' . ($data['phone'] ?? ''))
+            );
+            $emergPhoneParts = \App\Services\HealthcareSyncService::splitPhone(
+                trim(($data['emergency_country_code'] ?? '+91') . ' ' . ($data['emergency_phone'] ?? ''))
+            );
 
             $updateData = [
                 'name_en' => $data['name_en'],
@@ -823,11 +885,12 @@ class AdminDashboardController extends Controller
                 'city' => !empty($data['city']) ? $data['city'] : 'Jaipur',
                 'state' => !empty($data['state']) ? $data['state'] : 'Rajasthan',
                 'pincode' => !empty($data['pincode']) ? $data['pincode'] : null,
+                'landmark' => !empty($data['landmark']) ? $data['landmark'] : null,
                 'address_en' => !empty($data['address_en']) ? $data['address_en'] : ($data['address'] ?? ''),
                 'address_hi' => !empty($data['address_hi']) ? $data['address_hi'] : ($data['address'] ?? ''),
-                'country_code' => !empty($data['country_code']) ? $data['country_code'] : $phoneParts['country_code'],
+                'country_code' => $phoneParts['country_code'],
                 'phone' => $phoneParts['phone'],
-                'emergency_country_code' => !empty($data['emergency_country_code']) ? $data['emergency_country_code'] : $emergPhoneParts['country_code'],
+                'emergency_country_code' => $emergPhoneParts['country_code'],
                 'emergency_phone' => $emergPhoneParts['phone'],
                 'email' => !empty($data['email']) ? $data['email'] : null,
                 'website' => !empty($data['website']) ? $data['website'] : null,
@@ -866,6 +929,36 @@ class AdminDashboardController extends Controller
     public function syncBloodBanksProgress()
     {
         $progress = Cache::get('scrape_progress_bloodbanks', [
+            'status' => 'idle',
+            'city' => '',
+            'progress' => 0,
+            'message' => 'Waiting to start...',
+        ]);
+
+        return response()->json($progress);
+    }
+
+    public function syncDirectoryAll(Request $request, DirectorySyncService $directorySyncService)
+    {
+        $request->validate(['city' => 'required|string|max:255']);
+        $city = trim($request->string('city')->value());
+        $supportedCities = ScraperService::getSupportedCities();
+
+        if (!in_array(ucwords(strtolower($city)), $supportedCities, true)) {
+            return response()->json([
+                'status' => 'failed',
+                'message' => 'Unsupported city. Supported cities: ' . implode(', ', $supportedCities),
+            ], 422);
+        }
+
+        $result = $directorySyncService->syncCity($city, false, DirectorySyncService::PROGRESS_KEY);
+
+        return response()->json($result, $result['status'] === 'failed' ? 500 : 200);
+    }
+
+    public function syncDirectoryAllProgress()
+    {
+        $progress = Cache::get(DirectorySyncService::PROGRESS_KEY, [
             'status' => 'idle',
             'city' => '',
             'progress' => 0,

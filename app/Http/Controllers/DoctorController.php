@@ -11,6 +11,10 @@ class DoctorController extends Controller
 {
     public function index(Request $request)
     {
+        $userLat = $request->filled('user_lat') ? (float)$request->input('user_lat') : null;
+        $userLng = $request->filled('user_lng') ? (float)$request->input('user_lng') : null;
+        $hasUserLocation = is_numeric($userLat) && is_numeric($userLng);
+
         $query = Doctor::with(['department', 'hospitals'])->where('is_verified', true)->latest();
 
         // Filter by Department
@@ -59,12 +63,13 @@ class DoctorController extends Controller
 
         return view('doctors.index', [
             'doctors' => $query
-                ->paginate(50)
+                ->paginate(30)
                 ->withQueryString()
-                ->through(fn(Doctor $doctor) => $this->formatDoctor($doctor)),
+                ->through(fn(Doctor $doctor) => $this->formatDoctor($doctor, $userLat, $userLng)),
             'departments' => $departments->map(fn(Department $department) => $this->formatDepartment($department)),
             'cities' => $cities,
-            'filters' => $request->only(['department', 'experience', 'city', 'search']),
+            'filters' => $request->only(['department', 'experience', 'city', 'search', 'user_lat', 'user_lng']),
+            'hasUserLocation' => $hasUserLocation,
         ]);
     }
 
@@ -83,8 +88,16 @@ class DoctorController extends Controller
         ];
     }
 
-    private function formatDoctor(Doctor $doctor): array
+    private function formatDoctor(Doctor $doctor, ?float $userLat = null, ?float $userLng = null): array
     {
+        $primaryHospital = $doctor->hospitals->first();
+        $distanceKm = $this->calculateDistanceKm(
+            $userLat,
+            $userLng,
+            $doctor->latitude ?? $primaryHospital?->latitude,
+            $doctor->longitude ?? $primaryHospital?->longitude
+        );
+
         return [
             'id' => $doctor->id,
             'first_name' => $doctor->first_name,
@@ -115,6 +128,7 @@ class DoctorController extends Controller
             'pincode' => $doctor->pincode,
             'latitude' => $doctor->latitude,
             'longitude' => $doctor->longitude,
+            'distance_km' => $distanceKm,
             'hospitals' => $doctor->hospitals->map(fn(Hospital $hospital) => [
                 'id' => $hospital->id,
                 'name' => [
@@ -137,8 +151,32 @@ class DoctorController extends Controller
                 'accepts_cghs' => $hospital->accepts_cghs,
                 'is_cashless' => $hospital->is_cashless,
                 'cashless_schemes_list' => $hospital->cashless_schemes_list,
+                'distance_km' => $this->calculateDistanceKm($userLat, $userLng, $hospital->latitude, $hospital->longitude),
                 'pivot' => $hospital->pivot,
             ]),
         ];
+    }
+
+    private function calculateDistanceKm(?float $userLat, ?float $userLng, $targetLat, $targetLng): ?float
+    {
+        if (!is_numeric($userLat) || !is_numeric($userLng) || !is_numeric($targetLat) || !is_numeric($targetLng)) {
+            return null;
+        }
+
+        $earthRadius = 6371;
+        $latFrom = deg2rad((float)$userLat);
+        $lonFrom = deg2rad((float)$userLng);
+        $latTo = deg2rad((float)$targetLat);
+        $lonTo = deg2rad((float)$targetLng);
+
+        $latDelta = $latTo - $latFrom;
+        $lonDelta = $lonTo - $lonFrom;
+
+        $angle = 2 * asin(sqrt(
+            pow(sin($latDelta / 2), 2) +
+            cos($latFrom) * cos($latTo) * pow(sin($lonDelta / 2), 2)
+        ));
+
+        return round($angle * $earthRadius, 1);
     }
 }

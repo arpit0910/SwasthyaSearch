@@ -15,14 +15,14 @@ class SyncHealthcareDirectoryCommand extends Command
      *
      * @var string
      */
-    protected $signature = 'healthcare:sync {city=all : The city to synchronize, or "all" for all supported cities} {--force-fallback : Force using verified institutional fallback dataset}';
+    protected $signature = 'healthcare:sync {city=jaipur : The city to synchronize, defaults to Jaipur} {--force-fallback : Force using verified institutional fallback dataset}';
 
     /**
      * The console command description.
      *
      * @var string
      */
-    protected $description = 'Synchronize verified healthcare directory records (Doctors, Hospitals, Blood Banks) for a specified city or all cities.';
+    protected $description = 'Synchronize verified healthcare directory records (Doctors, Hospitals, Blood Banks) for configured Indian cities.';
 
     /**
      * Execute the console command.
@@ -33,14 +33,19 @@ class SyncHealthcareDirectoryCommand extends Command
         $cityArg = strtolower(trim($this->argument('city')));
         $forceFallback = $this->option('force-fallback');
 
-        $supportedCities = ['Ahmedabad', 'Bangalore', 'Chennai', 'Delhi', 'Hyderabad', 'Jaipur', 'Jodhpur', 'Kolkata', 'Kota', 'Mumbai', 'Pune'];
+        $supportedCities = ScraperService::getSupportedCities();
 
         if ($cityArg === 'all') {
             $citiesToSync = $supportedCities;
-            $this->info("Starting healthcare directory synchronization for ALL cities: " . implode(', ', $citiesToSync));
+            $this->info("Starting healthcare directory synchronization for ALL supported cities: " . implode(', ', $citiesToSync));
         } else {
-            $citiesToSync = [ucfirst($cityArg)];
-            $this->info("Starting healthcare directory synchronization for city: " . ucfirst($cityArg));
+            $cityTitle = ucfirst($cityArg);
+            if (!in_array($cityTitle, $supportedCities)) {
+                $this->error("City '{$cityTitle}' is not supported. Currently we only support: " . implode(', ', $supportedCities));
+                return Command::FAILURE;
+            }
+            $citiesToSync = [$cityTitle];
+            $this->info("Starting healthcare directory synchronization for city: " . $cityTitle);
         }
 
         $this->info("Mode: " . ($forceFallback ? "Verified Institutional Fallback (High-Integrity)" : "Live Web Scraping + Fallback"));

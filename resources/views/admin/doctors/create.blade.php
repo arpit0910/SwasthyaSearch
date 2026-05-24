@@ -121,6 +121,10 @@
                             <label class="form-label fw-semibold">Address Line 2</label>
                             <input type="text" name="address_line2" class="form-control" placeholder="Street / Area">
                         </div>
+                        <div class="col-md-6">
+                            <label class="form-label fw-semibold">Landmark</label>
+                            <input type="text" name="landmark" class="form-control" placeholder="Near City Mall / Landmark">
+                        </div>
                         <div class="col-md-4">
                             <label class="form-label fw-semibold">City</label>
                             <input type="text" name="city" class="form-control" placeholder="Jaipur" value="Jaipur">

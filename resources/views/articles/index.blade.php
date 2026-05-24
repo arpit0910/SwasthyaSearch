@@ -23,7 +23,7 @@
 
 <!-- Filter Bar -->
 <section class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 -mt-8 relative z-20 w-full mb-12">
-    <form action="{{ route('articles.index') }}" method="GET" class="bg-white rounded-2xl shadow-xl border border-slate-200/80 p-5 sm:p-6 backdrop-blur-xl">
+    <form action="{{ route('articles.index') }}" method="GET" data-auto-filter class="bg-white rounded-2xl shadow-xl border border-slate-200/80 p-5 sm:p-6 backdrop-blur-xl">
         <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 xl:grid-cols-12 gap-4 items-stretch">
             <!-- Search Input -->
             <div class="relative lg:col-span-3 xl:col-span-9">
@@ -52,23 +52,14 @@
             </div>
         </div>
 
-        <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 mt-6 pt-6 border-t border-slate-100">
+        <div class="grid grid-cols-1 gap-3 mt-6 pt-6 border-t border-slate-100">
             <a
                 href="{{ route('articles.index') }}"
                 class="h-12 px-5 rounded-xl border border-slate-200 hover:border-slate-300 text-slate-600 hover:text-slate-800 hover:bg-slate-50 font-bold text-sm transition-all duration-200 flex items-center justify-center space-x-2 shadow-2xs"
             >
                 <i data-lucide="rotate-ccw" class="w-4 h-4"></i>
                 <span>{{ $locale === 'hi' ? 'रीसेट करें' : 'Reset Filters' }}</span>
-            </a>
-
-            <button
-                type="submit"
-                class="h-12 bg-gradient-to-tr from-teal-500 to-indigo-600 hover:from-teal-600 hover:to-indigo-700 text-white font-bold px-8 rounded-xl shadow-md hover:shadow-lg transition-all duration-200 text-sm flex items-center justify-center space-x-2 transform active:scale-98 uppercase tracking-wider"
-            >
-                <i data-lucide="filter" class="w-4 h-4"></i>
-                <span>{{ $locale === 'hi' ? 'फ़िल्टर लागू करें' : 'Apply Filters' }}</span>
-            </button>
-        </div>
+            </a>`r`n        </div>
     </form>
 </section>
 
@@ -153,6 +144,13 @@
             @endforeach
         </div>
     @endif
+
+    @if ($articles->hasPages())
+        <div class="mt-12">
+            {{ $articles->links('pagination::tailwind') }}
+        </div>
+    @endif
 </main>
 @endsection
+
 

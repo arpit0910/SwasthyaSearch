@@ -2,6 +2,10 @@
 
 @section('title', ($locale === 'hi' ? 'रोग और लक्षण' : 'Diseases & Symptoms') . ' - SwasthyaSearch')
 
+@section('meta_title', $locale === 'hi' ? 'रोग और लक्षण निर्देशिका | SwasthyaSearch' : 'Diseases & Symptoms Directory | SwasthyaSearch')
+@section('meta_description', $locale === 'hi'
+    ? 'रोग या लक्षण खोजें और संबंधित चिकित्सा विभाग देखें। सही विशेषज्ञ डॉक्टर तक पहुंचने के लिए उपयोगी स्वास्थ्य निर्देशिका।'
+    : 'Search diseases and symptoms, then discover the relevant medical departments to reach the right specialist doctors.')
 @section('content')
     <!-- Hero Section -->
     <header
@@ -27,7 +31,7 @@
 
     <!-- Filter Bar -->
     <section class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 -mt-8 relative z-20 w-full mb-10">
-        <form action="{{ route('diseases.index') }}" method="GET"
+        <form action="{{ route('diseases.index') }}" method="GET" data-auto-filter
             class="bg-white rounded-2xl shadow-xl border border-slate-200/80 p-6 backdrop-blur-xl">
             <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
                 <div class="relative md:col-span-2">
@@ -62,11 +66,6 @@
                     <i data-lucide="rotate-ccw" class="w-4 h-4"></i>
                     <span>{{ $locale === 'hi' ? 'रीसेट करें' : 'Reset' }}</span>
                 </a>
-                <button type="submit"
-                    class="bg-gradient-to-tr from-teal-500 to-indigo-600 hover:from-teal-600 hover:to-indigo-700 text-white font-bold px-7 py-2.5 rounded-xl shadow-md text-sm flex items-center gap-2 transform active:scale-98 uppercase tracking-wider">
-                    <i data-lucide="filter" class="w-4 h-4"></i>
-                    <span>{{ $locale === 'hi' ? 'फ़िल्टर लागू करें' : 'Apply Filters' }}</span>
-                </button>
             </div>
         </form>
     </section>

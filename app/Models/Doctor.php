@@ -28,6 +28,7 @@ class Doctor extends Model implements HasMedia
         'phone',
         'address_line1',
         'address_line2',
+        'landmark',
         'city',
         'state',
         'pincode',

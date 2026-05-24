@@ -18,26 +18,45 @@ use Illuminate\Support\Facades\Log;
 class ScraperService
 {
     /**
+     * City => scraper class map.
+     *
+     * @var array<string, class-string>
+     */
+    private const CITY_SCRAPER_MAP = [
+        'jaipur' => JaipurScraperService::class,
+        'delhi' => DelhiScraperService::class,
+        'jodhpur' => JodhpurScraperService::class,
+        'kota' => KotaScraperService::class,
+        'mumbai' => MumbaiScraperService::class,
+        'pune' => PuneScraperService::class,
+        'bangalore' => BangaloreScraperService::class,
+        'hyderabad' => HyderabadScraperService::class,
+        'ahmedabad' => AhmedabadScraperService::class,
+        'kolkata' => KolkataScraperService::class,
+        'chennai' => ChennaiScraperService::class,
+    ];
+
+    /**
      * Get the appropriate scraper service class for a given city.
      */
     private static function getServiceForCity(string $city): ?string
     {
         $cityClean = strtolower(trim($city));
 
-        return match ($cityClean) {
-            'jaipur' => JaipurScraperService::class,
-            'delhi', 'new delhi' => DelhiScraperService::class,
-            'jodhpur' => JodhpurScraperService::class,
-            'kota' => KotaScraperService::class,
-            'mumbai' => MumbaiScraperService::class,
-            'pune' => PuneScraperService::class,
-            'bangalore', 'bengaluru' => BangaloreScraperService::class,
-            'hyderabad' => HyderabadScraperService::class,
-            'ahmedabad' => AhmedabadScraperService::class,
-            'kolkata', 'calcutta' => KolkataScraperService::class,
-            'chennai', 'madras' => ChennaiScraperService::class,
-            default => null,
-        };
+        return self::CITY_SCRAPER_MAP[$cityClean] ?? null;
+    }
+
+    /**
+     * List all supported city names in title case.
+     *
+     * @return array<int, string>
+     */
+    public static function getSupportedCities(): array
+    {
+        return array_map(
+            static fn (string $city): string => ucwords($city),
+            array_keys(self::CITY_SCRAPER_MAP)
+        );
     }
 
     /**

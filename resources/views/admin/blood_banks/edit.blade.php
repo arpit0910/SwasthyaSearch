@@ -39,6 +39,10 @@
                             <label class="form-label fw-semibold">Pincode</label>
                             <input type="text" name="pincode" class="form-control" value="{{ $bloodBank->pincode }}">
                         </div>
+                        <div class="col-md-8">
+                            <label class="form-label fw-semibold">Landmark</label>
+                            <input type="text" name="landmark" class="form-control" value="{{ $bloodBank->landmark }}" placeholder="Near Main Gate / Circle">
+                        </div>
                         <div class="col-md-4">
                             <label class="form-label fw-semibold">Latitude</label>
                             <input type="number" step="any" name="latitude" class="form-control" value="{{ $bloodBank->latitude }}">
@@ -50,14 +54,14 @@
                         <div class="col-md-6">
                             <label class="form-label fw-semibold">General Helpline</label>
                             <div class="input-group">
-                                <input type="text" name="country_code" class="form-control" style="max-width: 80px;" value="{{ $bloodBank->country_code ?: '+91' }}">
+                                <input type="text" name="country_code" class="form-control" style="max-width: 80px;" value="{{ !empty($bloodBank->country_code) ? ('+' . ltrim($bloodBank->country_code, '+')) : '+91' }}">
                                 <input type="text" name="phone" class="form-control" value="{{ $bloodBank->phone }}">
                             </div>
                         </div>
                         <div class="col-md-6">
                             <label class="form-label fw-semibold">Emergency Helpline</label>
                             <div class="input-group">
-                                <input type="text" name="emergency_country_code" class="form-control" style="max-width: 80px;" value="{{ $bloodBank->emergency_country_code ?: '+91' }}">
+                                <input type="text" name="emergency_country_code" class="form-control" style="max-width: 80px;" value="{{ !empty($bloodBank->emergency_country_code) ? ('+' . ltrim($bloodBank->emergency_country_code, '+')) : '+91' }}">
                                 <input type="text" name="emergency_phone" class="form-control" required value="{{ $bloodBank->emergency_phone }}">
                             </div>
                         </div>

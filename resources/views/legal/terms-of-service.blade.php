@@ -76,10 +76,13 @@
                     {{ $locale === 'hi' ? '6. शासी कानून' : '6. Governing Law' }}
                 </h2>
                 <p>
-                    {{ $locale === 'hi' ? 'ये शर्तें भारत के कानूनों के अनुसार शासित और तैयार की जाएंगी। मंच के उपयोग से उत्पन्न होने वाला कोई भी विवाद जयपुर, राजस्थान के न्यायालयों के विशेष अधिकार क्षेत्र के अधीन होगा।' : 'These terms shall be governed by and construed in accordance with the laws of India. Any disputes arising from the use of the platform shall be subject to the exclusive jurisdiction of the courts in Jaipur, Rajasthan.' }}
+                    {{ $locale === 'hi' ? 'ये शर्तें भारत के कानूनों के अनुसार शासित और तैयार की जाएंगी। मंच के उपयोग से उत्पन्न होने वाला कोई भी विवाद जयपुर, राजस्थान के न्यायालयों के विशेष अधिकार क्षेत्र के अधीन होगा।' : 'These terms shall be governed by and construed in accordance with the laws of India. Any disputes arising from the use of the platform shall be subject to the exclusive jurisdiction of the courts of Rajasthan.' }}
                 </p>
             </section>
         </div>
     </div>
 </main>
 @endsection
+
+
+

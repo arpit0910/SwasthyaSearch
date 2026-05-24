@@ -2,6 +2,10 @@
 
 @section('title', ($locale === 'hi' ? 'चिकित्सा विभाग' : 'Medical Departments') . ' - SwasthyaSearch')
 
+@section('meta_title', $locale === 'hi' ? 'चिकित्सा विभाग निर्देशिका | SwasthyaSearch' : 'Medical Departments Directory | SwasthyaSearch')
+@section('meta_description', $locale === 'hi'
+    ? 'सभी प्रमुख चिकित्सा विभाग देखें और समझें कि कौन सा विभाग किन रोगों और लक्षणों के लिए उपयुक्त है।'
+    : 'Browse major medical departments and understand which specialties are relevant for different diseases and symptoms.')
 @section('content')
 <!-- Hero Section -->
 <header class="bg-gradient-to-r from-slate-900 via-indigo-950 to-slate-900 text-white py-16 px-4 sm:px-6 lg:px-8 border-b border-slate-800 shadow-xl relative overflow-hidden">

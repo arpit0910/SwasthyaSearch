@@ -33,6 +33,7 @@
                                 <th class="ps-4">Name (EN / HI)</th>
                                 <th>Type</th>
                                 <th>City</th>
+                                <th>Address</th>
                                 <th>Emergency Phone</th>
                                 <th>Status</th>
                                 <th class="text-end pe-4">Actions</th>
@@ -47,6 +48,25 @@
                                     </td>
                                     <td><span class="badge bg-light text-dark border">{{ $hospital->type }}</span></td>
                                     <td>{{ $hospital->city }}</td>
+                                    <td>
+                                        <div class="small text-dark">{{ $hospital->address_line1 ?: 'N/A' }}</div>
+                                        @if(!empty($hospital->address_line2))
+                                            <div class="small text-muted">{{ $hospital->address_line2 }}</div>
+                                        @endif
+                                        @if(!empty($hospital->landmark))
+                                            <div class="small text-muted">Landmark: {{ $hospital->landmark }}</div>
+                                        @endif
+                                        @php
+                                            $locationParts = array_filter([
+                                                $hospital->city,
+                                                $hospital->state,
+                                                $hospital->pincode
+                                            ]);
+                                        @endphp
+                                        @if(!empty($locationParts))
+                                            <div class="small text-muted">{{ implode(', ', $locationParts) }}</div>
+                                        @endif
+                                    </td>
                                     <td><span class="font-monospace">{{ $hospital->emergency_phone }}</span></td>
                                     <td>
                                         @if($hospital->is_verified)

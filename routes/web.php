@@ -58,6 +58,10 @@ Route::prefix('admin')->middleware('web')->group(function () {
         Route::post('/blood-banks/sync', [AdminDashboardController::class, 'syncBloodBanks'])->name('admin.blood_banks.sync');
         Route::get('/blood-banks/sync-progress', [AdminDashboardController::class, 'syncBloodBanksProgress'])->name('admin.blood_banks.sync.progress');
 
+        // Full Directory Sync (Hospitals + Doctors + Blood Banks)
+        Route::post('/sync-all', [AdminDashboardController::class, 'syncDirectoryAll'])->name('admin.directory.sync_all');
+        Route::get('/sync-all-progress', [AdminDashboardController::class, 'syncDirectoryAllProgress'])->name('admin.directory.sync_all.progress');
+
         // Departments
         Route::get('/departments', [AdminDashboardController::class, 'departments'])->name('admin.departments');
         Route::post('/departments', [AdminDashboardController::class, 'storeDepartment'])->name('admin.departments.store');

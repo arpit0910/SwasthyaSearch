@@ -32,11 +32,6 @@
                             <label class="form-label fw-semibold">City</label>
                             <input type="text" name="city" class="form-control" required placeholder="Delhi">
                         </div>
-                        <div class="col-12">
-                            <label class="form-label fw-semibold">Complete Address (Display)</label>
-                            <input type="text" name="address" class="form-control" required
-                                placeholder="123 Healthcare Blvd, Sector 4">
-                        </div>
                         <div class="col-md-6">
                             <label class="form-label fw-semibold">Address Line 1</label>
                             <input type="text" name="address_line1" class="form-control" placeholder="Building / Plot No">
@@ -44,6 +39,10 @@
                         <div class="col-md-6">
                             <label class="form-label fw-semibold">Address Line 2</label>
                             <input type="text" name="address_line2" class="form-control" placeholder="Street / Area">
+                        </div>
+                        <div class="col-md-6">
+                            <label class="form-label fw-semibold">Landmark</label>
+                            <input type="text" name="landmark" class="form-control" placeholder="Near Metro Station / Mall">
                         </div>
                         <div class="col-md-6">
                             <label class="form-label fw-semibold">State</label>

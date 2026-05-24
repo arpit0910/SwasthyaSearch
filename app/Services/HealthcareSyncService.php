@@ -142,14 +142,14 @@ class HealthcareSyncService
         }
 
         $rawPhone = trim($rawPhone);
-        if (preg_match('/^(\+\d{1,4})\s*[- ]?\s*(.*)$/', $rawPhone, $matches)) {
-            return [
-                'country_code' => $matches[1],
-                'phone' => trim($matches[2], '- '),
-            ];
-        }
+        $rawPhone = preg_replace('/^\+?91[\s\-]*/', '', $rawPhone) ?? $rawPhone;
+        $rawPhone = preg_replace('/^0091[\s\-]*/', '', $rawPhone) ?? $rawPhone;
+        $phone = preg_replace('/\s+/', ' ', trim($rawPhone, "- \t\n\r\0\x0B"));
 
-        return ['country_code' => '+91', 'phone' => trim($rawPhone, '- ')];
+        return [
+            'country_code' => '+91',
+            'phone' => $phone !== '' ? $phone : null,
+        ];
     }
 
     /**
@@ -210,7 +210,8 @@ class HealthcareSyncService
             [
                 'name_hi' => $nameHi,
                 'type' => $hospType,
-                'address' => $addressData['full_address'],
+                // Canonical display address is derived from address components.
+                'address' => null,
                 'address_line1' => $addressData['address_line1'],
                 'address_line2' => $addressData['address_line2'],
                 'city' => $addressData['city'],

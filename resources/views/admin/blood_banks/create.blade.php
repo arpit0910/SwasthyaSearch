@@ -38,6 +38,10 @@
                             <label class="form-label fw-semibold">Pincode</label>
                             <input type="text" name="pincode" class="form-control" placeholder="302004">
                         </div>
+                        <div class="col-md-8">
+                            <label class="form-label fw-semibold">Landmark</label>
+                            <input type="text" name="landmark" class="form-control" placeholder="Near Main Gate / Circle">
+                        </div>
                         <div class="col-md-4">
                             <label class="form-label fw-semibold">Latitude</label>
                             <input type="number" step="any" name="latitude" class="form-control" placeholder="26.8924">

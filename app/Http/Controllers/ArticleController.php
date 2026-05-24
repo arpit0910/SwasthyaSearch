@@ -30,7 +30,7 @@ class ArticleController extends Controller
         $categories = Article::where('is_published', true)->distinct()->pluck('category');
 
         return view('articles.index', [
-            'articles' => $query->get(),
+            'articles' => $query->paginate(30)->withQueryString(),
             'categories' => $categories,
             'filters' => $request->only(['category', 'search']),
         ]);

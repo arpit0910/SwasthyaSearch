@@ -15,6 +15,7 @@ class BloodBank extends Model
         'name_hi',
         'address_en',
         'address_hi',
+        'landmark',
         'city',
         'state',
         'pincode',

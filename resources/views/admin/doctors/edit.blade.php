@@ -41,7 +41,7 @@
                             <label class="form-label fw-semibold">Phone Number</label>
                             <div class="input-group">
                                 <input type="text" name="country_code" class="form-control" style="max-width: 80px;"
-                                    value="{{ $doctor->country_code ?? '+91' }}" placeholder="+91">
+                                    value="{{ !empty($doctor->country_code) ? ('+' . ltrim($doctor->country_code, '+')) : '+91' }}" placeholder="+91">
                                 <input type="text" name="phone" class="form-control" value="{{ $doctor->phone }}"
                                     placeholder="9876543210">
                             </div>
@@ -161,6 +161,11 @@
                             <label class="form-label fw-semibold">Address Line 2</label>
                             <input type="text" name="address_line2" class="form-control"
                                 value="{{ $doctor->address_line2 }}">
+                        </div>
+                        <div class="col-md-6">
+                            <label class="form-label fw-semibold">Landmark</label>
+                            <input type="text" name="landmark" class="form-control"
+                                value="{{ $doctor->landmark }}" placeholder="Near City Mall / Landmark">
                         </div>
                         <div class="col-md-4">
                             <label class="form-label fw-semibold">City</label>

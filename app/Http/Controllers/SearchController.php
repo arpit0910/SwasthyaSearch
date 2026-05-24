@@ -22,7 +22,7 @@ class SearchController extends Controller
         return view('home.index', [
             'departments' => Department::where('is_active', true)->orderBy($nameColumn)->get()->map(fn(Department $department) => $this->formatDepartment($department)),
             'doctors' => Doctor::with(['department', 'hospitals'])->where('is_verified', true)->latest()->take(6)->get()->map(fn(Doctor $doctor) => $this->formatDoctor($doctor)),
-            'articles' => Article::with('comments')->where('is_published', true)->latest()->get(),
+            'articles' => Article::with('comments')->where('is_published', true)->latest()->take(6)->get(),
             'faqs' => Faq::latest()->get(),
             'stats' => [
                 'cities' => Hospital::distinct('city')->count('city') ?: 1,
@@ -36,7 +36,7 @@ class SearchController extends Controller
 
     public function search(Request $request)
     {
-        $query = $request->input('q', '');
+        $query = $this->normalizeSymptomQuery((string) $request->input('q', ''));
         $locale = app()->getLocale();
 
         if (empty($query)) {
@@ -49,62 +49,52 @@ class SearchController extends Controller
 
         $matchedDeptId = null;
         $matchedDiseaseName = null;
-
-        // 1. Prioritize Direct Doctor Name / Specialization Matching
-        $doctorQuery = Doctor::with(['department', 'hospitals'])->where('is_verified', true);
         $terms = array_filter(explode(' ', trim($query)));
-        $nameMatchedDoctors = collect();
+        $isLikelyDoctorNameQuery = preg_match('/\bdr\.?\b/i', $query) === 1 || count($terms) >= 2;
 
-        if (!empty($terms)) {
-            $nameQuery = clone $doctorQuery;
-            $nameQuery->where(function ($q) use ($terms) {
-                foreach ($terms as $term) {
-                    $q->where(function ($subQ) use ($term) {
-                        $subQ->where('first_name', 'LIKE', "%{$term}%")
-                             ->orWhere('last_name', 'LIKE', "%{$term}%")
-                             ->orWhere('specialization_summary', 'LIKE', "%{$term}%")
-                             ->orWhere('about_en', 'LIKE', "%{$term}%")
-                             ->orWhere('about_hi', 'LIKE', "%{$term}%");
-                    });
-                }
-            });
-            $nameMatchedDoctors = $nameQuery->get();
+        // High-confidence symptom intent routing first (prevents bad "pain" fallbacks).
+        $intentMatch = $this->resolveSymptomIntentDepartment($query);
+        if ($intentMatch) {
+            $matchedDeptId = $intentMatch['department_id'];
+            $matchedDiseaseName = $intentMatch['matched_label'];
         }
 
-        if ($nameMatchedDoctors->isNotEmpty()) {
-            $firstDocDept = $nameMatchedDoctors->first()->department;
-            $deptName = $firstDocDept ? ($locale === 'hi' ? $firstDocDept->name_hi : $firstDocDept->name_en) : null;
-
-            return response()->json([
-                'doctors' => $nameMatchedDoctors->map(fn(Doctor $doctor) => $this->formatDoctor($doctor)),
-                'matched_department' => $deptName,
-                'matched_disease' => null,
-            ]);
-        }
-
-        // 2. Vector Similarity Search or Fallback Text Search on Diseases (If no direct doctor match)
-        try {
-            /** @var mixed $stringObj */
-            $stringObj = Str::of($query);
-            $userEmbedding = method_exists($stringObj, 'toEmbeddings') ? $stringObj->toEmbeddings() : json_encode(array_fill(0, 1536, 0.01));
-            $diseases = Disease::whereVectorSimilarTo('symptoms_embedding', $userEmbedding)
-                ->with(['department'])
-                ->get();
-
-            if ($diseases->isNotEmpty()) {
-                $firstMatch = $diseases->first();
-                $matchedDeptId = $firstMatch->department_id;
-                $matchedDiseaseName = $locale === 'hi' ? $firstMatch->name_hi : $firstMatch->name_en;
-            }
-        } catch (Exception $e) {
-            // Fallback to LIKE search
-            $diseaseMatch = Disease::where(function ($diseaseQuery) use ($query) {
+        // 1. Deterministic symptom/disease text match first (prevents incorrect vector-only matches).
+        if (!$matchedDeptId) {
+            $diseaseCandidates = Disease::where(function ($diseaseQuery) use ($query, $terms) {
                 $diseaseQuery->where('name_en', 'LIKE', "%{$query}%")
                     ->orWhere('name_hi', 'LIKE', "%{$query}%");
-            })->with('department')->first();
+
+                foreach ($terms as $term) {
+                    $diseaseQuery->orWhere('name_en', 'LIKE', "%{$term}%")
+                        ->orWhere('name_hi', 'LIKE', "%{$term}%");
+                }
+            })->with('department')->get();
+
+            $diseaseMatch = $this->pickBestDiseaseMatch($diseaseCandidates, $query, $terms);
             if ($diseaseMatch) {
                 $matchedDeptId = $diseaseMatch->department_id;
                 $matchedDiseaseName = $locale === 'hi' ? $diseaseMatch->name_hi : $diseaseMatch->name_en;
+            }
+        }
+
+        // 2. If text match is not found, use vector similarity.
+        if (!$matchedDeptId) {
+            try {
+                /** @var mixed $stringObj */
+                $stringObj = Str::of($query);
+                $userEmbedding = method_exists($stringObj, 'toEmbeddings') ? $stringObj->toEmbeddings() : json_encode(array_fill(0, 1536, 0.01));
+                $diseases = Disease::whereVectorSimilarTo('symptoms_embedding', $userEmbedding)
+                    ->with(['department'])
+                    ->get();
+
+                if ($diseases->isNotEmpty()) {
+                    $firstMatch = $diseases->first();
+                    $matchedDeptId = $firstMatch->department_id;
+                    $matchedDiseaseName = $locale === 'hi' ? $firstMatch->name_hi : $firstMatch->name_en;
+                }
+            } catch (Exception $e) {
+                // Ignore vector errors and continue with department/name fallback.
             }
         }
 
@@ -126,6 +116,22 @@ class SearchController extends Controller
                 ->get();
         } else {
             $doctors = collect();
+        }
+
+        // 2. If no symptom/department mapping produced doctors, attempt doctor-name search.
+        if ($doctors->isEmpty() && $isLikelyDoctorNameQuery && !empty($terms)) {
+            $nameQuery = Doctor::with(['department', 'hospitals'])->where('is_verified', true);
+            $nameQuery->where(function ($q) use ($terms) {
+                foreach ($terms as $term) {
+                    $q->where(function ($subQ) use ($term) {
+                        $subQ->where('first_name', 'LIKE', "%{$term}%")
+                            ->orWhere('last_name', 'LIKE', "%{$term}%")
+                            ->orWhereRaw("CONCAT(first_name, ' ', last_name) LIKE ?", ["%{$term}%"])
+                            ->orWhere('specialization_summary', 'LIKE', "%{$term}%");
+                    });
+                }
+            });
+            $doctors = $nameQuery->get();
         }
 
         $matchedDept = $matchedDeptId ? Department::find($matchedDeptId) : null;
@@ -211,5 +217,152 @@ class SearchController extends Controller
                 'pivot' => $hospital->pivot,
             ]),
         ];
+    }
+
+    private function normalizeSymptomQuery(string $query): string
+    {
+        $normalized = mb_strtolower(trim($query));
+        if ($normalized === '') {
+            return '';
+        }
+
+        $replacements = [
+            'join pain' => 'joint pain',
+            'hedache' => 'headache',
+            'feaver' => 'fever',
+            'stomuch pain' => 'stomach pain',
+        ];
+
+        foreach ($replacements as $wrong => $correct) {
+            if (str_contains($normalized, $wrong)) {
+                $normalized = str_replace($wrong, $correct, $normalized);
+            }
+        }
+
+        return $normalized;
+    }
+
+    private function resolveSymptomIntentDepartment(string $query): ?array
+    {
+        $q = mb_strtolower(trim($query));
+        if ($q === '') {
+            return null;
+        }
+
+        $intentMap = [
+            [
+                'label' => 'Fever',
+                'keywords' => ['fever', 'बुखार'],
+                'department_like' => ['general medicine', 'internal medicine'],
+            ],
+            [
+                'label' => 'Cough',
+                'keywords' => ['cough', 'खांसी', 'खासी'],
+                'department_like' => ['pulmonology', 'respiratory', 'general medicine'],
+            ],
+            [
+                'label' => 'Stomach Pain',
+                'keywords' => ['stomach pain', 'abdominal pain', 'पेट दर्द', 'पेट में दर्द'],
+                'department_like' => ['gastroenterology', 'general medicine'],
+            ],
+            [
+                'label' => 'Skin Rash',
+                'keywords' => ['skin rash', 'rash', 'त्वचा चकत्ते', 'चकत्ते'],
+                'department_like' => ['dermatology', 'skin'],
+            ],
+            [
+                'label' => 'Joint Pain',
+                'keywords' => ['joint pain', 'join pain', 'knee pain', 'shoulder pain', 'जोड़ों का दर्द', 'घुटने का दर्द'],
+                'department_like' => ['orthoped', 'orthopaed'],
+            ],
+            [
+                'label' => 'Headache',
+                'keywords' => ['headache', 'migraine', 'सिरदर्द', 'सिर दर्द'],
+                'department_like' => ['neurology', 'general medicine'],
+            ],
+        ];
+
+        foreach ($intentMap as $intent) {
+            $matched = false;
+            foreach ($intent['keywords'] as $keyword) {
+                if (str_contains($q, mb_strtolower($keyword))) {
+                    $matched = true;
+                    break;
+                }
+            }
+            if (!$matched) {
+                continue;
+            }
+
+            $dept = Department::where('is_active', true)
+                ->where(function ($query) use ($intent) {
+                    $first = true;
+                    foreach ($intent['department_like'] as $needle) {
+                        $pattern = '%' . mb_strtolower($needle) . '%';
+                        if ($first) {
+                            $query->whereRaw('LOWER(name_en) LIKE ?', [$pattern])
+                                ->orWhereRaw('LOWER(name_hi) LIKE ?', [$pattern]);
+                            $first = false;
+                        } else {
+                            $query->orWhereRaw('LOWER(name_en) LIKE ?', [$pattern])
+                                ->orWhereRaw('LOWER(name_hi) LIKE ?', [$pattern]);
+                        }
+                    }
+                })
+                ->first();
+
+            if ($dept) {
+                return [
+                    'department_id' => $dept->id,
+                    'matched_label' => $intent['label'],
+                ];
+            }
+        }
+
+        return null;
+    }
+
+    private function pickBestDiseaseMatch($diseases, string $query, array $terms): ?Disease
+    {
+        if (!$diseases || $diseases->isEmpty()) {
+            return null;
+        }
+
+        $query = mb_strtolower($query);
+        $best = null;
+        $bestScore = -1;
+
+        foreach ($diseases as $disease) {
+            $en = mb_strtolower((string) ($disease->name_en ?? ''));
+            $hi = mb_strtolower((string) ($disease->name_hi ?? ''));
+            $name = $en !== '' ? $en : $hi;
+            if ($name === '') {
+                continue;
+            }
+
+            $score = 0;
+            if ($name === $query) {
+                $score += 1000;
+            }
+            if (str_contains($name, $query)) {
+                $score += 350;
+            }
+
+            $matchedTerms = 0;
+            foreach ($terms as $term) {
+                $t = mb_strtolower((string) $term);
+                if ($t !== '' && (str_contains($en, $t) || str_contains($hi, $t))) {
+                    $matchedTerms++;
+                }
+            }
+            $score += $matchedTerms * 120;
+
+            if ($score > $bestScore) {
+                $bestScore = $score;
+                $best = $disease;
+            }
+        }
+
+        return $best;
     }
 }

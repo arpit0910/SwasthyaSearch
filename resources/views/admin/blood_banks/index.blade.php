@@ -45,6 +45,9 @@
                                 <td class="ps-4">
                                     <div class="fw-bold text-dark">{{ $bb->getTranslation('name', 'en') }}</div>
                                     <div class="text-muted fs-7">{{ $bb->getTranslation('name', 'hi') }}</div>
+                                    @if(!empty($bb->landmark))
+                                        <div class="text-muted fs-7">Landmark: {{ $bb->landmark }}</div>
+                                    @endif
                                 </td>
                                 <td>
                                     @if($bb->is_government)
@@ -58,7 +61,7 @@
                                 </td>
                                 <td>{{ $bb->city }}</td>
                                 <td>
-                                    <div class="font-monospace fs-7">{{ $bb->emergency_country_code }} {{ $bb->emergency_phone }}</div>
+                                    <div class="font-monospace fs-7">{{ '+' . ltrim(($bb->emergency_country_code ?? '91'), '+') }} {{ $bb->emergency_phone }}</div>
                                 </td>
                                 <td>
                                     @if(is_array($bb->available_blood_groups))

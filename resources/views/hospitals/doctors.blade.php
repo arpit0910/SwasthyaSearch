@@ -2,6 +2,10 @@
 
 @php
     $hospitalName = $locale === 'hi' ? ($hospital['name_hi'] ?: $hospital['name_en']) : $hospital['name_en'];
+    $hospitalCity = $locale === 'hi' ? ($hospital['city_hi'] ?? $hospital['city']) : $hospital['city'];
+    $hospitalState = $locale === 'hi' ? ($hospital['state_hi'] ?? $hospital['state']) : $hospital['state'];
+    $hospitalAddressLine1 = $locale === 'hi' ? ($hospital['address_line1_hi'] ?? $hospital['address_line1']) : $hospital['address_line1'];
+    $hospitalAddressLine2 = $locale === 'hi' ? ($hospital['address_line2_hi'] ?? $hospital['address_line2']) : $hospital['address_line2'];
 @endphp
 
 @section('title', ($locale === 'hi' ? 'अस्पताल के डॉक्टर' : 'Hospital Doctors') . ' - SwasthyaSearch')
@@ -32,13 +36,16 @@
                 <i data-lucide="building-2" class="w-4 h-4 text-indigo-600"></i>{{ $hospital['type'] }}
             </span>
             <span class="inline-flex items-center gap-1.5 bg-slate-50 border border-slate-200 px-3 py-1 rounded-full font-semibold">
-                <i data-lucide="map-pin" class="w-4 h-4 text-teal-600"></i>{{ $hospital['city'] }}
+                <i data-lucide="map-pin" class="w-4 h-4 text-teal-600"></i>{{ $hospitalCity }}
             </span>
             @if(!empty($hospital['emergency_phone']))
                 <a href="tel:{{ $hospital['emergency_phone'] }}" class="inline-flex items-center gap-1.5 bg-teal-50 border border-teal-200 px-3 py-1 rounded-full font-semibold text-teal-800">
                     <i data-lucide="phone-call" class="w-4 h-4"></i>{{ $locale === 'hi' ? 'कॉल करें' : 'Call Hospital' }}
                 </a>
             @endif
+        </div>
+        <div class="mt-3 text-sm text-slate-600">
+            {{ trim($hospitalAddressLine1 . (!empty($hospitalAddressLine2) ? ', ' . $hospitalAddressLine2 : '') . ', ' . $hospitalCity . ', ' . $hospitalState . (!empty($hospital['pincode']) ? ' - ' . $hospital['pincode'] : '')) }}
         </div>
     </div>
 
