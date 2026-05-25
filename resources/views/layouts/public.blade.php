@@ -350,13 +350,16 @@
         <!-- Chat Window -->
         <div id="chatbot-window" class="hidden w-[94vw] sm:w-[420px] h-[74vh] max-h-[680px] min-h-[520px] bg-white dark:bg-slate-950 rounded-3xl shadow-2xl border border-slate-300/90 dark:border-slate-800 flex flex-col overflow-hidden animate-in fade-in duration-300 chatbot-window">
             <!-- Header -->
-            <div class="bg-gradient-to-r from-slate-900 via-indigo-900 to-slate-900 text-white p-4 flex justify-between items-start shadow-md">
+            <div id="chatbot-header" class="relative bg-gradient-to-r from-slate-900 via-indigo-900 to-slate-900 text-white p-4 flex justify-between items-start shadow-md">
                 <div class="flex items-start space-x-3 min-w-0 pr-2">
                     <div class="p-2 bg-teal-500/20 rounded-2xl border border-teal-500/30">
                         <i data-lucide="bot" class="w-6 h-6 text-teal-400"></i>
                     </div>
                     <div class="min-w-0">
-                        <h3 class="font-bold text-[17px] leading-tight text-white">Swasthya Saathi</h3>
+                        <div class="flex items-center gap-2">
+                            <h3 class="font-bold text-[17px] leading-tight text-white">Swasthya Saathi</h3>
+                            <button type="button" id="chatbot-important-toggle" onclick="toggleChatbotImportant()" class="inline-flex items-center justify-center w-5 h-5 rounded-full bg-amber-500/90 text-[11px] font-bold text-white hover:bg-amber-400 transition-all" aria-label="Show important assistant details">i</button>
+                        </div>
                         <p class="text-xs sm:text-[12px] text-teal-200 leading-snug mt-1 break-words">
                             {{ $locale === 'hi' ? 'तेज़ हेल्थकेयर खोज' : 'Quick healthcare search' }}
                         </p>
@@ -374,19 +377,23 @@
                 <button onclick="toggleChatbot()" aria-label="Close AI assistant" class="p-2 text-slate-300 hover:text-white hover:bg-white/10 rounded-xl transition-all duration-200">
                     <i data-lucide="x" class="w-5 h-5"></i>
                 </button>
+                <div id="chatbot-important-details" class="hidden absolute left-4 right-4 top-[74px] z-20 text-[11px] leading-relaxed text-amber-950 bg-white border border-amber-200 rounded-xl px-3 py-2 shadow-xl">
+                    This assistant does not provide diagnosis or treatment. For severe or urgent symptoms, visit the nearest hospital immediately and consult a qualified healthcare professional.
+                </div>
             </div>
 
             <div class="px-3.5 py-2 bg-slate-50/90 dark:bg-slate-900/90 border-t border-b border-slate-200/80 dark:border-slate-800/80">
                 <div class="flex items-center justify-between gap-2 min-h-[36px] w-full text-xs">
-                    <!-- Dropdown Selection State (visible when not locked) -->
+                    <!-- City Pills Selection State (visible when not locked) -->
                     <div id="chatbot-city-select-wrapper" class="flex-1 flex items-center gap-1.5 min-w-0">
                         <i data-lucide="map-pin" class="w-4 h-4 text-slate-500 shrink-0"></i>
-                        <select id="chatbot-city-selector" onchange="selectChatbotCity(this.value)" class="w-full bg-white dark:bg-slate-800 border border-slate-350 dark:border-slate-700 rounded-lg px-2 py-1.5 text-slate-850 dark:text-slate-100 focus:outline-none focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-500 font-semibold transition-all">
-                            <option value="">{{ $locale === 'hi' ? 'शहर चुनें...' : 'Select city...' }}</option>
-                            @foreach($chatbotCities as $city)
-                            <option value="{{ $city }}">{{ $city }}</option>
+                        <div id="chatbot-city-pill-wrap" class="flex flex-wrap gap-1.5 max-h-20 overflow-y-auto pr-1">
+                            @foreach($chatbotCityPills as $city)
+                            <button type="button" class="chatbot-city-pill" data-city="{{ $city }}" onclick="selectChatbotCity('{{ addslashes($city) }}')">
+                                {{ $city }}
+                            </button>
                             @endforeach
-                        </select>
+                        </div>
                     </div>
 
                     <!-- Locked Selected State (visible when locked) -->
@@ -450,20 +457,6 @@
                     <span></span><span></span><span></span>
                 </div>
                 <span id="chatbot-loading-text">{{ $locale === 'hi' ? 'स्वास्थ्य AI सोच रहा है...' : 'Swasthya AI is thinking...' }}</span>
-            </div>
-            <div class="px-3 pb-2 bg-amber-50 border-t border-amber-200">
-                <button
-                    type="button"
-                    id="chatbot-important-toggle"
-                    onclick="toggleChatbotImportant()"
-                    class="inline-flex items-center gap-1.5 text-[11px] font-semibold text-amber-900 bg-white border border-amber-300 rounded-full px-2.5 py-1"
-                    aria-label="Show important assistant details">
-                    <span class="inline-flex items-center justify-center w-4 h-4 rounded-full bg-amber-600 text-white text-[10px] font-bold">i</span>
-                    <span>{{ $locale === 'hi' ? 'महत्वपूर्ण जानकारी' : 'Important details' }}</span>
-                </button>
-                <div id="chatbot-important-details" class="hidden mt-2 text-[11px] leading-relaxed text-amber-950 bg-white border border-amber-200 rounded-xl px-3 py-2">
-                    {{ $locale === 'hi' ? 'यह सहायक निदान या उपचार नहीं देता। गंभीर या आपातकालीन लक्षण होने पर तुरंत नजदीकी अस्पताल जाएँ और योग्य चिकित्सा विशेषज्ञ से सलाह लें।' : 'This assistant does not provide diagnosis or treatment. For severe or urgent symptoms, visit the nearest hospital immediately and consult a qualified healthcare professional.' }}
-                </div>
             </div>
             <!-- Input Footer -->
             <form id="chatbot-form" onsubmit="handleChatbotSubmit(event)" class="p-3 bg-slate-50 border-t border-slate-200/80 flex items-center space-x-2 shadow-lg">
@@ -853,6 +846,7 @@
         // Chatbot Logic
         let chatbotOpen = false;
         let chatbotSessionToken = null;
+        let chatbotInitialMessagesHtml = '';
         let currentLocale = "{{ $locale }}";
         let chatbotLocale = currentLocale === 'hi' ? 'hi' : 'en';
         let chatbotCity = '';
@@ -1047,25 +1041,55 @@
             scrollToChatBottom();
         }
 
-        function collapseMobileFab() {
+        let fabCycleInterval = null;
+        let fabSingleTimeout = null;
+
+        function clearFabCycles() {
+            if (fabCycleInterval) {
+                clearInterval(fabCycleInterval);
+                fabCycleInterval = null;
+            }
+            if (fabSingleTimeout) {
+                clearTimeout(fabSingleTimeout);
+                fabSingleTimeout = null;
+            }
+        }
+
+        function contractFab() {
             const btn = document.getElementById('chatbot-toggle-btn');
             if (!btn) return;
-            if (window.innerWidth < 640) {
-                btn.classList.add('fab-collapsed');
-            } else {
-                btn.classList.remove('fab-collapsed');
+            if (!chatbotOpen) {
+                btn.classList.add('fab-contracted');
             }
         }
 
         function setupFabHintCycle() {
             const btn = document.getElementById('chatbot-toggle-btn');
             if (!btn) return;
-            if (window.innerWidth >= 640) return;
 
-            btn.classList.remove('fab-collapsed');
-            setTimeout(() => {
-                if (!chatbotOpen) collapseMobileFab();
-            }, 2800);
+            clearFabCycles();
+
+            // Start expanded to show full text initially
+            btn.classList.remove('fab-contracted');
+
+            if (window.innerWidth < 640) {
+                // Mobile: show full text once, then collapse and stay compact
+                fabSingleTimeout = setTimeout(() => {
+                    if (!chatbotOpen) contractFab();
+                }, 5200);
+            } else {
+                // Desktop/Web: collapse and uncollapse every 5 seconds
+                let isCollapsed = false;
+                fabCycleInterval = setInterval(() => {
+                    if (chatbotOpen) return;
+                    isCollapsed = !isCollapsed;
+                    if (isCollapsed) {
+                        btn.classList.add('fab-contracted');
+                    } else {
+                        btn.classList.remove('fab-contracted');
+                    }
+                }, 5000);
+            }
         }
 
         function toggleMobileMenu() {
@@ -1124,18 +1148,27 @@
             refreshChatbotCityUI();
         }
 
+        function moveQuickPromptsToBottom() {
+            const quickPromptsWrap = document.getElementById('chatbot-quick-prompts-wrap');
+            const messagesDiv = document.getElementById('chatbot-messages');
+            if (!quickPromptsWrap || !messagesDiv) return;
+            messagesDiv.appendChild(quickPromptsWrap);
+        }
+
         function refreshChatbotCityUI() {
             const selectWrapper = document.getElementById('chatbot-city-select-wrapper');
             const lockedWrapper = document.getElementById('chatbot-city-locked-wrapper');
             const selectedLabel = document.getElementById('chatbot-selected-city-label');
-            const citySelector = document.getElementById('chatbot-city-selector');
+            const cityPills = document.querySelectorAll('#chatbot-city-pill-wrap .chatbot-city-pill');
             const quickPromptsWrap = document.getElementById('chatbot-quick-prompts-wrap');
             const input = document.getElementById('chatbot-input');
             const sendBtn = document.querySelector('#chatbot-form button[type="submit"]');
             const voiceBtn = document.getElementById('chatbot-voice-btn');
-            if (!selectWrapper || !lockedWrapper || !selectedLabel || !citySelector || !quickPromptsWrap) return;
-
-            citySelector.value = chatbotCity;
+            if (!selectWrapper || !lockedWrapper || !selectedLabel || !quickPromptsWrap) return;
+            cityPills.forEach(pill => {
+                const isActive = normalizeCityValue(pill.dataset.city || '') === chatbotCity;
+                pill.classList.toggle('active', isActive);
+            });
 
             if (isCityLocked && chatbotCity) {
                 selectedLabel.textContent = chatbotCity;
@@ -1143,6 +1176,7 @@
                 lockedWrapper.classList.remove('hidden');
                 lockedWrapper.classList.add('flex');
                 quickPromptsWrap.classList.remove('hidden');
+                moveQuickPromptsToBottom();
                 if (input) {
                     input.disabled = false;
                     input.placeholder = chatbotLocale === 'hi' ? 'लक्षण बताएं या डॉक्टर, अस्पताल, ब्लड बैंक खोजें...' : 'Describe symptoms or search doctors, hospitals, blood banks...';
@@ -1234,12 +1268,29 @@
             }
         }
 
+        function resetChatbotForFreshStart() {
+            chatbotSessionToken = null;
+            hasCityPromptVisible = false;
+            const messagesDiv = document.getElementById('chatbot-messages');
+            if (messagesDiv && chatbotInitialMessagesHtml) {
+                messagesDiv.innerHTML = chatbotInitialMessagesHtml;
+            }
+            const initialMessage = document.getElementById('chatbot-initial-message');
+            if (initialMessage) {
+                initialMessage.textContent = getInitialChatbotMessage();
+            }
+            refreshChatbotCityUI();
+            lucide.createIcons();
+            scrollToChatBottom();
+        }
+
         function toggleChatbot() {
             chatbotOpen = !chatbotOpen;
             const btn = document.getElementById('chatbot-toggle-btn');
             const win = document.getElementById('chatbot-window');
             const overlay = document.getElementById('chatbot-mobile-overlay');
             if (chatbotOpen) {
+                clearFabCycles();
                 btn.classList.add('hidden');
                 win.classList.remove('hidden');
                 if (window.innerWidth < 640) {
@@ -1250,6 +1301,7 @@
                 setTimeout(handleChatbotKeyboardViewport, 80);
                 scrollToChatBottom();
             } else {
+                resetChatbotForFreshStart();
                 if (pendingChatAbortController) {
                     pendingChatAbortController.abort();
                     pendingChatAbortController = null;
@@ -1301,6 +1353,9 @@
             const details = document.getElementById('chatbot-important-details');
             if (!details) return;
             details.classList.toggle('hidden');
+            if (!details.classList.contains('hidden')) {
+                setTimeout(() => scrollToChatBottom(), 20);
+            }
         }
         async function useQuickPrompt(btn) {
             const msg = btn?.dataset?.message || '';
@@ -1347,6 +1402,7 @@
             });
 
             input.addEventListener('input', () => {
+                handleChatbotKeyboardViewport();
                 scrollToChatBottom();
             });
 
@@ -2005,7 +2061,9 @@
             }
         }
 
-        window.addEventListener('resize', collapseMobileFab);
+        window.addEventListener('resize', () => {
+            if (!chatbotOpen) setupFabHintCycle();
+        });
         document.addEventListener('click', function(e) {
             const menu = document.getElementById('mobile-nav-menu');
             const btn = document.getElementById('mobile-menu-toggle-btn');
@@ -2047,8 +2105,11 @@
         });
         initializeChatbotCity();
         setupChatbotKeyboardHandlers();
+        const initialMessagesDiv = document.getElementById('chatbot-messages');
+        if (initialMessagesDiv) {
+            chatbotInitialMessagesHtml = initialMessagesDiv.innerHTML;
+        }
         setupFabHintCycle();
-        collapseMobileFab();
 
         function initializePageAnimations() {
             document.body.classList.add('motion-ready');
@@ -2830,23 +2891,65 @@
             }
         }
 
+        /* Chatbot FAB premium expand/contract transitions (Global) */
+        .chatbot-fab {
+            display: inline-flex !important;
+            align-items: center;
+            height: 56px;
+            min-width: 56px;
+            padding-left: 20px !important;
+            padding-right: 24px !important;
+            border-radius: 9999px;
+            transition: width 3.4s cubic-bezier(0.22, 0.65, 0.22, 1),
+                padding 3.4s cubic-bezier(0.22, 0.65, 0.22, 1),
+                transform 3.4s cubic-bezier(0.22, 0.65, 0.22, 1),
+                box-shadow 0.4s ease !important;
+            overflow: hidden;
+            white-space: nowrap;
+            justify-content: flex-start !important;
+        }
+
+        .chatbot-fab-label {
+            display: inline-block;
+            max-width: 240px;
+            /* Enough to display 'Ask Swasthya Saathi' or 'स्वास्थ्य साथी से पूछें' */
+            margin-left: 12px;
+            opacity: 1;
+            overflow: hidden;
+            white-space: nowrap;
+            transform: translateX(0);
+            transition: max-width 3.4s cubic-bezier(0.22, 0.65, 0.22, 1),
+                margin-left 3.4s cubic-bezier(0.22, 0.65, 0.22, 1),
+                opacity 2.8s cubic-bezier(0.22, 0.65, 0.22, 1),
+                transform 3.4s cubic-bezier(0.22, 0.65, 0.22, 1);
+        }
+
+        .chatbot-fab.fab-contracted {
+            width: 56px;
+            min-width: 56px;
+            padding-left: 0 !important;
+            padding-right: 0 !important;
+            justify-content: center !important;
+            gap: 0 !important;
+        }
+
+        .chatbot-fab.fab-contracted .chatbot-fab-label {
+            max-width: 0;
+            margin-left: 0;
+            opacity: 0;
+            transform: translateX(-10px);
+            pointer-events: none;
+        }
+
+        .chatbot-fab.fab-contracted .chatbot-fab-icon {
+            animation: none !important;
+            margin: 0 auto !important;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
         @media (max-width: 639px) {
-            .chatbot-fab.fab-collapsed {
-                width: 56px;
-                height: 56px;
-                padding: 0;
-                border-radius: 9999px;
-                justify-content: center;
-            }
-
-            .chatbot-fab.fab-collapsed .chatbot-fab-label {
-                display: none;
-            }
-
-            .chatbot-fab.fab-collapsed .chatbot-fab-icon {
-                animation: none;
-            }
-
             #chatbot-container {
                 right: 0.75rem;
                 bottom: calc(0.75rem + env(safe-area-inset-bottom));
@@ -3012,4 +3115,10 @@
 </body>
 
 </html>
+
+
+
+
+
+
 

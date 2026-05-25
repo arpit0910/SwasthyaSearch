@@ -13,29 +13,29 @@ $locale === 'hi'
 @endphp
 
 <!-- Hero Section -->
-<header id="home-hero" class="relative overflow-hidden py-14 lg:py-20 mb-6 bg-gradient-to-b from-slate-950 via-slate-900 to-indigo-950 text-white indian-motif-bg">
+<header id="home-hero" class="relative overflow-hidden py-6 lg:py-9 mb-1 bg-gradient-to-b from-slate-950 via-slate-900 to-indigo-950 text-white indian-motif-bg">
     <!-- Glowing background blobs -->
     <div class="glow-blob w-[400px] h-[400px] bg-teal-500/10 top-0 left-0"></div>
     <div class="glow-blob w-[500px] h-[500px] bg-indigo-500/10 bottom-0 right-0"></div>
     <div class="absolute inset-0 opacity-20 bg-[radial-gradient(#67e8f9_1px,transparent_1px)] [background-size:18px_18px]"></div>
 
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10 text-center">
-        <div class="flex flex-wrap justify-center items-center gap-3 mb-7">
+        <div class="flex flex-wrap justify-center items-center gap-3 mb-4">
             <div class="inline-flex items-center space-x-2 px-4 py-2 rounded-full bg-teal-400/10 border border-teal-300/30 text-teal-200 shadow-inner">
                 <i data-lucide="shield-check" class="w-4 h-4 text-teal-300"></i>
                 <span class="text-xs font-semibold tracking-wider uppercase">{{ $locale === 'hi' ? 'भरोसेमंद हेल्थकेयर खोज' : 'Trusted Healthcare Discovery' }}</span>
             </div>
         </div>
 
-        <h1 class="text-4xl sm:text-6xl font-extrabold tracking-tight max-w-5xl mx-auto py-4 leading-[1.3] text-white drop-shadow-md mb-5">
+        <h1 class="text-4xl sm:text-6xl font-extrabold tracking-tight max-w-5xl mx-auto py-2 leading-[1.3] text-white drop-shadow-md mb-3">
             {{ $locale === 'hi' ? 'अपने पास भरोसेमंद डॉक्टर, अस्पताल और ब्लड बैंक खोजें' : 'Find trusted doctors, hospitals, and blood banks near you' }}
         </h1>
-        <p class="text-lg sm:text-xl text-slate-200 max-w-4xl mx-auto font-normal leading-[1.7] mb-7">
+        <p class="text-lg sm:text-xl text-slate-200 max-w-4xl mx-auto font-normal leading-[1.7] mb-4">
             {{ $locale === 'hi' ? 'लक्षण, विभाग, अस्पताल, ब्लड बैंक या शहर से खोजें। बिना विज्ञापन और बिना बिचौलियों के सीधे संपर्क करें।' : 'Search by symptoms, department, hospital, blood bank, or city. Connect directly without ads or intermediaries.' }}
         </p>
 
         <!-- Omni-Search Box -->
-        <div class="mt-12 max-w-3xl mx-auto px-4 sm:px-0">
+        <div class="mt-7 max-w-3xl mx-auto px-4 sm:px-0">
             <div
                 id="hero-search-shell"
                 class="relative flex items-center bg-white/10 dark:bg-slate-900/40 backdrop-blur-xl rounded-3xl shadow-2xl p-2 sm:p-3 border border-white/20 dark:border-white/10 focus-within:ring-4 focus-within:ring-teal-500/30 transition-all duration-300 focus-within:border-teal-400/50 overflow-hidden aurora-border">
@@ -51,8 +51,8 @@ $locale === 'hi'
             </div>
 
             <!-- Interactive Symptom Grid -->
-            <div class="mt-8 pt-4">
-                <p class="text-[11px] sm:text-xs font-bold text-slate-300 uppercase tracking-wider mb-4">{{ $locale === 'hi' ? 'लक्षणों द्वारा त्वरित खोज' : 'Quick Search by Symptoms' }}</p>
+            <div class="mt-5 pt-2">
+                <p class="text-[11px] sm:text-xs font-bold text-slate-300 uppercase tracking-wider mb-3">{{ $locale === 'hi' ? 'लक्षणों द्वारा त्वरित खोज' : 'Quick Search by Symptoms' }}</p>
                 <div class="grid grid-cols-3 sm:grid-cols-6 gap-3">
                     @php
                     $symptoms = [
@@ -74,7 +74,7 @@ $locale === 'hi'
                     @endforeach
                 </div>
             </div>
-            <div class="mt-8 pt-6 border-t border-white/10 max-w-4xl mx-auto text-center">
+            <div class="mt-5 pt-4 border-t border-white/10 max-w-4xl mx-auto text-center">
                 <div class="flex flex-wrap justify-center gap-2.5 items-center">
                     <a href="{{ route('doctors.index') }}" class="px-4 py-2 rounded-2xl bg-white/10 hover:bg-white/20 border border-white/10 text-xs sm:text-sm font-semibold">{{ $locale === 'hi' ? 'डॉक्टर खोजें' : 'Find Doctor' }}</a>
                     <a href="{{ route('hospitals.index') }}" class="px-4 py-2 rounded-2xl bg-white/10 hover:bg-white/20 border border-white/10 text-xs sm:text-sm font-semibold">{{ $locale === 'hi' ? 'अस्पताल खोजें' : 'Find Hospital' }}</a>
@@ -173,14 +173,16 @@ $locale === 'hi'
 
             <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-6">
                 <!-- Cities Count -->
-                <div
-                    class="bg-gradient-to-br from-indigo-500 via-indigo-600 to-indigo-700 p-6 rounded-3xl text-white shadow-xl relative overflow-hidden group">
+                <a href="{{ route('hospitals.index') }}"
+                    class="bg-gradient-to-br from-indigo-500 via-indigo-600 to-indigo-700 p-6 rounded-3xl text-white shadow-xl relative overflow-hidden group block ring-1 ring-white/15 hover:ring-white/35 hover:shadow-2xl hover:-translate-y-1.5 transition-all duration-300 focus:outline-none focus-visible:ring-2 focus-visible:ring-indigo-300/80"
+                    aria-label="{{ $locale === 'hi' ? 'शहर और क्षेत्रों के लिए अस्पताल खोजें' : 'Browse hospitals by cities and regions' }}">
                     <div
                         class="absolute -right-4 -bottom-4 w-24 h-24 bg-white/10 rounded-full blur-xl group-hover:scale-150 transition-transform duration-500">
                     </div>
+                    <div class="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-300 bg-gradient-to-t from-black/15 to-transparent"></div>
                     <div class="relative z-10 flex flex-col justify-between h-full space-y-4">
                         <div
-                            class="p-3 bg-white/20 rounded-2xl w-12 h-12 flex items-center justify-center backdrop-blur-md border border-white/20">
+                            class="p-3 bg-white/20 rounded-2xl w-12 h-12 flex items-center justify-center backdrop-blur-md border border-white/25 shadow-lg">
                             <i data-lucide="map-pin" class="w-6 h-6 text-white"></i>
                         </div>
                         <div>
@@ -192,17 +194,19 @@ $locale === 'hi'
                             </div>
                         </div>
                     </div>
-                </div>
+                </a>
 
                 <!-- Doctors Count -->
-                <div
-                    class="bg-gradient-to-br from-teal-500 via-teal-600 to-teal-700 p-6 rounded-3xl text-white shadow-xl relative overflow-hidden group">
+                <a href="{{ route('doctors.index') }}"
+                    class="bg-gradient-to-br from-teal-500 via-teal-600 to-teal-700 p-6 rounded-3xl text-white shadow-xl relative overflow-hidden group block ring-1 ring-white/15 hover:ring-white/35 hover:shadow-2xl hover:-translate-y-1.5 transition-all duration-300 focus:outline-none focus-visible:ring-2 focus-visible:ring-teal-300/80"
+                    aria-label="{{ $locale === 'hi' ? 'सत्यापित डॉक्टर देखें' : 'Browse verified doctors' }}">
                     <div
                         class="absolute -right-4 -bottom-4 w-24 h-24 bg-white/10 rounded-full blur-xl group-hover:scale-150 transition-transform duration-500">
                     </div>
+                    <div class="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-300 bg-gradient-to-t from-black/15 to-transparent"></div>
                     <div class="relative z-10 flex flex-col justify-between h-full space-y-4">
                         <div
-                            class="p-3 bg-white/20 rounded-2xl w-12 h-12 flex items-center justify-center backdrop-blur-md border border-white/20">
+                            class="p-3 bg-white/20 rounded-2xl w-12 h-12 flex items-center justify-center backdrop-blur-md border border-white/25 shadow-lg">
                             <i data-lucide="users" class="w-6 h-6 text-white"></i>
                         </div>
                         <div>
@@ -214,17 +218,19 @@ $locale === 'hi'
                             </div>
                         </div>
                     </div>
-                </div>
+                </a>
 
                 <!-- Departments Count -->
-                <div
-                    class="bg-gradient-to-br from-amber-500 via-amber-600 to-amber-700 p-6 rounded-3xl text-white shadow-xl relative overflow-hidden group">
+                <a href="{{ route('departments.index') }}"
+                    class="bg-gradient-to-br from-amber-500 via-amber-600 to-amber-700 p-6 rounded-3xl text-white shadow-xl relative overflow-hidden group block ring-1 ring-white/15 hover:ring-white/35 hover:shadow-2xl hover:-translate-y-1.5 transition-all duration-300 focus:outline-none focus-visible:ring-2 focus-visible:ring-amber-300/80"
+                    aria-label="{{ $locale === 'hi' ? 'चिकित्सा विभाग देखें' : 'Browse medical departments' }}">
                     <div
                         class="absolute -right-4 -bottom-4 w-24 h-24 bg-white/10 rounded-full blur-xl group-hover:scale-150 transition-transform duration-500">
                     </div>
+                    <div class="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-300 bg-gradient-to-t from-black/15 to-transparent"></div>
                     <div class="relative z-10 flex flex-col justify-between h-full space-y-4">
                         <div
-                            class="p-3 bg-white/20 rounded-2xl w-12 h-12 flex items-center justify-center backdrop-blur-md border border-white/20">
+                            class="p-3 bg-white/20 rounded-2xl w-12 h-12 flex items-center justify-center backdrop-blur-md border border-white/25 shadow-lg">
                             <i data-lucide="heart-pulse" class="w-6 h-6 text-white"></i>
                         </div>
                         <div>
@@ -236,17 +242,19 @@ $locale === 'hi'
                             </div>
                         </div>
                     </div>
-                </div>
+                </a>
 
                 <!-- Hospitals Count -->
-                <div
-                    class="bg-gradient-to-br from-purple-500 via-purple-600 to-purple-700 p-6 rounded-3xl text-white shadow-xl relative overflow-hidden group">
+                <a href="{{ route('hospitals.index') }}"
+                    class="bg-gradient-to-br from-purple-500 via-purple-600 to-purple-700 p-6 rounded-3xl text-white shadow-xl relative overflow-hidden group block ring-1 ring-white/15 hover:ring-white/35 hover:shadow-2xl hover:-translate-y-1.5 transition-all duration-300 focus:outline-none focus-visible:ring-2 focus-visible:ring-purple-300/80"
+                    aria-label="{{ $locale === 'hi' ? 'अस्पताल और क्लीनिक देखें' : 'Browse hospitals and clinics' }}">
                     <div
                         class="absolute -right-4 -bottom-4 w-24 h-24 bg-white/10 rounded-full blur-xl group-hover:scale-150 transition-transform duration-500">
                     </div>
+                    <div class="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-300 bg-gradient-to-t from-black/15 to-transparent"></div>
                     <div class="relative z-10 flex flex-col justify-between h-full space-y-4">
                         <div
-                            class="p-3 bg-white/20 rounded-2xl w-12 h-12 flex items-center justify-center backdrop-blur-md border border-white/20">
+                            class="p-3 bg-white/20 rounded-2xl w-12 h-12 flex items-center justify-center backdrop-blur-md border border-white/25 shadow-lg">
                             <i data-lucide="building-2" class="w-6 h-6 text-white"></i>
                         </div>
                         <div>
@@ -258,17 +266,19 @@ $locale === 'hi'
                             </div>
                         </div>
                     </div>
-                </div>
+                </a>
 
                 <!-- Blood Banks Count -->
-                <div
-                    class="bg-gradient-to-br from-red-500 via-red-600 to-rose-700 p-6 rounded-3xl text-white shadow-xl relative overflow-hidden group">
+                <a href="{{ route('blood_banks.index') }}"
+                    class="bg-gradient-to-br from-red-500 via-red-600 to-rose-700 p-6 rounded-3xl text-white shadow-xl relative overflow-hidden group block ring-1 ring-white/15 hover:ring-white/35 hover:shadow-2xl hover:-translate-y-1.5 transition-all duration-300 focus:outline-none focus-visible:ring-2 focus-visible:ring-rose-300/80"
+                    aria-label="{{ $locale === 'hi' ? 'ब्लड बैंक देखें' : 'Browse blood banks' }}">
                     <div
                         class="absolute -right-4 -bottom-4 w-24 h-24 bg-white/10 rounded-full blur-xl group-hover:scale-150 transition-transform duration-500">
                     </div>
+                    <div class="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-300 bg-gradient-to-t from-black/15 to-transparent"></div>
                     <div class="relative z-10 flex flex-col justify-between h-full space-y-4">
                         <div
-                            class="p-3 bg-white/20 rounded-2xl w-12 h-12 flex items-center justify-center backdrop-blur-md border border-white/20">
+                            class="p-3 bg-white/20 rounded-2xl w-12 h-12 flex items-center justify-center backdrop-blur-md border border-white/25 shadow-lg">
                             <i data-lucide="droplet" class="w-6 h-6 text-white fill-white"></i>
                         </div>
                         <div>
@@ -280,13 +290,13 @@ $locale === 'hi'
                             </div>
                         </div>
                     </div>
-                </div>
+                </a>
             </div>
         </div>
 
         <!-- Compact Trust & Schemes Strip -->
         <section class="rounded-2xl border border-slate-200/80 dark:border-slate-800 bg-white/80 dark:bg-slate-900/70 backdrop-blur-sm p-4 sm:p-5 shadow-sm">
-            <div class="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-3">
+            <div class="flex flex-col gap-3">
                 <div class="min-w-0">
                     <p class="text-[11px] sm:text-xs font-bold uppercase tracking-wider text-teal-700 dark:text-teal-300">
                         {{ $locale === 'hi' ? '100% निःशुल्क और पारदर्शी' : '100% Free & Transparent' }}
@@ -298,7 +308,7 @@ $locale === 'hi'
                         {{ $locale === 'hi' ? 'सत्यापित अस्पतालों और डॉक्टरों से सीधे जुड़ें। न बिचौलिया, न बुकिंग शुल्क, और सरकारी स्वास्थ्य योजनाओं का पूरा समर्थन।' : 'Connect directly with verified hospitals and doctors. Zero intermediaries, zero booking fees, and full support for government health schemes.' }}
                     </p>
                 </div>
-                <div class="flex flex-wrap gap-2.5">
+                <div class="flex items-center gap-2.5 flex-nowrap overflow-x-auto whitespace-nowrap pb-1">
                     <span class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-emerald-50 dark:bg-emerald-950/30 border border-emerald-200 dark:border-emerald-900 text-xs font-bold text-emerald-700 dark:text-emerald-300">
                         <i data-lucide="check-circle-2" class="w-3.5 h-3.5"></i> {{ $locale === 'hi' ? 'आयुष्मान भारत' : 'Ayushman Bharat' }}
                     </span>
@@ -1047,6 +1057,8 @@ $locale === 'hi'
     updateStarsDisplay(0);
 </script>
 @endpush
+
+
 
 
 

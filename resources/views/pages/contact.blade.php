@@ -1,175 +1,79 @@
-@extends('layouts.public')
+﻿@extends('layouts.public')
 
-@section('title', ($locale === 'hi' ? 'संपर्क करें' : 'Contact Us') . ' - SwasthyaSearch')
+@section('title', ($locale === 'hi' ? 'Contact Us' : 'Contact Us') . ' - SwasthyaSearch')
+@section('meta_title', 'Contact SwasthyaSearch | Support & Corrections')
+@section('meta_description', 'Contact SwasthyaSearch for support, listing corrections, and general questions.')
 
-@section('meta_title', $locale === 'hi' ? 'संपर्क करें | SwasthyaSearch' : 'Contact SwasthyaSearch | Support & Listing Corrections')
-@section('meta_description', $locale === 'hi'
-    ? 'SwasthyaSearch सहायता टीम से संपर्क करें। डॉक्टर, अस्पताल और ब्लड बैंक सूचीकरण सुधार, सुझाव और सपोर्ट के लिए संदेश भेजें।'
-    : 'Contact SwasthyaSearch support for listing corrections, suggestions, and assistance related to doctors, hospitals, and blood banks.')
 @section('content')
-<!-- Hero Section -->
-<header class="bg-gradient-to-r from-slate-900 via-indigo-950 to-slate-900 text-white py-16 px-4 sm:px-6 lg:px-8 border-b border-slate-800 shadow-xl relative overflow-hidden">
+<header class="bg-gradient-to-r from-slate-900 via-indigo-950 to-slate-900 text-white py-14 px-4 sm:px-6 lg:px-8 border-b border-slate-800 shadow-xl relative overflow-hidden">
     <div class="absolute inset-0 bg-[radial-gradient(circle_at_top_right,rgba(20,184,166,0.15),transparent_50%)]"></div>
     <div class="max-w-5xl mx-auto text-center relative z-10">
-        <span class="bg-teal-500/20 text-teal-300 border border-teal-500/30 px-4 py-1.5 rounded-full text-xs font-semibold tracking-wider uppercase inline-block mb-4 shadow-sm">
-            {{ $locale === 'hi' ? 'हम आपकी सहायता के लिए यहाँ हैं' : 'We Are Here To Help' }}
-        </span>
-        <h1 class="text-3xl sm:text-5xl font-extrabold tracking-tight mb-4 bg-gradient-to-r from-white via-slate-100 to-slate-300 bg-clip-text text-transparent py-2 leading-normal">
-            {{ $locale === 'hi' ? 'हमसे संपर्क करें' : 'Get In Touch With Us' }}
-        </h1>
-        <p class="max-w-2xl mx-auto text-slate-300 text-base sm:text-lg leading-relaxed">
-            {{ $locale === 'hi' ? 'क्या आपके पास कोई प्रश्न, सुझाव या प्रतिक्रिया है? हमारी सहायता टीम से संपर्क करें, हम 24 घंटे के भीतर जवाब देंगे।' : 'Have questions, feedback, or need support? Reach out to our dedicated team and we will respond within 24 hours.' }}
-        </p>
+        <span class="bg-teal-500/20 text-teal-300 border border-teal-500/30 px-4 py-1.5 rounded-full text-xs font-semibold tracking-wider uppercase inline-block mb-4">Support Center</span>
+        <h1 class="text-3xl sm:text-5xl font-extrabold tracking-tight mb-4 bg-gradient-to-r from-white via-slate-100 to-slate-300 bg-clip-text text-transparent py-2 leading-normal">How Can We Help You?</h1>
+        <p class="max-w-3xl mx-auto text-slate-300 text-base sm:text-lg leading-relaxed">If any doctor/hospital details are incorrect, or you need help using the platform, write to us.</p>
     </div>
 </header>
 
-<!-- Main Content -->
-<main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16 flex-1 w-full">
-    <div class="grid grid-cols-1 lg:grid-cols-3 gap-12 items-start">
-        <!-- Contact Info Cards -->
-        <div class="space-y-6 lg:col-span-1">
-            <div class="bg-white rounded-3xl border border-slate-200/80 p-8 shadow-2xs hover:shadow-xl transition-all duration-300 flex flex-col group">
-                <div class="w-14 h-14 bg-teal-50 rounded-2xl flex items-center justify-center text-teal-600 mb-6 border border-teal-100 group-hover:scale-110 transition-transform duration-300 shadow-inner">
-                    <i data-lucide="mail" class="w-6 h-6"></i>
+<main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12 sm:py-16 flex-1 w-full">
+    <div class="grid grid-cols-1 lg:grid-cols-3 gap-8 items-start">
+        <div class="space-y-5 lg:col-span-1">
+            <div class="bg-white rounded-2xl border border-slate-200 p-6 shadow-sm">
+                <h3 class="text-lg font-extrabold text-slate-900 mb-3">Contact Options</h3>
+                <div class="space-y-3 text-sm text-slate-700">
+                    <p><strong>General Support:</strong> <a class="text-teal-700 font-semibold hover:underline" href="mailto:support@swasthyasearch.com">support@swasthyasearch.com</a></p>
+                    <p><strong>Privacy:</strong> <a class="text-teal-700 font-semibold hover:underline" href="mailto:privacy@swasthyasearch.com">privacy@swasthyasearch.com</a></p>
                 </div>
-                <h3 class="text-lg font-extrabold text-slate-900 mb-2">
-                    {{ $locale === 'hi' ? 'ईमेल समर्थन' : 'Email Support' }}
-                </h3>
-                <p class="text-slate-500 text-sm mb-4 leading-relaxed">
-                    {{ $locale === 'hi' ? 'सामान्य पूछताछ और तकनीकी सहायता के लिए।' : 'For general inquiries and technical assistance.' }}
-                </p>
-                <a href="mailto:support@swasthyasearch.com" class="text-teal-600 font-extrabold text-sm hover:underline flex items-center space-x-1">
-                    <span>support@swasthyasearch.com</span>
-                </a>
             </div>
 
-            <div class="bg-white rounded-3xl border border-slate-200/80 p-8 shadow-2xs hover:shadow-xl transition-all duration-300 flex flex-col group">
-                <div class="w-14 h-14 bg-indigo-50 rounded-2xl flex items-center justify-center text-indigo-600 mb-6 border border-indigo-100 group-hover:scale-110 transition-transform duration-300 shadow-inner">
-                    <i data-lucide="message-square-heart" class="w-6 h-6"></i>
-                </div>
-                <h3 class="text-lg font-extrabold text-slate-900 mb-2">
-                    {{ $locale === 'hi' ? 'लिस्टिंग सुधार सहायता' : 'Listing Correction Support' }}
-                </h3>
-                <p class="text-slate-500 text-sm leading-relaxed">
-                    {{ $locale === 'hi' ? 'गलत डॉक्टर/अस्पताल/ब्लड बैंक विवरण सुधारने के लिए कृपया फॉर्म में नाम और शहर जरूर लिखें। हमारी टीम समीक्षा करके अपडेट करेगी।' : 'To report incorrect doctor, hospital, or blood bank details, please include the provider name and city in the form. Our team will review and update.' }}
-                </p>
+            <div class="bg-white rounded-2xl border border-slate-200 p-6 shadow-sm">
+                <h3 class="text-lg font-extrabold text-slate-900 mb-3">Send These Details for Faster Resolution</h3>
+                <ul class="list-disc pl-5 text-sm text-slate-700 space-y-1.5">
+                    <li>Doctor/Hospital/Blood bank name</li>
+                    <li>City and state</li>
+                    <li>What is incorrect (phone, address, hours, etc.)</li>
+                    <li>Correct info (if available)</li>
+                </ul>
             </div>
         </div>
 
-        <!-- Contact Form -->
-        <div class="lg:col-span-2 bg-white rounded-3xl border border-slate-200/80 p-8 sm:p-12 shadow-sm">
-            <h2 class="text-2xl sm:text-3xl font-extrabold text-slate-900 tracking-tight mb-2">
-                {{ $locale === 'hi' ? 'हमें एक संदेश भेजें' : 'Send Us A Message' }}
-            </h2>
-            <p class="text-slate-500 text-sm mb-8 leading-relaxed">
-                {{ $locale === 'hi' ? 'नीचे दिया गया फ़ॉर्म भरें। लिस्टिंग सुधार के लिए डॉक्टर/अस्पताल/ब्लड बैंक का नाम और शहर अवश्य लिखें।' : 'Fill out the form below. For listing corrections, include the doctor/hospital/blood bank name and city.' }}
-            </p>
+        <div class="lg:col-span-2 bg-white rounded-3xl border border-slate-200 p-6 sm:p-10 shadow-sm">
+            <h2 class="text-2xl sm:text-3xl font-extrabold text-slate-900 tracking-tight mb-2">Send a Message</h2>
+            <p class="text-slate-500 text-sm mb-6">We usually respond within 1 business day.</p>
 
             @if (session('success'))
-                <div class="mb-8 bg-teal-50 border border-teal-200 text-teal-800 p-6 rounded-2xl flex items-start space-x-4 shadow-2xs animate-fade-in">
-                    <i data-lucide="check-circle-2" class="w-6 h-6 text-teal-600 shrink-0 mt-0.5"></i>
-                    <div class="flex-1">
-                        <h4 class="font-extrabold text-base text-teal-900 mb-1">
-                            {{ $locale === 'hi' ? 'संदेश सफलतापूर्वक भेजा गया!' : 'Message Sent Successfully!' }}
-                        </h4>
-                        <p class="text-sm text-teal-700 leading-relaxed">{{ session('success') }}</p>
-                    </div>
-                </div>
+                <div class="mb-6 bg-teal-50 border border-teal-200 text-teal-800 p-4 rounded-xl text-sm">{{ session('success') }}</div>
             @endif
 
-            <form action="{{ route('contact.submit') }}" method="POST" class="space-y-6">
+            <form action="{{ route('contact.submit') }}" method="POST" class="space-y-5">
                 @csrf
-                <div class="grid grid-cols-1 sm:grid-cols-2 gap-6">
-                    <!-- Name -->
+                <div class="grid grid-cols-1 sm:grid-cols-2 gap-5">
                     <div>
-                        <label class="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-2">
-                            {{ $locale === 'hi' ? 'आपका पूरा नाम *' : 'Your Full Name *' }}
-                        </label>
-                        <input
-                            type="text"
-                            name="name"
-                            value="{{ old('name') }}"
-                            placeholder="{{ $locale === 'hi' ? 'उदा. राहुल शर्मा' : 'e.g. Rahul Sharma' }}"
-                            required
-                            class="w-full px-4 py-3 bg-slate-50 border rounded-xl text-sm focus:outline-none focus:ring-2 transition-all duration-200 font-medium @error('name') border-rose-300 focus:border-rose-500 focus:ring-rose-500/20 bg-rose-50/30 @else border-slate-200 focus:border-teal-500 focus:ring-teal-500/20 @enderror"
-                        />
-                        @error('name')
-                            <p class="mt-1.5 text-xs text-rose-500 flex items-center space-x-1 font-semibold">
-                                <i data-lucide="alert-circle" class="w-3.5 h-3.5"></i>
-                                <span>{{ $message }}</span>
-                            </p>
-                        @enderror
+                        <label class="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-2">Full Name *</label>
+                        <input type="text" name="name" value="{{ old('name') }}" required class="w-full px-4 py-3 bg-slate-50 border rounded-xl text-sm @error('name') border-rose-300 @else border-slate-200 @enderror focus:outline-none focus:ring-2 focus:ring-teal-500/20 focus:border-teal-500" />
+                        @error('name')<p class="mt-1 text-xs text-rose-500">{{ $message }}</p>@enderror
                     </div>
-
-                    <!-- Email -->
                     <div>
-                        <label class="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-2">
-                            {{ $locale === 'hi' ? 'ईमेल पता *' : 'Email Address *' }}
-                        </label>
-                        <input
-                            type="email"
-                            name="email"
-                            value="{{ old('email') }}"
-                            placeholder="{{ $locale === 'hi' ? 'उदा. rahul@example.com' : 'e.g. rahul@example.com' }}"
-                            required
-                            class="w-full px-4 py-3 bg-slate-50 border rounded-xl text-sm focus:outline-none focus:ring-2 transition-all duration-200 font-medium @error('email') border-rose-300 focus:border-rose-500 focus:ring-rose-500/20 bg-rose-50/30 @else border-slate-200 focus:border-teal-500 focus:ring-teal-500/20 @enderror"
-                        />
-                        @error('email')
-                            <p class="mt-1.5 text-xs text-rose-500 flex items-center space-x-1 font-semibold">
-                                <i data-lucide="alert-circle" class="w-3.5 h-3.5"></i>
-                                <span>{{ $message }}</span>
-                            </p>
-                        @enderror
+                        <label class="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-2">Email *</label>
+                        <input type="email" name="email" value="{{ old('email') }}" required class="w-full px-4 py-3 bg-slate-50 border rounded-xl text-sm @error('email') border-rose-300 @else border-slate-200 @enderror focus:outline-none focus:ring-2 focus:ring-teal-500/20 focus:border-teal-500" />
+                        @error('email')<p class="mt-1 text-xs text-rose-500">{{ $message }}</p>@enderror
                     </div>
                 </div>
 
-                <!-- Subject -->
                 <div>
-                    <label class="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-2">
-                        {{ $locale === 'hi' ? 'विषय *' : 'Subject *' }}
-                    </label>
-                    <input
-                        type="text"
-                        name="subject"
-                        value="{{ old('subject') }}"
-                        placeholder="{{ $locale === 'hi' ? 'उदा. अस्पताल लिस्टिंग के बारे में' : 'e.g. Inquiry regarding hospital listing' }}"
-                        required
-                        class="w-full px-4 py-3 bg-slate-50 border rounded-xl text-sm focus:outline-none focus:ring-2 transition-all duration-200 font-medium @error('subject') border-rose-300 focus:border-rose-500 focus:ring-rose-500/20 bg-rose-50/30 @else border-slate-200 focus:border-teal-500 focus:ring-teal-500/20 @enderror"
-                    />
-                    @error('subject')
-                        <p class="mt-1.5 text-xs text-rose-500 flex items-center space-x-1 font-semibold">
-                            <i data-lucide="alert-circle" class="w-3.5 h-3.5"></i>
-                            <span>{{ $message }}</span>
-                        </p>
-                    @enderror
+                    <label class="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-2">Subject *</label>
+                    <input type="text" name="subject" value="{{ old('subject') }}" required class="w-full px-4 py-3 bg-slate-50 border rounded-xl text-sm @error('subject') border-rose-300 @else border-slate-200 @enderror focus:outline-none focus:ring-2 focus:ring-teal-500/20 focus:border-teal-500" />
+                    @error('subject')<p class="mt-1 text-xs text-rose-500">{{ $message }}</p>@enderror
                 </div>
 
-                <!-- Message -->
                 <div>
-                    <label class="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-2">
-                        {{ $locale === 'hi' ? 'आपका संदेश *' : 'Your Message *' }}
-                    </label>
-                    <textarea
-                        rows="6"
-                        name="message"
-                        placeholder="{{ $locale === 'hi' ? 'अपना संदेश यहाँ विस्तार से लिखें...' : 'Write your message here in detail...' }}"
-                        required
-                        class="w-full px-4 py-3 bg-slate-50 border rounded-xl text-sm focus:outline-none focus:ring-2 transition-all duration-200 font-medium @error('message') border-rose-300 focus:border-rose-500 focus:ring-rose-500/20 bg-rose-50/30 @else border-slate-200 focus:border-teal-500 focus:ring-teal-500/20 @enderror"
-                    >{{ old('message') }}</textarea>
-                    @error('message')
-                        <p class="mt-1.5 text-xs text-rose-500 flex items-center space-x-1 font-semibold">
-                            <i data-lucide="alert-circle" class="w-3.5 h-3.5"></i>
-                            <span>{{ $message }}</span>
-                        </p>
-                    @enderror
+                    <label class="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-2">Message *</label>
+                    <textarea rows="6" name="message" required class="w-full px-4 py-3 bg-slate-50 border rounded-xl text-sm @error('message') border-rose-300 @else border-slate-200 @enderror focus:outline-none focus:ring-2 focus:ring-teal-500/20 focus:border-teal-500">{{ old('message') }}</textarea>
+                    @error('message')<p class="mt-1 text-xs text-rose-500">{{ $message }}</p>@enderror
                 </div>
 
-                <button
-                    type="submit"
-                    class="w-full bg-gradient-to-tr from-teal-500 to-indigo-600 hover:from-teal-600 hover:to-indigo-700 text-white font-bold py-3.5 rounded-xl shadow-md hover:shadow-lg transition-all duration-200 text-sm uppercase tracking-wider flex items-center justify-center space-x-2 transform active:scale-98"
-                >
-                    <i data-lucide="send" class="w-4 h-4 text-white"></i>
-                    <span>{{ $locale === 'hi' ? 'संदेश भेजें' : 'Send Message' }}</span>
+                <button type="submit" class="w-full bg-gradient-to-tr from-teal-500 to-indigo-600 hover:from-teal-600 hover:to-indigo-700 text-white font-bold py-3.5 rounded-xl shadow-md transition-all text-sm uppercase tracking-wider inline-flex items-center justify-center gap-2">
+                    <i data-lucide="send" class="w-4 h-4"></i>
+                    <span>Send Message</span>
                 </button>
             </form>
         </div>
