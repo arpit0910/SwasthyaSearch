@@ -89,7 +89,7 @@ $pageDescription = $hasCity
                 <div>
                     <label class="block text-xs font-bold text-slate-600 mb-2 uppercase tracking-wider">{{ $locale === 'hi' ? 'रक्त समूह' : 'Blood Group' }}</label>
                     @php $selectedBG = is_array(request('blood_group')) ? request('blood_group') : (request('blood_group') && request('blood_group') !== 'All' ? [request('blood_group')] : []); @endphp
-                    <select name="blood_group[]" multiple class="h-12 w-full px-4 bg-slate-50 border border-slate-200 rounded-xl text-sm focus:outline-none focus:border-red-500 focus:ring-2 focus:ring-red-500/20 transition-all duration-200 font-medium text-slate-700">
+                    <select name="blood_group[]" multiple data-placeholder="{{ $locale === 'hi' ? 'ब्लड ग्रुप चुनें' : 'Select blood groups' }}" class="h-12 w-full px-4 bg-slate-50 border border-slate-200 rounded-xl text-sm focus:outline-none focus:border-red-500 focus:ring-2 focus:ring-red-500/20 transition-all duration-200 font-medium text-slate-700">
                         @foreach ($bloodGroups as $bg)
                         <option value="{{ $bg }}" {{ in_array($bg, $selectedBG) ? 'selected' : '' }}>{{ $bg }}</option>
                         @endforeach
@@ -98,7 +98,7 @@ $pageDescription = $hasCity
                 <div>
                     <label class="block text-xs font-bold text-slate-600 mb-2 uppercase tracking-wider">{{ $locale === 'hi' ? 'सुविधाएं' : 'Facilities' }}</label>
                     @php $selectedFac = is_array(request('facility')) ? request('facility') : (request('facility') && request('facility') !== 'All' ? [request('facility')] : []); @endphp
-                    <select name="facility[]" multiple class="h-12 w-full px-4 bg-slate-50 border border-slate-200 rounded-xl text-sm focus:outline-none focus:border-red-500 focus:ring-2 focus:ring-red-500/20 transition-all duration-200 font-medium text-slate-700">
+                    <select name="facility[]" multiple data-placeholder="{{ $locale === 'hi' ? 'सुविधा चुनें' : 'Select facilities' }}" class="h-12 w-full px-4 bg-slate-50 border border-slate-200 rounded-xl text-sm focus:outline-none focus:border-red-500 focus:ring-2 focus:ring-red-500/20 transition-all duration-200 font-medium text-slate-700">
                         <option value="24x7" {{ in_array('24x7', $selectedFac) ? 'selected' : '' }}>{{ $locale === 'hi' ? '24x7 उपलब्ध' : '24x7 Available' }}</option>
                         <option value="Government" {{ in_array('Government', $selectedFac) ? 'selected' : '' }}>{{ $locale === 'hi' ? 'सरकारी ब्लड बैंक' : 'Government Blood Bank' }}</option>
                         <option value="Private" {{ in_array('Private', $selectedFac) ? 'selected' : '' }}>{{ $locale === 'hi' ? 'निजी ब्लड बैंक' : 'Private Blood Bank' }}</option>
@@ -109,7 +109,7 @@ $pageDescription = $hasCity
                 <div>
                     <label class="block text-xs font-bold text-slate-600 mb-2 uppercase tracking-wider">{{ $locale === 'hi' ? 'शहर' : 'City' }}</label>
                     @php $selectedCities = is_array(request('city')) ? request('city') : (request('city') && request('city') !== 'All' ? [request('city')] : []); @endphp
-                    <select name="city[]" multiple class="h-12 w-full px-4 bg-slate-50 border border-slate-200 rounded-xl text-sm focus:outline-none focus:border-red-500 focus:ring-2 focus:ring-red-500/20 transition-all duration-200 font-medium text-slate-700">
+                    <select name="city[]" multiple data-placeholder="{{ $locale === 'hi' ? 'शहर चुनें' : 'Select cities' }}" class="h-12 w-full px-4 bg-slate-50 border border-slate-200 rounded-xl text-sm focus:outline-none focus:border-red-500 focus:ring-2 focus:ring-red-500/20 transition-all duration-200 font-medium text-slate-700">
                         @foreach ($cities as $c)
                         <option value="{{ $c }}" {{ in_array($c, $selectedCities) ? 'selected' : '' }}>{{ $c }}</option>
                         @endforeach
@@ -160,6 +160,7 @@ $pageDescription = $hasCity
                 <select
                     name="blood_group[]"
                     multiple
+                    data-placeholder="{{ $locale === 'hi' ? 'ब्लड ग्रुप चुनें' : 'Select blood groups' }}"
                     class="h-12 w-full px-4 bg-slate-50 border border-slate-200 rounded-xl text-sm focus:outline-none focus:border-red-500 focus:ring-2 focus:ring-red-500/20 transition-all duration-200 font-medium text-slate-700">
                     @foreach ($bloodGroups as $bg)
                     <option value="{{ $bg }}" {{ in_array($bg, $selectedBG) ? 'selected' : '' }}>{{ $bg }}</option>
@@ -175,6 +176,7 @@ $pageDescription = $hasCity
                 <select
                     name="facility[]"
                     multiple
+                    data-placeholder="{{ $locale === 'hi' ? 'सुविधा चुनें' : 'Select facilities' }}"
                     class="h-12 w-full px-4 bg-slate-50 border border-slate-200 rounded-xl text-sm focus:outline-none focus:border-red-500 focus:ring-2 focus:ring-red-500/20 transition-all duration-200 font-medium text-slate-700">
                     <option value="24x7" {{ in_array('24x7', $selectedFac) ? 'selected' : '' }}>{{ $locale === 'hi' ? '24x7 उपलब्ध' : '24x7 Available' }}</option>
                     <option value="Government" {{ in_array('Government', $selectedFac) ? 'selected' : '' }}>{{ $locale === 'hi' ? 'सरकारी ब्लड बैंक' : 'Government Blood Bank' }}</option>
@@ -192,6 +194,7 @@ $pageDescription = $hasCity
                 <select
                     name="city[]"
                     multiple
+                    data-placeholder="{{ $locale === 'hi' ? 'शहर चुनें' : 'Select cities' }}"
                     class="h-12 w-full px-4 bg-slate-50 border border-slate-200 rounded-xl text-sm focus:outline-none focus:border-red-500 focus:ring-2 focus:ring-red-500/20 transition-all duration-200 font-medium text-slate-700">
                     @foreach ($cities as $c)
                     <option value="{{ $c }}" {{ in_array($c, $selectedCities) ? 'selected' : '' }}>{{ $c }}</option>
@@ -417,7 +420,8 @@ $pageDescription = $hasCity
         const trigger = document.createElement('button');
         trigger.type = 'button';
         trigger.className = 'h-12 w-full px-4 bg-white border border-slate-200 rounded-xl text-sm font-medium text-slate-700 flex items-center justify-between';
-        trigger.innerHTML = '<span class="multi-select-label truncate text-left">Select options</span><i data-lucide="chevron-down" class="w-4 h-4 text-slate-500"></i>';
+        const placeholder = selectEl.dataset.placeholder || 'Select options';
+        trigger.innerHTML = `<span class="multi-select-label truncate text-left">${placeholder}</span><i data-lucide="chevron-down" class="w-4 h-4 text-slate-500"></i>`;
 
         const panel = document.createElement('div');
         panel.className = 'hidden absolute z-50 mt-2 w-full max-h-64 overflow-auto rounded-xl border border-slate-200 bg-white shadow-lg p-2 space-y-1';
@@ -441,7 +445,7 @@ $pageDescription = $hasCity
         const updateLabel = () => {
             const selected = Array.from(selectEl.selectedOptions).map(o => o.textContent.trim()).filter(Boolean);
             const label = wrapper.querySelector('.multi-select-label');
-            label.textContent = selected.length ? selected.join(', ') : 'Select options';
+            label.textContent = placeholder;
         };
 
         trigger.addEventListener('click', () => {
@@ -491,7 +495,7 @@ $pageDescription = $hasCity
 
         const selected = Array.from(selectEl.selectedOptions).map(opt => opt.textContent.trim()).filter(Boolean);
         if (selected.length === 0) {
-            badgeWrap.innerHTML = '<span class="text-[11px] text-slate-400 italic">No filters selected</span>';
+            badgeWrap.innerHTML = '';
             return;
         }
 

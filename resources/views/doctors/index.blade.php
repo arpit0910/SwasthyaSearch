@@ -115,6 +115,7 @@ $pageDescription = $hasCity
                     <select
                         name="department[]"
                         multiple
+                        data-placeholder="{{ $locale === 'hi' ? 'विभाग चुनें' : 'Select departments' }}"
                         class="h-12 w-full px-4 bg-slate-50 border border-slate-200 rounded-xl text-sm focus:outline-none focus:border-teal-500 focus:ring-2 focus:ring-teal-500/20 transition-all duration-200 font-medium text-slate-700">
                         @foreach ($departments as $dept)
                         @php
@@ -138,6 +139,7 @@ $pageDescription = $hasCity
                     <select
                         name="experience[]"
                         multiple
+                        data-placeholder="{{ $locale === 'hi' ? 'अनुभव चुनें' : 'Select experience' }}"
                         class="h-12 w-full px-4 bg-slate-50 border border-slate-200 rounded-xl text-sm focus:outline-none focus:border-teal-500 focus:ring-2 focus:ring-teal-500/20 transition-all duration-200 font-medium text-slate-700">
                         <option value="5" {{ in_array('5', $selectedExps) ? 'selected' : '' }}>{{ $locale === 'hi' ? '5+ वर्ष' : '5+ Years' }}</option>
                         <option value="10" {{ in_array('10', $selectedExps) ? 'selected' : '' }}>{{ $locale === 'hi' ? '10+ वर्ष' : '10+ Years' }}</option>
@@ -155,6 +157,7 @@ $pageDescription = $hasCity
                     <select
                         name="city[]"
                         multiple
+                        data-placeholder="{{ $locale === 'hi' ? 'शहर चुनें' : 'Select cities' }}"
                         class="h-12 w-full px-4 bg-slate-50 border border-slate-200 rounded-xl text-sm focus:outline-none focus:border-teal-500 focus:ring-2 focus:ring-teal-500/20 transition-all duration-200 font-medium text-slate-700">
                         @foreach ($cities as $c)
                         <option value="{{ $c }}" {{ in_array($c, $selectedCities) ? 'selected' : '' }}>{{ $c }}</option>
@@ -207,6 +210,7 @@ $pageDescription = $hasCity
                 <select
                     name="department[]"
                     multiple
+                    data-placeholder="{{ $locale === 'hi' ? 'विभाग चुनें' : 'Select departments' }}"
                     class="h-12 w-full px-4 bg-slate-50 border border-slate-200 rounded-xl text-sm focus:outline-none focus:border-teal-500 focus:ring-2 focus:ring-teal-500/20 transition-all duration-200 font-medium text-slate-700">
                     @foreach ($departments as $dept)
                     @php
@@ -229,6 +233,7 @@ $pageDescription = $hasCity
                 <select
                     name="experience[]"
                     multiple
+                    data-placeholder="{{ $locale === 'hi' ? 'अनुभव चुनें' : 'Select experience' }}"
                     class="h-12 w-full px-4 bg-slate-50 border border-slate-200 rounded-xl text-sm focus:outline-none focus:border-teal-500 focus:ring-2 focus:ring-teal-500/20 transition-all duration-200 font-medium text-slate-700">
                     <option value="5" {{ in_array('5', $selectedExps) ? 'selected' : '' }}>{{ $locale === 'hi' ? '5+ वर्ष' : '5+ Years' }}</option>
                     <option value="10" {{ in_array('10', $selectedExps) ? 'selected' : '' }}>{{ $locale === 'hi' ? '10+ वर्ष' : '10+ Years' }}</option>
@@ -245,6 +250,7 @@ $pageDescription = $hasCity
                 <select
                     name="city[]"
                     multiple
+                    data-placeholder="{{ $locale === 'hi' ? 'शहर चुनें' : 'Select cities' }}"
                     class="h-12 w-full px-4 bg-slate-50 border border-slate-200 rounded-xl text-sm focus:outline-none focus:border-teal-500 focus:ring-2 focus:ring-teal-500/20 transition-all duration-200 font-medium text-slate-700">
                     @foreach ($cities as $c)
                     <option value="{{ $c }}" {{ in_array($c, $selectedCities) ? 'selected' : '' }}>{{ $c }}</option>
@@ -635,7 +641,8 @@ $pageDescription = $hasCity
         const trigger = document.createElement('button');
         trigger.type = 'button';
         trigger.className = 'h-12 w-full px-4 bg-white border border-slate-200 rounded-xl text-sm font-medium text-slate-700 flex items-center justify-between';
-        trigger.innerHTML = '<span class="multi-select-label truncate text-left">Select options</span><i data-lucide="chevron-down" class="w-4 h-4 text-slate-500"></i>';
+        const placeholder = selectEl.dataset.placeholder || 'Select options';
+        trigger.innerHTML = `<span class="multi-select-label truncate text-left">${placeholder}</span><i data-lucide="chevron-down" class="w-4 h-4 text-slate-500"></i>`;
 
         const panel = document.createElement('div');
         panel.className = 'hidden absolute z-50 mt-2 w-full max-h-64 overflow-auto rounded-xl border border-slate-200 bg-white shadow-lg p-2 space-y-1';
@@ -659,7 +666,7 @@ $pageDescription = $hasCity
         const updateLabel = () => {
             const selected = Array.from(selectEl.selectedOptions).map(o => o.textContent.trim()).filter(Boolean);
             const label = wrapper.querySelector('.multi-select-label');
-            label.textContent = selected.length ? selected.join(', ') : 'Select options';
+            label.textContent = placeholder;
         };
 
         trigger.addEventListener('click', () => {
@@ -709,7 +716,7 @@ $pageDescription = $hasCity
 
         const selected = Array.from(selectEl.selectedOptions).map(opt => opt.textContent.trim()).filter(Boolean);
         if (selected.length === 0) {
-            badgeWrap.innerHTML = '<span class="text-[11px] text-slate-400 italic">No filters selected</span>';
+            badgeWrap.innerHTML = '';
             return;
         }
 
@@ -877,5 +884,4 @@ $pageDescription = $hasCity
 
 </script>
 @endpush
-
 

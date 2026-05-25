@@ -117,6 +117,7 @@ $pageDescription = $hasCity
                         $selectedTypes = is_array(request('type')) ? request('type') : (request('type') && request('type') !== 'All' ? [request('type')] : []);
                     @endphp
                     <select name="type[]" multiple
+                        data-placeholder="{{ $locale === 'hi' ? 'प्रकार चुनें' : 'Select facility types' }}"
                         class="h-12 w-full px-4 bg-slate-50 border border-slate-200 rounded-xl text-sm focus:outline-none focus:border-teal-500 focus:ring-2 focus:ring-teal-500/20 transition-all duration-200 font-medium text-slate-700">
                         @foreach ($types as $t)
                         <option value="{{ $t }}" {{ in_array($t, $selectedTypes) ? 'selected' : '' }}>{{ $t }}</option>
@@ -131,6 +132,7 @@ $pageDescription = $hasCity
                         $selectedCities = is_array(request('city')) ? request('city') : (request('city') && request('city') !== 'All' ? [request('city')] : []);
                     @endphp
                     <select name="city[]" multiple
+                        data-placeholder="{{ $locale === 'hi' ? 'शहर चुनें' : 'Select cities' }}"
                         class="h-12 w-full px-4 bg-slate-50 border border-slate-200 rounded-xl text-sm focus:outline-none focus:border-teal-500 focus:ring-2 focus:ring-teal-500/20 transition-all duration-200 font-medium text-slate-700">
                         @foreach ($cities as $c)
                         <option value="{{ $c }}" {{ in_array($c, $selectedCities) ? 'selected' : '' }}>{{ $c }}</option>
@@ -145,6 +147,7 @@ $pageDescription = $hasCity
                         $selectedBenefits = is_array(request('benefit')) ? request('benefit') : (request('benefit') && request('benefit') !== 'All' ? [request('benefit')] : []);
                     @endphp
                     <select name="benefit[]" multiple
+                        data-placeholder="{{ $locale === 'hi' ? 'योजना/लाभ चुनें' : 'Select benefits' }}"
                         class="h-12 w-full px-4 bg-slate-50 border border-slate-200 rounded-xl text-sm focus:outline-none focus:border-teal-500 focus:ring-2 focus:ring-teal-500/20 transition-all duration-200 font-medium text-slate-700">
                         <option value="ayushman" {{ in_array('ayushman', $selectedBenefits) ? 'selected' : '' }}>
                             {{ $locale === 'hi' ? 'आयुष्मान कार्ड' : 'Ayushman Card' }}
@@ -203,6 +206,7 @@ $pageDescription = $hasCity
                     $selectedTypes = is_array(request('type')) ? request('type') : (request('type') && request('type') !== 'All' ? [request('type')] : []);
                 @endphp
                 <select name="type[]" multiple
+                    data-placeholder="{{ $locale === 'hi' ? 'प्रकार चुनें' : 'Select facility types' }}"
                     class="h-12 w-full px-4 bg-slate-50 border border-slate-200 rounded-xl text-sm focus:outline-none focus:border-teal-500 focus:ring-2 focus:ring-teal-500/20 transition-all duration-200 font-medium text-slate-700">
                     @foreach ($types as $t)
                     <option value="{{ $t }}" {{ in_array($t, $selectedTypes) ? 'selected' : '' }}>{{ $t }}</option>
@@ -216,6 +220,7 @@ $pageDescription = $hasCity
                     $selectedCities = is_array(request('city')) ? request('city') : (request('city') && request('city') !== 'All' ? [request('city')] : []);
                 @endphp
                 <select name="city[]" multiple
+                    data-placeholder="{{ $locale === 'hi' ? 'शहर चुनें' : 'Select cities' }}"
                     class="h-12 w-full px-4 bg-slate-50 border border-slate-200 rounded-xl text-sm focus:outline-none focus:border-teal-500 focus:ring-2 focus:ring-teal-500/20 transition-all duration-200 font-medium text-slate-700">
                     @foreach ($cities as $c)
                     <option value="{{ $c }}" {{ in_array($c, $selectedCities) ? 'selected' : '' }}>{{ $c }}</option>
@@ -229,6 +234,7 @@ $pageDescription = $hasCity
                     $selectedBenefits = is_array(request('benefit')) ? request('benefit') : (request('benefit') && request('benefit') !== 'All' ? [request('benefit')] : []);
                 @endphp
                 <select name="benefit[]" multiple
+                    data-placeholder="{{ $locale === 'hi' ? 'योजना/लाभ चुनें' : 'Select benefits' }}"
                     class="h-12 w-full px-4 bg-slate-50 border border-slate-200 rounded-xl text-sm focus:outline-none focus:border-teal-500 focus:ring-2 focus:ring-teal-500/20 transition-all duration-200 font-medium text-slate-700">
                     <option value="ayushman" {{ in_array('ayushman', $selectedBenefits) ? 'selected' : '' }}>
                         {{ $locale === 'hi' ? 'आयुष्मान कार्ड' : 'Ayushman Card' }}
@@ -491,7 +497,8 @@ $pageDescription = $hasCity
         const trigger = document.createElement('button');
         trigger.type = 'button';
         trigger.className = 'h-12 w-full px-4 bg-white border border-slate-200 rounded-xl text-sm font-medium text-slate-700 flex items-center justify-between';
-        trigger.innerHTML = '<span class="multi-select-label truncate text-left">Select options</span><i data-lucide="chevron-down" class="w-4 h-4 text-slate-500"></i>';
+        const placeholder = selectEl.dataset.placeholder || 'Select options';
+        trigger.innerHTML = `<span class="multi-select-label truncate text-left">${placeholder}</span><i data-lucide="chevron-down" class="w-4 h-4 text-slate-500"></i>`;
 
         const panel = document.createElement('div');
         panel.className = 'hidden absolute z-50 mt-2 w-full max-h-64 overflow-auto rounded-xl border border-slate-200 bg-white shadow-lg p-2 space-y-1';
@@ -515,7 +522,7 @@ $pageDescription = $hasCity
         const updateLabel = () => {
             const selected = Array.from(selectEl.selectedOptions).map(o => o.textContent.trim()).filter(Boolean);
             const label = wrapper.querySelector('.multi-select-label');
-            label.textContent = selected.length ? selected.join(', ') : 'Select options';
+            label.textContent = placeholder;
         };
 
         trigger.addEventListener('click', () => {
@@ -565,7 +572,7 @@ $pageDescription = $hasCity
 
         const selected = Array.from(selectEl.selectedOptions).map(opt => opt.textContent.trim()).filter(Boolean);
         if (selected.length === 0) {
-            badgeWrap.innerHTML = '<span class="text-[11px] text-slate-400 italic">No filters selected</span>';
+            badgeWrap.innerHTML = '';
             return;
         }
 
