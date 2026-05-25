@@ -12,6 +12,9 @@ $pageTitle = $hasCity
 $pageDescription = $hasCity
 ? "Find blood banks in {$seoCity} and contact them directly to confirm current blood availability before visiting."
 : 'Find blood banks by city and contact them directly to confirm current blood availability before visiting.';
+$hasActiveMobileFilters = !empty(array_filter((array) request('blood_group', [])))
+    || !empty(array_filter((array) request('facility', [])))
+    || !empty(array_filter((array) request('city', [])));
 @endphp
 @section('meta_title', $pageTitle)
 @section('meta_description', $pageDescription)
@@ -63,7 +66,7 @@ $pageDescription = $hasCity
                 placeholder="Search blood bank name or location..."
                 value="{{ request('search', $filters['search'] ?? '') }}"
                 class="h-12 w-full pl-10 pr-14 bg-slate-50 border border-slate-200 rounded-xl text-sm focus:outline-none focus:border-red-500 focus:ring-2 focus:ring-red-500/20 transition-all duration-200 font-medium" />
-            <button type="button" onclick="openMobileFilters()" class="lg:hidden absolute right-2 top-1/2 -translate-y-1/2 w-8 h-8 rounded-lg border border-red-200 bg-white text-red-700 hover:bg-red-50 flex items-center justify-center" title="Filters">
+            <button type="button" data-open-mobile-filters onclick="openMobileFilters()" aria-label="Open filters" class="lg:hidden absolute right-2 top-1/2 -translate-y-1/2 w-8 h-8 rounded-lg border flex items-center justify-center transition-all duration-200 {{ $hasActiveMobileFilters ? 'border-red-600 bg-red-600 text-white shadow-md shadow-red-500/30' : 'border-red-200 bg-white text-red-700 hover:bg-red-50' }}" title="Filters">
                 <i data-lucide="filter" class="w-4 h-4"></i>
             </button>
         </div>
@@ -71,13 +74,13 @@ $pageDescription = $hasCity
 </section>
 
 <!-- Mobile Filter Sidebar -->
-<section class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-20 w-full mb-2 lg:mb-8">
-    <div id="mobile-filter-sidebar" class="fixed inset-0 z-50 hidden lg:hidden">
-        <div id="mobile-filter-backdrop" class="absolute inset-0 bg-black/50 backdrop-blur-sm"></div>
-        <div class="absolute top-0 right-0 h-full w-full max-w-sm bg-white shadow-2xl overflow-y-auto">
+<div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-20 w-full mb-2 lg:mb-8">
+    <div id="mobile-filter-sidebar" class="fixed inset-0 z-[120] hidden lg:hidden" aria-hidden="true">
+        <div id="mobile-filter-backdrop" onclick="closeMobileFilters()" class="absolute inset-0 bg-black/50 backdrop-blur-sm opacity-0 transition-opacity duration-300 ease-out"></div>
+        <div id="mobile-filter-drawer" class="absolute top-0 right-0 h-full w-full max-w-sm bg-white shadow-2xl overflow-y-auto transform translate-x-full transition-transform duration-300 ease-out">
             <div class="sticky top-0 p-3 sm:p-4 border-b border-slate-200 bg-white flex items-center justify-between">
                 <h2 class="text-lg font-bold text-slate-900">{{ $locale === 'hi' ? 'फ़िल्टर' : 'Filters' }}</h2>
-                <button type="button" id="mobile-filter-close" class="p-2 hover:bg-slate-100 rounded-lg transition-colors">
+                <button type="button" id="mobile-filter-close" onclick="closeMobileFilters()" aria-label="Close filters" class="p-2 hover:bg-slate-100 rounded-lg transition-colors">
                     <i data-lucide="x" class="w-5 h-5 text-slate-600"></i>
                 </button>
             </div>
@@ -132,7 +135,7 @@ $pageDescription = $hasCity
             </form>
         </div>
     </div>
-</section>
+</div>
 
 <!-- Desktop Filter Panel -->
 <section id="filter-panel" class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-20 w-full mb-2 hidden lg:block">
@@ -535,24 +538,45 @@ $pageDescription = $hasCity
 
     function openMobileFilters() {
         const sidebar = document.getElementById('mobile-filter-sidebar');
+        const drawer = document.getElementById('mobile-filter-drawer');
+        const backdrop = document.getElementById('mobile-filter-backdrop');
         if (!sidebar) return;
         sidebar.classList.remove('hidden');
+        sidebar.setAttribute('aria-hidden', 'false');
         document.body.style.overflow = 'hidden';
+        requestAnimationFrame(() => {
+            drawer?.classList.remove('translate-x-full');
+            backdrop?.classList.remove('opacity-0');
+        });
         initMultiSelectBadges(sidebar);
     }
 
-    document.getElementById('mobile-filter-close')?.addEventListener('click', function() {
-        document.getElementById('mobile-filter-sidebar').classList.add('hidden');
+    function closeMobileFilters() {
+        const sidebar = document.getElementById('mobile-filter-sidebar');
+        const drawer = document.getElementById('mobile-filter-drawer');
+        const backdrop = document.getElementById('mobile-filter-backdrop');
+        if (!sidebar) return;
+        drawer?.classList.add('translate-x-full');
+        backdrop?.classList.add('opacity-0');
+        sidebar.setAttribute('aria-hidden', 'true');
+        setTimeout(() => {
+            sidebar.classList.add('hidden');
+        }, 300);
         document.body.style.overflow = '';
-    });
-
-    document.getElementById('mobile-filter-backdrop')?.addEventListener('click', function() {
-        document.getElementById('mobile-filter-sidebar').classList.add('hidden');
-        document.body.style.overflow = '';
-    });
+    }
 
     document.addEventListener('DOMContentLoaded', function() {
         initMultiSelectBadges(document);
+        document.querySelectorAll('[data-open-mobile-filters]').forEach((btn) => {
+            btn.addEventListener('click', openMobileFilters);
+        });
+        document.getElementById('mobile-filter-close')?.addEventListener('click', closeMobileFilters);
+        document.getElementById('mobile-filter-backdrop')?.addEventListener('click', closeMobileFilters);
+        document.addEventListener('keydown', (event) => {
+            if (event.key === 'Escape') {
+                closeMobileFilters();
+            }
+        });
     });
 
     function setUserLocationAndSubmitMobile() {

@@ -12,6 +12,9 @@ $pageTitle = $hasCity
 $pageDescription = $hasCity
 ? "Find doctors in {$seoCity} by specialty, department, clinic, or symptoms. Call providers directly and confirm timings before visiting."
 : 'Search doctors by city, specialty, department, or symptoms. Find contact details, clinic information, and healthcare providers near you.';
+$hasActiveMobileFilters = !empty(array_filter((array) request('department', [])))
+    || !empty(array_filter((array) request('experience', [])))
+    || !empty(array_filter((array) request('city', [])));
 @endphp
 @section('meta_title', $pageTitle)
 @section('meta_description', $pageDescription)
@@ -63,26 +66,26 @@ $pageDescription = $hasCity
                 placeholder="Search doctors, departments, symptoms..."
                 value="{{ request('search', $filters['search'] ?? '') }}"
                 class="h-12 w-full pl-10 pr-14 bg-slate-50 border border-slate-200 rounded-xl text-sm focus:outline-none focus:border-teal-500 focus:ring-2 focus:ring-teal-500/20 transition-all duration-200 font-medium" />
-            <button type="button" onclick="openMobileFilters()" class="lg:hidden absolute right-2 top-1/2 -translate-y-1/2 w-8 h-8 rounded-lg border border-teal-200 bg-white text-teal-700 hover:bg-teal-50 flex items-center justify-center" title="{{ $locale === 'hi' ? 'फ़िल्टर' : 'Filters' }}">
+            <button type="button" data-open-mobile-filters onclick="openMobileFilters()" aria-label="{{ $locale === 'hi' ? 'फ़िल्टर खोलें' : 'Open filters' }}" class="lg:hidden absolute right-2 top-1/2 -translate-y-1/2 w-8 h-8 rounded-lg border flex items-center justify-center transition-all duration-200 {{ $hasActiveMobileFilters ? 'border-teal-600 bg-teal-600 text-white shadow-md shadow-teal-500/30' : 'border-teal-200 bg-white text-teal-700 hover:bg-teal-50' }}" title="{{ $locale === 'hi' ? 'फ़िल्टर' : 'Filters' }}">
                 <i data-lucide="filter" class="w-4 h-4"></i>
             </button>
         </div>
     </form>
 </section>
 <!-- Filter Bar & Mobile Toggle -->
-<section class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 mt-4 sm:-mt-8 relative z-20 w-full mb-2 lg:mb-8">
+<div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 mt-4 sm:-mt-8 relative z-20 w-full mb-2 lg:mb-8">
     <!-- Mobile Filter Button (visible on screens smaller than lg) -->
 
     <!-- Filter Sidebar (Mobile) - Hidden by default -->
-    <div id="mobile-filter-sidebar" class="fixed inset-0 z-50 hidden lg:hidden">
+    <div id="mobile-filter-sidebar" class="fixed inset-0 z-[120] hidden lg:hidden" aria-hidden="true">
         <!-- Backdrop -->
-        <div id="mobile-filter-backdrop" class="absolute inset-0 bg-black/50 backdrop-blur-sm"></div>
+        <div id="mobile-filter-backdrop" onclick="closeMobileFilters()" class="absolute inset-0 bg-black/50 backdrop-blur-sm opacity-0 transition-opacity duration-300 ease-out"></div>
         <!-- Sidebar -->
-        <div class="absolute top-0 right-0 h-full w-full max-w-sm bg-white shadow-2xl overflow-y-auto">
+        <div id="mobile-filter-drawer" class="absolute top-0 right-0 h-full w-full max-w-sm bg-white shadow-2xl overflow-y-auto transform translate-x-full transition-transform duration-300 ease-out">
             <!-- Header -->
             <div class="sticky top-0 p-3 sm:p-4 border-b border-slate-200 bg-white flex items-center justify-between">
                 <h2 class="text-lg font-bold text-slate-900">{{ $locale === 'hi' ? 'फ़िल्टर' : 'Filters' }}</h2>
-                <button type="button" id="mobile-filter-close" class="p-2 hover:bg-slate-100 rounded-lg transition-colors">
+                <button type="button" id="mobile-filter-close" onclick="closeMobileFilters()" aria-label="{{ $locale === 'hi' ? 'फ़िल्टर बंद करें' : 'Close filters' }}" class="p-2 hover:bg-slate-100 rounded-lg transition-colors">
                     <i data-lucide="x" class="w-5 h-5 text-slate-600"></i>
                 </button>
             </div>
@@ -279,7 +282,7 @@ $pageDescription = $hasCity
         </div>
 
     </form>
-</section>
+</div>
 <!-- Doctors Grid -->
 <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex-1 w-full mt-0 lg:mt-4 pb-20">
     @if (count($doctors) === 0)
@@ -756,24 +759,45 @@ $pageDescription = $hasCity
 
     function openMobileFilters() {
         const sidebar = document.getElementById('mobile-filter-sidebar');
+        const drawer = document.getElementById('mobile-filter-drawer');
+        const backdrop = document.getElementById('mobile-filter-backdrop');
         if (!sidebar) return;
         sidebar.classList.remove('hidden');
+        sidebar.setAttribute('aria-hidden', 'false');
         document.body.style.overflow = 'hidden';
+        requestAnimationFrame(() => {
+            drawer?.classList.remove('translate-x-full');
+            backdrop?.classList.remove('opacity-0');
+        });
         initMultiSelectBadges(sidebar);
     }
 
-    document.getElementById('mobile-filter-close')?.addEventListener('click', function() {
-        document.getElementById('mobile-filter-sidebar').classList.add('hidden');
+    function closeMobileFilters() {
+        const sidebar = document.getElementById('mobile-filter-sidebar');
+        const drawer = document.getElementById('mobile-filter-drawer');
+        const backdrop = document.getElementById('mobile-filter-backdrop');
+        if (!sidebar) return;
+        drawer?.classList.add('translate-x-full');
+        backdrop?.classList.add('opacity-0');
+        sidebar.setAttribute('aria-hidden', 'true');
+        setTimeout(() => {
+            sidebar.classList.add('hidden');
+        }, 300);
         document.body.style.overflow = '';
-    });
-
-    document.getElementById('mobile-filter-backdrop')?.addEventListener('click', function() {
-        document.getElementById('mobile-filter-sidebar').classList.add('hidden');
-        document.body.style.overflow = '';
-    });
+    }
 
     document.addEventListener('DOMContentLoaded', function() {
         initMultiSelectBadges(document);
+        document.querySelectorAll('[data-open-mobile-filters]').forEach((btn) => {
+            btn.addEventListener('click', openMobileFilters);
+        });
+        document.getElementById('mobile-filter-close')?.addEventListener('click', closeMobileFilters);
+        document.getElementById('mobile-filter-backdrop')?.addEventListener('click', closeMobileFilters);
+        document.addEventListener('keydown', (event) => {
+            if (event.key === 'Escape') {
+                closeMobileFilters();
+            }
+        });
     });
 
     function setUserLocationAndSubmitMobile() {
