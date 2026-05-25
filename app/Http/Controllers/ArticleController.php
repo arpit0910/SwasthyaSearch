@@ -11,8 +11,15 @@ class ArticleController extends Controller
     {
         $query = Article::with('comments')->where('is_published', true)->latest();
 
-        if ($request->filled('category') && $request->category !== 'All') {
-            $query->where('category', $request->category);
+        // Filter by category - support multiple selections
+        $categories = $request->input('category', []);
+        if (!is_array($categories)) {
+            $categories = ($categories && $categories !== 'All') ? [$categories] : [];
+        }
+        $categories = array_filter($categories); // Remove empty values
+
+        if (!empty($categories)) {
+            $query->whereIn('category', $categories);
         }
 
         if ($request->filled('search')) {
@@ -27,11 +34,11 @@ class ArticleController extends Controller
             });
         }
 
-        $categories = Article::where('is_published', true)->distinct()->pluck('category');
+        $categoryOptions = Article::where('is_published', true)->distinct()->pluck('category');
 
         return view('articles.index', [
             'articles' => $query->paginate(30)->withQueryString(),
-            'categories' => $categories,
+            'categories' => $categoryOptions,
             'filters' => $request->only(['category', 'search']),
         ]);
     }

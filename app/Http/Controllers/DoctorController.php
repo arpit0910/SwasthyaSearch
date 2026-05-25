@@ -6,6 +6,7 @@ use App\Models\Department;
 use App\Models\Doctor;
 use App\Models\Hospital;
 use Illuminate\Http\Request;
+use Illuminate\Pagination\LengthAwarePaginator;
 
 class DoctorController extends Controller
 {
@@ -17,27 +18,51 @@ class DoctorController extends Controller
 
         $query = Doctor::with(['department', 'hospitals'])->where('is_verified', true)->latest();
 
-        // Filter by Department
-        if ($request->filled('department') && $request->department !== 'All') {
-            $dept = $request->department;
-            $query->whereHas('department', function ($q) use ($dept) {
-                $q->where('name_en', 'LIKE', "%{$dept}%")
-                    ->orWhere('name_hi', 'LIKE', "%{$dept}%")
-                    ->orWhere('id', $dept);
+        // Filter by Department - support multiple selections
+        $departments = $request->input('department', []);
+        if (!is_array($departments)) {
+            $departments = ($departments && $departments !== 'All') ? [$departments] : [];
+        }
+        $departments = array_filter($departments); // Remove empty values
+
+        if (!empty($departments)) {
+            $query->where(function ($q) use ($departments) {
+                foreach ($departments as $dept) {
+                    $q->orWhereHas('department', function ($sq) use ($dept) {
+                        $sq->where('name_en', 'LIKE', "%{$dept}%")
+                            ->orWhere('name_hi', 'LIKE', "%{$dept}%")
+                            ->orWhere('id', $dept);
+                    });
+                }
             });
         }
 
-        // Filter by Experience Years
-        if ($request->filled('experience') && $request->experience !== 'All') {
-            $exp = (int) $request->experience;
-            $query->where('experience_years', '>=', $exp);
+        // Filter by Experience Years - support multiple selections
+        $experiences = $request->input('experience', []);
+        if (!is_array($experiences)) {
+            $experiences = ($experiences && $experiences !== 'All') ? [$experiences] : [];
+        }
+        $experiences = array_filter($experiences); // Remove empty values
+
+        if (!empty($experiences)) {
+            $experiences = array_map('intval', $experiences);
+            $query->where(function ($q) use ($experiences) {
+                foreach ($experiences as $exp) {
+                    $q->orWhere('experience_years', '>=', $exp);
+                }
+            });
         }
 
-        // Filter by City
-        if ($request->filled('city') && $request->city !== 'All') {
-            $city = $request->city;
-            $query->whereHas('hospitals', function ($q) use ($city) {
-                $q->where('city', $city);
+        // Filter by City - support multiple selections
+        $cities = $request->input('city', []);
+        if (!is_array($cities)) {
+            $cities = ($cities && $cities !== 'All') ? [$cities] : [];
+        }
+        $cities = array_filter($cities); // Remove empty values
+
+        if (!empty($cities)) {
+            $query->whereHas('hospitals', function ($q) use ($cities) {
+                $q->whereIn('city', $cities);
             });
         }
 
@@ -61,11 +86,24 @@ class DoctorController extends Controller
             ->get();
         $cities = Hospital::where('is_verified', true)->whereNotNull('city')->distinct()->pluck('city');
 
-        return view('doctors.index', [
-            'doctors' => $query
+        // Get all doctors first
+        $doctors = $query->get();
+        
+        // If user location provided, calculate distances and sort
+        if ($hasUserLocation) {
+            $nearbyDoctors = $doctors->map(fn(Doctor $doctor) => $this->formatDoctor($doctor, $userLat, $userLng))
+                ->sortBy('distance_km')
+                ->filter(fn($d) => $d['distance_km'] !== null && $d['distance_km'] < 50)
+                ->values();
+            $doctors = $this->paginateCollection($nearbyDoctors, $request, 30);
+        } else {
+            $doctors = $query
                 ->paginate(30)
-                ->withQueryString()
-                ->through(fn(Doctor $doctor) => $this->formatDoctor($doctor, $userLat, $userLng)),
+                ->through(fn(Doctor $doctor) => $this->formatDoctor($doctor, $userLat, $userLng));
+        }
+
+        return view('doctors.index', [
+            'doctors' => $doctors,
             'departments' => $departments->map(fn(Department $department) => $this->formatDepartment($department)),
             'cities' => $cities,
             'filters' => $request->only(['department', 'experience', 'city', 'search', 'user_lat', 'user_lng']),
@@ -178,5 +216,20 @@ class DoctorController extends Controller
         ));
 
         return round($angle * $earthRadius, 1);
+    }
+
+    private function paginateCollection($items, Request $request, int $perPage = 30): LengthAwarePaginator
+    {
+        $page = LengthAwarePaginator::resolveCurrentPage();
+        $collection = collect($items);
+        $slice = $collection->slice(($page - 1) * $perPage, $perPage)->values();
+
+        return new LengthAwarePaginator(
+            $slice,
+            $collection->count(),
+            $perPage,
+            $page,
+            ['path' => $request->url(), 'query' => $request->query()]
+        );
     }
 }

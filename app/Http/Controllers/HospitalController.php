@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Hospital;
 use App\Services\HealthcareSyncService;
 use Illuminate\Http\Request;
+use Illuminate\Pagination\LengthAwarePaginator;
 
 class HospitalController extends Controller
 {
@@ -16,14 +17,26 @@ class HospitalController extends Controller
 
         $query = Hospital::where('is_verified', true)->latest();
 
-        // Filter by Type (Hospital vs Clinic)
-        if ($request->filled('type') && $request->type !== 'All') {
-            $query->where('type', $request->type);
+        // Filter by Type (Hospital vs Clinic) - support multiple selections
+        $types = $request->input('type', []);
+        if (!is_array($types)) {
+            $types = ($types && $types !== 'All') ? [$types] : [];
+        }
+        $types = array_filter($types); // Remove empty values
+        
+        if (!empty($types)) {
+            $query->whereIn('type', $types);
         }
 
-        // Filter by City
-        if ($request->filled('city') && $request->city !== 'All') {
-            $query->where('city', $request->city);
+        // Filter by City - support multiple selections
+        $cities = $request->input('city', []);
+        if (!is_array($cities)) {
+            $cities = ($cities && $cities !== 'All') ? [$cities] : [];
+        }
+        $cities = array_filter($cities); // Remove empty values
+        
+        if (!empty($cities)) {
+            $query->whereIn('city', $cities);
         }
 
         // Filter by Search Keyword
@@ -40,26 +53,75 @@ class HospitalController extends Controller
             });
         }
 
-        // Filter by Benefit
-        if ($request->filled('benefit') && $request->benefit !== 'All') {
-            if ($request->benefit === 'ayushman') {
-                $query->where('accepts_ayushman', true);
-            } elseif ($request->benefit === 'janaadhaar') {
-                $query->where('accepts_janaadhaar', true);
-            } elseif ($request->benefit === 'cghs') {
-                $query->where('accepts_cghs', true);
-            } elseif ($request->benefit === 'cashless') {
-                $query->where('is_cashless', true);
-            }
+        // Filter by Benefit - support multiple selections
+        $benefits = $request->input('benefit', []);
+        if (!is_array($benefits)) {
+            $benefits = ($benefits && $benefits !== 'All') ? [$benefits] : [];
+        }
+        $benefits = array_filter($benefits); // Remove empty values
+
+        if (!empty($benefits)) {
+            $query->where(function ($q) use ($benefits) {
+                foreach ($benefits as $benefit) {
+                    if ($benefit === 'ayushman') {
+                        $q->orWhere('accepts_ayushman', true);
+                    } elseif ($benefit === 'janaadhaar') {
+                        $q->orWhere('accepts_janaadhaar', true);
+                    } elseif ($benefit === 'cghs') {
+                        $q->orWhere('accepts_cghs', true);
+                    } elseif ($benefit === 'cashless') {
+                        $q->orWhere('is_cashless', true);
+                    }
+                }
+            });
         }
 
         $cities = Hospital::where('is_verified', true)->whereNotNull('city')->distinct()->pluck('city');
         $types = Hospital::where('is_verified', true)->whereNotNull('type')->distinct()->pluck('type');
 
-        return view('hospitals.index', [
-            'hospitals' => $query
+        // Get all results first
+        $hospitals = $query->get();
+        
+        // If user location provided, calculate distances and sort
+        if ($hasUserLocation) {
+            $nearbyHospitals = $hospitals->map(fn(Hospital $hospital) => [
+                'id' => $hospital->id,
+                'name_en' => $hospital->name_en,
+                'name_hi' => $hospital->name_hi ?: $this->buildHindiHospitalName($hospital),
+                'name' => [
+                    'en' => $hospital->name_en,
+                    'hi' => $hospital->name_hi ?: $this->buildHindiHospitalName($hospital),
+                ],
+                'type' => $hospital->type,
+                'address' => $hospital->display_address,
+                'address_hi' => $this->toHindiAddress($hospital->display_address),
+                'address_line1' => $hospital->address_line1,
+                'address_line1_hi' => $this->toHindiAddress($hospital->address_line1),
+                'address_line2' => $hospital->address_line2,
+                'address_line2_hi' => $this->toHindiAddress($hospital->address_line2),
+                'state' => $hospital->state,
+                'state_hi' => $this->toHindiState($hospital->state),
+                'pincode' => $hospital->pincode,
+                'city' => $hospital->city,
+                'city_hi' => $this->toHindiCity($hospital->city),
+                'latitude' => $hospital->latitude,
+                'longitude' => $hospital->longitude,
+                'emergency_phone' => $hospital->emergency_phone,
+                'is_verified' => $hospital->is_verified,
+                'accepts_ayushman' => $hospital->accepts_ayushman,
+                'accepts_janaadhaar' => $hospital->accepts_janaadhaar,
+                'accepts_cghs' => $hospital->accepts_cghs,
+                'is_cashless' => $hospital->is_cashless,
+                'cashless_schemes_list' => $hospital->cashless_schemes_list,
+                'distance_km' => $this->calculateDistanceKm($userLat, $userLng, $hospital->latitude, $hospital->longitude),
+            ])->sortBy('distance_km')
+            ->filter(fn($h) => $h['distance_km'] !== null && $h['distance_km'] < 50)
+            ->values();
+            $hospitals = $this->paginateCollection($nearbyHospitals, $request, 30);
+        } else {
+            // Original formatting for non-location queries
+            $hospitals = $query
                 ->paginate(30)
-                ->withQueryString()
                 ->through(fn(Hospital $hospital) => [
                     'id' => $hospital->id,
                     'name_en' => $hospital->name_en,
@@ -89,10 +151,12 @@ class HospitalController extends Controller
                     'accepts_cghs' => $hospital->accepts_cghs,
                     'is_cashless' => $hospital->is_cashless,
                     'cashless_schemes_list' => $hospital->cashless_schemes_list,
-                    'distance_km' => $hasUserLocation
-                        ? $this->calculateDistanceKm($userLat, $userLng, $hospital->latitude, $hospital->longitude)
-                        : null,
-                ]),
+                    'distance_km' => null,
+                ]);
+        }
+
+        return view('hospitals.index', [
+            'hospitals' => $hospitals,
             'cities' => $cities,
             'types' => $types,
             'filters' => $request->only(['type', 'city', 'search', 'benefit', 'user_lat', 'user_lng']),
@@ -121,6 +185,21 @@ class HospitalController extends Controller
         ));
 
         return round($angle * $earthRadius, 1);
+    }
+
+    private function paginateCollection($items, Request $request, int $perPage = 30): LengthAwarePaginator
+    {
+        $page = LengthAwarePaginator::resolveCurrentPage();
+        $collection = collect($items);
+        $slice = $collection->slice(($page - 1) * $perPage, $perPage)->values();
+
+        return new LengthAwarePaginator(
+            $slice,
+            $collection->count(),
+            $perPage,
+            $page,
+            ['path' => $request->url(), 'query' => $request->query()]
+        );
     }
 
     public function doctors(Hospital $hospital)

@@ -3,7 +3,8 @@
 @section('title', ($locale === 'hi' ? 'ब्लड बैंक निर्देशिका' : 'Blood Banks Directory') . ' - SwasthyaSearch')
 
 @php
-$seoCity = request('city');
+$seoCityInput = request('city');
+$seoCity = is_array($seoCityInput) ? ($seoCityInput[0] ?? null) : $seoCityInput;
 $hasCity = !empty($seoCity) && $seoCity !== 'All';
 $pageTitle = $hasCity
 ? "Blood Banks in {$seoCity} | Emergency Contacts | SwasthyaSearch"
@@ -25,85 +26,190 @@ $pageDescription = $hasCity
         <span class="bg-red-500/20 text-red-300 border border-red-500/30 px-4 py-1.5 rounded-full text-xs font-semibold tracking-wider uppercase inline-block mb-4 shadow-sm">
             {{ $locale === 'hi' ? 'सत्यापित रक्त केंद्र' : 'Verified Blood Centers' }}
         </span>
-        <h1 class="text-3xl sm:text-5xl font-extrabold tracking-tight mb-4 bg-gradient-to-r from-white via-slate-100 to-slate-300 bg-clip-text text-transparent py-2 leading-tight">
+        <h1 class="text-4xl sm:text-5xl font-extrabold tracking-tight mb-4 bg-gradient-to-r from-white via-slate-100 to-slate-300 bg-clip-text text-transparent py-2 leading-tight">
             {{ $hasCity ? "Find Blood Banks in {$seoCity}" : 'Find Blood Banks Near You' }}
         </h1>
-        <p class="max-w-2xl mx-auto text-slate-300 text-base sm:text-lg leading-relaxed">
+        <p class="max-w-4xl mx-auto text-slate-300 text-base sm:text-lg leading-relaxed">
             {{ $locale === 'hi' ? 'सत्यापित और लाइसेंस प्राप्त ब्लड बैंक खोजें। रक्त उपलब्धता तेजी से बदल सकती है, इसलिए जाने से पहले कॉल करके पुष्टि करें।' : 'Find verified, licensed blood banks. Blood availability can change quickly, so please call to confirm before visiting.' }}
         </p>
     </div>
 </header>
 
 <section class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 mt-6">
-    <p class="text-sm text-slate-600">
-        Blood availability changes quickly. Please call the blood bank to confirm current availability before visiting.
-    </p>
+    <div class="text-center">
+        <p class="text-sm text-slate-600 max-w-4xl mx-auto">
+            Blood availability changes quickly. Please call the blood bank to confirm current availability before visiting.
+        </p>
+    </div>
 </section>
 
-<!-- Filter Bar -->
-<section class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 mt-4 sm:-mt-8 relative z-20 w-full mb-12">
-    <form action="{{ route('blood_banks.index') }}" method="GET" data-auto-filter class="bg-white rounded-2xl shadow-xl border border-slate-200/80 p-5 sm:p-6 backdrop-blur-xl">
+<section class="lg:hidden max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 mt-4 sm:-mt-8 relative z-20 w-full mb-6">
+    <form action="{{ route('blood_banks.index') }}" method="POST" class="bg-white rounded-2xl shadow-xl border border-slate-200/80 p-4 sm:p-5 backdrop-blur-xl">
+        @csrf
+        @foreach ((array) request('blood_group', []) as $bgVal)
+        <input type="hidden" name="blood_group[]" value="{{ $bgVal }}">
+        @endforeach
+        @foreach ((array) request('facility', []) as $facVal)
+        <input type="hidden" name="facility[]" value="{{ $facVal }}">
+        @endforeach
+        @foreach ((array) request('city', []) as $cityVal)
+        <input type="hidden" name="city[]" value="{{ $cityVal }}">
+        @endforeach
+        <input type="hidden" name="user_lat" value="{{ request('user_lat', $filters['user_lat'] ?? '') }}">
+        <input type="hidden" name="user_lng" value="{{ request('user_lng', $filters['user_lng'] ?? '') }}">
+        <div class="relative">
+            <i data-lucide="search" class="absolute inset-y-0 left-0 flex items-center pl-4 pointer-events-none w-4 h-4 text-slate-400"></i>
+            <input type="text" name="search"
+                placeholder="Search blood bank name or location..."
+                value="{{ request('search', $filters['search'] ?? '') }}"
+                class="h-12 w-full pl-10 pr-14 bg-slate-50 border border-slate-200 rounded-xl text-sm focus:outline-none focus:border-red-500 focus:ring-2 focus:ring-red-500/20 transition-all duration-200 font-medium" />
+            <button type="button" onclick="openMobileFilters()" class="lg:hidden absolute right-2 top-1/2 -translate-y-1/2 w-8 h-8 rounded-lg border border-red-200 bg-white text-red-700 hover:bg-red-50 flex items-center justify-center" title="Filters">
+                <i data-lucide="filter" class="w-4 h-4"></i>
+            </button>
+        </div>
+    </form>
+</section>
+
+<!-- Mobile Filter Sidebar -->
+<section class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-20 w-full mb-2 lg:mb-8">
+    <div id="mobile-filter-sidebar" class="fixed inset-0 z-50 hidden lg:hidden">
+        <div id="mobile-filter-backdrop" class="absolute inset-0 bg-black/50 backdrop-blur-sm"></div>
+        <div class="absolute top-0 right-0 h-full w-full max-w-sm bg-white shadow-2xl overflow-y-auto">
+            <div class="sticky top-0 p-3 sm:p-4 border-b border-slate-200 bg-white flex items-center justify-between">
+                <h2 class="text-lg font-bold text-slate-900">{{ $locale === 'hi' ? 'फ़िल्टर' : 'Filters' }}</h2>
+                <button type="button" id="mobile-filter-close" class="p-2 hover:bg-slate-100 rounded-lg transition-colors">
+                    <i data-lucide="x" class="w-5 h-5 text-slate-600"></i>
+                </button>
+            </div>
+            <form action="{{ route('blood_banks.index') }}" method="POST" class="p-3 sm:p-4 space-y-4" id="mobile-filter-form">
+                @csrf
+                <input type="hidden" name="search" value="{{ request('search', $filters['search'] ?? '') }}">
+                <input type="hidden" name="user_lat" id="user_lat_mobile" value="{{ request('user_lat', $filters['user_lat'] ?? '') }}">
+                <input type="hidden" name="user_lng" id="user_lng_mobile" value="{{ request('user_lng', $filters['user_lng'] ?? '') }}">
+                <div>
+                    <label class="block text-xs font-bold text-slate-600 mb-2 uppercase tracking-wider">{{ $locale === 'hi' ? 'रक्त समूह' : 'Blood Group' }}</label>
+                    @php $selectedBG = is_array(request('blood_group')) ? request('blood_group') : (request('blood_group') && request('blood_group') !== 'All' ? [request('blood_group')] : []); @endphp
+                    <select name="blood_group[]" multiple class="h-12 w-full px-4 bg-slate-50 border border-slate-200 rounded-xl text-sm focus:outline-none focus:border-red-500 focus:ring-2 focus:ring-red-500/20 transition-all duration-200 font-medium text-slate-700">
+                        @foreach ($bloodGroups as $bg)
+                        <option value="{{ $bg }}" {{ in_array($bg, $selectedBG) ? 'selected' : '' }}>{{ $bg }}</option>
+                        @endforeach
+                    </select>
+                </div>
+                <div>
+                    <label class="block text-xs font-bold text-slate-600 mb-2 uppercase tracking-wider">{{ $locale === 'hi' ? 'सुविधाएं' : 'Facilities' }}</label>
+                    @php $selectedFac = is_array(request('facility')) ? request('facility') : (request('facility') && request('facility') !== 'All' ? [request('facility')] : []); @endphp
+                    <select name="facility[]" multiple class="h-12 w-full px-4 bg-slate-50 border border-slate-200 rounded-xl text-sm focus:outline-none focus:border-red-500 focus:ring-2 focus:ring-red-500/20 transition-all duration-200 font-medium text-slate-700">
+                        <option value="24x7" {{ in_array('24x7', $selectedFac) ? 'selected' : '' }}>{{ $locale === 'hi' ? '24x7 उपलब्ध' : '24x7 Available' }}</option>
+                        <option value="Government" {{ in_array('Government', $selectedFac) ? 'selected' : '' }}>{{ $locale === 'hi' ? 'सरकारी ब्लड बैंक' : 'Government Blood Bank' }}</option>
+                        <option value="Private" {{ in_array('Private', $selectedFac) ? 'selected' : '' }}>{{ $locale === 'hi' ? 'निजी ब्लड बैंक' : 'Private Blood Bank' }}</option>
+                        <option value="Component" {{ in_array('Component', $selectedFac) ? 'selected' : '' }}>{{ $locale === 'hi' ? 'रक्त घटक' : 'Blood Components' }}</option>
+                        <option value="Apheresis" {{ in_array('Apheresis', $selectedFac) ? 'selected' : '' }}>{{ $locale === 'hi' ? 'एफेरेसिस' : 'Apheresis (SDP)' }}</option>
+                    </select>
+                </div>
+                <div>
+                    <label class="block text-xs font-bold text-slate-600 mb-2 uppercase tracking-wider">{{ $locale === 'hi' ? 'शहर' : 'City' }}</label>
+                    @php $selectedCities = is_array(request('city')) ? request('city') : (request('city') && request('city') !== 'All' ? [request('city')] : []); @endphp
+                    <select name="city[]" multiple class="h-12 w-full px-4 bg-slate-50 border border-slate-200 rounded-xl text-sm focus:outline-none focus:border-red-500 focus:ring-2 focus:ring-red-500/20 transition-all duration-200 font-medium text-slate-700">
+                        @foreach ($cities as $c)
+                        <option value="{{ $c }}" {{ in_array($c, $selectedCities) ? 'selected' : '' }}>{{ $c }}</option>
+                        @endforeach
+                    </select>
+                </div>
+                <div class="space-y-2.5 pt-3 border-t border-slate-200">
+                    <button type="button" onclick="setUserLocationAndSubmitMobile()" class="w-full h-11 px-4 rounded-xl border border-red-200 bg-red-50 hover:bg-red-100 text-red-700 font-bold text-sm transition-all duration-200 flex items-center justify-center space-x-2 shadow-2xs">
+                        <i data-lucide="locate-fixed" class="w-4 h-4"></i>
+                        <span>{{ $locale === 'hi' ? 'मेरे नजदीक' : 'Show Nearby' }}</span>
+                    </button>
+                    <button type="submit" class="w-full h-11 px-4 rounded-xl border border-red-300 bg-red-600 hover:bg-red-700 text-white font-bold text-sm transition-all duration-200 flex items-center justify-center space-x-2 shadow-2xs">
+                        <i data-lucide="filter" class="w-4 h-4"></i>
+                        <span>{{ $locale === 'hi' ? 'फ़िल्टर लागू करें' : 'Apply Filters' }}</span>
+                    </button>
+                    <a href="{{ route('blood_banks.index') }}" class="w-full h-11 px-4 rounded-xl border border-slate-200 hover:border-slate-300 text-slate-600 hover:text-slate-800 hover:bg-slate-50 font-bold text-sm transition-all duration-200 flex items-center justify-center space-x-2 shadow-2xs">
+                        <i data-lucide="rotate-ccw" class="w-4 h-4"></i>
+                        <span>{{ $locale === 'hi' ? 'रीसेट करें' : 'Reset' }}</span>
+                    </a>
+                </div>
+            </form>
+        </div>
+    </div>
+</section>
+
+<!-- Desktop Filter Panel -->
+<section id="filter-panel" class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-20 w-full mb-2 hidden lg:block">
+    <form action="{{ route('blood_banks.index') }}" method="POST" class="bg-white rounded-2xl shadow-xl border border-slate-200/80 ring-1 ring-slate-200/70 p-5 sm:p-6 backdrop-blur-xl" id="filter-form">
+        @csrf
         <input type="hidden" name="user_lat" id="user_lat" value="{{ request('user_lat', $filters['user_lat'] ?? '') }}">
         <input type="hidden" name="user_lng" id="user_lng" value="{{ request('user_lng', $filters['user_lng'] ?? '') }}">
         <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 items-stretch">
             <!-- Search Input -->
             <div class="relative">
-                <i data-lucide="search" class="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-slate-400"></i>
+                <i data-lucide="search" class="absolute inset-y-0 left-0 flex items-center pl-4 pointer-events-none w-4 h-4 text-slate-400"></i>
                 <input
                     type="text"
                     name="search"
                     placeholder="{{ $locale === 'hi' ? 'ब्लड बैंक का नाम या स्थान खोजें...' : 'Search blood bank name or location...' }}"
                     value="{{ request('search', $filters['search'] ?? '') }}"
-                    class="h-12 w-full pl-11 pr-4 bg-slate-50 border border-slate-200 rounded-xl text-sm focus:outline-none focus:border-red-500 focus:ring-2 focus:ring-red-500/20 transition-all duration-200 font-medium" />
+                    class="h-12 w-full pl-10 pr-4 bg-slate-50 border border-slate-200 rounded-xl text-sm focus:outline-none focus:border-red-500 focus:ring-2 focus:ring-red-500/20 transition-all duration-200 font-medium" />
             </div>
 
-            <!-- Blood Group Filter -->
+            <!-- Blood Group Filter - Multiselect -->
             <div>
-                @php $bgVal = request('blood_group', $filters['blood_group'] ?? 'All'); @endphp
+                @php 
+                    $selectedBG = is_array(request('blood_group')) ? request('blood_group') : (request('blood_group') && request('blood_group') !== 'All' ? [request('blood_group')] : []);
+                @endphp
                 <select
-                    name="blood_group"
+                    name="blood_group[]"
+                    multiple
                     class="h-12 w-full px-4 bg-slate-50 border border-slate-200 rounded-xl text-sm focus:outline-none focus:border-red-500 focus:ring-2 focus:ring-red-500/20 transition-all duration-200 font-medium text-slate-700">
-                    <option value="All">{{ $locale === 'hi' ? 'सभी रक्त समूह' : 'All Blood Groups' }}</option>
                     @foreach ($bloodGroups as $bg)
-                    <option value="{{ $bg }}" {{ $bgVal === $bg ? 'selected' : '' }}>{{ $bg }}</option>
+                    <option value="{{ $bg }}" {{ in_array($bg, $selectedBG) ? 'selected' : '' }}>{{ $bg }}</option>
                     @endforeach
                 </select>
             </div>
 
-            <!-- Facility Filter -->
+            <!-- Facility Filter - Multiselect -->
             <div>
-                @php $facVal = request('facility', $filters['facility'] ?? 'All'); @endphp
+                @php 
+                    $selectedFac = is_array(request('facility')) ? request('facility') : (request('facility') && request('facility') !== 'All' ? [request('facility')] : []);
+                @endphp
                 <select
-                    name="facility"
+                    name="facility[]"
+                    multiple
                     class="h-12 w-full px-4 bg-slate-50 border border-slate-200 rounded-xl text-sm focus:outline-none focus:border-red-500 focus:ring-2 focus:ring-red-500/20 transition-all duration-200 font-medium text-slate-700">
-                    <option value="All" {{ $facVal === 'All' ? 'selected' : '' }}>{{ $locale === 'hi' ? 'सभी सुविधाएं' : 'All Facilities' }}</option>
-                    <option value="24x7" {{ $facVal === '24x7' ? 'selected' : '' }}>{{ $locale === 'hi' ? '24x7 उपलब्ध' : '24x7 Available' }}</option>
-                    <option value="Government" {{ $facVal === 'Government' ? 'selected' : '' }}>{{ $locale === 'hi' ? 'सरकारी ब्लड बैंक' : 'Government Blood Bank' }}</option>
-                    <option value="Component" {{ $facVal === 'Component' ? 'selected' : '' }}>{{ $locale === 'hi' ? 'रक्त घटक (प्लेटलेट्स आदि)' : 'Blood Components' }}</option>
-                    <option value="Apheresis" {{ $facVal === 'Apheresis' ? 'selected' : '' }}>{{ $locale === 'hi' ? 'एफेरेसिस (एसडीपी)' : 'Apheresis (SDP)' }}</option>
+                    <option value="24x7" {{ in_array('24x7', $selectedFac) ? 'selected' : '' }}>{{ $locale === 'hi' ? '24x7 उपलब्ध' : '24x7 Available' }}</option>
+                    <option value="Government" {{ in_array('Government', $selectedFac) ? 'selected' : '' }}>{{ $locale === 'hi' ? 'सरकारी ब्लड बैंक' : 'Government Blood Bank' }}</option>
+                    <option value="Private" {{ in_array('Private', $selectedFac) ? 'selected' : '' }}>{{ $locale === 'hi' ? 'निजी ब्लड बैंक' : 'Private Blood Bank' }}</option>
+                    <option value="Component" {{ in_array('Component', $selectedFac) ? 'selected' : '' }}>{{ $locale === 'hi' ? 'रक्त घटक (प्लेटलेट्स आदि)' : 'Blood Components' }}</option>
+                    <option value="Apheresis" {{ in_array('Apheresis', $selectedFac) ? 'selected' : '' }}>{{ $locale === 'hi' ? 'एफेरेसिस (एसडीपी)' : 'Apheresis (SDP)' }}</option>
                 </select>
             </div>
 
-            <!-- City Filter -->
+            <!-- City Filter - Multiselect -->
             <div>
-                @php $cityVal = request('city', $filters['city'] ?? 'All'); @endphp
+                @php 
+                    $selectedCities = is_array(request('city')) ? request('city') : (request('city') && request('city') !== 'All' ? [request('city')] : []);
+                @endphp
                 <select
-                    name="city"
+                    name="city[]"
+                    multiple
                     class="h-12 w-full px-4 bg-slate-50 border border-slate-200 rounded-xl text-sm focus:outline-none focus:border-red-500 focus:ring-2 focus:ring-red-500/20 transition-all duration-200 font-medium text-slate-700">
-                    <option value="All" {{ $cityVal === 'All' ? 'selected' : '' }}>{{ $locale === 'hi' ? 'सभी शहर' : 'All Cities' }}</option>
                     @foreach ($cities as $c)
-                    <option value="{{ $c }}" {{ $cityVal === $c ? 'selected' : '' }}>{{ $c }}</option>
+                    <option value="{{ $c }}" {{ in_array($c, $selectedCities) ? 'selected' : '' }}>{{ $c }}</option>
                     @endforeach
                 </select>
             </div>
         </div>
 
-
-        <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 mt-6 pt-6 border-t border-slate-100">
+        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3 mt-6 pt-6 border-t border-slate-100">
             <button type="button" onclick="setUserLocationAndSubmit(this.form)"
                 class="h-12 px-5 rounded-xl border border-red-200 bg-red-50 hover:bg-red-100 text-red-700 font-bold text-sm transition-all duration-200 flex items-center justify-center space-x-2 shadow-2xs">
                 <i data-lucide="locate-fixed" class="w-4 h-4"></i>
                 <span>{{ $locale === 'hi' ? 'मेरे नजदीक दिखाएँ' : 'Show Nearby' }}</span>
+            </button>
+            <button type="submit"
+                class="h-12 px-5 rounded-xl border border-red-300 bg-red-600 hover:bg-red-700 text-white font-bold text-sm transition-all duration-200 flex items-center justify-center space-x-2 shadow-2xs">
+                <i data-lucide="filter" class="w-4 h-4"></i>
+                <span>{{ $locale === 'hi' ? 'फ़िल्टर लागू करें' : 'Apply Filters' }}</span>
             </button>
             <a
                 href="{{ route('blood_banks.index') }}"
@@ -111,13 +217,12 @@ $pageDescription = $hasCity
                 <i data-lucide="rotate-ccw" class="w-4 h-4"></i>
                 <span>{{ $locale === 'hi' ? 'रीसेट करें' : 'Reset Filters' }}</span>
             </a>
-
         </div>
     </form>
 </section>
 
 <!-- Blood Banks Grid -->
-<main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex-1 w-full pb-20">
+<main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex-1 w-full mt-0 lg:mt-4 pb-20">
     @if (count($bloodBanks) === 0)
     <div class="bg-white rounded-3xl border border-slate-200/80 p-16 text-center shadow-sm max-w-2xl mx-auto">
         <div class="w-20 h-20 bg-red-50 rounded-full flex items-center justify-center mx-auto mb-6 text-red-600 border border-red-100 shadow-inner">
@@ -155,9 +260,9 @@ $pageDescription = $hasCity
 
             <!-- Card Header -->
             <div class="p-6 pb-4 bg-gradient-to-br from-slate-50/50 via-white/50 to-slate-50/50 dark:from-slate-800/30 dark:via-transparent dark:to-slate-800/30 border-b border-slate-100 dark:border-slate-800/60 flex items-start space-x-4">
-                <div class="w-16 h-16 bg-gradient-to-tr from-red-500 to-rose-600 rounded-2xl p-0.5 shadow-md shrink-0 group-hover:scale-105 transition-transform duration-300">
-                    <div class="w-full h-full bg-slate-900 rounded-[14px] flex items-center justify-center text-white font-extrabold text-xl tracking-wider">
-                        <i data-lucide="droplet" class="w-8 h-8 text-red-500 fill-red-500"></i>
+                <div class="w-12 h-12 bg-gradient-to-tr from-red-500 to-rose-600 rounded-xl p-0.5 shadow-md shrink-0 group-hover:scale-105 transition-transform duration-300">
+                    <div class="w-full h-full bg-slate-900 rounded-[10px] flex items-center justify-center text-white font-extrabold text-sm tracking-wider">
+                        <i data-lucide="droplet" class="w-6 h-6 text-red-500 fill-red-500"></i>
                     </div>
                 </div>
 
@@ -171,22 +276,22 @@ $pageDescription = $hasCity
                         @endif
                     </div>
                     <div class="flex flex-wrap gap-1 mb-2">
-                        @if (!empty($bank->distance_km))
-                        <span class="text-[10px] font-bold uppercase tracking-wider text-emerald-700 dark:text-emerald-300 bg-emerald-50 dark:bg-emerald-950/40 border border-emerald-100 dark:border-emerald-900/60 px-2 py-0.5 rounded-md shadow-2xs">
+                        @if ($bank->distance_km !== null)
+                        <span class="text-[9px] font-bold uppercase tracking-wider text-emerald-700 dark:text-emerald-300 bg-emerald-50 dark:bg-emerald-950/40 border border-emerald-100 dark:border-emerald-900/60 px-1.5 py-0.5 rounded-md shadow-2xs">
                             {{ $bank->distance_km }} km {{ $locale === 'hi' ? 'दूर' : 'away' }}
                         </span>
                         @endif
                         @if ($bank->is_24_7)
-                        <span class="text-[10px] font-bold uppercase tracking-wider text-emerald-600 dark:text-emerald-300 bg-emerald-50 dark:bg-emerald-950/40 border border-emerald-100 dark:border-emerald-900/60 px-2 py-0.5 rounded-md shadow-2xs">
+                        <span class="text-[9px] font-bold uppercase tracking-wider text-emerald-600 dark:text-emerald-300 bg-emerald-50 dark:bg-emerald-950/40 border border-emerald-100 dark:border-emerald-900/60 px-1.5 py-0.5 rounded-md shadow-2xs">
                             {{ $locale === 'hi' ? '24x7 उपलब्ध' : '24x7 Open' }}
                         </span>
                         @endif
                         @if ($bank->is_government)
-                        <span class="text-[10px] font-bold uppercase tracking-wider text-indigo-600 dark:text-indigo-300 bg-indigo-50 dark:bg-indigo-950/40 border border-indigo-100 dark:border-indigo-900/60 px-2 py-0.5 rounded-md shadow-2xs">
+                        <span class="text-[9px] font-bold uppercase tracking-wider text-indigo-600 dark:text-indigo-300 bg-indigo-50 dark:bg-indigo-950/40 border border-indigo-100 dark:border-indigo-900/60 px-1.5 py-0.5 rounded-md shadow-2xs">
                             {{ $locale === 'hi' ? 'सरकारी' : 'Govt' }}
                         </span>
                         @else
-                        <span class="text-[10px] font-bold uppercase tracking-wider text-amber-600 dark:text-amber-300 bg-amber-50 dark:bg-amber-950/40 border border-amber-100 dark:border-amber-900/60 px-2 py-0.5 rounded-md shadow-2xs">
+                        <span class="text-[9px] font-bold uppercase tracking-wider text-amber-600 dark:text-amber-300 bg-amber-50 dark:bg-amber-950/40 border border-amber-100 dark:border-amber-900/60 px-1.5 py-0.5 rounded-md shadow-2xs">
                             {{ $locale === 'hi' ? 'प्राइवेट' : 'Private' }}
                         </span>
                         @endif
@@ -292,7 +397,7 @@ $pageDescription = $hasCity
         </div>
         @endforeach
     </div>
-    <div class="mt-10 rounded-2xl border border-slate-200 bg-white/90 px-4 py-3 shadow-sm">
+    <div class="mt-6">
         {{ $bloodBanks->links('pagination::tailwind') }}
     </div>
     @endif
@@ -301,6 +406,170 @@ $pageDescription = $hasCity
 
 @push('scripts')
 <script>
+    function enhanceMultiSelectDropdown(selectEl) {
+        if (!selectEl || selectEl.dataset.enhanced === '1') return;
+
+        selectEl.classList.add('hidden');
+
+        const wrapper = document.createElement('div');
+        wrapper.className = 'relative multi-select-dropdown';
+
+        const trigger = document.createElement('button');
+        trigger.type = 'button';
+        trigger.className = 'h-12 w-full px-4 bg-white border border-slate-200 rounded-xl text-sm font-medium text-slate-700 flex items-center justify-between';
+        trigger.innerHTML = '<span class="multi-select-label truncate text-left">Select options</span><i data-lucide="chevron-down" class="w-4 h-4 text-slate-500"></i>';
+
+        const panel = document.createElement('div');
+        panel.className = 'hidden absolute z-50 mt-2 w-full max-h-64 overflow-auto rounded-xl border border-slate-200 bg-white shadow-lg p-2 space-y-1';
+
+        Array.from(selectEl.options).forEach((opt, idx) => {
+            const row = document.createElement('button');
+            row.type = 'button';
+            row.dataset.index = String(idx);
+            row.className = `w-full text-left px-3 py-2 rounded-md cursor-pointer text-sm transition-colors ${
+                opt.selected ? 'bg-red-100 text-red-800 font-semibold' : 'text-slate-700 hover:bg-slate-50'
+            }`;
+            row.textContent = opt.textContent.trim();
+            panel.appendChild(row);
+        });
+
+        selectEl.insertAdjacentElement('afterend', wrapper);
+        wrapper.appendChild(trigger);
+        wrapper.appendChild(panel);
+        wrapper.insertAdjacentElement('afterend', selectEl);
+
+        const updateLabel = () => {
+            const selected = Array.from(selectEl.selectedOptions).map(o => o.textContent.trim()).filter(Boolean);
+            const label = wrapper.querySelector('.multi-select-label');
+            label.textContent = selected.length ? selected.join(', ') : 'Select options';
+        };
+
+        trigger.addEventListener('click', () => {
+            panel.classList.toggle('hidden');
+            if (window.lucide) lucide.createIcons();
+        });
+
+        panel.querySelectorAll('button[data-index]').forEach((rowBtn) => {
+            rowBtn.addEventListener('click', () => {
+                const optionIndex = Number(rowBtn.dataset.index);
+                if (selectEl.options[optionIndex]) {
+                    const nextState = !selectEl.options[optionIndex].selected;
+                    selectEl.options[optionIndex].selected = nextState;
+                    rowBtn.className = `w-full text-left px-3 py-2 rounded-md cursor-pointer text-sm transition-colors ${
+                        nextState ? 'bg-red-100 text-red-800 font-semibold' : 'text-slate-700 hover:bg-slate-50'
+                    }`;
+                    selectEl.dispatchEvent(new Event('change', { bubbles: true }));
+                }
+                updateLabel();
+            });
+        });
+
+        if (!document.body.dataset.multiSelectOutsideBound) {
+            document.addEventListener('click', (e) => {
+                document.querySelectorAll('.multi-select-dropdown').forEach((dd) => {
+                    if (!dd.contains(e.target)) {
+                        dd.querySelector('div.absolute')?.classList.add('hidden');
+                    }
+                });
+            });
+            document.body.dataset.multiSelectOutsideBound = '1';
+        }
+
+        updateLabel();
+        selectEl.dataset.enhanced = '1';
+        if (window.lucide) lucide.createIcons();
+    }
+
+    function renderMultiSelectBadges(selectEl) {
+        if (!selectEl) return;
+        let badgeWrap = selectEl.parentElement.querySelector('.selected-badges');
+        if (!badgeWrap) {
+            badgeWrap = document.createElement('div');
+            badgeWrap.className = 'selected-badges mt-2 flex flex-wrap gap-1.5';
+            selectEl.parentElement.appendChild(badgeWrap);
+        }
+
+        const selected = Array.from(selectEl.selectedOptions).map(opt => opt.textContent.trim()).filter(Boolean);
+        if (selected.length === 0) {
+            badgeWrap.innerHTML = '<span class="text-[11px] text-slate-400 italic">No filters selected</span>';
+            return;
+        }
+
+        badgeWrap.innerHTML = Array.from(selectEl.selectedOptions).map(opt =>
+            `<button type="button" data-remove-value="${opt.value}" class="inline-flex items-center gap-1 rounded-full border border-red-200 bg-red-50 px-2.5 py-1 text-[11px] font-semibold text-red-700 hover:bg-red-100">${opt.textContent.trim()} <span class="text-red-900">x</span></button>`
+        ).join('');
+
+        if (!badgeWrap.dataset.removeBound) {
+            badgeWrap.addEventListener('click', (e) => {
+                const btn = e.target.closest('button[data-remove-value]');
+                if (!btn) return;
+                const val = btn.getAttribute('data-remove-value');
+                const option = Array.from(selectEl.options).find((o) => o.value === val);
+                if (!option) return;
+                option.selected = false;
+                const panelBtn = selectEl.parentElement.querySelector(`.multi-select-dropdown button[data-index="${Array.from(selectEl.options).indexOf(option)}"]`);
+                if (panelBtn) {
+                    panelBtn.className = 'w-full text-left px-3 py-2 rounded-md cursor-pointer text-sm transition-colors text-slate-700 hover:bg-slate-50';
+                }
+                selectEl.dispatchEvent(new Event('change', { bubbles: true }));
+            });
+            badgeWrap.dataset.removeBound = '1';
+        }
+    }
+
+    function initMultiSelectBadges(scope = document) {
+        const selects = scope.querySelectorAll('select[multiple]');
+        selects.forEach((selectEl) => {
+            enhanceMultiSelectDropdown(selectEl);
+            renderMultiSelectBadges(selectEl);
+            if (!selectEl.dataset.badgeBound) {
+                selectEl.addEventListener('change', () => renderMultiSelectBadges(selectEl));
+                selectEl.dataset.badgeBound = '1';
+            }
+        });
+    }
+
+    function openMobileFilters() {
+        const sidebar = document.getElementById('mobile-filter-sidebar');
+        if (!sidebar) return;
+        sidebar.classList.remove('hidden');
+        document.body.style.overflow = 'hidden';
+        initMultiSelectBadges(sidebar);
+    }
+
+    document.getElementById('mobile-filter-close')?.addEventListener('click', function() {
+        document.getElementById('mobile-filter-sidebar').classList.add('hidden');
+        document.body.style.overflow = '';
+    });
+
+    document.getElementById('mobile-filter-backdrop')?.addEventListener('click', function() {
+        document.getElementById('mobile-filter-sidebar').classList.add('hidden');
+        document.body.style.overflow = '';
+    });
+
+    document.addEventListener('DOMContentLoaded', function() {
+        initMultiSelectBadges(document);
+    });
+
+    function setUserLocationAndSubmitMobile() {
+        if (!navigator.geolocation) {
+            alert('Geolocation is not supported on this device/browser.');
+            return;
+        }
+
+        navigator.geolocation.getCurrentPosition(function(position) {
+            document.getElementById('user_lat_mobile').value = position.coords.latitude.toFixed(6);
+            document.getElementById('user_lng_mobile').value = position.coords.longitude.toFixed(6);
+            document.getElementById('mobile-filter-form').submit();
+        }, function() {
+            alert('Unable to fetch your location. Please enable location permission.');
+        }, {
+            enableHighAccuracy: true,
+            timeout: 10000,
+            maximumAge: 300000
+        });
+    }
+
     function setUserLocationAndSubmit(form) {
         if (!navigator.geolocation) {
             alert('Geolocation is not supported on this device/browser.');
@@ -388,3 +657,4 @@ $pageDescription = $hasCity
 
 </script>
 @endpush
+

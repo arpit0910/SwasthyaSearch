@@ -866,6 +866,15 @@
         let chatbotDetailBlockCounter = 0;
         const CHATBOT_CITY_STORAGE_KEY = 'swasthya_selected_city';
         const LEGACY_CHATBOT_CITY_STORAGE_KEY = 'swasthyasearch_chatbot_city';
+        const CHATBOT_CITY_ONBOARDED_KEY = 'swasthya_chatbot_city_onboarded';
+
+        function hasCompletedCityOnboarding() {
+            return localStorage.getItem(CHATBOT_CITY_ONBOARDED_KEY) === '1';
+        }
+
+        function markCityOnboardingComplete() {
+            localStorage.setItem(CHATBOT_CITY_ONBOARDED_KEY, '1');
+        }
 
         function normalizeCityValue(city) {
             return String(city || '').trim().replace(/\s+/g, ' ');
@@ -1094,6 +1103,7 @@
             const previousCity = chatbotCity;
             chatbotCity = normalizeCityValue(city);
             if (!chatbotCity) return;
+            markCityOnboardingComplete();
             setCityStorage(chatbotCity);
             syncCityDropdowns(chatbotCity);
             isCityLocked = true;
@@ -1154,20 +1164,31 @@
                 if (voiceBtn) voiceBtn.disabled = true;
             }
         }
-
+        function getInitialChatbotMessage() {
+            if (chatbotCity) {
+                return chatbotLocale === 'hi' ?
+                    `वापस स्वागत है। आपका चुना हुआ शहर ${chatbotCity} है। आप क्या खोजना चाहते हैं?` :
+                    `Welcome back. Your selected city is ${chatbotCity}. What would you like to find?`;
+            }
+            return chatbotLocale === 'hi'
+                ? 'नमस्ते, मैं Swasthya AI Assistant हूँ। मैं आपकी जरूरत के आधार पर विभाग, डॉक्टर, अस्पताल और ब्लड बैंक ढूंढने में मदद करता हूँ। कृपया पहले अपना शहर चुनें।'
+                : 'Hi, I\u2019m Swasthya AI Assistant. I help you find departments, doctors, hospitals, and blood banks based on your needs.';
+        }
         function initializeChatbotCity() {
-            const selectedCity = resolveSelectedCity();
-            if (selectedCity) {
+            const onboardingDone = hasCompletedCityOnboarding();
+            const selectedCity = onboardingDone ? resolveSelectedCity() : '';
+            if (selectedCity && onboardingDone) {
                 chatbotCity = selectedCity;
                 isCityLocked = true;
                 setCityStorage(chatbotCity);
                 syncCityDropdowns(chatbotCity);
+            } else {
+                chatbotCity = '';
+                isCityLocked = false;
             }
             const initialMessage = document.getElementById('chatbot-initial-message');
-            if (initialMessage && chatbotCity) {
-                initialMessage.textContent = chatbotLocale === 'hi' ?
-                    `वापस स्वागत है। आपका चुना हुआ शहर ${chatbotCity} है। आप क्या खोजना चाहते हैं?` :
-                    `Welcome back. Your selected city is ${chatbotCity}. What would you like to find?`;
+            if (initialMessage) {
+                initialMessage.textContent = getInitialChatbotMessage();
             }
             refreshChatbotCityUI();
         }
@@ -1226,6 +1247,7 @@
                     document.body.classList.add('overflow-hidden');
                 }
                 document.getElementById('chatbot-input').focus();
+                setTimeout(handleChatbotKeyboardViewport, 80);
                 scrollToChatBottom();
             } else {
                 if (pendingChatAbortController) {
@@ -1243,6 +1265,10 @@
                 win.classList.add('hidden');
                 overlay?.classList.add('hidden');
                 document.body.classList.remove('overflow-hidden');
+                win.style.height = '';
+                win.style.maxHeight = '';
+                win.style.minHeight = '';
+                win.style.bottom = '';
                 setupFabHintCycle();
             }
         }
@@ -1281,10 +1307,66 @@
             if (!msg) return;
             await submitChatbotMessage(msg);
         }
-
         function scrollToChatBottom() {
             const messagesDiv = document.getElementById('chatbot-messages');
+            if (!messagesDiv) return;
             messagesDiv.scrollTop = messagesDiv.scrollHeight;
+        }
+
+        function handleChatbotKeyboardViewport() {
+            if (window.innerWidth >= 640 || !chatbotOpen) return;
+            const win = document.getElementById('chatbot-window');
+            const viewport = window.visualViewport;
+            if (!win || !viewport) return;
+
+            const keyboardHeight = Math.max(0, window.innerHeight - viewport.height - viewport.offsetTop);
+            if (keyboardHeight > 90) {
+                const safeHeight = Math.max(340, Math.floor(viewport.height - 20));
+                win.style.height = `${safeHeight}px`;
+                win.style.maxHeight = `${safeHeight}px`;
+                win.style.minHeight = `${Math.min(520, safeHeight)}px`;
+                win.style.bottom = `${Math.max(8, keyboardHeight + 8)}px`;
+            } else {
+                win.style.height = '';
+                win.style.maxHeight = '';
+                win.style.minHeight = '';
+                win.style.bottom = '';
+            }
+            scrollToChatBottom();
+        }
+
+        function setupChatbotKeyboardHandlers() {
+            const input = document.getElementById('chatbot-input');
+            if (!input) return;
+
+            input.addEventListener('focus', () => {
+                setTimeout(() => {
+                    handleChatbotKeyboardViewport();
+                    scrollToChatBottom();
+                }, 90);
+            });
+
+            input.addEventListener('input', () => {
+                scrollToChatBottom();
+            });
+
+            input.addEventListener('blur', () => {
+                setTimeout(() => {
+                    const win = document.getElementById('chatbot-window');
+                    if (win) {
+                        win.style.height = '';
+                        win.style.maxHeight = '';
+                        win.style.minHeight = '';
+                        win.style.bottom = '';
+                    }
+                }, 140);
+            });
+
+            if (window.visualViewport) {
+                window.visualViewport.addEventListener('resize', handleChatbotKeyboardViewport);
+                window.visualViewport.addEventListener('scroll', handleChatbotKeyboardViewport);
+            }
+            window.addEventListener('orientationchange', handleChatbotKeyboardViewport);
         }
 
         function getLocalizedText(field, fallback = '') {
@@ -1960,18 +2042,11 @@
 
             const initialMsg = document.getElementById('chatbot-initial-message');
             if (initialMsg) {
-                if (chatbotCity) {
-                    initialMsg.textContent = chatbotLocale === 'hi' ?
-                        `वापस स्वागत है। आपका चुना हुआ शहर ${chatbotCity} है। आप क्या खोजना चाहते हैं?` :
-                        `Welcome back. Your selected city is ${chatbotCity}. What would you like to find?`;
-                } else {
-                    initialMsg.textContent = chatbotLocale === 'hi' ?
-                        'नमस्ते, मैं Swasthya AI Assistant हूँ। मैं लक्षण, विभाग, डॉक्टर, अस्पताल और ब्लड बैंक खोजने में मदद करता हूँ।' :
-                        'Hi, I’m Swasthya AI Assistant. I help you find departments, doctors, hospitals, and blood banks based on your needs.';
-                }
+                initialMsg.textContent = getInitialChatbotMessage();
             }
         });
         initializeChatbotCity();
+        setupChatbotKeyboardHandlers();
         setupFabHintCycle();
         collapseMobileFab();
 
@@ -2937,3 +3012,4 @@
 </body>
 
 </html>
+

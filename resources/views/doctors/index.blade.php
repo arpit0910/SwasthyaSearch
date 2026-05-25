@@ -3,7 +3,8 @@
 @section('title', ($locale === 'hi' ? 'डॉक्टर निर्देशिका' : 'Doctors Directory') . ' - SwasthyaSearch')
 
 @php
-$seoCity = request('city');
+$seoCityInput = request('city');
+$seoCity = is_array($seoCityInput) ? ($seoCityInput[0] ?? null) : $seoCityInput;
 $hasCity = !empty($seoCity) && $seoCity !== 'All';
 $pageTitle = $hasCity
 ? "Doctors in {$seoCity} | Find Specialists & Clinics | SwasthyaSearch"
@@ -35,82 +36,233 @@ $pageDescription = $hasCity
 </header>
 
 <section class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 mt-6">
-    <p class="text-sm text-slate-600">
-        Search by doctor name, specialty, department, symptoms, and city. Please call before visiting as timings and availability may change.
-    </p>
+    <div class="text-center">
+        <p class="text-sm text-slate-600 max-w-4xl mx-auto">
+            Search by doctor name, specialty, department, symptoms, and city. Please call before visiting as timings and availability may change.
+        </p>
+    </div>
 </section>
 
-<!-- Filter Bar -->
-<section class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 mt-4 sm:-mt-8 relative z-20 w-full mb-12">
-    <form action="{{ route('doctors.index') }}" method="GET" data-auto-filter class="bg-white rounded-2xl shadow-xl border border-slate-200/80 p-5 sm:p-6 backdrop-blur-xl">
+<section class="lg:hidden max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 mt-4 sm:-mt-8 relative z-20 w-full mb-6">
+    <form action="{{ route('doctors.index') }}" method="POST" class="bg-white rounded-2xl shadow-xl border border-slate-200/80 p-4 sm:p-5 backdrop-blur-xl">
+        @csrf
+        @foreach ((array) request('department', []) as $deptVal)
+        <input type="hidden" name="department[]" value="{{ $deptVal }}">
+        @endforeach
+        @foreach ((array) request('experience', []) as $expVal)
+        <input type="hidden" name="experience[]" value="{{ $expVal }}">
+        @endforeach
+        @foreach ((array) request('city', []) as $cityVal)
+        <input type="hidden" name="city[]" value="{{ $cityVal }}">
+        @endforeach
+        <input type="hidden" name="user_lat" value="{{ request('user_lat', $filters['user_lat'] ?? '') }}">
+        <input type="hidden" name="user_lng" value="{{ request('user_lng', $filters['user_lng'] ?? '') }}">
+        <div class="relative">
+            <i data-lucide="search" class="absolute inset-y-0 left-0 flex items-center pl-4 pointer-events-none w-4 h-4 text-slate-400"></i>
+            <input type="text" name="search"
+                placeholder="Search doctors, departments, symptoms..."
+                value="{{ request('search', $filters['search'] ?? '') }}"
+                class="h-12 w-full pl-10 pr-14 bg-slate-50 border border-slate-200 rounded-xl text-sm focus:outline-none focus:border-teal-500 focus:ring-2 focus:ring-teal-500/20 transition-all duration-200 font-medium" />
+            <button type="button" onclick="openMobileFilters()" class="lg:hidden absolute right-2 top-1/2 -translate-y-1/2 w-8 h-8 rounded-lg border border-teal-200 bg-white text-teal-700 hover:bg-teal-50 flex items-center justify-center" title="{{ $locale === 'hi' ? 'फ़िल्टर' : 'Filters' }}">
+                <i data-lucide="filter" class="w-4 h-4"></i>
+            </button>
+        </div>
+    </form>
+</section>
+<!-- Filter Bar & Mobile Toggle -->
+<section class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 mt-4 sm:-mt-8 relative z-20 w-full mb-2 lg:mb-8">
+    <!-- Mobile Filter Button (visible on screens smaller than lg) -->
+
+    <!-- Filter Sidebar (Mobile) - Hidden by default -->
+    <div id="mobile-filter-sidebar" class="fixed inset-0 z-50 hidden lg:hidden">
+        <!-- Backdrop -->
+        <div id="mobile-filter-backdrop" class="absolute inset-0 bg-black/50 backdrop-blur-sm"></div>
+        <!-- Sidebar -->
+        <div class="absolute top-0 right-0 h-full w-full max-w-sm bg-white shadow-2xl overflow-y-auto">
+            <!-- Header -->
+            <div class="sticky top-0 p-3 sm:p-4 border-b border-slate-200 bg-white flex items-center justify-between">
+                <h2 class="text-lg font-bold text-slate-900">{{ $locale === 'hi' ? 'फ़िल्टर' : 'Filters' }}</h2>
+                <button type="button" id="mobile-filter-close" class="p-2 hover:bg-slate-100 rounded-lg transition-colors">
+                    <i data-lucide="x" class="w-5 h-5 text-slate-600"></i>
+                </button>
+            </div>
+
+            <!-- Filter Form (Mobile) -->
+            <form action="{{ route('doctors.index') }}" method="POST" class="p-3 sm:p-4 space-y-4" id="mobile-filter-form">
+                @csrf
+                <input type="hidden" name="user_lat" id="user_lat_mobile" value="{{ request('user_lat', $filters['user_lat'] ?? '') }}">
+                <input type="hidden" name="user_lng" id="user_lng_mobile" value="{{ request('user_lng', $filters['user_lng'] ?? '') }}">
+
+                <!-- Search Input -->
+                <div class="hidden">
+                    <label class="block text-xs font-bold text-slate-600 mb-2 uppercase tracking-wider">{{ $locale === 'hi' ? 'खोज' : 'Search' }}</label>
+                    <div class="relative">
+                        <i data-lucide="search" class="absolute inset-y-0 left-0 flex items-center pl-4 pointer-events-none w-4 h-4 text-slate-400"></i>
+                        <input type="text" name="search"
+                            placeholder="{{ $locale === 'hi' ? 'खोजें...' : 'Search...' }}"
+                            value="{{ request('search', $filters['search'] ?? '') }}"
+                            class="h-12 w-full pl-10 pr-14 bg-slate-50 border border-slate-200 rounded-xl text-sm focus:outline-none focus:border-teal-500 focus:ring-2 focus:ring-teal-500/20 transition-all duration-200 font-medium" />
+                    </div>
+                </div>
+                <input type="hidden" name="search" value="{{ request('search', $filters['search'] ?? '') }}">
+
+                <!-- Department Filter -->
+                <div>
+                    <label class="block text-xs font-bold text-slate-600 mb-2 uppercase tracking-wider">{{ $locale === 'hi' ? 'विभाग' : 'Department' }}</label>
+                    @php
+                        $selectedDepts = is_array(request('department')) ? request('department') : (request('department') && request('department') !== 'All' ? [request('department')] : []);
+                    @endphp
+                    <select
+                        name="department[]"
+                        multiple
+                        class="h-12 w-full px-4 bg-slate-50 border border-slate-200 rounded-xl text-sm focus:outline-none focus:border-teal-500 focus:ring-2 focus:ring-teal-500/20 transition-all duration-200 font-medium text-slate-700">
+                        @foreach ($departments as $dept)
+                        @php
+                        $deptId = is_array($dept) ? $dept['id'] : $dept->id;
+                        $deptNameEn = is_array($dept) ? $dept['name']['en'] : ($dept->name['en'] ?? $dept->name_en);
+                        $deptNameHi = is_array($dept) ? $dept['name']['hi'] : ($dept->name['hi'] ?? $dept->name_hi);
+                        @endphp
+                        <option value="{{ $deptId }}" {{ in_array($deptId, $selectedDepts) ? 'selected' : '' }}>
+                            {{ $locale === 'hi' ? ($deptNameHi ?: $deptNameEn) : $deptNameEn }}
+                        </option>
+                        @endforeach
+                    </select>
+                </div>
+
+                <!-- Experience Filter -->
+                <div>
+                    <label class="block text-xs font-bold text-slate-600 mb-2 uppercase tracking-wider">{{ $locale === 'hi' ? 'अनुभव' : 'Experience' }}</label>
+                    @php 
+                        $selectedExps = is_array(request('experience')) ? request('experience') : (request('experience') && request('experience') !== 'All' ? [request('experience')] : []);
+                    @endphp
+                    <select
+                        name="experience[]"
+                        multiple
+                        class="h-12 w-full px-4 bg-slate-50 border border-slate-200 rounded-xl text-sm focus:outline-none focus:border-teal-500 focus:ring-2 focus:ring-teal-500/20 transition-all duration-200 font-medium text-slate-700">
+                        <option value="5" {{ in_array('5', $selectedExps) ? 'selected' : '' }}>{{ $locale === 'hi' ? '5+ वर्ष' : '5+ Years' }}</option>
+                        <option value="10" {{ in_array('10', $selectedExps) ? 'selected' : '' }}>{{ $locale === 'hi' ? '10+ वर्ष' : '10+ Years' }}</option>
+                        <option value="15" {{ in_array('15', $selectedExps) ? 'selected' : '' }}>{{ $locale === 'hi' ? '15+ वर्ष' : '15+ Years' }}</option>
+                        <option value="20" {{ in_array('20', $selectedExps) ? 'selected' : '' }}>{{ $locale === 'hi' ? '20+ वर्ष' : '20+ Years' }}</option>
+                    </select>
+                </div>
+
+                <!-- City Filter -->
+                <div>
+                    <label class="block text-xs font-bold text-slate-600 mb-2 uppercase tracking-wider">{{ $locale === 'hi' ? 'शहर' : 'City' }}</label>
+                    @php 
+                        $selectedCities = is_array(request('city')) ? request('city') : (request('city') && request('city') !== 'All' ? [request('city')] : []);
+                    @endphp
+                    <select
+                        name="city[]"
+                        multiple
+                        class="h-12 w-full px-4 bg-slate-50 border border-slate-200 rounded-xl text-sm focus:outline-none focus:border-teal-500 focus:ring-2 focus:ring-teal-500/20 transition-all duration-200 font-medium text-slate-700">
+                        @foreach ($cities as $c)
+                        <option value="{{ $c }}" {{ in_array($c, $selectedCities) ? 'selected' : '' }}>{{ $c }}</option>
+                        @endforeach
+                    </select>
+                </div>
+
+                <!-- Buttons -->
+                <div class="space-y-2.5 pt-3 border-t border-slate-200">
+                    <button type="button" onclick="setUserLocationAndSubmitMobile()"
+                        class="w-full h-11 px-4 rounded-xl border border-teal-200 bg-teal-50 hover:bg-teal-100 text-teal-700 font-bold text-sm transition-all duration-200 flex items-center justify-center space-x-2 shadow-2xs">
+                        <i data-lucide="locate-fixed" class="w-4 h-4"></i>
+                        <span>{{ $locale === 'hi' ? 'मेरे नजदीक' : 'Show Nearby' }}</span>
+                    </button>
+                    <button type="submit" class="w-full h-11 px-4 rounded-xl border border-indigo-300 bg-indigo-600 hover:bg-indigo-700 text-white font-bold text-sm transition-all duration-200 flex items-center justify-center space-x-2 shadow-2xs">
+                        <i data-lucide="filter" class="w-4 h-4"></i>
+                        <span>{{ $locale === 'hi' ? 'फ़िल्टर लागू करें' : 'Apply Filters' }}</span>
+                    </button>
+                    <a href="{{ route('doctors.index') }}" class="w-full h-11 px-4 rounded-xl border border-slate-200 hover:border-slate-300 text-slate-600 hover:text-slate-800 hover:bg-slate-50 font-bold text-sm transition-all duration-200 flex items-center justify-center space-x-2 shadow-2xs">
+                        <i data-lucide="rotate-ccw" class="w-4 h-4"></i>
+                        <span>{{ $locale === 'hi' ? 'रीसेट करें' : 'Reset' }}</span>
+                    </a>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Desktop Filter Form (lg and above) -->
+    <form action="{{ route('doctors.index') }}" method="POST" class="hidden lg:block bg-white rounded-2xl shadow-xl border border-slate-200/80 ring-1 ring-slate-200/70 p-5 sm:p-6 backdrop-blur-xl" id="filter-form">
+        @csrf
         <input type="hidden" name="user_lat" id="user_lat" value="{{ request('user_lat', $filters['user_lat'] ?? '') }}">
         <input type="hidden" name="user_lng" id="user_lng" value="{{ request('user_lng', $filters['user_lng'] ?? '') }}">
         <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 items-stretch">
             <!-- Search Input -->
             <div class="relative">
-                <i data-lucide="search" class="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-slate-400"></i>
+                <i data-lucide="search" class="absolute inset-y-0 left-0 flex items-center pl-4 pointer-events-none w-4 h-4 text-slate-400"></i>
                 <input
                     type="text"
                     name="search"
                     placeholder="{{ $locale === 'hi' ? 'डॉक्टर, विभाग, लक्षण खोजें...' : 'Search doctors, departments, symptoms...' }}"
                     value="{{ request('search', $filters['search'] ?? '') }}"
-                    class="h-12 w-full pl-11 pr-4 bg-slate-50 border border-slate-200 rounded-xl text-sm focus:outline-none focus:border-teal-500 focus:ring-2 focus:ring-teal-500/20 transition-all duration-200 font-medium" />
+                    class="h-12 w-full pl-10 pr-14 bg-slate-50 border border-slate-200 rounded-xl text-sm focus:outline-none focus:border-teal-500 focus:ring-2 focus:ring-teal-500/20 transition-all duration-200 font-medium" />
             </div>
 
-            <!-- Department Filter -->
+            <!-- Department Filter - Multiselect -->
             <div>
+                @php
+                    $selectedDepts = is_array(request('department')) ? request('department') : (request('department') && request('department') !== 'All' ? [request('department')] : []);
+                @endphp
                 <select
-                    name="department"
+                    name="department[]"
+                    multiple
                     class="h-12 w-full px-4 bg-slate-50 border border-slate-200 rounded-xl text-sm focus:outline-none focus:border-teal-500 focus:ring-2 focus:ring-teal-500/20 transition-all duration-200 font-medium text-slate-700">
-                    <option value="All">{{ $locale === 'hi' ? 'सभी विभाग' : 'All Departments' }}</option>
                     @foreach ($departments as $dept)
                     @php
                     $deptId = is_array($dept) ? $dept['id'] : $dept->id;
                     $deptNameEn = is_array($dept) ? $dept['name']['en'] : ($dept->name['en'] ?? $dept->name_en);
                     $deptNameHi = is_array($dept) ? $dept['name']['hi'] : ($dept->name['hi'] ?? $dept->name_hi);
-                    $deptVal = request('department', $filters['department'] ?? 'All');
                     @endphp
-                    <option value="{{ $deptId }}" {{ $deptVal == $deptId ? 'selected' : '' }}>
+                    <option value="{{ $deptId }}" {{ in_array($deptId, $selectedDepts) ? 'selected' : '' }}>
                         {{ $locale === 'hi' ? ($deptNameHi ?: $deptNameEn) : $deptNameEn }}
                     </option>
                     @endforeach
                 </select>
             </div>
 
-            <!-- Experience Filter -->
+            <!-- Experience Filter - Multiselect -->
             <div>
-                @php $expVal = request('experience', $filters['experience'] ?? 'All'); @endphp
+                @php 
+                    $selectedExps = is_array(request('experience')) ? request('experience') : (request('experience') && request('experience') !== 'All' ? [request('experience')] : []);
+                @endphp
                 <select
-                    name="experience"
+                    name="experience[]"
+                    multiple
                     class="h-12 w-full px-4 bg-slate-50 border border-slate-200 rounded-xl text-sm focus:outline-none focus:border-teal-500 focus:ring-2 focus:ring-teal-500/20 transition-all duration-200 font-medium text-slate-700">
-                    <option value="All" {{ $expVal === 'All' ? 'selected' : '' }}>{{ $locale === 'hi' ? 'सभी अनुभव' : 'All Experience' }}</option>
-                    <option value="5" {{ $expVal === '5' ? 'selected' : '' }}>{{ $locale === 'hi' ? '5+ वर्ष' : '5+ Years' }}</option>
-                    <option value="10" {{ $expVal === '10' ? 'selected' : '' }}>{{ $locale === 'hi' ? '10+ वर्ष' : '10+ Years' }}</option>
-                    <option value="15" {{ $expVal === '15' ? 'selected' : '' }}>{{ $locale === 'hi' ? '15+ वर्ष' : '15+ Years' }}</option>
-                    <option value="20" {{ $expVal === '20' ? 'selected' : '' }}>{{ $locale === 'hi' ? '20+ वर्ष' : '20+ Years' }}</option>
+                    <option value="5" {{ in_array('5', $selectedExps) ? 'selected' : '' }}>{{ $locale === 'hi' ? '5+ वर्ष' : '5+ Years' }}</option>
+                    <option value="10" {{ in_array('10', $selectedExps) ? 'selected' : '' }}>{{ $locale === 'hi' ? '10+ वर्ष' : '10+ Years' }}</option>
+                    <option value="15" {{ in_array('15', $selectedExps) ? 'selected' : '' }}>{{ $locale === 'hi' ? '15+ वर्ष' : '15+ Years' }}</option>
+                    <option value="20" {{ in_array('20', $selectedExps) ? 'selected' : '' }}>{{ $locale === 'hi' ? '20+ वर्ष' : '20+ Years' }}</option>
                 </select>
             </div>
 
-            <!-- City Filter -->
+            <!-- City Filter - Multiselect -->
             <div>
-                @php $cityVal = request('city', $filters['city'] ?? 'All'); @endphp
+                @php 
+                    $selectedCities = is_array(request('city')) ? request('city') : (request('city') && request('city') !== 'All' ? [request('city')] : []);
+                @endphp
                 <select
-                    name="city"
+                    name="city[]"
+                    multiple
                     class="h-12 w-full px-4 bg-slate-50 border border-slate-200 rounded-xl text-sm focus:outline-none focus:border-teal-500 focus:ring-2 focus:ring-teal-500/20 transition-all duration-200 font-medium text-slate-700">
-                    <option value="All" {{ $cityVal === 'All' ? 'selected' : '' }}>{{ $locale === 'hi' ? 'सभी शहर' : 'All Cities' }}</option>
                     @foreach ($cities as $c)
-                    <option value="{{ $c }}" {{ $cityVal === $c ? 'selected' : '' }}>{{ $c }}</option>
+                    <option value="{{ $c }}" {{ in_array($c, $selectedCities) ? 'selected' : '' }}>{{ $c }}</option>
                     @endforeach
                 </select>
             </div>
         </div>
 
-
-        <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 mt-6 pt-6 border-t border-slate-100">
+        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3 mt-6 pt-6 border-t border-slate-100">
             <button type="button" onclick="setUserLocationAndSubmit(this.form)"
                 class="h-12 px-5 rounded-xl border border-teal-200 bg-teal-50 hover:bg-teal-100 text-teal-700 font-bold text-sm transition-all duration-200 flex items-center justify-center space-x-2 shadow-2xs">
                 <i data-lucide="locate-fixed" class="w-4 h-4"></i>
                 <span>{{ $locale === 'hi' ? 'मेरे नजदीक दिखाएँ' : 'Show Nearby' }}</span>
+            </button>
+            <button type="submit"
+                class="h-12 px-5 rounded-xl border border-indigo-300 bg-indigo-600 hover:bg-indigo-700 text-white font-bold text-sm transition-all duration-200 flex items-center justify-center space-x-2 shadow-2xs">
+                <i data-lucide="filter" class="w-4 h-4"></i>
+                <span>{{ $locale === 'hi' ? 'फ़िल्टर लागू करें' : 'Apply Filters' }}</span>
             </button>
             <a
                 href="{{ route('doctors.index') }}"
@@ -118,13 +270,12 @@ $pageDescription = $hasCity
                 <i data-lucide="rotate-ccw" class="w-4 h-4"></i>
                 <span>{{ $locale === 'hi' ? 'रीसेट करें' : 'Reset Filters' }}</span>
             </a>
-
         </div>
+
     </form>
 </section>
-
 <!-- Doctors Grid -->
-<main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex-1 w-full pb-20">
+<main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex-1 w-full mt-0 lg:mt-4 pb-20">
     @if (count($doctors) === 0)
     <div class="bg-white rounded-3xl border border-slate-200/80 p-16 text-center shadow-sm max-w-2xl mx-auto">
         <div class="w-20 h-20 bg-teal-50 rounded-full flex items-center justify-center mx-auto mb-6 text-teal-600 border border-teal-100 shadow-inner">
@@ -205,8 +356,8 @@ $pageDescription = $hasCity
 
             <!-- Card Header -->
             <div class="p-6 pb-4 bg-gradient-to-br from-slate-50/50 via-white/50 to-slate-50/50 dark:from-slate-800/30 dark:via-transparent dark:to-slate-800/30 border-b border-slate-100 dark:border-slate-800/60 flex items-start space-x-4">
-                <div class="w-16 h-16 bg-gradient-to-tr from-teal-500 to-indigo-600 rounded-2xl p-0.5 shadow-md shrink-0 group-hover:scale-105 transition-transform duration-300">
-                    <div class="w-full h-full bg-slate-900 rounded-[14px] flex items-center justify-center text-white font-extrabold text-xl tracking-wider">
+                <div class="w-12 h-12 bg-gradient-to-tr from-teal-500 to-indigo-600 rounded-xl p-0.5 shadow-md shrink-0 group-hover:scale-105 transition-transform duration-300">
+                    <div class="w-full h-full bg-slate-900 rounded-[10px] flex items-center justify-center text-white font-extrabold text-sm tracking-wider">
                         {{ substr($doc->first_name, 0, 1) }}{{ substr($doc->last_name, 0, 1) }}
                     </div>
                 </div>
@@ -220,11 +371,11 @@ $pageDescription = $hasCity
                         <i data-lucide="check-circle-2" class="w-4 h-4 text-teal-500 shrink-0 mt-1"></i>
                         @endif
                     </div>
-                    <p class="text-xs font-bold text-teal-600 dark:text-teal-400 bg-teal-50 dark:bg-teal-950/40 border border-teal-100/80 dark:border-teal-900/50 px-3 py-1 rounded-2xl inline-block mb-2 shadow-2xs line-clamp-2 max-w-full">
+                    <p class="text-[11px] font-bold text-teal-600 dark:text-teal-400 bg-teal-50 dark:bg-teal-950/40 border border-teal-100/80 dark:border-teal-900/50 px-2 py-0.5 rounded-xl inline-block mb-2 shadow-2xs line-clamp-2 max-w-full">
                         {{ $deptName }}
                     </p>
-                    @if (!empty($doc->distance_km))
-                    <p class="text-xs font-bold text-emerald-700 dark:text-emerald-300 bg-emerald-50 dark:bg-emerald-950/40 border border-emerald-100 dark:border-emerald-900/60 px-3 py-1 rounded-2xl inline-block mb-2 shadow-2xs">
+                    @if ($doc->distance_km !== null)
+                    <p class="text-[11px] font-bold text-emerald-700 dark:text-emerald-300 bg-emerald-50 dark:bg-emerald-950/40 border border-emerald-100 dark:border-emerald-900/60 px-2 py-0.5 rounded-xl inline-block mb-2 shadow-2xs">
                         {{ $doc->distance_km }} km {{ $locale === 'hi' ? 'दूर' : 'away' }}
                     </p>
                     @endif
@@ -338,7 +489,7 @@ $pageDescription = $hasCity
                                     ₹{{ $pivot->consultation_fee ?? ($doc->consultation_fee ?: 500) }}
                                 </span>
                             </div>
-                            @if (!empty($h->distance_km))
+                            @if ($h->distance_km !== null)
                             <div class="text-[11px] text-emerald-700 dark:text-emerald-300 font-bold">
                                 {{ $h->distance_km }} km {{ $locale === 'hi' ? 'दूर' : 'away' }}
                             </div>
@@ -465,7 +616,7 @@ $pageDescription = $hasCity
         </div>
         @endforeach
     </div>
-    <div class="mt-10 rounded-2xl border border-slate-200 bg-white/90 px-4 py-3 shadow-sm">
+    <div class="mt-6">
         {{ $doctors->links('pagination::tailwind') }}
     </div>
     @endif
@@ -473,6 +624,172 @@ $pageDescription = $hasCity
 @endsection
 @push('scripts')
 <script>
+    function enhanceMultiSelectDropdown(selectEl) {
+        if (!selectEl || selectEl.dataset.enhanced === '1') return;
+
+        selectEl.classList.add('hidden');
+
+        const wrapper = document.createElement('div');
+        wrapper.className = 'relative multi-select-dropdown';
+
+        const trigger = document.createElement('button');
+        trigger.type = 'button';
+        trigger.className = 'h-12 w-full px-4 bg-white border border-slate-200 rounded-xl text-sm font-medium text-slate-700 flex items-center justify-between';
+        trigger.innerHTML = '<span class="multi-select-label truncate text-left">Select options</span><i data-lucide="chevron-down" class="w-4 h-4 text-slate-500"></i>';
+
+        const panel = document.createElement('div');
+        panel.className = 'hidden absolute z-50 mt-2 w-full max-h-64 overflow-auto rounded-xl border border-slate-200 bg-white shadow-lg p-2 space-y-1';
+
+        Array.from(selectEl.options).forEach((opt, idx) => {
+            const row = document.createElement('button');
+            row.type = 'button';
+            row.dataset.index = String(idx);
+            row.className = `w-full text-left px-3 py-2 rounded-md cursor-pointer text-sm transition-colors ${
+                opt.selected ? 'bg-teal-100 text-teal-800 font-semibold' : 'text-slate-700 hover:bg-slate-50'
+            }`;
+            row.textContent = opt.textContent.trim();
+            panel.appendChild(row);
+        });
+
+        selectEl.insertAdjacentElement('afterend', wrapper);
+        wrapper.appendChild(trigger);
+        wrapper.appendChild(panel);
+        wrapper.insertAdjacentElement('afterend', selectEl);
+
+        const updateLabel = () => {
+            const selected = Array.from(selectEl.selectedOptions).map(o => o.textContent.trim()).filter(Boolean);
+            const label = wrapper.querySelector('.multi-select-label');
+            label.textContent = selected.length ? selected.join(', ') : 'Select options';
+        };
+
+        trigger.addEventListener('click', () => {
+            panel.classList.toggle('hidden');
+            if (window.lucide) lucide.createIcons();
+        });
+
+        panel.querySelectorAll('button[data-index]').forEach((rowBtn) => {
+            rowBtn.addEventListener('click', () => {
+                const optionIndex = Number(rowBtn.dataset.index);
+                if (selectEl.options[optionIndex]) {
+                    const nextState = !selectEl.options[optionIndex].selected;
+                    selectEl.options[optionIndex].selected = nextState;
+                    rowBtn.className = `w-full text-left px-3 py-2 rounded-md cursor-pointer text-sm transition-colors ${
+                        nextState ? 'bg-teal-100 text-teal-800 font-semibold' : 'text-slate-700 hover:bg-slate-50'
+                    }`;
+                    selectEl.dispatchEvent(new Event('change', { bubbles: true }));
+                }
+                updateLabel();
+            });
+        });
+
+        if (!document.body.dataset.multiSelectOutsideBound) {
+            document.addEventListener('click', (e) => {
+                document.querySelectorAll('.multi-select-dropdown').forEach((dd) => {
+                    if (!dd.contains(e.target)) {
+                        dd.querySelector('div.absolute')?.classList.add('hidden');
+                    }
+                });
+            });
+            document.body.dataset.multiSelectOutsideBound = '1';
+        }
+
+        updateLabel();
+        selectEl.dataset.enhanced = '1';
+        if (window.lucide) lucide.createIcons();
+    }
+
+    function renderMultiSelectBadges(selectEl) {
+        if (!selectEl) return;
+        let badgeWrap = selectEl.parentElement.querySelector('.selected-badges');
+        if (!badgeWrap) {
+            badgeWrap = document.createElement('div');
+            badgeWrap.className = 'selected-badges mt-2 flex flex-wrap gap-1.5';
+            selectEl.parentElement.appendChild(badgeWrap);
+        }
+
+        const selected = Array.from(selectEl.selectedOptions).map(opt => opt.textContent.trim()).filter(Boolean);
+        if (selected.length === 0) {
+            badgeWrap.innerHTML = '<span class="text-[11px] text-slate-400 italic">No filters selected</span>';
+            return;
+        }
+
+        badgeWrap.innerHTML = Array.from(selectEl.selectedOptions).map(opt =>
+            `<button type="button" data-remove-value="${opt.value}" class="inline-flex items-center gap-1 rounded-full border border-teal-200 bg-teal-50 px-2.5 py-1 text-[11px] font-semibold text-teal-700 hover:bg-teal-100">${opt.textContent.trim()} <span class="text-teal-900">x</span></button>`
+        ).join('');
+
+        if (!badgeWrap.dataset.removeBound) {
+            badgeWrap.addEventListener('click', (e) => {
+                const btn = e.target.closest('button[data-remove-value]');
+                if (!btn) return;
+                const val = btn.getAttribute('data-remove-value');
+                const option = Array.from(selectEl.options).find((o) => o.value === val);
+                if (!option) return;
+                option.selected = false;
+                const panelBtn = selectEl.parentElement.querySelector(`.multi-select-dropdown button[data-index="${Array.from(selectEl.options).indexOf(option)}"]`);
+                if (panelBtn) {
+                    panelBtn.className = 'w-full text-left px-3 py-2 rounded-md cursor-pointer text-sm transition-colors text-slate-700 hover:bg-slate-50';
+                }
+                selectEl.dispatchEvent(new Event('change', { bubbles: true }));
+            });
+            badgeWrap.dataset.removeBound = '1';
+        }
+    }
+
+    function initMultiSelectBadges(scope = document) {
+        const selects = scope.querySelectorAll('select[multiple]');
+        selects.forEach((selectEl) => {
+            enhanceMultiSelectDropdown(selectEl);
+            renderMultiSelectBadges(selectEl);
+            if (!selectEl.dataset.badgeBound) {
+                selectEl.addEventListener('change', () => renderMultiSelectBadges(selectEl));
+                selectEl.dataset.badgeBound = '1';
+            }
+        });
+    }
+
+    function openMobileFilters() {
+        const sidebar = document.getElementById('mobile-filter-sidebar');
+        if (!sidebar) return;
+        sidebar.classList.remove('hidden');
+        document.body.style.overflow = 'hidden';
+        initMultiSelectBadges(sidebar);
+    }
+
+    document.getElementById('mobile-filter-close')?.addEventListener('click', function() {
+        document.getElementById('mobile-filter-sidebar').classList.add('hidden');
+        document.body.style.overflow = '';
+    });
+
+    document.getElementById('mobile-filter-backdrop')?.addEventListener('click', function() {
+        document.getElementById('mobile-filter-sidebar').classList.add('hidden');
+        document.body.style.overflow = '';
+    });
+
+    document.addEventListener('DOMContentLoaded', function() {
+        initMultiSelectBadges(document);
+    });
+
+    function setUserLocationAndSubmitMobile() {
+        if (!navigator.geolocation) {
+            alert('Geolocation is not supported on this device/browser.');
+            return;
+        }
+
+        navigator.geolocation.getCurrentPosition(function(position) {
+            const lat = position.coords.latitude.toFixed(6);
+            const lng = position.coords.longitude.toFixed(6);
+            document.getElementById('user_lat_mobile').value = lat;
+            document.getElementById('user_lng_mobile').value = lng;
+            document.getElementById('mobile-filter-form').submit();
+        }, function() {
+            alert('Unable to fetch your location. Please enable location permission.');
+        }, {
+            enableHighAccuracy: true,
+            timeout: 10000,
+            maximumAge: 300000
+        });
+    }
+
     function setUserLocationAndSubmit(form) {
         if (!navigator.geolocation) {
             alert('Geolocation is not supported on this device/browser.');
@@ -560,9 +877,5 @@ $pageDescription = $hasCity
 
 </script>
 @endpush
-
-
-
-
 
 

@@ -23,7 +23,8 @@
 
 <!-- Filter Bar -->
 <section class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 mt-4 sm:-mt-8 relative z-20 w-full mb-12">
-    <form action="{{ route('articles.index') }}" method="GET" data-auto-filter class="bg-white rounded-2xl shadow-xl border border-slate-200/80 p-5 sm:p-6 backdrop-blur-xl">
+    <form action="{{ route('articles.index') }}" method="POST" class="bg-white rounded-2xl shadow-xl border border-slate-200/80 p-5 sm:p-6 backdrop-blur-xl" id="filter-form">
+        @csrf
         <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 xl:grid-cols-12 gap-4 items-stretch">
             <!-- Search Input -->
             <div class="relative lg:col-span-3 xl:col-span-9">
@@ -37,22 +38,29 @@
                 />
             </div>
 
-            <!-- Category Filter -->
+            <!-- Category Filter - Multiselect -->
             <div class="lg:col-span-1 xl:col-span-3">
-                @php $catVal = request('category', $filters['category'] ?? 'All'); @endphp
+                @php 
+                    $selectedCats = is_array(request('category')) ? request('category') : (request('category') && request('category') !== 'All' ? [request('category')] : []);
+                @endphp
                 <select
-                    name="category"
+                    name="category[]"
+                    multiple
                     class="h-12 w-full px-4 bg-slate-50 border border-slate-200 rounded-xl text-sm focus:outline-none focus:border-teal-500 focus:ring-2 focus:ring-teal-500/20 transition-all duration-200 font-medium text-slate-700"
                 >
-                    <option value="All" {{ $catVal === 'All' ? 'selected' : '' }}>{{ $locale === 'hi' ? 'सभी श्रेणियां' : 'All Categories' }}</option>
                     @foreach ($categories as $cat)
-                        <option value="{{ $cat }}" {{ $catVal === $cat ? 'selected' : '' }}>{{ $cat }}</option>
+                        <option value="{{ $cat }}" {{ in_array($cat, $selectedCats) ? 'selected' : '' }}>{{ $cat }}</option>
                     @endforeach
                 </select>
             </div>
         </div>
 
-        <div class="grid grid-cols-1 gap-3 mt-6 pt-6 border-t border-slate-100">
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 mt-6 pt-6 border-t border-slate-100">
+            <button type="submit"
+                class="h-12 px-5 rounded-xl border border-teal-300 bg-teal-600 hover:bg-teal-700 text-white font-bold text-sm transition-all duration-200 flex items-center justify-center space-x-2 shadow-2xs">
+                <i data-lucide="filter" class="w-4 h-4"></i>
+                <span>{{ $locale === 'hi' ? 'फ़िल्टर लागू करें' : 'Apply Filters' }}</span>
+            </button>
             <a
                 href="{{ route('articles.index') }}"
                 class="h-12 px-5 rounded-xl border border-slate-200 hover:border-slate-300 text-slate-600 hover:text-slate-800 hover:bg-slate-50 font-bold text-sm transition-all duration-200 flex items-center justify-center space-x-2 shadow-2xs"
