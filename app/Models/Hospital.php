@@ -24,7 +24,8 @@ class Hospital extends Model
         'latitude',
         'longitude',
         'emergency_country_code',
-        'emergency_phone',
+        'emergency_phone_1',
+        'emergency_phone_2',
         'is_verified',
         'accepts_ayushman',
         'accepts_janaadhaar',
@@ -104,6 +105,16 @@ class Hospital extends Model
         }
 
         return $address;
+    }
+
+    public function getEmergencyPhoneAttribute(): ?string
+    {
+        return $this->emergency_phone_1;
+    }
+
+    public function setEmergencyPhoneAttribute($value): void
+    {
+        $this->attributes['emergency_phone_1'] = $value;
     }
 
     public function setNameAttribute($value)

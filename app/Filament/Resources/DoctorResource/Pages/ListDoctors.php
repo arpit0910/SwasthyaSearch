@@ -58,6 +58,9 @@ class ListDoctors extends ListRecords
                             $dept = Department::where('name_en', 'LIKE', "%{$deptName}%")->first();
                         }
 
+                        $phone1 = $row['phone_1'] ?? null;
+                        $phone2 = $row['phone_2'] ?? null;
+
                         Doctor::firstOrCreate(
                             ['registration_number' => $row['registration_number']],
                             [
@@ -69,6 +72,8 @@ class ListDoctors extends ListRecords
                                 'experience_years' => (int)($row['experience_years'] ?? 5),
                                 'about_en' => $row['about_en'] ?? '',
                                 'about_hi' => $row['about_hi'] ?? '',
+                                'phone_1' => $phone1 ?? ($row['phone'] ?? null),
+                                'phone_2' => $phone2,
                                 'is_verified' => true,
                             ]
                         );

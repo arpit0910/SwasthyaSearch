@@ -4,6 +4,36 @@ namespace App\Services;
 
 class SpreadsheetService
 {
+    private static function splitTwoPhones(string $value): array
+    {
+        $parts = array_values(array_filter(array_map(
+            static fn ($part) => trim($part),
+            explode(',', $value)
+        ), static fn ($part) => $part !== ''));
+
+        return [
+            $parts[0] ?? null,
+            $parts[1] ?? null,
+        ];
+    }
+
+    private static function hydratePhoneVariants(array $row): array
+    {
+        if (array_key_exists('emergency_phone', $row)) {
+            [$first, $second] = self::splitTwoPhones((string) ($row['emergency_phone'] ?? ''));
+            $row['emergency_phone_1'] = $first;
+            $row['emergency_phone_2'] = $second;
+        }
+
+        if (array_key_exists('phone', $row)) {
+            [$first, $second] = self::splitTwoPhones((string) ($row['phone'] ?? ''));
+            $row['phone_1'] = $first;
+            $row['phone_2'] = $second;
+        }
+
+        return $row;
+    }
+
     /**
      * Parses an XLSX or CSV file and returns an array of associative arrays.
      */
@@ -87,7 +117,8 @@ class SpreadsheetService
                         $r = array_pad($r, count($headers), '');
                         // Truncate if longer
                         $r = array_slice($r, 0, count($headers));
-                        $data[] = array_combine($headers, $r);
+                        $row = array_combine($headers, $r);
+                        $data[] = self::hydratePhoneVariants($row);
                     }
                     return $data;
                 }
@@ -104,7 +135,8 @@ class SpreadsheetService
                     if (!empty(array_filter($row))) {
                         $row = array_pad($row, count($headers), '');
                         $row = array_slice($row, 0, count($headers));
-                        $data[] = array_combine($headers, $row);
+                        $parsedRow = array_combine($headers, $row);
+                        $data[] = self::hydratePhoneVariants($parsedRow);
                     }
                 }
             }

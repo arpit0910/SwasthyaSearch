@@ -43,6 +43,12 @@ class DoctorResource extends Resource
                             ->formatStateUsing(fn ($state) => (str_starts_with($state ?? '', 'REG-') || str_starts_with($state ?? '', 'RAJ-MC-') || str_starts_with($state ?? '', 'MMC-') || str_starts_with($state ?? '', 'DMC-') || str_starts_with($state ?? '', 'JOD-') || str_starts_with($state ?? '', 'KOT-')) ? '' : $state),
                         Forms\Components\TextInput::make('medical_council')
                             ->maxLength(255),
+                        Forms\Components\TextInput::make('phone_1')
+                            ->label('Phone 1')
+                            ->maxLength(255),
+                        Forms\Components\TextInput::make('phone_2')
+                            ->label('Phone 2')
+                            ->maxLength(255),
                         Forms\Components\TextInput::make('experience_years')
                             ->required()
                             ->numeric()
@@ -88,6 +94,12 @@ class DoctorResource extends Resource
                     ->label('Experience')
                     ->sortable()
                     ->suffix(' yrs'),
+                Tables\Columns\TextColumn::make('phone_1')
+                    ->label('Phone 1')
+                    ->searchable(),
+                Tables\Columns\TextColumn::make('phone_2')
+                    ->label('Phone 2')
+                    ->searchable(),
                 Tables\Columns\IconColumn::make('is_verified')
                     ->boolean(),
             ])

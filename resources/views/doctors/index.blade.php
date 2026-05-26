@@ -327,12 +327,12 @@ $hasActiveMobileFilters = !empty(array_filter((array) request('department', []))
         }
         }
 
-        $doctorPhone = !empty($doc->phone) ? $doc->phone : '';
+        $doctorPhone = !empty($doc->phone_1) ? $doc->phone_1 : (!empty($doc->phone_2) ? $doc->phone_2 : (!empty($doc->phone) ? $doc->phone : ''));
         $hospitalPhone = '';
         if (!empty($doc->hospitals) && count($doc->hospitals) > 0) {
         foreach ($doc->hospitals as $hospForPhone) {
         $hfp = is_array($hospForPhone) ? (object) $hospForPhone : $hospForPhone;
-        $candidate = !empty($hfp->emergency_phone) ? $hfp->emergency_phone : (!empty($hfp->phone) ? $hfp->phone : '');
+        $candidate = !empty($hfp->emergency_phone_1) ? $hfp->emergency_phone_1 : (!empty($hfp->emergency_phone_2) ? $hfp->emergency_phone_2 : (!empty($hfp->emergency_phone) ? $hfp->emergency_phone : ''));
         if (!empty($candidate)) {
         $hospitalPhone = $candidate;
         break;

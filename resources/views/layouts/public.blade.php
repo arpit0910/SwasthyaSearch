@@ -2060,7 +2060,7 @@
                     msg.doctors.forEach(doc => {
                         const fullName = `Dr. ${doc.first_name} ${doc.last_name}`;
                         const deptName = doc.department ? getLocalizedText(doc.department.name) : '';
-                        const emergencyPhone = doc.hospitals?.[0]?.emergency_phone || '';
+                        const emergencyPhone = doc.hospitals?.[0]?.emergency_phone_1 || doc.hospitals?.[0]?.emergency_phone_2 || doc.hospitals?.[0]?.emergency_phone || '';
                         const hospName = doc.hospitals?.[0] ? getLocalizedText(doc.hospitals[0].name) : '';
 
                         html += `
@@ -2121,7 +2121,7 @@
                     `;
                     msg.hospitals.forEach(hosp => {
                         const hospName = getLocalizedText(hosp.name);
-                        const emergencyPhone = hosp.emergency_phone || '';
+                        const emergencyPhone = hosp.emergency_phone_1 || hosp.emergency_phone_2 || hosp.emergency_phone || '';
                         const city = hosp.city || '';
 
                         html += `

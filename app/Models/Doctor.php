@@ -25,7 +25,8 @@ class Doctor extends Model implements HasMedia
         'is_verified',
         'email',
         'country_code',
-        'phone',
+        'phone_1',
+        'phone_2',
         'address_line1',
         'address_line2',
         'landmark',
@@ -110,6 +111,16 @@ class Doctor extends Model implements HasMedia
             'en' => $this->about_en,
             'hi' => $this->about_hi,
         ];
+    }
+
+    public function getPhoneAttribute(): ?string
+    {
+        return $this->phone_1;
+    }
+
+    public function setPhoneAttribute($value): void
+    {
+        $this->attributes['phone_1'] = $value;
     }
 
     public function setAboutAttribute($value)

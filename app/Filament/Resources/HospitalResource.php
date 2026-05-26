@@ -43,8 +43,12 @@ class HospitalResource extends Resource
                             ])
                             ->required()
                             ->default('Hospital'),
-                        Forms\Components\TextInput::make('emergency_phone')
+                        Forms\Components\TextInput::make('emergency_phone_1')
+                            ->label('Emergency Phone 1')
                             ->required()
+                            ->maxLength(255),
+                        Forms\Components\TextInput::make('emergency_phone_2')
+                            ->label('Emergency Phone 2')
                             ->maxLength(255),
                         Forms\Components\Textarea::make('address')
                             ->required()
@@ -78,7 +82,11 @@ class HospitalResource extends Resource
                 Tables\Columns\TextColumn::make('city')
                     ->searchable()
                     ->sortable(),
-                Tables\Columns\TextColumn::make('emergency_phone')
+                Tables\Columns\TextColumn::make('emergency_phone_1')
+                    ->label('Emergency Phone 1')
+                    ->searchable(),
+                Tables\Columns\TextColumn::make('emergency_phone_2')
+                    ->label('Emergency Phone 2')
                     ->searchable(),
                 Tables\Columns\IconColumn::make('is_verified')
                     ->boolean(),

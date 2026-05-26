@@ -42,8 +42,8 @@ class GooglePlacesHospitalEnrichmentService
                 ->orWhere('pincode', '')
                 ->orWhereNull('latitude')
                 ->orWhereNull('longitude')
-                ->orWhereNull('emergency_phone')
-                ->orWhere('emergency_phone', '');
+                ->orWhereNull('emergency_phone_1')
+                ->orWhere('emergency_phone_1', '');
         });
 
         $hospitals = $query->limit(max(1, $limit))->get();
@@ -118,7 +118,7 @@ class GooglePlacesHospitalEnrichmentService
             'latitude' => $latitude,
             'longitude' => $longitude,
             'emergency_country_code' => $hospital->emergency_country_code ?: ($phoneParts['country_code'] ?? '+91'),
-            'emergency_phone' => $phoneParts['phone'] ?: $hospital->emergency_phone,
+            'emergency_phone_1' => $phoneParts['phone'] ?: $hospital->emergency_phone_1,
         ]);
 
         $after = [
@@ -221,4 +221,3 @@ class GooglePlacesHospitalEnrichmentService
         ];
     }
 }
-
