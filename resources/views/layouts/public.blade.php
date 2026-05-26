@@ -339,7 +339,7 @@
     <div class="fixed bottom-5 right-4 sm:bottom-6 sm:right-6 z-[80]" id="chatbot-container">
         <!-- Chat Button -->
         <button id="chatbot-toggle-btn" aria-label="Open AI assistant" onclick="toggleChatbot()" class="chatbot-fab flex items-center gap-3 bg-gradient-to-tr from-teal-500 to-indigo-600 text-white px-6 py-3.5 rounded-full shadow-2xl hover:shadow-indigo-500/50 hover:scale-105 transition-all duration-300 transform group ring-1 ring-white/20">
-            <div class="chatbot-fab-icon w-6 h-6 flex items-center justify-center shrink-0 animate-bounce group-hover:animate-none">
+            <div class="chatbot-fab-icon w-6 h-6 flex items-center justify-center shrink-0">
                 <i data-lucide="message-square" class="w-6 h-6 text-white"></i>
             </div>
             <span id="chatbot-fab-label" class="chatbot-fab-label font-bold text-base tracking-wide whitespace-nowrap leading-none pt-0.5">
@@ -1069,17 +1069,21 @@
 
             clearFabCycles();
 
-            // Start expanded to show full text initially
-            btn.classList.remove('fab-contracted');
-
             if (window.innerWidth < 640) {
-                // Mobile: show full text once, then collapse and stay compact
-                fabSingleTimeout = setTimeout(() => {
-                    if (!chatbotOpen) contractFab();
-                }, 5200);
+                // Mobile: keep static (no repetitive expand/contract animation)
+                btn.classList.remove('fab-contracted');
+                return;
             } else {
-                // Desktop/Web: collapse and uncollapse every 5 seconds
+                // Desktop/Web: slower, calmer expand/contract cycle
+                btn.classList.remove('fab-contracted');
                 let isCollapsed = false;
+                fabSingleTimeout = setTimeout(() => {
+                    if (!chatbotOpen) {
+                        isCollapsed = true;
+                        btn.classList.add('fab-contracted');
+                    }
+                }, 9000);
+
                 fabCycleInterval = setInterval(() => {
                     if (chatbotOpen) return;
                     isCollapsed = !isCollapsed;
@@ -1088,7 +1092,7 @@
                     } else {
                         btn.classList.remove('fab-contracted');
                     }
-                }, 5000);
+                }, 12000);
             }
         }
 
@@ -2062,7 +2066,7 @@
         }
 
         window.addEventListener('resize', () => {
-            if (!chatbotOpen) setupFabHintCycle();
+            if (!chatbotOpen && window.innerWidth >= 640) setupFabHintCycle();
         });
         document.addEventListener('click', function(e) {
             const menu = document.getElementById('mobile-nav-menu');
@@ -2430,6 +2434,25 @@
         .dark input::placeholder,
         .dark textarea::placeholder {
             color: #64748b !important;
+        }
+
+        /* Keep homepage top hero visually stable across dark/light themes */
+        .dark #home-hero p.text-slate-200 {
+            color: #e2e8f0 !important;
+        }
+
+        .dark #home-hero #hero-search-shell {
+            background: rgba(255, 255, 255, 0.1) !important;
+            border-color: rgba(255, 255, 255, 0.2) !important;
+        }
+
+        .dark #home-hero #omni-search-input {
+            background: transparent !important;
+            color: #ffffff !important;
+        }
+
+        .dark #home-hero #omni-search-input::placeholder {
+            color: #cbd5e1 !important;
         }
 
         /* Global borders */
@@ -2900,9 +2923,9 @@
             padding-left: 20px !important;
             padding-right: 24px !important;
             border-radius: 9999px;
-            transition: width 3.4s cubic-bezier(0.22, 0.65, 0.22, 1),
-                padding 3.4s cubic-bezier(0.22, 0.65, 0.22, 1),
-                transform 3.4s cubic-bezier(0.22, 0.65, 0.22, 1),
+            transition: width 460ms cubic-bezier(0.22, 0.65, 0.22, 1),
+                padding 460ms cubic-bezier(0.22, 0.65, 0.22, 1),
+                transform 460ms cubic-bezier(0.22, 0.65, 0.22, 1),
                 box-shadow 0.4s ease !important;
             overflow: hidden;
             white-space: nowrap;
@@ -2918,10 +2941,10 @@
             overflow: hidden;
             white-space: nowrap;
             transform: translateX(0);
-            transition: max-width 3.4s cubic-bezier(0.22, 0.65, 0.22, 1),
-                margin-left 3.4s cubic-bezier(0.22, 0.65, 0.22, 1),
-                opacity 2.8s cubic-bezier(0.22, 0.65, 0.22, 1),
-                transform 3.4s cubic-bezier(0.22, 0.65, 0.22, 1);
+            transition: max-width 460ms cubic-bezier(0.22, 0.65, 0.22, 1),
+                margin-left 460ms cubic-bezier(0.22, 0.65, 0.22, 1),
+                opacity 320ms cubic-bezier(0.22, 0.65, 0.22, 1),
+                transform 460ms cubic-bezier(0.22, 0.65, 0.22, 1);
         }
 
         .chatbot-fab.fab-contracted {
@@ -3052,62 +3075,6 @@
             background: #6366f1 !important;
             border-color: #6366f1 !important;
             color: #ffffff !important;
-        }
-
-        /* Targeted dark-mode UI fixes for homepage hero search and contrast */
-        .dark #home-hero p.text-slate-200 {
-            color: #e2e8f0 !important;
-        }
-
-        .dark #hero-search-shell {
-            background: linear-gradient(135deg, rgba(15, 23, 42, 0.88), rgba(30, 41, 59, 0.8)) !important;
-            border-color: rgba(148, 163, 184, 0.28) !important;
-            box-shadow: 0 20px 44px rgba(2, 6, 23, 0.45) !important;
-        }
-
-        .dark #hero-search-shell #omni-search-input {
-            background: transparent !important;
-            border: 0 !important;
-            box-shadow: none !important;
-            color: #f8fafc !important;
-        }
-
-        .dark #hero-search-shell #omni-search-input::placeholder {
-            color: #cbd5e1 !important;
-        }
-
-        .dark #hero-search-shell .aurora-border::after,
-        .dark #hero-search-shell.aurora-border::after {
-            opacity: 0.75;
-        }
-
-        .dark #home-hero #clear-search-btn {
-            background-color: rgba(148, 163, 184, 0.14) !important;
-            border-color: rgba(148, 163, 184, 0.24) !important;
-            color: #e2e8f0 !important;
-        }
-
-        .dark #home-hero #clear-search-btn:hover {
-            background-color: rgba(148, 163, 184, 0.22) !important;
-            color: #ffffff !important;
-        }
-
-        .dark #home-hero .bg-white\/10 {
-            border-color: rgba(148, 163, 184, 0.24) !important;
-        }
-
-        .dark #home-hero .bg-white\/10:hover {
-            background-color: rgba(148, 163, 184, 0.2) !important;
-        }
-
-        .dark #home-hero .bg-white\/5 {
-            background-color: rgba(148, 163, 184, 0.08) !important;
-            border-color: rgba(148, 163, 184, 0.2) !important;
-        }
-
-        .dark #home-hero .bg-white\/5:hover {
-            background-color: rgba(148, 163, 184, 0.16) !important;
-            border-color: rgba(148, 163, 184, 0.35) !important;
         }
 
     </style>

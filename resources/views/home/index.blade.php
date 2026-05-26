@@ -38,12 +38,12 @@ $locale === 'hi'
         <div class="mt-7 max-w-3xl mx-auto px-4 sm:px-0">
             <div
                 id="hero-search-shell"
-                class="relative flex items-center bg-white/10 dark:bg-slate-900/40 backdrop-blur-xl rounded-3xl shadow-2xl p-2 sm:p-3 border border-white/20 dark:border-white/10 focus-within:ring-4 focus-within:ring-teal-500/30 transition-all duration-300 focus-within:border-teal-400/50 overflow-hidden aurora-border">
+                class="relative flex items-center bg-white/10 backdrop-blur-xl rounded-3xl shadow-2xl p-2 sm:p-3 border border-white/20 focus-within:ring-4 focus-within:ring-teal-500/30 transition-all duration-300 focus-within:border-teal-400/50 overflow-hidden aurora-border">
                 <i data-lucide="search"
                     class="absolute left-4 sm:left-6 w-5 h-5 sm:w-6 sm:h-6 text-slate-300 pointer-events-none"></i>
                 <input type="text" id="omni-search-input" oninput="handleOmniSearch(this.value)"
                     placeholder="{{ $locale === 'hi' ? 'डॉक्टर, अस्पताल, ब्लड बैंक, लक्षण खोजें...' : 'Search doctors, hospitals, blood banks, symptoms...' }}"
-                    class="w-full pl-11 sm:pl-16 pr-4 py-3.5 sm:py-4 text-white bg-transparent dark:bg-transparent text-base sm:text-lg font-medium placeholder:text-slate-300 appearance-none border-0 shadow-none ring-0 focus:outline-none focus:ring-0 focus:border-0" />
+                    class="w-full pl-11 sm:pl-16 pr-4 py-3.5 sm:py-4 text-white bg-transparent text-base sm:text-lg font-medium placeholder:text-slate-300 appearance-none border-0 shadow-none ring-0 focus:outline-none focus:ring-0 focus:border-0" />
                 <button id="clear-search-btn" onclick="clearOmniSearch()"
                     class="hidden mr-3 px-3 py-1.5 text-xs text-slate-200 hover:text-white bg-white/10 hover:bg-white/20 rounded-xl transition-all duration-200 border border-white/10">
                     {{ $locale === 'hi' ? 'साफ़ करें' : 'Clear' }}
@@ -509,7 +509,7 @@ $locale === 'hi'
         <!-- User Feedback Form Section -->
         <div class="pt-12 border-t border-slate-200/80 dark:border-slate-800">
             <div
-                class="bg-gradient-to-br from-slate-900 via-indigo-950 to-slate-900 rounded-3xl p-8 sm:p-12 text-white shadow-2xl relative overflow-hidden border border-slate-800">
+                class="bg-gradient-to-br from-white via-slate-50 to-indigo-50 dark:from-slate-900 dark:via-indigo-950 dark:to-slate-900 rounded-3xl p-8 sm:p-12 text-slate-900 dark:text-white shadow-2xl relative overflow-hidden border border-slate-200/80 dark:border-slate-800">
                 <div
                     class="absolute inset-0 opacity-10 bg-[radial-gradient(#4A90E2_1px,transparent_1px)] [background-size:16px_16px]">
                 </div>
@@ -529,29 +529,29 @@ $locale === 'hi'
                     </div>
 
                     <form action="{{ route('feedback.submit') }}" method="POST"
-                        class="space-y-6 bg-slate-800/50 backdrop-blur-md p-6 sm:p-8 rounded-2xl border border-slate-700/80 shadow-inner">
+                        class="space-y-6">
                         @csrf
                         <div class="grid grid-cols-1 sm:grid-cols-2 gap-6">
                             <div>
                                 <label for="feedback-name"
-                                    class="block text-xs font-bold text-slate-300 uppercase tracking-wider mb-2">
+                                    class="block text-xs font-bold text-slate-600 dark:text-slate-300 uppercase tracking-wider mb-2">
                                     {{ $locale === 'hi' ? 'आपका नाम' : 'Your Name' }} <span
                                         class="text-teal-400">*</span>
                                 </label>
                                 <input type="text" id="feedback-name" name="name" required
                                     placeholder="{{ $locale === 'hi' ? 'नाम दर्ज करें' : 'Enter your name' }}"
-                                    class="w-full px-4 py-3 bg-slate-900/80 border border-slate-700 rounded-xl text-white placeholder:text-slate-500 focus:outline-none focus:border-teal-500 focus:ring-1 focus:ring-teal-500 transition-colors text-sm" />
+                                    class="w-full px-4 py-3 bg-white/80 dark:bg-slate-900/70 border border-slate-300 dark:border-slate-700 rounded-xl text-slate-900 dark:text-white placeholder:text-slate-500 focus:outline-none focus:border-teal-500 focus:ring-1 focus:ring-teal-500 transition-colors text-sm" />
                             </div>
 
                             <div>
-                                <label class="block text-xs font-bold text-slate-300 uppercase tracking-wider mb-2">
+                                <label class="block text-xs font-bold text-slate-600 dark:text-slate-300 uppercase tracking-wider mb-2">
                                     {{ $locale === 'hi' ? 'रेटिंग' : 'Rating' }}
                                 </label>
                                 <input type="hidden" id="feedback-rating-input" name="rating" value="" />
                                 <div class="flex items-center space-x-1.5 py-1.5" id="star-rating-container">
                                     @for ($s = 1; $s <= 5; $s++)
                                         <button type="button" onclick="setFeedbackRating({{ $s }})"
-                                        class="p-2 rounded-xl bg-slate-900/80 hover:bg-slate-900 border border-slate-700/80 hover:border-amber-400/50 transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-amber-400/50 shadow-inner"
+                                        class="p-2 rounded-xl bg-white/80 dark:bg-slate-900/70 hover:bg-white dark:hover:bg-slate-900 border border-slate-300 dark:border-slate-700 hover:border-amber-400/50 transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-amber-400/50 shadow-inner"
                                         title="{{ $s }} Star">
                                         <i data-lucide="star"
                                             class="w-6 h-6 text-slate-600 fill-transparent transition-colors duration-200"
@@ -559,7 +559,7 @@ $locale === 'hi'
                                         </button>
                                         @endfor
                                 </div>
-                                <p class="text-[11px] text-slate-400 mt-1" id="rating-label-text">
+                                <p class="text-[11px] text-slate-500 dark:text-slate-400 mt-1" id="rating-label-text">
                                     {{ $locale === 'hi' ? 'रेटिंग चुनने के लिए स्टार क्लिक करें' : 'Click a star to select your rating' }}
                                 </p>
                             </div>
@@ -567,13 +567,13 @@ $locale === 'hi'
 
                         <div>
                             <label for="feedback-category"
-                                class="block text-xs font-bold text-slate-300 uppercase tracking-wider mb-2">
+                                class="block text-xs font-bold text-slate-600 dark:text-slate-300 uppercase tracking-wider mb-2">
                                 {{ $locale === 'hi' ? 'फीडबैक श्रेणी' : 'Feedback Category' }} <span
                                     class="text-teal-400">*</span>
                             </label>
                             <div class="relative">
                                 <select id="feedback-category" name="category" required
-                                    class="w-full pl-4 pr-10 py-3 bg-slate-900/80 border border-slate-700 rounded-xl text-white appearance-none focus:outline-none focus:border-teal-500 focus:ring-1 focus:ring-teal-500 transition-colors text-sm cursor-pointer">
+                                    class="w-full pl-4 pr-10 py-3 bg-white/80 dark:bg-slate-900/70 border border-slate-300 dark:border-slate-700 rounded-xl text-slate-900 dark:text-white appearance-none focus:outline-none focus:border-teal-500 focus:ring-1 focus:ring-teal-500 transition-colors text-sm cursor-pointer">
                                     <option value="Doctor Search Experience">
                                         {{ $locale === 'hi' ? 'डॉक्टर खोजने का अनुभव' : 'Doctor Search Experience' }}
                                     </option>
@@ -596,13 +596,13 @@ $locale === 'hi'
 
                         <div>
                             <label for="feedback-comments"
-                                class="block text-xs font-bold text-slate-300 uppercase tracking-wider mb-2">
+                                class="block text-xs font-bold text-slate-600 dark:text-slate-300 uppercase tracking-wider mb-2">
                                 {{ $locale === 'hi' ? 'आपके सुझाव या विचार' : 'Your Comments & Suggestions' }} <span
                                     class="text-teal-400">*</span>
                             </label>
                             <textarea id="feedback-comments" name="comments" rows="4" required
                                 placeholder="{{ $locale === 'hi' ? 'अपने विचार यहाँ लिखें...' : 'Please let us know how we can improve...' }}"
-                                class="w-full px-4 py-3 bg-slate-900/80 border border-slate-700 rounded-xl text-white placeholder:text-slate-500 focus:outline-none focus:border-teal-500 focus:ring-1 focus:ring-teal-500 transition-colors text-sm"></textarea>
+                                class="w-full px-4 py-3 bg-white/80 dark:bg-slate-900/70 border border-slate-300 dark:border-slate-700 rounded-xl text-slate-900 dark:text-white placeholder:text-slate-500 focus:outline-none focus:border-teal-500 focus:ring-1 focus:ring-teal-500 transition-colors text-sm"></textarea>
                         </div>
 
                         <div class="text-center pt-2">
@@ -1057,8 +1057,6 @@ $locale === 'hi'
     updateStarsDisplay(0);
 </script>
 @endpush
-
-
 
 
 

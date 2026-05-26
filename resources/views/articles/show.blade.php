@@ -83,31 +83,31 @@
 
 <!-- Main Article Content -->
 <main class="flex-1 max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-12 w-full">
-    <article class="bg-white rounded-3xl border border-slate-200/80 shadow-sm p-6 sm:p-10 mb-12">
+    <article class="bg-white dark:bg-slate-900 rounded-3xl border border-slate-200/80 dark:border-slate-700/70 shadow-sm p-6 sm:p-10 mb-12">
         <!-- Excerpt Box -->
-        <div class="mb-8 p-6 bg-gradient-to-r from-teal-50/50 to-indigo-50/50 rounded-2xl border-l-4 border-teal-500 border border-slate-100 shadow-2xs">
-            <p class="font-medium text-slate-800 text-lg leading-relaxed italic">
+        <div class="mb-8 p-6 bg-gradient-to-r from-teal-50/50 to-indigo-50/50 dark:from-teal-950/20 dark:to-indigo-950/20 rounded-2xl border-l-4 border-teal-500 border border-slate-100 dark:border-slate-700 shadow-2xs">
+            <p class="font-medium text-slate-800 dark:text-slate-200 text-lg leading-relaxed italic">
                 "{{ $excerpt }}"
             </p>
         </div>
 
         <!-- Main Content -->
-        <div class="prose prose-slate max-w-none text-slate-700 text-base sm:text-lg leading-relaxed space-y-6 whitespace-pre-line">
+        <div class="prose prose-slate dark:prose-invert max-w-none text-slate-700 dark:text-slate-300 text-base sm:text-lg leading-relaxed space-y-6 whitespace-pre-line">
             {{ $content }}
         </div>
-        <div class="mt-8 rounded-2xl border border-amber-200 bg-amber-50 px-4 py-3 text-sm text-amber-900">
+        <div class="mt-8 rounded-2xl border border-amber-200 dark:border-amber-800 bg-amber-50 dark:bg-amber-950/30 px-4 py-3 text-sm text-amber-900 dark:text-amber-200">
             This article is for general information only and is not a substitute for professional medical advice, diagnosis, or treatment.
         </div>
     </article>
 
     <!-- Comments Section -->
-    <section class="bg-white rounded-3xl border border-slate-200/80 shadow-sm p-6 sm:p-10">
-        <div class="border-b border-slate-100 pb-6 mb-8 flex items-center justify-between">
-            <h2 class="text-2xl font-bold text-slate-900 flex items-center space-x-2">
+    <section class="bg-white dark:bg-slate-900 rounded-3xl border border-slate-200/80 dark:border-slate-700/70 shadow-sm p-6 sm:p-10">
+        <div class="border-b border-slate-100 dark:border-slate-700 pb-6 mb-8 flex items-center justify-between">
+            <h2 class="text-2xl font-bold text-slate-900 dark:text-slate-100 flex items-center space-x-2">
                 <i data-lucide="message-square" class="w-6 h-6 text-teal-600"></i>
                 <span>{{ $locale === 'hi' ? 'पाठक प्रतिक्रियाएं' : 'Reader Comments' }}</span>
             </h2>
-            <span class="text-sm font-semibold bg-indigo-50 text-indigo-700 px-3.5 py-1.5 rounded-full border border-indigo-100" id="comments-count-badge">
+            <span class="text-sm font-semibold bg-indigo-50 dark:bg-indigo-950/40 text-indigo-700 dark:text-indigo-300 px-3.5 py-1.5 rounded-full border border-indigo-100 dark:border-indigo-800" id="comments-count-badge">
                 {{ is_array($article->comments) ? count($article->comments) : ($article->comments ? $article->comments->count() : 0) }} {{ $locale === 'hi' ? 'टिप्पणियां' : 'Comments' }}
             </span>
         </div>
@@ -120,21 +120,21 @@
             @if (count($comments) > 0)
                 @foreach ($comments as $comm)
                     @php $c = is_array($comm) ? (object) $comm : $comm; @endphp
-                    <div class="bg-slate-50 p-5 rounded-2xl border border-slate-100/80 space-y-2 shadow-2xs hover:shadow-sm transition-shadow duration-200">
-                        <div class="flex items-center justify-between text-xs text-slate-400 border-b border-slate-200/60 pb-2">
-                            <span class="font-bold text-slate-800 text-sm flex items-center space-x-1.5">
-                                <i data-lucide="user" class="w-4 h-4 text-slate-400"></i>
+                    <div class="bg-slate-50 dark:bg-slate-800/70 p-5 rounded-2xl border border-slate-100/80 dark:border-slate-700/70 space-y-2 shadow-2xs hover:shadow-sm transition-shadow duration-200">
+                        <div class="flex items-center justify-between text-xs text-slate-400 dark:text-slate-500 border-b border-slate-200/60 dark:border-slate-700 pb-2">
+                            <span class="font-bold text-slate-800 dark:text-slate-100 text-sm flex items-center space-x-1.5">
+                                <i data-lucide="user" class="w-4 h-4 text-slate-400 dark:text-slate-500"></i>
                                 <span>{{ $c->user_name }}</span>
                             </span>
                             <span>{{ \Carbon\Carbon::parse($c->created_at)->translatedFormat($locale === 'hi' ? 'd M Y' : 'M d, Y') }}</span>
                         </div>
-                        <p class="text-slate-600 text-sm leading-relaxed pl-1">{{ $c->comment }}</p>
+                        <p class="text-slate-600 dark:text-slate-300 text-sm leading-relaxed pl-1">{{ $c->comment }}</p>
                     </div>
                 @endforeach
             @else
-                <div id="no-comments-placeholder" class="text-center py-12 bg-slate-50/50 rounded-2xl border border-slate-100/60 space-y-3">
-                    <i data-lucide="message-square" class="w-10 h-10 text-slate-300 mx-auto"></i>
-                    <p class="text-sm text-slate-500 font-medium">
+                <div id="no-comments-placeholder" class="text-center py-12 bg-slate-50/50 dark:bg-slate-800/50 rounded-2xl border border-slate-100/60 dark:border-slate-700/60 space-y-3">
+                    <i data-lucide="message-square" class="w-10 h-10 text-slate-300 dark:text-slate-500 mx-auto"></i>
+                    <p class="text-sm text-slate-500 dark:text-slate-400 font-medium">
                         {{ $locale === 'hi' ? 'कोई टिप्पणी नहीं। पहली टिप्पणी करने वाले बनें!' : 'No comments yet. Be the first to share your thoughts!' }}
                     </p>
                 </div>
@@ -142,8 +142,8 @@
         </div>
 
         <!-- Add Comment Form -->
-        <form onsubmit="handleCommentSubmit(event)" class="bg-gradient-to-tr from-slate-50 via-white to-indigo-50/30 p-6 sm:p-8 rounded-3xl border border-slate-200/80 shadow-sm space-y-5">
-            <h3 class="font-bold text-slate-900 text-lg flex items-center space-x-2">
+        <form onsubmit="handleCommentSubmit(event)" class="bg-gradient-to-tr from-slate-50 via-white to-indigo-50/30 dark:from-slate-800 dark:via-slate-900 dark:to-indigo-950/20 p-6 sm:p-8 rounded-3xl border border-slate-200/80 dark:border-slate-700/70 shadow-sm space-y-5">
+            <h3 class="font-bold text-slate-900 dark:text-slate-100 text-lg flex items-center space-x-2">
                 <span>{{ $locale === 'hi' ? 'अपनी प्रतिक्रिया साझा करें' : 'Leave a Comment' }}</span>
             </h3>
 
@@ -154,7 +154,7 @@
 
             <div class="space-y-4">
                 <div>
-                    <label class="block text-xs font-bold text-slate-600 uppercase tracking-wider mb-1.5">
+                    <label class="block text-xs font-bold text-slate-600 dark:text-slate-300 uppercase tracking-wider mb-1.5">
                         {{ $locale === 'hi' ? 'आपका नाम' : 'Your Name' }}
                     </label>
                     <input
@@ -162,11 +162,11 @@
                         id="comment-name"
                         placeholder="{{ $locale === 'hi' ? 'आपका नाम...' : 'Your name...' }}"
                         required
-                        class="w-full px-4 py-3 bg-white border border-slate-200 rounded-xl text-base placeholder:text-slate-400 focus:outline-none focus:ring-2 focus:ring-teal-500/20 focus:border-teal-500 transition-all duration-200 shadow-2xs"
+                        class="w-full px-4 py-3 bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl text-base text-slate-900 dark:text-slate-100 placeholder:text-slate-400 dark:placeholder:text-slate-500 focus:outline-none focus:ring-2 focus:ring-teal-500/20 focus:border-teal-500 transition-all duration-200 shadow-2xs"
                     />
                 </div>
                 <div>
-                    <label class="block text-xs font-bold text-slate-600 uppercase tracking-wider mb-1.5">
+                    <label class="block text-xs font-bold text-slate-600 dark:text-slate-300 uppercase tracking-wider mb-1.5">
                         {{ $locale === 'hi' ? 'आपकी टिप्पणी' : 'Your Comment' }}
                     </label>
                     <textarea
@@ -174,7 +174,7 @@
                         placeholder="{{ $locale === 'hi' ? 'इस लेख पर आपके विचार...' : 'Your thoughts on this article...' }}"
                         rows="4"
                         required
-                        class="w-full px-4 py-3 bg-white border border-slate-200 rounded-xl text-base placeholder:text-slate-400 focus:outline-none focus:ring-2 focus:ring-teal-500/20 focus:border-teal-500 transition-all duration-200 resize-none shadow-2xs"
+                        class="w-full px-4 py-3 bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl text-base text-slate-900 dark:text-slate-100 placeholder:text-slate-400 dark:placeholder:text-slate-500 focus:outline-none focus:ring-2 focus:ring-teal-500/20 focus:border-teal-500 transition-all duration-200 resize-none shadow-2xs"
                     ></textarea>
                 </div>
             </div>

@@ -73,19 +73,19 @@
     </div>
 
     <!-- Story Section -->
-    <section class="mt-20 bg-gradient-to-br from-white via-slate-50 to-teal-50/30 rounded-3xl border border-slate-200/80 p-10 sm:p-16 shadow-sm flex flex-col lg:flex-row items-center gap-12">
+    <section class="mt-20 bg-gradient-to-br from-white via-slate-50 to-teal-50/30 dark:from-slate-900 dark:via-slate-850 dark:to-teal-950/20 rounded-3xl border border-slate-200/80 dark:border-slate-700/70 p-10 sm:p-16 shadow-sm flex flex-col lg:flex-row items-center gap-12">
         <div class="flex-1 space-y-6">
             <div class="flex items-center space-x-2 text-teal-600 font-extrabold text-sm uppercase tracking-wider bg-teal-50 border border-teal-100 px-4 py-1.5 rounded-full inline-flex shadow-2xs">
                 <i data-lucide="sparkles" class="w-4 h-4"></i>
                 <span>{{ $locale === 'hi' ? 'हमारी कहानी' : 'Our Story' }}</span>
             </div>
-            <h2 class="text-3xl sm:text-4xl font-extrabold text-slate-900 tracking-tight leading-normal py-0.5">
+            <h2 class="text-3xl sm:text-4xl font-extrabold text-slate-900 dark:text-slate-100 tracking-tight leading-normal py-0.5">
                 {{ $locale === 'hi' ? 'स्वास्थ्या सर्च की शुरुआत क्यों हुई?' : 'Why We Started SwasthyaSearch' }}
             </h2>
-            <p class="text-slate-600 text-base sm:text-lg leading-relaxed">
+            <p class="text-slate-600 dark:text-slate-300 text-base sm:text-lg leading-relaxed">
                 {{ $locale === 'hi' ? 'वर्तमान डिजिटल स्वास्थ्य सेवा में विज्ञापनों और सशुल्क लिस्टिंग की भरमार है, जहां सबसे अधिक भुगतान करने वाले डॉक्टरों को ही सबसे ऊपर दिखाया जाता है, न कि सबसे योग्य डॉक्टरों को। हमने मरीजों को एक ऐसा मंच देने के लिए स्वास्थ्या सर्च बनाया जो 100% मुफ़्त, निष्पक्ष और पारदर्शी हो।' : 'Modern digital healthcare is crowded with sponsored listings and aggregator commissions, where providers who pay the most receive top visibility rather than those who are most qualified. We established SwasthyaSearch to give patients a platform that is 100% free, unbiased, and fully transparent.' }}
             </p>
-            <p class="text-slate-600 text-base sm:text-lg leading-relaxed">
+            <p class="text-slate-600 dark:text-slate-300 text-base sm:text-lg leading-relaxed">
                 {{ $locale === 'hi' ? 'हमारा लक्ष्य भारत के हर नागरिक को बिना किसी आर्थिक बाधा या भ्रम के बेहतरीन चिकित्सा विशेषज्ञों तक पहुँच प्रदान करना है।' : 'Our ultimate goal is to provide every citizen with direct, barrier-free access to elite medical professionals without financial friction or confusion.' }}
             </p>
         </div>
