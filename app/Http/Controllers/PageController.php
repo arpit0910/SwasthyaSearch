@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Department;
 use App\Models\Disease;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 
 class PageController extends Controller
 {
@@ -122,5 +123,98 @@ class PageController extends Controller
         ]);
 
         return back()->with('success', 'Thank you for your valuable feedback! Your input helps us improve SwasthyaSearch for everyone.');
+    }
+
+    public function submitLeadCapture(Request $request)
+    {
+        $validated = $request->validate([
+            'name' => 'required|string|max:255',
+            'email' => 'required|email|max:255',
+            'mobile' => ['required', 'string', 'regex:/^[0-9]{10,15}$/'],
+        ]);
+
+        return response()->json([
+            'success' => true,
+            'message' => 'Thank you! We will stay in touch with useful updates.',
+        ]);
+    }
+
+    public function submitListingReport(Request $request)
+    {
+        $validated = $request->validate([
+            'entity_type' => 'required|string|in:doctor,hospital,blood_bank',
+            'entity_id' => 'required|integer|min:1',
+            'entity_name' => 'required|string|max:255',
+            'issue' => 'required|string|in:wrong_phone,wrong_address,duplicate,closed,other',
+            'details' => 'required|string|min:3|max:1000',
+        ]);
+
+        DB::table('listing_feedback')->insert([
+            'entity_type' => $validated['entity_type'],
+            'entity_id' => $validated['entity_id'],
+            'entity_name' => $validated['entity_name'],
+            'vote_type' => 'red',
+            'issue' => $validated['issue'],
+            'details' => $validated['details'],
+            'ip_address' => (string) $request->ip(),
+            'user_agent' => substr((string) $request->userAgent(), 0, 512),
+            'created_at' => now(),
+            'updated_at' => now(),
+        ]);
+
+        $counts = $this->getListingVoteCounts($validated['entity_type'], (int) $validated['entity_id']);
+
+        return response()->json([
+            'success' => true,
+            'message' => 'Thank you. Your report has been submitted.',
+            'counts' => $counts,
+        ]);
+    }
+
+    public function submitListingVote(Request $request)
+    {
+        $validated = $request->validate([
+            'entity_type' => 'required|string|in:doctor,hospital,blood_bank',
+            'entity_id' => 'required|integer|min:1',
+            'entity_name' => 'required|string|max:255',
+            'vote_type' => 'required|string|in:green',
+        ]);
+
+        DB::table('listing_feedback')->insert([
+            'entity_type' => $validated['entity_type'],
+            'entity_id' => $validated['entity_id'],
+            'entity_name' => $validated['entity_name'],
+            'vote_type' => 'green',
+            'ip_address' => (string) $request->ip(),
+            'user_agent' => substr((string) $request->userAgent(), 0, 512),
+            'created_at' => now(),
+            'updated_at' => now(),
+        ]);
+
+        $counts = $this->getListingVoteCounts($validated['entity_type'], (int) $validated['entity_id']);
+
+        return response()->json([
+            'success' => true,
+            'message' => 'Vote submitted.',
+            'counts' => $counts,
+        ]);
+    }
+
+    private function getListingVoteCounts(string $entityType, int $entityId): array
+    {
+        $rows = DB::table('listing_feedback')
+            ->select('vote_type', DB::raw('COUNT(*) as total'))
+            ->where('entity_type', $entityType)
+            ->where('entity_id', $entityId)
+            ->groupBy('vote_type')
+            ->get();
+
+        $green = (int) optional($rows->firstWhere('vote_type', 'green'))->total;
+        $red = (int) optional($rows->firstWhere('vote_type', 'red'))->total;
+
+        return [
+            'green' => $green,
+            'red' => $red,
+        ];
     }
 }

@@ -335,6 +335,67 @@
     @yield('content')
 
     <div id="chatbot-mobile-overlay" class="hidden fixed inset-0 bg-slate-950/45 backdrop-blur-[1px] z-[70] sm:hidden" onclick="toggleChatbot()"></div>
+    <div id="lead-capture-overlay" class="hidden fixed inset-0 z-[95] bg-slate-950/55 backdrop-blur-[2px]"></div>
+    <div id="lead-capture-modal" class="hidden fixed inset-0 z-[96] flex items-center justify-center p-4">
+        <div class="w-full max-w-md rounded-3xl border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-900 shadow-2xl overflow-hidden">
+            <div class="px-6 pt-6 pb-4 border-b border-slate-100 dark:border-slate-800">
+                <h3 class="text-xl font-extrabold text-slate-900 dark:text-slate-100">{{ $locale === 'hi' ? 'जुड़ें और अपडेट पाएं' : 'Stay Connected' }}</h3>
+                <p class="mt-1 text-sm text-slate-600 dark:text-slate-300">{{ $locale === 'hi' ? 'बेहतर हेल्थकेयर सुझाव और अपडेट के लिए अपनी जानकारी साझा करें।' : 'Share your details to receive useful healthcare updates and tips.' }}</p>
+            </div>
+            <form id="lead-capture-form" class="px-6 py-5 space-y-4">
+                <div>
+                    <label class="block text-xs font-bold text-slate-600 dark:text-slate-300 uppercase tracking-wider mb-1.5">{{ $locale === 'hi' ? 'नाम' : 'Name' }}</label>
+                    <input type="text" name="name" required class="w-full px-4 py-2.5 rounded-xl border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-800 text-slate-900 dark:text-slate-100 focus:outline-none focus:ring-2 focus:ring-teal-500/30">
+                </div>
+                <div>
+                    <label class="block text-xs font-bold text-slate-600 dark:text-slate-300 uppercase tracking-wider mb-1.5">{{ $locale === 'hi' ? 'ईमेल' : 'Email' }}</label>
+                    <input type="email" name="email" required class="w-full px-4 py-2.5 rounded-xl border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-800 text-slate-900 dark:text-slate-100 focus:outline-none focus:ring-2 focus:ring-teal-500/30">
+                </div>
+                <div>
+                    <label class="block text-xs font-bold text-slate-600 dark:text-slate-300 uppercase tracking-wider mb-1.5">{{ $locale === 'hi' ? 'मोबाइल नंबर' : 'Mobile Number' }}</label>
+                    <input type="tel" name="mobile" inputmode="numeric" pattern="[0-9]{10,15}" required class="w-full px-4 py-2.5 rounded-xl border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-800 text-slate-900 dark:text-slate-100 focus:outline-none focus:ring-2 focus:ring-teal-500/30">
+                </div>
+                <p id="lead-capture-message" class="hidden text-xs font-semibold"></p>
+                <div class="flex items-center justify-between pt-1">
+                    <button type="button" id="lead-capture-skip" class="text-sm font-semibold text-slate-600 dark:text-slate-300 hover:text-slate-900 dark:hover:text-white">{{ $locale === 'hi' ? 'अभी के लिए स्किप करें' : 'Skip for now' }}</button>
+                    <button type="submit" class="px-5 py-2.5 rounded-xl bg-teal-600 hover:bg-teal-700 text-white font-bold text-sm">{{ $locale === 'hi' ? 'सबमिट करें' : 'Submit' }}</button>
+                </div>
+            </form>
+        </div>
+    </div>
+    <div id="listing-report-overlay" class="hidden fixed inset-0 z-[96] bg-slate-950/55 backdrop-blur-[2px]"></div>
+    <div id="listing-report-modal" class="hidden fixed inset-0 z-[97] flex items-center justify-center p-4">
+        <div class="w-full max-w-md rounded-3xl border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-900 shadow-2xl overflow-hidden">
+            <div class="px-6 pt-6 pb-4 border-b border-slate-100 dark:border-slate-800">
+                <h3 class="text-xl font-extrabold text-slate-900 dark:text-slate-100">{{ $locale === 'hi' ? 'गलत जानकारी रिपोर्ट करें' : 'Report Incorrect Listing' }}</h3>
+                <p id="listing-report-subtitle" class="mt-1 text-sm text-slate-600 dark:text-slate-300"></p>
+            </div>
+            <form id="listing-report-form" class="px-6 py-5 space-y-4">
+                <input type="hidden" name="entity_type" id="listing-report-entity-type">
+                <input type="hidden" name="entity_id" id="listing-report-entity-id">
+                <input type="hidden" name="entity_name" id="listing-report-entity-name">
+                <div>
+                    <label class="block text-xs font-bold text-slate-600 dark:text-slate-300 uppercase tracking-wider mb-1.5">{{ $locale === 'hi' ? 'समस्या का प्रकार' : 'Issue Type' }}</label>
+                    <select name="issue" required class="w-full px-4 py-2.5 rounded-xl border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-800 text-slate-900 dark:text-slate-100 focus:outline-none focus:ring-2 focus:ring-teal-500/30">
+                        <option value="wrong_phone">{{ $locale === 'hi' ? 'गलत फोन नंबर' : 'Wrong phone number' }}</option>
+                        <option value="wrong_address">{{ $locale === 'hi' ? 'गलत पता' : 'Wrong address' }}</option>
+                        <option value="duplicate">{{ $locale === 'hi' ? 'डुप्लीकेट लिस्टिंग' : 'Duplicate listing' }}</option>
+                        <option value="closed">{{ $locale === 'hi' ? 'सेवा बंद हो चुकी है' : 'Service is closed' }}</option>
+                        <option value="other">{{ $locale === 'hi' ? 'अन्य' : 'Other' }}</option>
+                    </select>
+                </div>
+                <div>
+                    <label class="block text-xs font-bold text-slate-600 dark:text-slate-300 uppercase tracking-wider mb-1.5">{{ $locale === 'hi' ? 'अतिरिक्त विवरण (वैकल्पिक)' : 'Remarks (Required)' }}</label>
+                    <textarea name="details" required minlength="3" rows="3" class="w-full px-4 py-2.5 rounded-xl border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-800 text-slate-900 dark:text-slate-100 focus:outline-none focus:ring-2 focus:ring-teal-500/30"></textarea>
+                </div>
+                <p id="listing-report-message" class="hidden text-xs font-semibold"></p>
+                <div class="flex items-center justify-between pt-1">
+                    <button type="button" id="listing-report-cancel" class="text-sm font-semibold text-slate-600 dark:text-slate-300 hover:text-slate-900 dark:hover:text-white">{{ $locale === 'hi' ? 'रद्द करें' : 'Cancel' }}</button>
+                    <button type="submit" class="px-5 py-2.5 rounded-xl bg-rose-600 hover:bg-rose-700 text-white font-bold text-sm">{{ $locale === 'hi' ? 'रिपोर्ट भेजें' : 'Submit Report' }}</button>
+                </div>
+            </form>
+        </div>
+    </div>
     <!-- Floating Chatbot Widget -->
     <div class="fixed bottom-5 right-4 sm:bottom-6 sm:right-6 z-[80]" id="chatbot-container">
         <!-- Chat Button -->
@@ -419,11 +480,11 @@
                             <i data-lucide="bot" class="w-4 h-4"></i>
                         </div>
                         <div id="chatbot-initial-message" class="p-3.5 rounded-2xl text-sm shadow-sm leading-relaxed bg-white text-slate-800 border border-slate-200/60 rounded-tl-none">
-                            {{ $locale === 'hi' ? 'नमस्ते, मैं Swasthya AI Assistant हूँ। मैं लक्षण, विभाग, डॉक्टर, अस्पताल और ब्लड बैंक खोजने में मदद करता हूँ।' : 'Hi, I’m Swasthya AI Assistant. I help you find departments, doctors, hospitals, and blood banks based on your needs.' }}
+                            {{ $locale === 'hi' ? 'नमस्ते, मैं Swasthya AI Assistant हूँ। कृपया पहले अपना शहर चुनें, फिर मैं आपके लिए सही विकल्प ढूँढने में मदद करूँगा।' : 'Hi, I’m Swasthya AI Assistant. Please select your city first, then I’ll help you find the right nearby healthcare options.' }}
                         </div>
                     </div>
                 </div>
-                <div class="ml-9 max-w-[85%] rounded-xl border border-teal-100 bg-teal-50/80 px-3 py-2">
+                <div id="chatbot-post-city-questions-wrapper" class="hidden ml-9 max-w-[85%] rounded-xl border border-teal-100 bg-teal-50/80 px-3 py-2">
                     <p class="text-[11px] font-semibold text-teal-900">
                         {{ $locale === 'hi' ? 'उदाहरण: "Nearby में cardiologist", "नजदीकी hospital", "A+ blood bank"' : 'Try: "cardiologist near me", "nearby hospital", "A+ blood bank"' }}
                     </p>
@@ -858,6 +919,7 @@
         let pendingChatAbortController = null;
         let hasCityPromptVisible = false;
         let chatbotDetailBlockCounter = 0;
+        let activeListenButton = null;
         const CHATBOT_CITY_STORAGE_KEY = 'swasthya_selected_city';
         const LEGACY_CHATBOT_CITY_STORAGE_KEY = 'swasthyasearch_chatbot_city';
         const CHATBOT_CITY_ONBOARDED_KEY = 'swasthya_chatbot_city_onboarded';
@@ -1103,6 +1165,93 @@
             updateMobileMenuIcon();
         }
 
+        const LEAD_CAPTURE_NEXT_SHOW_KEY = 'swasthya_lead_capture_next_show_at';
+        const LEAD_CAPTURE_DONE_KEY = 'swasthya_lead_capture_done';
+
+        function closeLeadCaptureModal() {
+            document.getElementById('lead-capture-modal')?.classList.add('hidden');
+            document.getElementById('lead-capture-overlay')?.classList.add('hidden');
+            document.body.classList.remove('overflow-hidden');
+        }
+
+        function skipLeadCapture(days = 3) {
+            const next = Date.now() + (days * 24 * 60 * 60 * 1000);
+            localStorage.setItem(LEAD_CAPTURE_NEXT_SHOW_KEY, String(next));
+            closeLeadCaptureModal();
+        }
+
+        function showLeadCaptureModal() {
+            if (localStorage.getItem(LEAD_CAPTURE_DONE_KEY) === '1') return;
+            const nextShowAt = Number(localStorage.getItem(LEAD_CAPTURE_NEXT_SHOW_KEY) || 0);
+            if (nextShowAt && Date.now() < nextShowAt) return;
+            if (chatbotOpen) return;
+
+            document.getElementById('lead-capture-overlay')?.classList.remove('hidden');
+            document.getElementById('lead-capture-modal')?.classList.remove('hidden');
+            document.body.classList.add('overflow-hidden');
+        }
+
+        function openListingReportModal(entityType, entityId, entityName) {
+            const typeInput = document.getElementById('listing-report-entity-type');
+            const idInput = document.getElementById('listing-report-entity-id');
+            const nameInput = document.getElementById('listing-report-entity-name');
+            const subtitle = document.getElementById('listing-report-subtitle');
+            const msg = document.getElementById('listing-report-message');
+            if (msg) msg.classList.add('hidden');
+            if (typeInput) typeInput.value = entityType;
+            if (idInput) idInput.value = entityId;
+            if (nameInput) nameInput.value = entityName;
+            if (subtitle) subtitle.textContent = `${entityName}`;
+            document.getElementById('listing-report-overlay')?.classList.remove('hidden');
+            document.getElementById('listing-report-modal')?.classList.remove('hidden');
+            document.body.classList.add('overflow-hidden');
+        }
+
+        function getVoteCountElementId(entityType, voteType, entityId) {
+            return `vote-${voteType}-${entityType}-${entityId}`;
+        }
+
+        function applyVoteCountsFromResponse(entityType, entityId, counts) {
+            if (!counts) return;
+            const greenEl = document.getElementById(getVoteCountElementId(entityType, 'green', entityId));
+            const redEl = document.getElementById(getVoteCountElementId(entityType, 'red', entityId));
+            if (greenEl && Number.isFinite(Number(counts.green))) {
+                greenEl.textContent = String(counts.green);
+            }
+            if (redEl && Number.isFinite(Number(counts.red))) {
+                redEl.textContent = String(counts.red);
+            }
+        }
+
+        async function submitGreenVote(entityType, entityId, entityName) {
+            try {
+                const res = await fetch('{{ route("listing.vote.submit") }}', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]')?.content || '',
+                    },
+                    body: JSON.stringify({
+                        entity_type: String(entityType || ''),
+                        entity_id: Number(entityId || 0),
+                        entity_name: String(entityName || ''),
+                        vote_type: 'green',
+                    }),
+                });
+                if (!res.ok) return;
+                const data = await res.json();
+                applyVoteCountsFromResponse(String(entityType), Number(entityId), data?.counts || null);
+            } catch (err) {
+                // Keep UI silent for vote failure to avoid interrupting browsing flow.
+            }
+        }
+
+        function closeListingReportModal() {
+            document.getElementById('listing-report-modal')?.classList.add('hidden');
+            document.getElementById('listing-report-overlay')?.classList.add('hidden');
+            document.body.classList.remove('overflow-hidden');
+        }
+
         function closeMobileMenu() {
             const menu = document.getElementById('mobile-nav-menu');
             if (!menu) return;
@@ -1165,6 +1314,7 @@
             const selectedLabel = document.getElementById('chatbot-selected-city-label');
             const cityPills = document.querySelectorAll('#chatbot-city-pill-wrap .chatbot-city-pill');
             const quickPromptsWrap = document.getElementById('chatbot-quick-prompts-wrap');
+            const postCityQuestionsWrapper = document.getElementById('chatbot-post-city-questions-wrapper');
             const input = document.getElementById('chatbot-input');
             const sendBtn = document.querySelector('#chatbot-form button[type="submit"]');
             const voiceBtn = document.getElementById('chatbot-voice-btn');
@@ -1180,6 +1330,7 @@
                 lockedWrapper.classList.remove('hidden');
                 lockedWrapper.classList.add('flex');
                 quickPromptsWrap.classList.remove('hidden');
+                if (postCityQuestionsWrapper) postCityQuestionsWrapper.classList.remove('hidden');
                 moveQuickPromptsToBottom();
                 if (input) {
                     input.disabled = false;
@@ -1194,6 +1345,7 @@
                 selectWrapper.classList.add('flex');
                 lockedWrapper.classList.add('hidden');
                 quickPromptsWrap.classList.add('hidden');
+                if (postCityQuestionsWrapper) postCityQuestionsWrapper.classList.add('hidden');
                 if (input) {
                     input.disabled = true;
                     input.placeholder = chatbotLocale === 'hi' ? 'पहले शहर चुनें...' : 'Select city first...';
@@ -1210,7 +1362,7 @@
             }
             return chatbotLocale === 'hi'
                 ? 'नमस्ते, मैं Swasthya AI Assistant हूँ। मैं आपकी जरूरत के आधार पर विभाग, डॉक्टर, अस्पताल और ब्लड बैंक ढूंढने में मदद करता हूँ। कृपया पहले अपना शहर चुनें।'
-                : 'Hi, I\u2019m Swasthya AI Assistant. I help you find departments, doctors, hospitals, and blood banks based on your needs.';
+                : 'Hi, I\u2019m Swasthya AI Assistant. Please select your city first, then I\u2019ll ask a few quick questions and help you find the best nearby options.';
         }
         function initializeChatbotCity() {
             const onboardingDone = hasCompletedCityOnboarding();
@@ -1289,22 +1441,30 @@
         }
 
         function toggleChatbot() {
-            chatbotOpen = !chatbotOpen;
             const btn = document.getElementById('chatbot-toggle-btn');
             const win = document.getElementById('chatbot-window');
             const overlay = document.getElementById('chatbot-mobile-overlay');
+            chatbotOpen = !chatbotOpen;
+
+            const syncChatbotVisibility = () => {
+                if (!btn || !win) return;
+                btn.classList.toggle('chatbot-fab-hidden', chatbotOpen);
+                win.classList.toggle('hidden', !chatbotOpen);
+            };
+
             if (chatbotOpen) {
                 clearFabCycles();
-                btn.classList.add('hidden');
-                win.classList.remove('hidden');
+                syncChatbotVisibility();
                 if (window.innerWidth < 640) {
                     overlay?.classList.remove('hidden');
                     document.body.classList.add('overflow-hidden');
+                } else {
+                    document.getElementById('chatbot-input')?.focus();
                 }
-                document.getElementById('chatbot-input').focus();
                 setTimeout(handleChatbotKeyboardViewport, 80);
                 scrollToChatBottom();
             } else {
+                stopMessageListening();
                 resetChatbotForFreshStart();
                 if (pendingChatAbortController) {
                     pendingChatAbortController.abort();
@@ -1317,8 +1477,7 @@
                 if (input) input.value = '';
                 const details = document.getElementById('chatbot-important-details');
                 if (details) details.classList.add('hidden');
-                btn.classList.remove('hidden');
-                win.classList.add('hidden');
+                syncChatbotVisibility();
                 overlay?.classList.add('hidden');
                 document.body.classList.remove('overflow-hidden');
                 win.style.height = '';
@@ -1441,6 +1600,52 @@
             window.speechSynthesis.cancel();
             const utterance = new SpeechSynthesisUtterance(String(text).replace(/<[^>]*>/g, ''));
             utterance.lang = chatbotLocale === 'hi' ? 'hi-IN' : 'en-US';
+            window.speechSynthesis.speak(utterance);
+        }
+
+        function resetListenButtonState(btn) {
+            if (!btn) return;
+            btn.classList.remove('listening');
+            btn.innerHTML = `🔊 ${chatbotLocale === 'hi' ? 'सुनें' : 'Listen'}`;
+        }
+
+        function stopMessageListening() {
+            if (!('speechSynthesis' in window)) return;
+            window.speechSynthesis.cancel();
+            resetListenButtonState(activeListenButton);
+            activeListenButton = null;
+        }
+
+        function toggleMessageListen(encodedText, btn) {
+            if (!('speechSynthesis' in window) || !btn) return;
+
+            const text = decodeURIComponent(String(encodedText || '')).replace(/<[^>]*>/g, '').trim();
+            if (!text) return;
+
+            if (activeListenButton === btn && window.speechSynthesis.speaking) {
+                stopMessageListening();
+                return;
+            }
+
+            stopMessageListening();
+            activeListenButton = btn;
+            btn.classList.add('listening');
+            btn.innerHTML = `⏹ ${chatbotLocale === 'hi' ? 'रोकें' : 'Stop'}`;
+
+            const utterance = new SpeechSynthesisUtterance(text);
+            utterance.lang = chatbotLocale === 'hi' ? 'hi-IN' : 'en-US';
+            utterance.onend = () => {
+                if (activeListenButton === btn) {
+                    resetListenButtonState(btn);
+                    activeListenButton = null;
+                }
+            };
+            utterance.onerror = () => {
+                if (activeListenButton === btn) {
+                    resetListenButtonState(btn);
+                    activeListenButton = null;
+                }
+            };
             window.speechSynthesis.speak(utterance);
         }
 
@@ -1736,7 +1941,8 @@
             const messagesDiv = document.getElementById('chatbot-messages');
             const isUser = msg.sender === 'user';
 
-            const spoken = String(msg.text || '').replace(/\*\*/g, '').replace(/[*_\-`]/g, '').replace(/'/g, '&#39;').replace(/\"/g, '&quot;');
+            const spoken = String(msg.text || '').replace(/\*\*/g, '').replace(/[*_\-`]/g, '');
+            const spokenEncoded = encodeURIComponent(spoken);
             const isWarning = !isUser && /(emergency|urgent|call|आपात|तुरंत|helpline)/i.test(String(msg.text || ''));
             let html = `
                 <div class="flex ${isUser ? 'justify-end' : 'justify-start'} animate-in fade-in duration-200">
@@ -1749,7 +1955,7 @@
                                 ${isUser ? escapeHtml(msg.text) : formatMessageText(msg.text)}
                             </div>
                             <div class="flex flex-wrap gap-2 items-center">
-                                ${!isUser ? `<button type="button" onclick="speakText('${spoken}')" class="inline-flex items-center gap-1 text-[11px] text-slate-500 hover:text-teal-600 text-left px-2.5 py-1 rounded-lg hover:bg-teal-50 border border-slate-200/60 bg-white transition-all">🔊 ${chatbotLocale === 'hi' ? 'सुनें' : 'Listen'}</button>` : ''}
+                                ${!isUser ? `<button type="button" onclick="toggleMessageListen('${spokenEncoded}', this)" class="inline-flex items-center gap-1 text-[11px] text-slate-500 hover:text-teal-600 text-left px-2.5 py-1 rounded-lg hover:bg-teal-50 border border-slate-200/60 bg-white transition-all">🔊 ${chatbotLocale === 'hi' ? 'सुनें' : 'Listen'}</button>` : ''}
                                 ${(!isUser && msg.suggest_details && isLastBotMsg) ? `<button type="button" onclick="submitChatbotMessage('${chatbotLocale === 'hi' ? 'कृपया विस्तार से समझाएं' : 'Please explain in detail'}')" class="inline-flex items-center gap-1 text-[11px] font-semibold text-indigo-700 hover:text-indigo-900 border border-indigo-200 hover:border-indigo-300 bg-white hover:bg-indigo-50 rounded-lg px-2.5 py-1 transition-all">💬 ${chatbotLocale === 'hi' ? 'विस्तार से समझाएं' : 'Explain in Detail'}</button>` : ''}
                             </div>
                             ${(!isUser && msg.show_options && isLastBotMsg && idx >= 0) ? (() => {
@@ -2088,6 +2294,8 @@
         });
         document.querySelectorAll('select[name="city"]').forEach(select => {
             select.addEventListener('change', function() {
+                // Keep first-time flow city-pill-first inside chatbot.
+                if (!hasCompletedCityOnboarding()) return;
                 const value = normalizeCityValue(select.value);
                 if (!value || value.toLowerCase() === 'all') return;
                 chatbotCity = value;
@@ -2109,11 +2317,99 @@
         });
         initializeChatbotCity();
         setupChatbotKeyboardHandlers();
+        document.getElementById('chatbot-toggle-btn')?.classList.remove('chatbot-fab-hidden');
+        document.getElementById('chatbot-window')?.classList.add('hidden');
         const initialMessagesDiv = document.getElementById('chatbot-messages');
         if (initialMessagesDiv) {
             chatbotInitialMessagesHtml = initialMessagesDiv.innerHTML;
         }
         setupFabHintCycle();
+
+        document.getElementById('lead-capture-overlay')?.addEventListener('click', () => skipLeadCapture(3));
+        document.getElementById('lead-capture-skip')?.addEventListener('click', () => skipLeadCapture(7));
+        document.getElementById('lead-capture-form')?.addEventListener('submit', async function(e) {
+            e.preventDefault();
+            const form = e.currentTarget;
+            const msgEl = document.getElementById('lead-capture-message');
+            const formData = new FormData(form);
+            const payload = {
+                name: String(formData.get('name') || '').trim(),
+                email: String(formData.get('email') || '').trim(),
+                mobile: String(formData.get('mobile') || '').trim(),
+            };
+
+            try {
+                const res = await fetch('{{ route("lead.capture.submit") }}', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]')?.content || '',
+                    },
+                    body: JSON.stringify(payload),
+                });
+                if (!res.ok) throw new Error('Unable to submit');
+                const data = await res.json();
+
+                localStorage.setItem(LEAD_CAPTURE_DONE_KEY, '1');
+                if (msgEl) {
+                    msgEl.classList.remove('hidden');
+                    msgEl.classList.remove('text-rose-600');
+                    msgEl.classList.add('text-emerald-600');
+                    msgEl.textContent = '{{ $locale === "hi" ? "धन्यवाद! आपकी जानकारी सफलतापूर्वक सेव हो गई।" : "Thanks! Your details were saved successfully." }}';
+                }
+                setTimeout(closeLeadCaptureModal, 800);
+            } catch (err) {
+                if (msgEl) {
+                    msgEl.classList.remove('hidden');
+                    msgEl.classList.remove('text-emerald-600');
+                    msgEl.classList.add('text-rose-600');
+                    msgEl.textContent = '{{ $locale === "hi" ? "कृपया सही विवरण भरें और दोबारा प्रयास करें।" : "Please check your details and try again." }}';
+                }
+            }
+        });
+
+        setTimeout(showLeadCaptureModal, 3500);
+        document.getElementById('listing-report-overlay')?.addEventListener('click', closeListingReportModal);
+        document.getElementById('listing-report-cancel')?.addEventListener('click', closeListingReportModal);
+        document.getElementById('listing-report-form')?.addEventListener('submit', async function(e) {
+            e.preventDefault();
+            const form = e.currentTarget;
+            const msgEl = document.getElementById('listing-report-message');
+            const formData = new FormData(form);
+            const payload = {
+                entity_type: String(formData.get('entity_type') || ''),
+                entity_id: Number(formData.get('entity_id') || 0),
+                entity_name: String(formData.get('entity_name') || ''),
+                issue: String(formData.get('issue') || ''),
+                details: String(formData.get('details') || '').trim(),
+            };
+
+            try {
+                const res = await fetch('{{ route("listing.report.submit") }}', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]')?.content || '',
+                    },
+                    body: JSON.stringify(payload),
+                });
+                if (!res.ok) throw new Error('Unable to submit');
+                const data = await res.json();
+                applyVoteCountsFromResponse(payload.entity_type, payload.entity_id, data?.counts || null);
+                if (msgEl) {
+                    msgEl.classList.remove('hidden', 'text-rose-600');
+                    msgEl.classList.add('text-emerald-600');
+                    msgEl.textContent = '{{ $locale === "hi" ? "धन्यवाद! आपकी रिपोर्ट दर्ज कर ली गई है।" : "Thank you! Your report has been submitted." }}';
+                }
+                setTimeout(closeListingReportModal, 900);
+            } catch (err) {
+                if (msgEl) {
+                    msgEl.classList.remove('hidden', 'text-emerald-600');
+                    msgEl.classList.add('text-rose-600');
+                    msgEl.textContent = '{{ $locale === "hi" ? "रिपोर्ट सबमिट नहीं हो सकी। कृपया दोबारा प्रयास करें।" : "Please add remarks and try again." }}';
+                }
+            }
+        });
 
         function initializePageAnimations() {
             document.body.classList.add('motion-ready');
@@ -2923,13 +3219,31 @@
             padding-left: 20px !important;
             padding-right: 24px !important;
             border-radius: 9999px;
-            transition: width 460ms cubic-bezier(0.22, 0.65, 0.22, 1),
-                padding 460ms cubic-bezier(0.22, 0.65, 0.22, 1),
-                transform 460ms cubic-bezier(0.22, 0.65, 0.22, 1),
-                box-shadow 0.4s ease !important;
             overflow: hidden;
             white-space: nowrap;
             justify-content: flex-start !important;
+            opacity: 1;
+            visibility: visible;
+            pointer-events: auto;
+            transition: width 460ms cubic-bezier(0.22, 0.65, 0.22, 1),
+                padding 460ms cubic-bezier(0.22, 0.65, 0.22, 1),
+                transform 460ms cubic-bezier(0.22, 0.65, 0.22, 1),
+                box-shadow 0.4s ease,
+                opacity 280ms ease,
+                visibility 280ms step-end !important;
+        }
+
+        .chatbot-fab.chatbot-fab-hidden {
+            opacity: 0;
+            visibility: hidden;
+            pointer-events: none;
+            transform: translateY(10px) scale(0.97);
+            transition: width 460ms cubic-bezier(0.22, 0.65, 0.22, 1),
+                padding 460ms cubic-bezier(0.22, 0.65, 0.22, 1),
+                transform 280ms ease,
+                box-shadow 0.4s ease,
+                opacity 280ms ease,
+                visibility 280ms step-start !important;
         }
 
         .chatbot-fab-label {
@@ -3082,6 +3396,9 @@
 </body>
 
 </html>
+
+
+
 
 
 

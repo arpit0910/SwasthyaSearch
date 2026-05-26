@@ -1,6 +1,6 @@
-@extends('layouts.public')
+﻿@extends('layouts.public')
 
-@section('title', ($locale === 'hi' ? 'मुखपृष्ठ' : 'Home') . ' - SwasthyaSearch')
+@section('title', ($locale === 'hi' ? 'à¤®à¥à¤–à¤ªà¥ƒà¤·à¥à¤ ' : 'Home') . ' - SwasthyaSearch')
 
 @section('meta_title', 'SwasthyaSearch - Find Doctors, Hospitals & Blood Banks Near You')
 @section('meta_description', 'Search trusted doctors, hospitals, blood banks, and departments by city or symptoms. Connect directly with healthcare providers without ads or intermediaries.')
@@ -8,7 +8,7 @@
 @php
 $quickSymptoms =
 $locale === 'hi'
-? ['बुखार और खांसी', 'हड्डी का टूटना', 'छाती में दर्द']
+? ['à¤¬à¥à¤–à¤¾à¤° à¤”à¤° à¤–à¤¾à¤‚à¤¸à¥€', 'à¤¹à¤¡à¥à¤¡à¥€ à¤•à¤¾ à¤Ÿà¥‚à¤Ÿà¤¨à¤¾', 'à¤›à¤¾à¤¤à¥€ à¤®à¥‡à¤‚ à¤¦à¤°à¥à¤¦']
 : ['Fever and Cough', 'Bone Fracture', 'Chest Pain'];
 @endphp
 
@@ -23,15 +23,15 @@ $locale === 'hi'
         <div class="flex flex-wrap justify-center items-center gap-3 mb-4">
             <div class="inline-flex items-center space-x-2 px-4 py-2 rounded-full bg-teal-400/10 border border-teal-300/30 text-teal-200 shadow-inner">
                 <i data-lucide="shield-check" class="w-4 h-4 text-teal-300"></i>
-                <span class="text-xs font-semibold tracking-wider uppercase">{{ $locale === 'hi' ? 'भरोसेमंद हेल्थकेयर खोज' : 'Trusted Healthcare Discovery' }}</span>
+                <span class="text-xs font-semibold tracking-wider uppercase">{{ $locale === 'hi' ? 'à¤­à¤°à¥‹à¤¸à¥‡à¤®à¤‚à¤¦ à¤¹à¥‡à¤²à¥à¤¥à¤•à¥‡à¤¯à¤° à¤–à¥‹à¤œ' : 'Trusted Healthcare Discovery' }}</span>
             </div>
         </div>
 
         <h1 class="text-4xl sm:text-6xl font-extrabold tracking-tight max-w-5xl mx-auto py-2 leading-[1.3] text-white drop-shadow-md mb-3">
-            {{ $locale === 'hi' ? 'अपने पास भरोसेमंद डॉक्टर, अस्पताल और ब्लड बैंक खोजें' : 'Find trusted doctors, hospitals, and blood banks near you' }}
+            {{ $locale === 'hi' ? 'à¤…à¤ªà¤¨à¥‡ à¤ªà¤¾à¤¸ à¤­à¤°à¥‹à¤¸à¥‡à¤®à¤‚à¤¦ à¤¡à¥‰à¤•à¥à¤Ÿà¤°, à¤…à¤¸à¥à¤ªà¤¤à¤¾à¤² à¤”à¤° à¤¬à¥à¤²à¤¡ à¤¬à¥ˆà¤‚à¤• à¤–à¥‹à¤œà¥‡à¤‚' : 'Find trusted doctors, hospitals, and blood banks near you' }}
         </h1>
         <p class="text-lg sm:text-xl text-slate-200 max-w-4xl mx-auto font-normal leading-[1.7] mb-4">
-            {{ $locale === 'hi' ? 'लक्षण, विभाग, अस्पताल, ब्लड बैंक या शहर से खोजें। बिना विज्ञापन और बिना बिचौलियों के सीधे संपर्क करें।' : 'Search by symptoms, department, hospital, blood bank, or city. Connect directly without ads or intermediaries.' }}
+            {{ $locale === 'hi' ? 'à¤²à¤•à¥à¤·à¤£, à¤µà¤¿à¤­à¤¾à¤—, à¤…à¤¸à¥à¤ªà¤¤à¤¾à¤², à¤¬à¥à¤²à¤¡ à¤¬à¥ˆà¤‚à¤• à¤¯à¤¾ à¤¶à¤¹à¤° à¤¸à¥‡ à¤–à¥‹à¤œà¥‡à¤‚à¥¤ à¤¬à¤¿à¤¨à¤¾ à¤µà¤¿à¤œà¥à¤žà¤¾à¤ªà¤¨ à¤”à¤° à¤¬à¤¿à¤¨à¤¾ à¤¬à¤¿à¤šà¥Œà¤²à¤¿à¤¯à¥‹à¤‚ à¤•à¥‡ à¤¸à¥€à¤§à¥‡ à¤¸à¤‚à¤ªà¤°à¥à¤• à¤•à¤°à¥‡à¤‚à¥¤' : 'Search by symptoms, department, hospital, blood bank, or city. Connect directly without ads or intermediaries.' }}
         </p>
 
         <!-- Omni-Search Box -->
@@ -42,26 +42,26 @@ $locale === 'hi'
                 <i data-lucide="search"
                     class="absolute left-4 sm:left-6 w-5 h-5 sm:w-6 sm:h-6 text-slate-300 pointer-events-none"></i>
                 <input type="text" id="omni-search-input" oninput="handleOmniSearch(this.value)"
-                    placeholder="{{ $locale === 'hi' ? 'डॉक्टर, अस्पताल, ब्लड बैंक, लक्षण खोजें...' : 'Search doctors, hospitals, blood banks, symptoms...' }}"
+                    placeholder="{{ $locale === 'hi' ? 'à¤¡à¥‰à¤•à¥à¤Ÿà¤°, à¤…à¤¸à¥à¤ªà¤¤à¤¾à¤², à¤¬à¥à¤²à¤¡ à¤¬à¥ˆà¤‚à¤•, à¤²à¤•à¥à¤·à¤£ à¤–à¥‹à¤œà¥‡à¤‚...' : 'Search doctors, hospitals, blood banks, symptoms...' }}"
                     class="w-full pl-11 sm:pl-16 pr-4 py-3.5 sm:py-4 text-white bg-transparent text-base sm:text-lg font-medium placeholder:text-slate-300 appearance-none border-0 shadow-none ring-0 focus:outline-none focus:ring-0 focus:border-0" />
                 <button id="clear-search-btn" onclick="clearOmniSearch()"
                     class="hidden mr-3 px-3 py-1.5 text-xs text-slate-200 hover:text-white bg-white/10 hover:bg-white/20 rounded-xl transition-all duration-200 border border-white/10">
-                    {{ $locale === 'hi' ? 'साफ़ करें' : 'Clear' }}
+                    {{ $locale === 'hi' ? 'à¤¸à¤¾à¤«à¤¼ à¤•à¤°à¥‡à¤‚' : 'Clear' }}
                 </button>
             </div>
 
             <!-- Interactive Symptom Grid -->
             <div class="mt-5 pt-2">
-                <p class="text-[11px] sm:text-xs font-bold text-slate-300 uppercase tracking-wider mb-3">{{ $locale === 'hi' ? 'लक्षणों द्वारा त्वरित खोज' : 'Quick Search by Symptoms' }}</p>
+                <p class="text-[11px] sm:text-xs font-bold text-slate-300 uppercase tracking-wider mb-3">{{ $locale === 'hi' ? 'à¤²à¤•à¥à¤·à¤£à¥‹à¤‚ à¤¦à¥à¤µà¤¾à¤°à¤¾ à¤¤à¥à¤µà¤°à¤¿à¤¤ à¤–à¥‹à¤œ' : 'Quick Search by Symptoms' }}</p>
                 <div class="grid grid-cols-3 sm:grid-cols-6 gap-3">
                     @php
                     $symptoms = [
-                    ['id' => 'fever', 'en' => 'Fever', 'hi' => 'बुखार', 'icon' => 'thermometer', 'color' => 'text-rose-450 bg-rose-500/10 border-rose-500/20'],
-                    ['id' => 'cough', 'en' => 'Cough', 'hi' => 'खांसी', 'icon' => 'wind', 'color' => 'text-cyan-450 bg-cyan-500/10 border-cyan-500/20'],
-                    ['id' => 'stomach-pain', 'en' => 'Stomach Pain', 'hi' => 'पेट दर्द', 'icon' => 'shield-alert', 'color' => 'text-amber-450 bg-amber-500/10 border-amber-500/20'],
-                    ['id' => 'skin-rash', 'en' => 'Skin Rash', 'hi' => 'त्वचा चकत्ते', 'icon' => 'sparkles', 'color' => 'text-teal-450 bg-teal-500/10 border-teal-500/20'],
-                    ['id' => 'joint-pain', 'en' => 'Joint Pain', 'hi' => 'जोड़ों का दर्द', 'icon' => 'activity', 'color' => 'text-indigo-450 bg-indigo-500/10 border-indigo-500/20'],
-                    ['id' => 'headache', 'en' => 'Headache', 'hi' => 'सिरदर्द', 'icon' => 'brain', 'color' => 'text-fuchsia-450 bg-fuchsia-500/10 border-fuchsia-500/20']
+                    ['id' => 'fever', 'en' => 'Fever', 'hi' => 'à¤¬à¥à¤–à¤¾à¤°', 'icon' => 'thermometer', 'color' => 'text-rose-450 bg-rose-500/10 border-rose-500/20'],
+                    ['id' => 'cough', 'en' => 'Cough', 'hi' => 'à¤–à¤¾à¤‚à¤¸à¥€', 'icon' => 'wind', 'color' => 'text-cyan-450 bg-cyan-500/10 border-cyan-500/20'],
+                    ['id' => 'stomach-pain', 'en' => 'Stomach Pain', 'hi' => 'à¤ªà¥‡à¤Ÿ à¤¦à¤°à¥à¤¦', 'icon' => 'shield-alert', 'color' => 'text-amber-450 bg-amber-500/10 border-amber-500/20'],
+                    ['id' => 'skin-rash', 'en' => 'Skin Rash', 'hi' => 'à¤¤à¥à¤µà¤šà¤¾ à¤šà¤•à¤¤à¥à¤¤à¥‡', 'icon' => 'sparkles', 'color' => 'text-teal-450 bg-teal-500/10 border-teal-500/20'],
+                    ['id' => 'joint-pain', 'en' => 'Joint Pain', 'hi' => 'à¤œà¥‹à¤¡à¤¼à¥‹à¤‚ à¤•à¤¾ à¤¦à¤°à¥à¤¦', 'icon' => 'activity', 'color' => 'text-indigo-450 bg-indigo-500/10 border-indigo-500/20'],
+                    ['id' => 'headache', 'en' => 'Headache', 'hi' => 'à¤¸à¤¿à¤°à¤¦à¤°à¥à¤¦', 'icon' => 'brain', 'color' => 'text-fuchsia-450 bg-fuchsia-500/10 border-fuchsia-500/20']
                     ];
                     @endphp
                     @foreach($symptoms as $symptom)
@@ -76,10 +76,10 @@ $locale === 'hi'
             </div>
             <div class="mt-5 pt-4 border-t border-white/10 max-w-4xl mx-auto text-center">
                 <div class="flex flex-wrap justify-center gap-2.5 items-center">
-                    <a href="{{ route('doctors.index') }}" class="px-4 py-2 rounded-2xl bg-white/10 hover:bg-white/20 border border-white/10 text-xs sm:text-sm font-semibold">{{ $locale === 'hi' ? 'डॉक्टर खोजें' : 'Find Doctor' }}</a>
-                    <a href="{{ route('hospitals.index') }}" class="px-4 py-2 rounded-2xl bg-white/10 hover:bg-white/20 border border-white/10 text-xs sm:text-sm font-semibold">{{ $locale === 'hi' ? 'अस्पताल खोजें' : 'Find Hospital' }}</a>
-                    <a href="{{ route('blood_banks.index') }}" class="px-4 py-2 rounded-2xl bg-white/10 hover:bg-white/20 border border-white/10 text-xs sm:text-sm font-semibold">{{ $locale === 'hi' ? 'ब्लड बैंक खोजें' : 'Find Blood Bank' }}</a>
-                    <button type="button" onclick="toggleChatbot()" class="px-4 py-2 rounded-2xl bg-teal-500 hover:bg-teal-400 border border-teal-300/40 text-xs sm:text-sm font-semibold text-slate-950">{{ $locale === 'hi' ? 'AI सहायक से पूछें' : 'Ask AI Assistant' }}</button>
+                    <a href="{{ route('doctors.index') }}" class="px-4 py-2 rounded-2xl bg-white/10 hover:bg-white/20 border border-white/10 text-xs sm:text-sm font-semibold">{{ $locale === 'hi' ? 'à¤¡à¥‰à¤•à¥à¤Ÿà¤° à¤–à¥‹à¤œà¥‡à¤‚' : 'Find Doctor' }}</a>
+                    <a href="{{ route('hospitals.index') }}" class="px-4 py-2 rounded-2xl bg-white/10 hover:bg-white/20 border border-white/10 text-xs sm:text-sm font-semibold">{{ $locale === 'hi' ? 'à¤…à¤¸à¥à¤ªà¤¤à¤¾à¤² à¤–à¥‹à¤œà¥‡à¤‚' : 'Find Hospital' }}</a>
+                    <a href="{{ route('blood_banks.index') }}" class="px-4 py-2 rounded-2xl bg-white/10 hover:bg-white/20 border border-white/10 text-xs sm:text-sm font-semibold">{{ $locale === 'hi' ? 'à¤¬à¥à¤²à¤¡ à¤¬à¥ˆà¤‚à¤• à¤–à¥‹à¤œà¥‡à¤‚' : 'Find Blood Bank' }}</a>
+                    <button type="button" onclick="toggleChatbot()" class="px-4 py-2 rounded-2xl bg-teal-500 hover:bg-teal-400 border border-teal-300/40 text-xs sm:text-sm font-semibold text-slate-950">{{ $locale === 'hi' ? 'AI à¤¸à¤¹à¤¾à¤¯à¤• à¤¸à¥‡ à¤ªà¥‚à¤›à¥‡à¤‚' : 'Ask AI Assistant' }}</button>
                 </div>
             </div>
         </div>
@@ -97,14 +97,14 @@ $locale === 'hi'
             </div>
             <div>
                 <h3 class="text-lg font-bold text-slate-800 dark:text-slate-100">
-                    {{ $locale === 'hi' ? 'लक्षण विश्लेषण और विभाग मिलान' : 'Symptom Analysis & Department Match' }}
+                    {{ $locale === 'hi' ? 'à¤²à¤•à¥à¤·à¤£ à¤µà¤¿à¤¶à¥à¤²à¥‡à¤·à¤£ à¤”à¤° à¤µà¤¿à¤­à¤¾à¤— à¤®à¤¿à¤²à¤¾à¤¨' : 'Symptom Analysis & Department Match' }}
                 </h3>
                 <p class="text-sm text-slate-600 mt-0.5" id="search-match-text"></p>
             </div>
         </div>
         <span
             class="text-xs font-semibold bg-white dark:bg-slate-900 text-teal-700 dark:text-teal-300 px-3 py-1.5 rounded-xl shadow-sm border border-teal-100 dark:border-teal-900/70">
-            {{ $locale === 'hi' ? 'एआई द्वारा सत्यापित' : 'AI Verified Match' }}
+            {{ $locale === 'hi' ? 'à¤à¤†à¤ˆ à¤¦à¥à¤µà¤¾à¤°à¤¾ à¤¸à¤¤à¥à¤¯à¤¾à¤ªà¤¿à¤¤' : 'AI Verified Match' }}
         </span>
     </div>
 
@@ -113,16 +113,16 @@ $locale === 'hi'
         <div class="flex justify-between items-end mb-8">
             <div>
                 <h2 class="text-2xl sm:text-3xl font-bold tracking-tight text-slate-900 dark:text-white">
-                    {{ $locale === 'hi' ? 'खोज परिणाम' : 'Search Results' }}
+                    {{ $locale === 'hi' ? 'à¤–à¥‹à¤œ à¤ªà¤°à¤¿à¤£à¤¾à¤®' : 'Search Results' }}
                 </h2>
                 <p class="text-sm text-slate-500 dark:text-slate-400 mt-1">
-                    {{ $locale === 'hi' ? 'बिना किसी विज्ञापन या मध्यस्थ के सीधे संपर्क करें' : 'Direct contact details with zero ads or intermediaries' }}
+                    {{ $locale === 'hi' ? 'à¤¬à¤¿à¤¨à¤¾ à¤•à¤¿à¤¸à¥€ à¤µà¤¿à¤œà¥à¤žà¤¾à¤ªà¤¨ à¤¯à¤¾ à¤®à¤§à¥à¤¯à¤¸à¥à¤¥ à¤•à¥‡ à¤¸à¥€à¤§à¥‡ à¤¸à¤‚à¤ªà¤°à¥à¤• à¤•à¤°à¥‡à¤‚' : 'Direct contact details with zero ads or intermediaries' }}
                 </p>
             </div>
             <span
                 class="text-sm font-semibold text-indigo-600 dark:text-indigo-400 bg-indigo-50 dark:bg-indigo-950/40 px-3 py-1.5 rounded-xl border border-indigo-100 dark:border-indigo-900"
                 id="doctors-count-badge">
-                0 {{ $locale === 'hi' ? 'डॉक्टर मिले' : 'Doctors Found' }}
+                0 {{ $locale === 'hi' ? 'à¤¡à¥‰à¤•à¥à¤Ÿà¤° à¤®à¤¿à¤²à¥‡' : 'Doctors Found' }}
             </span>
         </div>
 
@@ -130,7 +130,7 @@ $locale === 'hi'
         <div id="search-loading"
             class="hidden py-20 text-center text-slate-400 font-medium flex flex-col items-center justify-center space-y-3">
             <div class="w-10 h-10 border-4 border-teal-500 border-t-transparent rounded-full animate-spin"></div>
-            <span>{{ $locale === 'hi' ? 'डॉक्टर खोजे जा रहे हैं...' : 'Searching healthcare providers...' }}</span>
+            <span>{{ $locale === 'hi' ? 'à¤¡à¥‰à¤•à¥à¤Ÿà¤° à¤–à¥‹à¤œà¥‡ à¤œà¤¾ à¤°à¤¹à¥‡ à¤¹à¥ˆà¤‚...' : 'Searching healthcare providers...' }}</span>
         </div>
 
         <!-- Doctors Grid -->
@@ -143,10 +143,10 @@ $locale === 'hi'
                 <i data-lucide="search" class="w-8 h-8"></i>
             </div>
             <h3 class="text-xl font-bold text-slate-800 dark:text-slate-100">
-                {{ $locale === 'hi' ? 'कोई डॉक्टर नहीं मिला' : 'No Specialists Found' }}
+                {{ $locale === 'hi' ? 'à¤•à¥‹à¤ˆ à¤¡à¥‰à¤•à¥à¤Ÿà¤° à¤¨à¤¹à¥€à¤‚ à¤®à¤¿à¤²à¤¾' : 'No Specialists Found' }}
             </h3>
             <p class="text-slate-500 dark:text-slate-400 text-sm">
-                {{ $locale === 'hi' ? 'आपकी खोज से मेल खाने वाले कोई डॉक्टर या अस्पताल नहीं मिले। कृपया किसी अन्य लक्षण या विभाग से खोजें।' : 'We couldn\'t find any healthcare providers matching your exact criteria. Try searching with different symptom keywords.' }}
+                {{ $locale === 'hi' ? 'à¤†à¤ªà¤•à¥€ à¤–à¥‹à¤œ à¤¸à¥‡ à¤®à¥‡à¤² à¤–à¤¾à¤¨à¥‡ à¤µà¤¾à¤²à¥‡ à¤•à¥‹à¤ˆ à¤¡à¥‰à¤•à¥à¤Ÿà¤° à¤¯à¤¾ à¤…à¤¸à¥à¤ªà¤¤à¤¾à¤² à¤¨à¤¹à¥€à¤‚ à¤®à¤¿à¤²à¥‡à¥¤ à¤•à¥ƒà¤ªà¤¯à¤¾ à¤•à¤¿à¤¸à¥€ à¤…à¤¨à¥à¤¯ à¤²à¤•à¥à¤·à¤£ à¤¯à¤¾ à¤µà¤¿à¤­à¤¾à¤— à¤¸à¥‡ à¤–à¥‹à¤œà¥‡à¤‚à¥¤' : 'We couldn\'t find any healthcare providers matching your exact criteria. Try searching with different symptom keywords.' }}
             </p>
         </div>
     </div>
@@ -160,13 +160,13 @@ $locale === 'hi'
                     <div
                         class="inline-flex items-center space-x-2 text-teal-600 font-bold text-sm uppercase tracking-wider mb-2">
                         <i data-lucide="bar-chart-2" class="w-4 h-4"></i>
-                        <span>{{ $locale === 'hi' ? 'स्वास्थ्या सर्च एक नज़र में' : 'SwasthyaSearch at a Glance' }}</span>
+                        <span>{{ $locale === 'hi' ? 'à¤¸à¥à¤µà¤¾à¤¸à¥à¤¥à¥à¤¯à¤¾ à¤¸à¤°à¥à¤š à¤à¤• à¤¨à¤œà¤¼à¤° à¤®à¥‡à¤‚' : 'SwasthyaSearch at a Glance' }}</span>
                     </div>
                     <h2 class="text-2xl sm:text-3xl font-bold tracking-tight text-slate-900 dark:text-white">
-                        {{ $locale === 'hi' ? 'हमारा विस्तृत और प्रमाणित स्वास्थ्य नेटवर्क' : 'Our Extensive & Verified Healthcare Network' }}
+                        {{ $locale === 'hi' ? 'à¤¹à¤®à¤¾à¤°à¤¾ à¤µà¤¿à¤¸à¥à¤¤à¥ƒà¤¤ à¤”à¤° à¤ªà¥à¤°à¤®à¤¾à¤£à¤¿à¤¤ à¤¸à¥à¤µà¤¾à¤¸à¥à¤¥à¥à¤¯ à¤¨à¥‡à¤Ÿà¤µà¤°à¥à¤•' : 'Our Extensive & Verified Healthcare Network' }}
                     </h2>
                     <p class="text-sm text-slate-500 mt-1">
-                        {{ $locale === 'hi' ? 'राजस्थान के सर्वश्रेष्ठ डॉक्टरों और अस्पतालों की सम्पूर्ण जानकारी' : 'Comprehensive directory coverage across top healthcare institutions and specialists' }}
+                        {{ $locale === 'hi' ? 'à¤°à¤¾à¤œà¤¸à¥à¤¥à¤¾à¤¨ à¤•à¥‡ à¤¸à¤°à¥à¤µà¤¶à¥à¤°à¥‡à¤·à¥à¤  à¤¡à¥‰à¤•à¥à¤Ÿà¤°à¥‹à¤‚ à¤”à¤° à¤…à¤¸à¥à¤ªà¤¤à¤¾à¤²à¥‹à¤‚ à¤•à¥€ à¤¸à¤®à¥à¤ªà¥‚à¤°à¥à¤£ à¤œà¤¾à¤¨à¤•à¤¾à¤°à¥€' : 'Comprehensive directory coverage across top healthcare institutions and specialists' }}
                     </p>
                 </div>
             </div>
@@ -175,7 +175,7 @@ $locale === 'hi'
                 <!-- Cities Count -->
                 <a href="{{ route('hospitals.index') }}"
                     class="bg-gradient-to-br from-indigo-500 via-indigo-600 to-indigo-700 p-6 rounded-3xl text-white shadow-xl relative overflow-hidden group block ring-1 ring-white/15 hover:ring-white/35 hover:shadow-2xl hover:-translate-y-1.5 transition-all duration-300 focus:outline-none focus-visible:ring-2 focus-visible:ring-indigo-300/80"
-                    aria-label="{{ $locale === 'hi' ? 'शहर और क्षेत्रों के लिए अस्पताल खोजें' : 'Browse hospitals by cities and regions' }}">
+                    aria-label="{{ $locale === 'hi' ? 'à¤¶à¤¹à¤° à¤”à¤° à¤•à¥à¤·à¥‡à¤¤à¥à¤°à¥‹à¤‚ à¤•à¥‡ à¤²à¤¿à¤ à¤…à¤¸à¥à¤ªà¤¤à¤¾à¤² à¤–à¥‹à¤œà¥‡à¤‚' : 'Browse hospitals by cities and regions' }}">
                     <div
                         class="absolute -right-4 -bottom-4 w-24 h-24 bg-white/10 rounded-full blur-xl group-hover:scale-150 transition-transform duration-500">
                     </div>
@@ -190,7 +190,7 @@ $locale === 'hi'
                                 {{ $stats['cities'] ?? 1 }}+
                             </div>
                             <div class="text-indigo-100 text-xs sm:text-sm font-medium mt-1">
-                                {{ $locale === 'hi' ? 'शहर व क्षेत्र' : 'Cities & Regions' }}
+                                {{ $locale === 'hi' ? 'à¤¶à¤¹à¤° à¤µ à¤•à¥à¤·à¥‡à¤¤à¥à¤°' : 'Cities & Regions' }}
                             </div>
                         </div>
                     </div>
@@ -199,7 +199,7 @@ $locale === 'hi'
                 <!-- Doctors Count -->
                 <a href="{{ route('doctors.index') }}"
                     class="bg-gradient-to-br from-teal-500 via-teal-600 to-teal-700 p-6 rounded-3xl text-white shadow-xl relative overflow-hidden group block ring-1 ring-white/15 hover:ring-white/35 hover:shadow-2xl hover:-translate-y-1.5 transition-all duration-300 focus:outline-none focus-visible:ring-2 focus-visible:ring-teal-300/80"
-                    aria-label="{{ $locale === 'hi' ? 'सत्यापित डॉक्टर देखें' : 'Browse verified doctors' }}">
+                    aria-label="{{ $locale === 'hi' ? 'à¤¸à¤¤à¥à¤¯à¤¾à¤ªà¤¿à¤¤ à¤¡à¥‰à¤•à¥à¤Ÿà¤° à¤¦à¥‡à¤–à¥‡à¤‚' : 'Browse verified doctors' }}">
                     <div
                         class="absolute -right-4 -bottom-4 w-24 h-24 bg-white/10 rounded-full blur-xl group-hover:scale-150 transition-transform duration-500">
                     </div>
@@ -214,7 +214,7 @@ $locale === 'hi'
                                 {{ $stats['doctors'] ?? 120 }}+
                             </div>
                             <div class="text-teal-100 text-xs sm:text-sm font-medium mt-1">
-                                {{ $locale === 'hi' ? 'सत्यापित डॉक्टर' : 'Verified Specialists' }}
+                                {{ $locale === 'hi' ? 'à¤¸à¤¤à¥à¤¯à¤¾à¤ªà¤¿à¤¤ à¤¡à¥‰à¤•à¥à¤Ÿà¤°' : 'Verified Specialists' }}
                             </div>
                         </div>
                     </div>
@@ -223,7 +223,7 @@ $locale === 'hi'
                 <!-- Departments Count -->
                 <a href="{{ route('departments.index') }}"
                     class="bg-gradient-to-br from-amber-500 via-amber-600 to-amber-700 p-6 rounded-3xl text-white shadow-xl relative overflow-hidden group block ring-1 ring-white/15 hover:ring-white/35 hover:shadow-2xl hover:-translate-y-1.5 transition-all duration-300 focus:outline-none focus-visible:ring-2 focus-visible:ring-amber-300/80"
-                    aria-label="{{ $locale === 'hi' ? 'चिकित्सा विभाग देखें' : 'Browse medical departments' }}">
+                    aria-label="{{ $locale === 'hi' ? 'à¤šà¤¿à¤•à¤¿à¤¤à¥à¤¸à¤¾ à¤µà¤¿à¤­à¤¾à¤— à¤¦à¥‡à¤–à¥‡à¤‚' : 'Browse medical departments' }}">
                     <div
                         class="absolute -right-4 -bottom-4 w-24 h-24 bg-white/10 rounded-full blur-xl group-hover:scale-150 transition-transform duration-500">
                     </div>
@@ -238,7 +238,7 @@ $locale === 'hi'
                                 {{ $stats['departments'] ?? 10 }}+
                             </div>
                             <div class="text-amber-100 text-xs sm:text-sm font-medium mt-1">
-                                {{ $locale === 'hi' ? 'चिकित्सा विभाग' : 'Medical Departments' }}
+                                {{ $locale === 'hi' ? 'à¤šà¤¿à¤•à¤¿à¤¤à¥à¤¸à¤¾ à¤µà¤¿à¤­à¤¾à¤—' : 'Medical Departments' }}
                             </div>
                         </div>
                     </div>
@@ -247,7 +247,7 @@ $locale === 'hi'
                 <!-- Hospitals Count -->
                 <a href="{{ route('hospitals.index') }}"
                     class="bg-gradient-to-br from-purple-500 via-purple-600 to-purple-700 p-6 rounded-3xl text-white shadow-xl relative overflow-hidden group block ring-1 ring-white/15 hover:ring-white/35 hover:shadow-2xl hover:-translate-y-1.5 transition-all duration-300 focus:outline-none focus-visible:ring-2 focus-visible:ring-purple-300/80"
-                    aria-label="{{ $locale === 'hi' ? 'अस्पताल और क्लीनिक देखें' : 'Browse hospitals and clinics' }}">
+                    aria-label="{{ $locale === 'hi' ? 'à¤…à¤¸à¥à¤ªà¤¤à¤¾à¤² à¤”à¤° à¤•à¥à¤²à¥€à¤¨à¤¿à¤• à¤¦à¥‡à¤–à¥‡à¤‚' : 'Browse hospitals and clinics' }}">
                     <div
                         class="absolute -right-4 -bottom-4 w-24 h-24 bg-white/10 rounded-full blur-xl group-hover:scale-150 transition-transform duration-500">
                     </div>
@@ -262,7 +262,7 @@ $locale === 'hi'
                                 {{ $stats['hospitals'] ?? 20 }}+
                             </div>
                             <div class="text-purple-100 text-xs sm:text-sm font-medium mt-1">
-                                {{ $locale === 'hi' ? 'अस्पताल व क्लीनिक' : 'Hospitals & Clinics' }}
+                                {{ $locale === 'hi' ? 'à¤…à¤¸à¥à¤ªà¤¤à¤¾à¤² à¤µ à¤•à¥à¤²à¥€à¤¨à¤¿à¤•' : 'Hospitals & Clinics' }}
                             </div>
                         </div>
                     </div>
@@ -271,7 +271,7 @@ $locale === 'hi'
                 <!-- Blood Banks Count -->
                 <a href="{{ route('blood_banks.index') }}"
                     class="bg-gradient-to-br from-red-500 via-red-600 to-rose-700 p-6 rounded-3xl text-white shadow-xl relative overflow-hidden group block ring-1 ring-white/15 hover:ring-white/35 hover:shadow-2xl hover:-translate-y-1.5 transition-all duration-300 focus:outline-none focus-visible:ring-2 focus-visible:ring-rose-300/80"
-                    aria-label="{{ $locale === 'hi' ? 'ब्लड बैंक देखें' : 'Browse blood banks' }}">
+                    aria-label="{{ $locale === 'hi' ? 'à¤¬à¥à¤²à¤¡ à¤¬à¥ˆà¤‚à¤• à¤¦à¥‡à¤–à¥‡à¤‚' : 'Browse blood banks' }}">
                     <div
                         class="absolute -right-4 -bottom-4 w-24 h-24 bg-white/10 rounded-full blur-xl group-hover:scale-150 transition-transform duration-500">
                     </div>
@@ -286,7 +286,7 @@ $locale === 'hi'
                                 {{ $stats['blood_banks'] ?? 8 }}+
                             </div>
                             <div class="text-red-100 text-xs sm:text-sm font-medium mt-1">
-                                {{ $locale === 'hi' ? 'ब्लड बैंक' : 'Blood Banks' }}
+                                {{ $locale === 'hi' ? 'à¤¬à¥à¤²à¤¡ à¤¬à¥ˆà¤‚à¤•' : 'Blood Banks' }}
                             </div>
                         </div>
                     </div>
@@ -299,24 +299,24 @@ $locale === 'hi'
             <div class="flex flex-col gap-3">
                 <div class="min-w-0">
                     <p class="text-[11px] sm:text-xs font-bold uppercase tracking-wider text-teal-700 dark:text-teal-300">
-                        {{ $locale === 'hi' ? '100% निःशुल्क और पारदर्शी' : '100% Free & Transparent' }}
+                        {{ $locale === 'hi' ? '100% à¤¨à¤¿à¤ƒà¤¶à¥à¤²à¥à¤• à¤”à¤° à¤ªà¤¾à¤°à¤¦à¤°à¥à¤¶à¥€' : '100% Free & Transparent' }}
                     </p>
                     <p class="text-sm sm:text-base font-semibold text-slate-900 dark:text-white mt-1">
-                        {{ $locale === 'hi' ? 'आयुष्मान भारत और जन आधार कार्ड स्वीकृत' : 'Ayushman Bharat & Jan Aadhaar Cards Accepted' }}
+                        {{ $locale === 'hi' ? 'à¤†à¤¯à¥à¤·à¥à¤®à¤¾à¤¨ à¤­à¤¾à¤°à¤¤ à¤”à¤° à¤œà¤¨ à¤†à¤§à¤¾à¤° à¤•à¤¾à¤°à¥à¤¡ à¤¸à¥à¤µà¥€à¤•à¥ƒà¤¤' : 'Ayushman Bharat & Jan Aadhaar Cards Accepted' }}
                     </p>
                     <p class="text-xs sm:text-sm text-slate-600 dark:text-slate-300 mt-1">
-                        {{ $locale === 'hi' ? 'सत्यापित अस्पतालों और डॉक्टरों से सीधे जुड़ें। न बिचौलिया, न बुकिंग शुल्क, और सरकारी स्वास्थ्य योजनाओं का पूरा समर्थन।' : 'Connect directly with verified hospitals and doctors. Zero intermediaries, zero booking fees, and full support for government health schemes.' }}
+                        {{ $locale === 'hi' ? 'à¤¸à¤¤à¥à¤¯à¤¾à¤ªà¤¿à¤¤ à¤…à¤¸à¥à¤ªà¤¤à¤¾à¤²à¥‹à¤‚ à¤”à¤° à¤¡à¥‰à¤•à¥à¤Ÿà¤°à¥‹à¤‚ à¤¸à¥‡ à¤¸à¥€à¤§à¥‡ à¤œà¥à¤¡à¤¼à¥‡à¤‚à¥¤ à¤¨ à¤¬à¤¿à¤šà¥Œà¤²à¤¿à¤¯à¤¾, à¤¨ à¤¬à¥à¤•à¤¿à¤‚à¤— à¤¶à¥à¤²à¥à¤•, à¤”à¤° à¤¸à¤°à¤•à¤¾à¤°à¥€ à¤¸à¥à¤µà¤¾à¤¸à¥à¤¥à¥à¤¯ à¤¯à¥‹à¤œà¤¨à¤¾à¤“à¤‚ à¤•à¤¾ à¤ªà¥‚à¤°à¤¾ à¤¸à¤®à¤°à¥à¤¥à¤¨à¥¤' : 'Connect directly with verified hospitals and doctors. Zero intermediaries, zero booking fees, and full support for government health schemes.' }}
                     </p>
                 </div>
                 <div class="flex items-center gap-2.5 flex-nowrap overflow-x-auto whitespace-nowrap pb-1">
                     <span class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-emerald-50 dark:bg-emerald-950/30 border border-emerald-200 dark:border-emerald-900 text-xs font-bold text-emerald-700 dark:text-emerald-300">
-                        <i data-lucide="check-circle-2" class="w-3.5 h-3.5"></i> {{ $locale === 'hi' ? 'आयुष्मान भारत' : 'Ayushman Bharat' }}
+                        <i data-lucide="check-circle-2" class="w-3.5 h-3.5"></i> {{ $locale === 'hi' ? 'à¤†à¤¯à¥à¤·à¥à¤®à¤¾à¤¨ à¤­à¤¾à¤°à¤¤' : 'Ayushman Bharat' }}
                     </span>
                     <span class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-sky-50 dark:bg-sky-950/30 border border-sky-200 dark:border-sky-900 text-xs font-bold text-sky-700 dark:text-sky-300">
-                        <i data-lucide="check-circle-2" class="w-3.5 h-3.5"></i> {{ $locale === 'hi' ? 'जन आधार' : 'Jan Aadhaar' }}
+                        <i data-lucide="check-circle-2" class="w-3.5 h-3.5"></i> {{ $locale === 'hi' ? 'à¤œà¤¨ à¤†à¤§à¤¾à¤°' : 'Jan Aadhaar' }}
                     </span>
                     <span class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-violet-50 dark:bg-violet-950/30 border border-violet-200 dark:border-violet-900 text-xs font-bold text-violet-700 dark:text-violet-300">
-                        <i data-lucide="check-circle-2" class="w-3.5 h-3.5"></i> {{ $locale === 'hi' ? 'कैशलेस बीमा' : 'Cashless Insurance' }}
+                        <i data-lucide="check-circle-2" class="w-3.5 h-3.5"></i> {{ $locale === 'hi' ? 'à¤•à¥ˆà¤¶à¤²à¥‡à¤¸ à¤¬à¥€à¤®à¤¾' : 'Cashless Insurance' }}
                     </span>
                 </div>
             </div>
@@ -328,10 +328,10 @@ $locale === 'hi'
                 <div
                     class="inline-flex items-center space-x-2 text-indigo-600 font-bold text-sm uppercase tracking-wider mb-2">
                     <i data-lucide="workflow" class="w-4 h-4"></i>
-                    <span>{{ $locale === 'hi' ? 'कैसे काम करता है' : 'How It Works' }}</span>
+                    <span>{{ $locale === 'hi' ? 'à¤•à¥ˆà¤¸à¥‡ à¤•à¤¾à¤® à¤•à¤°à¤¤à¤¾ à¤¹à¥ˆ' : 'How It Works' }}</span>
                 </div>
                 <h2 class="text-2xl sm:text-3xl font-bold tracking-tight text-slate-900 dark:text-white">
-                    {{ $locale === 'hi' ? 'सही डॉक्टर तक पहुँचने के 3 आसान चरण' : '3 Simple Steps to Reach the Right Doctor' }}
+                    {{ $locale === 'hi' ? 'à¤¸à¤¹à¥€ à¤¡à¥‰à¤•à¥à¤Ÿà¤° à¤¤à¤• à¤ªà¤¹à¥à¤à¤šà¤¨à¥‡ à¤•à¥‡ 3 à¤†à¤¸à¤¾à¤¨ à¤šà¤°à¤£' : '3 Simple Steps to Reach the Right Doctor' }}
                 </h2>
             </div>
             <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
@@ -340,10 +340,10 @@ $locale === 'hi'
                         <i data-lucide="message-square-text" class="w-5 h-5"></i>
                     </div>
                     <h3 class="text-lg font-bold text-slate-900 dark:text-white mb-2">
-                        {{ $locale === 'hi' ? '1. लक्षण लिखें' : '1. Enter Symptoms' }}
+                        {{ $locale === 'hi' ? '1. à¤²à¤•à¥à¤·à¤£ à¤²à¤¿à¤–à¥‡à¤‚' : '1. Enter Symptoms' }}
                     </h3>
                     <p class="text-sm text-slate-600 dark:text-slate-300">
-                        {{ $locale === 'hi' ? 'अपनी समस्या सामान्य भाषा में लिखें, जैसे छाती में दर्द या बुखार।' : 'Type your concern in plain language like chest pain or fever.' }}
+                        {{ $locale === 'hi' ? 'à¤…à¤ªà¤¨à¥€ à¤¸à¤®à¤¸à¥à¤¯à¤¾ à¤¸à¤¾à¤®à¤¾à¤¨à¥à¤¯ à¤­à¤¾à¤·à¤¾ à¤®à¥‡à¤‚ à¤²à¤¿à¤–à¥‡à¤‚, à¤œà¥ˆà¤¸à¥‡ à¤›à¤¾à¤¤à¥€ à¤®à¥‡à¤‚ à¤¦à¤°à¥à¤¦ à¤¯à¤¾ à¤¬à¥à¤–à¤¾à¤°à¥¤' : 'Type your concern in plain language like chest pain or fever.' }}
                     </p>
                 </article>
                 <article class="bg-white dark:bg-slate-900 rounded-3xl p-6 border border-slate-200/80 dark:border-slate-800 shadow-sm modern-card">
@@ -351,10 +351,10 @@ $locale === 'hi'
                         <i data-lucide="brain-circuit" class="w-5 h-5"></i>
                     </div>
                     <h3 class="text-lg font-bold text-slate-900 dark:text-white mb-2">
-                        {{ $locale === 'hi' ? '2. विभाग सुझाव पाएँ' : '2. Get Department Match' }}
+                        {{ $locale === 'hi' ? '2. à¤µà¤¿à¤­à¤¾à¤— à¤¸à¥à¤à¤¾à¤µ à¤ªà¤¾à¤à¤' : '2. Get Department Match' }}
                     </h3>
                     <p class="text-sm text-slate-600 dark:text-slate-300">
-                        {{ $locale === 'hi' ? 'AI आपके लक्षणों को संबंधित मेडिकल विभाग से जोड़ता है।' : 'AI maps your symptoms to the most relevant medical specialty.' }}
+                        {{ $locale === 'hi' ? 'AI à¤†à¤ªà¤•à¥‡ à¤²à¤•à¥à¤·à¤£à¥‹à¤‚ à¤•à¥‹ à¤¸à¤‚à¤¬à¤‚à¤§à¤¿à¤¤ à¤®à¥‡à¤¡à¤¿à¤•à¤² à¤µà¤¿à¤­à¤¾à¤— à¤¸à¥‡ à¤œà¥‹à¤¡à¤¼à¤¤à¤¾ à¤¹à¥ˆà¥¤' : 'AI maps your symptoms to the most relevant medical specialty.' }}
                     </p>
                 </article>
                 <article class="bg-white dark:bg-slate-900 rounded-3xl p-6 border border-slate-200/80 dark:border-slate-800 shadow-sm modern-card">
@@ -362,34 +362,57 @@ $locale === 'hi'
                         <i data-lucide="phone-call" class="w-5 h-5"></i>
                     </div>
                     <h3 class="text-lg font-bold text-slate-900 dark:text-white mb-2">
-                        {{ $locale === 'hi' ? '3. डॉक्टर से जुड़ें' : '3. Connect with Doctors' }}
+                        {{ $locale === 'hi' ? '3. à¤¡à¥‰à¤•à¥à¤Ÿà¤° à¤¸à¥‡ à¤œà¥à¤¡à¤¼à¥‡à¤‚' : '3. Connect with Doctors' }}
                     </h3>
                     <p class="text-sm text-slate-600 dark:text-slate-300">
-                        {{ $locale === 'hi' ? 'अपने शहर के सत्यापित डॉक्टर/अस्पताल चुनें और तुरंत संपर्क करें।' : 'Choose verified doctors and hospitals in your city and contact them directly.' }}
+                        {{ $locale === 'hi' ? 'à¤…à¤ªà¤¨à¥‡ à¤¶à¤¹à¤° à¤•à¥‡ à¤¸à¤¤à¥à¤¯à¤¾à¤ªà¤¿à¤¤ à¤¡à¥‰à¤•à¥à¤Ÿà¤°/à¤…à¤¸à¥à¤ªà¤¤à¤¾à¤² à¤šà¥à¤¨à¥‡à¤‚ à¤”à¤° à¤¤à¥à¤°à¤‚à¤¤ à¤¸à¤‚à¤ªà¤°à¥à¤• à¤•à¤°à¥‡à¤‚à¥¤' : 'Choose verified doctors and hospitals in your city and contact them directly.' }}
                     </p>
                 </article>
             </div>
         </div>
         
+        <section class="rounded-3xl border border-rose-200/80 dark:border-rose-900/60 bg-gradient-to-r from-rose-50 via-white to-amber-50 dark:from-rose-950/25 dark:via-slate-900 dark:to-amber-950/25 p-5 sm:p-6 shadow-sm modern-card">
+            <div class="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
+                <div>
+                    <p class="text-[11px] uppercase tracking-wider text-rose-700 dark:text-rose-300 font-bold">{{ $locale === 'hi' ? 'आपातकालीन सहायता' : 'Emergency Quick Actions' }}</p>
+                    <h3 class="text-lg sm:text-xl font-bold text-slate-900 dark:text-white mt-1">{{ $locale === 'hi' ? 'एक टैप में मदद पाएं' : 'Get Help in One Tap' }}</h3>
+                </div>
+                <div class="grid grid-cols-1 sm:grid-cols-3 gap-2.5 w-full md:w-auto">
+                    <a href="tel:108" class="inline-flex items-center justify-center gap-2 px-4 py-2.5 rounded-xl bg-rose-600 hover:bg-rose-700 text-white text-sm font-bold shadow-md">
+                        <i data-lucide="ambulance" class="w-4 h-4"></i>
+                        <span>{{ $locale === 'hi' ? 'एम्बुलेंस 108' : 'Call Ambulance 108' }}</span>
+                    </a>
+                    <a href="{{ route('hospitals.index', ['search' => 'emergency']) }}" class="inline-flex items-center justify-center gap-2 px-4 py-2.5 rounded-xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-700 text-slate-800 dark:text-slate-100 text-sm font-semibold">
+                        <i data-lucide="hospital" class="w-4 h-4 text-indigo-600 dark:text-indigo-400"></i>
+                        <span>{{ $locale === 'hi' ? 'नजदीकी ER खोजें' : 'Nearest ER Search' }}</span>
+                    </a>
+                    <a href="{{ route('blood_banks.index') }}" class="inline-flex items-center justify-center gap-2 px-4 py-2.5 rounded-xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-700 text-slate-800 dark:text-slate-100 text-sm font-semibold">
+                        <i data-lucide="droplet" class="w-4 h-4 text-red-600 dark:text-red-400"></i>
+                        <span>{{ $locale === 'hi' ? 'ब्लड बैंक पास में' : 'Blood Bank Nearby' }}</span>
+                    </a>
+                </div>
+            </div>
+        </section>
+
         <section class="rounded-3xl border border-slate-200/80 dark:border-slate-800 bg-gradient-to-r from-teal-50/80 via-white to-indigo-50/80 dark:from-teal-950/25 dark:via-slate-900 dark:to-indigo-950/25 p-5 sm:p-6 shadow-sm modern-card">
             <div class="grid grid-cols-1 md:grid-cols-3 gap-4 sm:gap-5">
                 <div class="rounded-2xl border border-teal-200/70 dark:border-teal-900/70 bg-white/80 dark:bg-slate-900/70 p-4">
-                    <p class="text-[11px] uppercase tracking-wider text-teal-700 dark:text-teal-300 font-bold">{{ $locale === 'hi' ? 'भारत के लिए बनाया गया' : 'Built for India' }}</p>
-                    <p class="text-sm text-slate-800 dark:text-slate-100 font-semibold mt-1">{{ $locale === 'hi' ? '100% विज्ञापन-मुक्त स्वास्थ्य खोज' : '100% Ad-Free Healthcare Search' }}</p>
+                    <p class="text-[11px] uppercase tracking-wider text-teal-700 dark:text-teal-300 font-bold">{{ $locale === 'hi' ? 'à¤­à¤¾à¤°à¤¤ à¤•à¥‡ à¤²à¤¿à¤ à¤¬à¤¨à¤¾à¤¯à¤¾ à¤—à¤¯à¤¾' : 'Built for India' }}</p>
+                    <p class="text-sm text-slate-800 dark:text-slate-100 font-semibold mt-1">{{ $locale === 'hi' ? '100% à¤µà¤¿à¤œà¥à¤žà¤¾à¤ªà¤¨-à¤®à¥à¤•à¥à¤¤ à¤¸à¥à¤µà¤¾à¤¸à¥à¤¥à¥à¤¯ à¤–à¥‹à¤œ' : '100% Ad-Free Healthcare Search' }}</p>
                 </div>
                 <div class="rounded-2xl border border-emerald-200/70 dark:border-emerald-900/70 bg-white/80 dark:bg-slate-900/70 p-4">
                     <div class="flex items-center gap-2 text-slate-800 dark:text-slate-100 text-sm font-semibold">
                         <i data-lucide="shield-check" class="w-4 h-4 text-emerald-600 dark:text-emerald-400"></i>
-                        <span>{{ $locale === 'hi' ? 'सत्यापित सूची' : 'Verified Listings' }}</span>
+                        <span>{{ $locale === 'hi' ? 'à¤¸à¤¤à¥à¤¯à¤¾à¤ªà¤¿à¤¤ à¤¸à¥‚à¤šà¥€' : 'Verified Listings' }}</span>
                     </div>
-                    <p class="text-xs text-slate-600 dark:text-slate-300 mt-1.5">{{ $locale === 'hi' ? 'बिना पेड प्लेसमेंट के पारदर्शी रैंकिंग।' : 'Transparent ranking with no paid placements.' }}</p>
+                    <p class="text-xs text-slate-600 dark:text-slate-300 mt-1.5">{{ $locale === 'hi' ? 'à¤¬à¤¿à¤¨à¤¾ à¤ªà¥‡à¤¡ à¤ªà¥à¤²à¥‡à¤¸à¤®à¥‡à¤‚à¤Ÿ à¤•à¥‡ à¤ªà¤¾à¤°à¤¦à¤°à¥à¤¶à¥€ à¤°à¥ˆà¤‚à¤•à¤¿à¤‚à¤—à¥¤' : 'Transparent ranking with no paid placements.' }}</p>
                 </div>
                 <div class="rounded-2xl border border-cyan-200/70 dark:border-cyan-900/70 bg-white/80 dark:bg-slate-900/70 p-4">
                     <div class="flex items-center gap-2 text-slate-800 dark:text-slate-100 text-sm font-semibold">
                         <i data-lucide="lock" class="w-4 h-4 text-cyan-600 dark:text-cyan-400"></i>
-                        <span>{{ $locale === 'hi' ? 'गोपनीयता का सम्मान' : 'Privacy Respecting' }}</span>
+                        <span>{{ $locale === 'hi' ? 'à¤—à¥‹à¤ªà¤¨à¥€à¤¯à¤¤à¤¾ à¤•à¤¾ à¤¸à¤®à¥à¤®à¤¾à¤¨' : 'Privacy Respecting' }}</span>
                     </div>
-                    <p class="text-xs text-slate-600 dark:text-slate-300 mt-1.5">{{ $locale === 'hi' ? 'कोई विज्ञापन नहीं, कोई ब्रोकर कॉल नहीं, सीधे प्रदाता से संपर्क।' : 'No ads, no broker calls, direct provider contact.' }}</p>
+                    <p class="text-xs text-slate-600 dark:text-slate-300 mt-1.5">{{ $locale === 'hi' ? 'à¤•à¥‹à¤ˆ à¤µà¤¿à¤œà¥à¤žà¤¾à¤ªà¤¨ à¤¨à¤¹à¥€à¤‚, à¤•à¥‹à¤ˆ à¤¬à¥à¤°à¥‹à¤•à¤° à¤•à¥‰à¤² à¤¨à¤¹à¥€à¤‚, à¤¸à¥€à¤§à¥‡ à¤ªà¥à¤°à¤¦à¤¾à¤¤à¤¾ à¤¸à¥‡ à¤¸à¤‚à¤ªà¤°à¥à¤•à¥¤' : 'No ads, no broker calls, direct provider contact.' }}</p>
                 </div>
             </div>
         </section>
@@ -401,18 +424,18 @@ $locale === 'hi'
                     <div
                         class="inline-flex items-center space-x-2 text-indigo-600 font-bold text-sm uppercase tracking-wider mb-2">
                         <i data-lucide="book-open" class="w-4 h-4"></i>
-                        <span>{{ $locale === 'hi' ? 'स्वास्थ्य ज्ञान और समाचार' : 'Health Knowledge & News' }}</span>
+                        <span>{{ $locale === 'hi' ? 'à¤¸à¥à¤µà¤¾à¤¸à¥à¤¥à¥à¤¯ à¤œà¥à¤žà¤¾à¤¨ à¤”à¤° à¤¸à¤®à¤¾à¤šà¤¾à¤°' : 'Health Knowledge & News' }}</span>
                     </div>
                     <h2 class="text-2xl sm:text-3xl font-bold tracking-tight text-slate-900 dark:text-white">
-                        {{ $locale === 'hi' ? 'नवीनतम चिकित्सा लेख और स्वास्थ्य सुझाव' : 'Latest Medical Articles & Wellness Tips' }}
+                        {{ $locale === 'hi' ? 'à¤¨à¤µà¥€à¤¨à¤¤à¤® à¤šà¤¿à¤•à¤¿à¤¤à¥à¤¸à¤¾ à¤²à¥‡à¤– à¤”à¤° à¤¸à¥à¤µà¤¾à¤¸à¥à¤¥à¥à¤¯ à¤¸à¥à¤à¤¾à¤µ' : 'Latest Medical Articles & Wellness Tips' }}
                     </h2>
                     <p class="text-sm text-slate-500 dark:text-slate-400 mt-1">
-                        {{ $locale === 'hi' ? 'विशेषज्ञ डॉक्टरों द्वारा प्रमाणित स्वास्थ्य सलाह और जीवनशैली मार्गदर्शन' : 'Expert-verified health advice and lifestyle guidance from top practitioners' }}
+                        {{ $locale === 'hi' ? 'à¤µà¤¿à¤¶à¥‡à¤·à¤œà¥à¤ž à¤¡à¥‰à¤•à¥à¤Ÿà¤°à¥‹à¤‚ à¤¦à¥à¤µà¤¾à¤°à¤¾ à¤ªà¥à¤°à¤®à¤¾à¤£à¤¿à¤¤ à¤¸à¥à¤µà¤¾à¤¸à¥à¤¥à¥à¤¯ à¤¸à¤²à¤¾à¤¹ à¤”à¤° à¤œà¥€à¤µà¤¨à¤¶à¥ˆà¤²à¥€ à¤®à¤¾à¤°à¥à¤—à¤¦à¤°à¥à¤¶à¤¨' : 'Expert-verified health advice and lifestyle guidance from top practitioners' }}
                     </p>
                 </div>
                 <a href="{{ route('articles.index') }}"
                     class="hidden sm:inline-flex items-center space-x-1.5 px-4 py-2 rounded-xl border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-900 text-xs font-bold text-slate-700 dark:text-slate-200 hover:bg-slate-50 dark:hover:bg-slate-800 transition-colors">
-                    <span>{{ $locale === 'hi' ? 'सभी लेख देखें' : 'View All Articles' }}</span>
+                    <span>{{ $locale === 'hi' ? 'à¤¸à¤­à¥€ à¤²à¥‡à¤– à¤¦à¥‡à¤–à¥‡à¤‚' : 'View All Articles' }}</span>
                     <i data-lucide="arrow-right" class="w-3.5 h-3.5"></i>
                 </a>
             </div>
@@ -432,7 +455,7 @@ $locale === 'hi'
                         </span>
                         <div class="flex items-center space-x-1 text-xs text-slate-400 dark:text-slate-500 font-medium">
                             <i data-lucide="clock" class="w-3.5 h-3.5"></i>
-                            <span>{{ $locale === 'hi' ? '3 मिनट पढ़ें' : '3 min read' }}</span>
+                            <span>{{ $locale === 'hi' ? '3 à¤®à¤¿à¤¨à¤Ÿ à¤ªà¤¢à¤¼à¥‡à¤‚' : '3 min read' }}</span>
                         </div>
                     </div>
 
@@ -449,12 +472,12 @@ $locale === 'hi'
 
                         <div class="pt-4 border-t border-slate-100 dark:border-slate-800 flex items-center justify-between">
                             <span class="text-xs font-semibold text-slate-500 dark:text-slate-400 italic">
-                                {{ $locale === 'hi' ? 'लेखक' : 'By' }}: {{ $article->author_name }}
+                                {{ $locale === 'hi' ? 'à¤²à¥‡à¤–à¤•' : 'By' }}: {{ $article->author_name }}
                             </span>
                             <span
                                 class="text-xs font-bold text-indigo-600 group-hover:translate-x-1 transition-transform flex items-center space-x-1">
-                                <span>{{ $locale === 'hi' ? 'पूरा लेख पढ़ें' : 'Read Article' }}</span>
-                                <span>→</span>
+                                <span>{{ $locale === 'hi' ? 'à¤ªà¥‚à¤°à¤¾ à¤²à¥‡à¤– à¤ªà¤¢à¤¼à¥‡à¤‚' : 'Read Article' }}</span>
+                                <span>â†’</span>
                             </span>
                         </div>
                     </div>
@@ -464,7 +487,7 @@ $locale === 'hi'
             <div class="mt-6 sm:hidden">
                 <a href="{{ route('articles.index') }}"
                     class="w-full inline-flex items-center justify-center space-x-1.5 px-4 py-3 rounded-xl border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-900 text-sm font-bold text-slate-700 dark:text-slate-200 hover:bg-slate-50 dark:hover:bg-slate-800 transition-colors">
-                    <span>{{ $locale === 'hi' ? 'सभी लेख देखें' : 'View All Articles' }}</span>
+                    <span>{{ $locale === 'hi' ? 'à¤¸à¤­à¥€ à¤²à¥‡à¤– à¤¦à¥‡à¤–à¥‡à¤‚' : 'View All Articles' }}</span>
                     <i data-lucide="arrow-right" class="w-4 h-4"></i>
                 </a>
             </div>
@@ -475,10 +498,10 @@ $locale === 'hi'
         <div class="pt-12 border-t border-slate-200/80 dark:border-slate-800">
             <div class="text-center max-w-2xl mx-auto mb-10">
                 <h2 class="text-2xl sm:text-3xl font-bold tracking-tight text-slate-900 dark:text-white">
-                    {{ $locale === 'hi' ? 'अक्सर पूछे जाने वाले प्रश्न' : 'Frequently Asked Questions' }}
+                    {{ $locale === 'hi' ? 'à¤…à¤•à¥à¤¸à¤° à¤ªà¥‚à¤›à¥‡ à¤œà¤¾à¤¨à¥‡ à¤µà¤¾à¤²à¥‡ à¤ªà¥à¤°à¤¶à¥à¤¨' : 'Frequently Asked Questions' }}
                 </h2>
                 <p class="text-sm text-slate-500 dark:text-slate-400 mt-2">
-                    {{ $locale === 'hi' ? 'स्वास्थ्या सर्च के बारे में आपके सभी सवालों के जवाब' : 'Everything you need to know about SwasthyaSearch' }}
+                    {{ $locale === 'hi' ? 'à¤¸à¥à¤µà¤¾à¤¸à¥à¤¥à¥à¤¯à¤¾ à¤¸à¤°à¥à¤š à¤•à¥‡ à¤¬à¤¾à¤°à¥‡ à¤®à¥‡à¤‚ à¤†à¤ªà¤•à¥‡ à¤¸à¤­à¥€ à¤¸à¤µà¤¾à¤²à¥‹à¤‚ à¤•à¥‡ à¤œà¤µà¤¾à¤¬' : 'Everything you need to know about SwasthyaSearch' }}
                 </p>
             </div>
 
@@ -509,22 +532,22 @@ $locale === 'hi'
         <!-- User Feedback Form Section -->
         <div class="pt-12 border-t border-slate-200/80 dark:border-slate-800">
             <div
-                class="bg-gradient-to-br from-white via-slate-50 to-indigo-50 dark:from-slate-900 dark:via-indigo-950 dark:to-slate-900 rounded-3xl p-8 sm:p-12 text-slate-900 dark:text-white shadow-2xl relative overflow-hidden border border-slate-200/80 dark:border-slate-800">
+                class="bg-gradient-to-br from-white via-slate-50 to-cyan-50/40 dark:from-slate-900 dark:via-slate-900 dark:to-indigo-950/30 rounded-3xl p-7 sm:p-11 text-slate-900 dark:text-slate-100 shadow-xl relative overflow-hidden border border-slate-200/80 dark:border-slate-700/70 ring-1 ring-slate-100/80 dark:ring-slate-700/40">
                 <div
-                    class="absolute inset-0 opacity-10 bg-[radial-gradient(#4A90E2_1px,transparent_1px)] [background-size:16px_16px]">
+                    class="absolute inset-0 opacity-[0.08] dark:opacity-[0.10] bg-[radial-gradient(#4A90E2_1px,transparent_1px)] [background-size:16px_16px]">
                 </div>
                 <div class="relative z-10 max-w-3xl mx-auto">
                     <div class="text-center mb-10">
                         <div
-                            class="inline-flex items-center space-x-2 px-3 py-1 rounded-full bg-teal-500/10 border border-teal-500/30 text-teal-300 mb-4 shadow-inner text-xs font-semibold uppercase tracking-wider">
+                            class="inline-flex items-center space-x-2 px-3 py-1 rounded-full bg-teal-500/10 dark:bg-teal-500/15 border border-teal-500/30 text-teal-700 dark:text-teal-300 mb-4 shadow-inner text-xs font-semibold uppercase tracking-wider">
                             <i data-lucide="message-square" class="w-4 h-4 text-teal-400"></i>
-                            <span>{{ $locale === 'hi' ? 'आपकी राय महत्वपूर्ण है' : 'Your Opinion Matters' }}</span>
+                            <span>{{ $locale === 'hi' ? 'à¤†à¤ªà¤•à¥€ à¤°à¤¾à¤¯ à¤®à¤¹à¤¤à¥à¤µà¤ªà¥‚à¤°à¥à¤£ à¤¹à¥ˆ' : 'Your Opinion Matters' }}</span>
                         </div>
-                        <h2 class="text-3xl sm:text-4xl font-extrabold tracking-tight text-white">
-                            {{ $locale === 'hi' ? 'हमें अपना फीडबैक दें' : 'Share Your Feedback With Us' }}
+                        <h2 class="text-3xl sm:text-4xl font-extrabold tracking-tight text-slate-900 dark:text-slate-100">
+                            {{ $locale === 'hi' ? 'à¤¹à¤®à¥‡à¤‚ à¤…à¤ªà¤¨à¤¾ à¤«à¥€à¤¡à¤¬à¥ˆà¤• à¤¦à¥‡à¤‚' : 'Share Your Feedback With Us' }}
                         </h2>
-                        <p class="text-sm text-slate-300 mt-2 max-w-xl mx-auto leading-relaxed">
-                            {{ $locale === 'hi' ? 'आपके सुझावों से हम स्वास्थ्या सर्च को और बेहतर बनाने के लिए निरंतर प्रयासरत हैं।' : 'Help us improve our healthcare directory. Tell us about your experience searching for doctors and hospitals.' }}
+                        <p class="text-sm text-slate-600 dark:text-slate-300 mt-2 max-w-xl mx-auto leading-relaxed">
+                            {{ $locale === 'hi' ? 'à¤†à¤ªà¤•à¥‡ à¤¸à¥à¤à¤¾à¤µà¥‹à¤‚ à¤¸à¥‡ à¤¹à¤® à¤¸à¥à¤µà¤¾à¤¸à¥à¤¥à¥à¤¯à¤¾ à¤¸à¤°à¥à¤š à¤•à¥‹ à¤”à¤° à¤¬à¥‡à¤¹à¤¤à¤° à¤¬à¤¨à¤¾à¤¨à¥‡ à¤•à¥‡ à¤²à¤¿à¤ à¤¨à¤¿à¤°à¤‚à¤¤à¤° à¤ªà¥à¤°à¤¯à¤¾à¤¸à¤°à¤¤ à¤¹à¥ˆà¤‚à¥¤' : 'Help us improve our healthcare directory. Tell us about your experience searching for doctors and hospitals.' }}
                         </p>
                     </div>
 
@@ -535,56 +558,52 @@ $locale === 'hi'
                             <div>
                                 <label for="feedback-name"
                                     class="block text-xs font-bold text-slate-600 dark:text-slate-300 uppercase tracking-wider mb-2">
-                                    {{ $locale === 'hi' ? 'आपका नाम' : 'Your Name' }} <span
+                                    {{ $locale === 'hi' ? 'à¤†à¤ªà¤•à¤¾ à¤¨à¤¾à¤®' : 'Your Name' }} <span
                                         class="text-teal-400">*</span>
                                 </label>
                                 <input type="text" id="feedback-name" name="name" required
-                                    placeholder="{{ $locale === 'hi' ? 'नाम दर्ज करें' : 'Enter your name' }}"
+                                    placeholder="{{ $locale === 'hi' ? 'à¤¨à¤¾à¤® à¤¦à¤°à¥à¤œ à¤•à¤°à¥‡à¤‚' : 'Enter your name' }}"
                                     class="w-full px-4 py-3 bg-white/80 dark:bg-slate-900/70 border border-slate-300 dark:border-slate-700 rounded-xl text-slate-900 dark:text-white placeholder:text-slate-500 focus:outline-none focus:border-teal-500 focus:ring-1 focus:ring-teal-500 transition-colors text-sm" />
                             </div>
 
                             <div>
                                 <label class="block text-xs font-bold text-slate-600 dark:text-slate-300 uppercase tracking-wider mb-2">
-                                    {{ $locale === 'hi' ? 'रेटिंग' : 'Rating' }}
+                                    {{ $locale === 'hi' ? 'à¤°à¥‡à¤Ÿà¤¿à¤‚à¤—' : 'Rating' }}
                                 </label>
                                 <input type="hidden" id="feedback-rating-input" name="rating" value="" />
                                 <div class="flex items-center space-x-1.5 py-1.5" id="star-rating-container">
                                     @for ($s = 1; $s <= 5; $s++)
                                         <button type="button" onclick="setFeedbackRating({{ $s }})"
-                                        class="p-2 rounded-xl bg-white/80 dark:bg-slate-900/70 hover:bg-white dark:hover:bg-slate-900 border border-slate-300 dark:border-slate-700 hover:border-amber-400/50 transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-amber-400/50 shadow-inner"
+                                        class="p-2 rounded-xl bg-white dark:bg-slate-900/70 hover:bg-white dark:hover:bg-slate-900 border border-slate-300 dark:border-slate-700 hover:border-amber-400/50 transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-amber-400/50 shadow-inner"
                                         title="{{ $s }} Star">
                                         <i data-lucide="star"
                                             class="w-6 h-6 text-slate-600 fill-transparent transition-colors duration-200"
                                             id="star-icon-{{ $s }}"></i>
                                         </button>
                                         @endfor
-                                </div>
-                                <p class="text-[11px] text-slate-500 dark:text-slate-400 mt-1" id="rating-label-text">
-                                    {{ $locale === 'hi' ? 'रेटिंग चुनने के लिए स्टार क्लिक करें' : 'Click a star to select your rating' }}
-                                </p>
-                            </div>
+                                </div></div>
                         </div>
 
                         <div>
                             <label for="feedback-category"
                                 class="block text-xs font-bold text-slate-600 dark:text-slate-300 uppercase tracking-wider mb-2">
-                                {{ $locale === 'hi' ? 'फीडबैक श्रेणी' : 'Feedback Category' }} <span
+                                {{ $locale === 'hi' ? 'à¤«à¥€à¤¡à¤¬à¥ˆà¤• à¤¶à¥à¤°à¥‡à¤£à¥€' : 'Feedback Category' }} <span
                                     class="text-teal-400">*</span>
                             </label>
                             <div class="relative">
                                 <select id="feedback-category" name="category" required
                                     class="w-full pl-4 pr-10 py-3 bg-white/80 dark:bg-slate-900/70 border border-slate-300 dark:border-slate-700 rounded-xl text-slate-900 dark:text-white appearance-none focus:outline-none focus:border-teal-500 focus:ring-1 focus:ring-teal-500 transition-colors text-sm cursor-pointer">
                                     <option value="Doctor Search Experience">
-                                        {{ $locale === 'hi' ? 'डॉक्टर खोजने का अनुभव' : 'Doctor Search Experience' }}
+                                        {{ $locale === 'hi' ? 'à¤¡à¥‰à¤•à¥à¤Ÿà¤° à¤–à¥‹à¤œà¤¨à¥‡ à¤•à¤¾ à¤…à¤¨à¥à¤­à¤µ' : 'Doctor Search Experience' }}
                                     </option>
                                     <option value="Hospital Information Accuracy">
-                                        {{ $locale === 'hi' ? 'अस्पताल की जानकारी' : 'Hospital Information Accuracy' }}
+                                        {{ $locale === 'hi' ? 'à¤…à¤¸à¥à¤ªà¤¤à¤¾à¤² à¤•à¥€ à¤œà¤¾à¤¨à¤•à¤¾à¤°à¥€' : 'Hospital Information Accuracy' }}
                                     </option>
                                     <option value="Website Navigation & Speed">
-                                        {{ $locale === 'hi' ? 'वेबसाइट की गति व उपयोग' : 'Website Navigation & Speed' }}
+                                        {{ $locale === 'hi' ? 'à¤µà¥‡à¤¬à¤¸à¤¾à¤‡à¤Ÿ à¤•à¥€ à¤—à¤¤à¤¿ à¤µ à¤‰à¤ªà¤¯à¥‹à¤—' : 'Website Navigation & Speed' }}
                                     </option>
                                     <option value="General Suggestion">
-                                        {{ $locale === 'hi' ? 'सामान्य सुझाव' : 'General Suggestion' }}
+                                        {{ $locale === 'hi' ? 'à¤¸à¤¾à¤®à¤¾à¤¨à¥à¤¯ à¤¸à¥à¤à¤¾à¤µ' : 'General Suggestion' }}
                                     </option>
                                 </select>
                                 <div
@@ -597,11 +616,11 @@ $locale === 'hi'
                         <div>
                             <label for="feedback-comments"
                                 class="block text-xs font-bold text-slate-600 dark:text-slate-300 uppercase tracking-wider mb-2">
-                                {{ $locale === 'hi' ? 'आपके सुझाव या विचार' : 'Your Comments & Suggestions' }} <span
+                                {{ $locale === 'hi' ? 'à¤†à¤ªà¤•à¥‡ à¤¸à¥à¤à¤¾à¤µ à¤¯à¤¾ à¤µà¤¿à¤šà¤¾à¤°' : 'Your Comments & Suggestions' }} <span
                                     class="text-teal-400">*</span>
                             </label>
                             <textarea id="feedback-comments" name="comments" rows="4" required
-                                placeholder="{{ $locale === 'hi' ? 'अपने विचार यहाँ लिखें...' : 'Please let us know how we can improve...' }}"
+                                placeholder="{{ $locale === 'hi' ? 'à¤…à¤ªà¤¨à¥‡ à¤µà¤¿à¤šà¤¾à¤° à¤¯à¤¹à¤¾à¤ à¤²à¤¿à¤–à¥‡à¤‚...' : 'Please let us know how we can improve...' }}"
                                 class="w-full px-4 py-3 bg-white/80 dark:bg-slate-900/70 border border-slate-300 dark:border-slate-700 rounded-xl text-slate-900 dark:text-white placeholder:text-slate-500 focus:outline-none focus:border-teal-500 focus:ring-1 focus:ring-teal-500 transition-colors text-sm"></textarea>
                         </div>
 
@@ -609,7 +628,7 @@ $locale === 'hi'
                             <button type="submit"
                                 class="px-8 py-3.5 bg-teal-500 hover:bg-teal-600 active:bg-teal-700 text-slate-900 hover:text-white font-extrabold rounded-xl shadow-lg hover:shadow-xl transition-all duration-200 text-sm uppercase tracking-wider flex items-center justify-center space-x-2 mx-auto">
                                 <i data-lucide="send" class="w-4 h-4"></i>
-                                <span>{{ $locale === 'hi' ? 'फीडबैक सबमिट करें' : 'Submit Feedback' }}</span>
+                                <span>{{ $locale === 'hi' ? 'à¤«à¥€à¤¡à¤¬à¥ˆà¤• à¤¸à¤¬à¤®à¤¿à¤Ÿ à¤•à¤°à¥‡à¤‚' : 'Submit Feedback' }}</span>
                             </button>
                         </div>
                     </form>
@@ -747,7 +766,7 @@ $locale === 'hi'
 
         const countBadge = document.getElementById('doctors-count-badge');
         countBadge.innerText =
-            `${doctors ? doctors.length : 0} ${currentLocale === 'hi' ? 'डॉक्टर मिले' : 'Doctors Found'}`;
+            `${doctors ? doctors.length : 0} ${currentLocale === 'hi' ? 'à¤¡à¥‰à¤•à¥à¤Ÿà¤° à¤®à¤¿à¤²à¥‡' : 'Doctors Found'}`;
 
         if (!doctors || doctors.length === 0) {
             document.getElementById('no-results-container').classList.remove('hidden');
@@ -764,8 +783,8 @@ $locale === 'hi'
             const aboutText = doc.about ? (currentLocale === 'hi' ? doc.about.hi : doc.about.en) : '';
 
             const detail2Text = doc.hospitals && doc.hospitals.length > 0 ? (currentLocale === 'hi' ? (doc.hospitals[0].name.hi || doc.hospitals[0].name.en) : doc.hospitals[0].name.en) : '';
-            const expLabel = currentLocale === 'hi' ? 'वर्ष अनुभव' : 'Yrs Exp';
-            const detail1Text = `${deptName} • ${doc.experience_years} ${expLabel}`;
+            const expLabel = currentLocale === 'hi' ? 'à¤µà¤°à¥à¤· à¤…à¤¨à¥à¤­à¤µ' : 'Yrs Exp';
+            const detail1Text = `${deptName} â€¢ ${doc.experience_years} ${expLabel}`;
 
             let html = `
                 <div class="glass-card rounded-3xl border border-slate-200/80 dark:border-slate-800 shadow-sm hover:shadow-xl transition-all duration-300 flex flex-col overflow-hidden group relative">
@@ -792,15 +811,15 @@ $locale === 'hi'
                             <div class="bg-slate-50 dark:bg-slate-800/60 p-3 rounded-2xl border border-slate-100/80 dark:border-slate-700/80 flex items-center space-x-2 shadow-2xs">
                                 <i data-lucide="award" class="w-4 h-4 text-indigo-500 shrink-0"></i>
                                 <div class="truncate">
-                                    <span class="text-slate-400 dark:text-slate-500 block text-[10px] uppercase">${currentLocale === 'hi' ? 'अनुभव' : 'Experience'}</span>
-                                    <span class="text-slate-900 dark:text-white font-bold">${doc.experience_years} ${currentLocale === 'hi' ? 'वर्ष' : 'Years'}</span>
+                                    <span class="text-slate-400 dark:text-slate-500 block text-[10px] uppercase">${currentLocale === 'hi' ? 'à¤…à¤¨à¥à¤­à¤µ' : 'Experience'}</span>
+                                    <span class="text-slate-900 dark:text-white font-bold">${doc.experience_years} ${currentLocale === 'hi' ? 'à¤µà¤°à¥à¤·' : 'Years'}</span>
                                 </div>
                             </div>
                             <div class="bg-slate-50 dark:bg-slate-800/60 p-3 rounded-2xl border border-slate-100/80 dark:border-slate-700/80 flex items-center space-x-2 shadow-2xs">
                                 <i data-lucide="file-text" class="w-4 h-4 text-teal-500 shrink-0"></i>
                                 <div class="truncate">
-                                    <span class="text-slate-400 dark:text-slate-500 block text-[10px] uppercase">${currentLocale === 'hi' ? 'परामर्श शुल्क' : 'Fee'}</span>
-                                    <span class="text-slate-900 dark:text-white font-bold">₹${doc.consultation_fee || 500}</span>
+                                    <span class="text-slate-400 dark:text-slate-500 block text-[10px] uppercase">${currentLocale === 'hi' ? 'à¤ªà¤°à¤¾à¤®à¤°à¥à¤¶ à¤¶à¥à¤²à¥à¤•' : 'Fee'}</span>
+                                    <span class="text-slate-900 dark:text-white font-bold">â‚¹${doc.consultation_fee || 500}</span>
                                 </div>
                             </div>
                         </div>
@@ -818,7 +837,7 @@ $locale === 'hi'
             if (doc.registration_number && !isPlaceholderReg) {
                 html += `
                     <div class="flex items-center justify-between text-xs text-slate-500 dark:text-slate-400 px-1 pt-1 border-t border-slate-100 dark:border-slate-800">
-                        <span>${currentLocale === 'hi' ? 'पंजीकरण संख्या:' : 'Reg No:'}</span>
+                        <span>${currentLocale === 'hi' ? 'à¤ªà¤‚à¤œà¥€à¤•à¤°à¤£ à¤¸à¤‚à¤–à¥à¤¯à¤¾:' : 'Reg No:'}</span>
                         <span class="font-mono font-semibold text-slate-700 dark:text-slate-300">${doc.registration_number} ${doc.medical_council ? `(${doc.medical_council})` : ''}</span>
                     </div>
                 `;
@@ -828,7 +847,7 @@ $locale === 'hi'
                 html += `
                     <div class="flex items-center space-x-2 text-xs text-slate-600 dark:text-slate-350 px-1">
                         <i data-lucide="languages" class="w-3.5 h-3.5 text-indigo-400 shrink-0"></i>
-                        <span class="text-slate-400 dark:text-slate-500 text-[11px]">${currentLocale === 'hi' ? 'भाषाएँ:' : 'Languages:'}</span>
+                        <span class="text-slate-400 dark:text-slate-500 text-[11px]">${currentLocale === 'hi' ? 'à¤­à¤¾à¤·à¤¾à¤à¤:' : 'Languages:'}</span>
                         <span class="font-medium text-slate-700 dark:text-slate-300">${doc.languages_spoken.join(', ')}</span>
                     </div>
                 `;
@@ -846,10 +865,10 @@ $locale === 'hi'
                     <div class="space-y-1 pt-2 border-t border-slate-100 dark:border-slate-800">
                         <span class="text-[11px] font-bold text-slate-400 dark:text-slate-500 uppercase tracking-wider flex items-center space-x-1">
                             <i data-lucide="trophy" class="w-3 h-3 text-amber-500"></i>
-                            <span>${currentLocale === 'hi' ? 'पुरस्कार एवं सम्मान' : 'Awards & Recognitions'}</span>
+                            <span>${currentLocale === 'hi' ? 'à¤ªà¥à¤°à¤¸à¥à¤•à¤¾à¤° à¤à¤µà¤‚ à¤¸à¤®à¥à¤®à¤¾à¤¨' : 'Awards & Recognitions'}</span>
                         </span>
                         <div class="text-[11px] text-slate-600 dark:text-slate-400 pl-4 list-disc space-y-0.5">
-                            ${doc.awards_recognitions.map(award => `<div class="truncate">• ${award}</div>`).join('')}
+                            ${doc.awards_recognitions.map(award => `<div class="truncate">â€¢ ${award}</div>`).join('')}
                         </div>
                     </div>
                 `;
@@ -860,7 +879,7 @@ $locale === 'hi'
                     <div class="pt-4 border-t border-slate-100 dark:border-slate-800 space-y-3">
                         <h4 class="text-xs font-bold text-slate-400 dark:text-slate-500 uppercase tracking-wider flex items-center space-x-1.5">
                             <i data-lucide="map-pin" class="w-3.5 h-3.5 text-teal-500"></i>
-                            <span>${currentLocale === 'hi' ? 'अभ्यास स्थल एवं पता' : 'Practicing At & Location'}</span>
+                            <span>${currentLocale === 'hi' ? 'à¤…à¤­à¥à¤¯à¤¾à¤¸ à¤¸à¥à¤¥à¤² à¤à¤µà¤‚ à¤ªà¤¤à¤¾' : 'Practicing At & Location'}</span>
                         </h4>
                 `;
                 doc.hospitals.forEach(hosp => {
@@ -868,13 +887,13 @@ $locale === 'hi'
                     let schemesHtml = '';
                     let schemesList = [];
                     if (hosp.accepts_ayushman) schemesList.push(currentLocale === 'hi' ?
-                        'आयुष्मान भारत' : 'Ayushman Bharat');
+                        'à¤†à¤¯à¥à¤·à¥à¤®à¤¾à¤¨ à¤­à¤¾à¤°à¤¤' : 'Ayushman Bharat');
                     if (hosp.accepts_janaadhaar) schemesList.push(currentLocale === 'hi' ?
-                        'जन आधार' : 'Jan Aadhaar');
+                        'à¤œà¤¨ à¤†à¤§à¤¾à¤°' : 'Jan Aadhaar');
                     if (hosp.accepts_cghs) schemesList.push('CGHS');
                     if (hosp.rgahs_approved) schemesList.push('RGAHS');
                     if (hosp.is_cashless) schemesList.push(currentLocale === 'hi' ?
-                        'कैशलेस सुविधा' : 'Cashless Facility');
+                        'à¤•à¥ˆà¤¶à¤²à¥‡à¤¸ à¤¸à¥à¤µà¤¿à¤§à¤¾' : 'Cashless Facility');
                     if (hosp.cashless_schemes_list && hosp.cashless_schemes_list.length > 0) {
                         hosp.cashless_schemes_list.forEach(s => {
                             if (!schemesList.includes(s)) schemesList.push(s);
@@ -886,7 +905,7 @@ $locale === 'hi'
                                 <div class="pt-2 mt-1 border-t border-slate-200/60 dark:border-slate-700/60 space-y-1.5">
                                     <span class="text-[10px] font-bold text-slate-400 dark:text-slate-500 uppercase tracking-wider flex items-center space-x-1">
                                         <i data-lucide="shield-check" class="w-3.5 h-3.5 text-teal-600 dark:text-teal-400"></i>
-                                        <span>${currentLocale === 'hi' ? 'उपलब्ध स्वास्थ्य योजनाएं व सुविधाएं:' : 'Available Health Schemes & Facilities:'}</span>
+                                        <span>${currentLocale === 'hi' ? 'à¤‰à¤ªà¤²à¤¬à¥à¤§ à¤¸à¥à¤µà¤¾à¤¸à¥à¤¥à¥à¤¯ à¤¯à¥‹à¤œà¤¨à¤¾à¤à¤‚ à¤µ à¤¸à¥à¤µà¤¿à¤§à¤¾à¤à¤‚:' : 'Available Health Schemes & Facilities:'}</span>
                                     </span>
                                     <div class="flex flex-wrap gap-1">
                                         ${schemesList.map(scheme => `<span class="text-[10px] bg-teal-50 dark:bg-teal-950/40 text-teal-700 dark:text-teal-300 border border-teal-200/80 dark:border-teal-800/80 px-2.5 py-0.5 rounded-lg font-semibold shadow-2xs">${scheme}</span>`).join('')}
@@ -903,11 +922,11 @@ $locale === 'hi'
                                     ${hosp.type ? `<span class="text-[10px] font-semibold uppercase tracking-wider text-teal-600 bg-teal-50 dark:bg-teal-950/40 border border-teal-100 dark:border-teal-900/60 px-2 py-0.5 rounded-md inline-block mt-0.5">${hosp.type}</span>` : ''}
                                 </div>
                                 <span class="text-teal-700 dark:text-teal-400 shrink-0 font-extrabold bg-white dark:bg-slate-800 px-2.5 py-1 rounded-xl border border-teal-100 dark:border-teal-800 shadow-2xs">
-                                    ₹${hosp.pivot?.consultation_fee || doc.consultation_fee || 500}
+                                    â‚¹${hosp.pivot?.consultation_fee || doc.consultation_fee || 500}
                                 </span>
                             </div>
                             <p class="text-slate-600 dark:text-slate-350 text-[11px] leading-normal pt-1 border-t border-slate-200/60 dark:border-slate-700/60">
-                                <span class="font-semibold text-slate-700 dark:text-slate-300">${currentLocale === 'hi' ? 'पता:' : 'Address:'}</span> ${(hosp.address || '')} ${hosp.city ? `, ${hosp.city}` : ''}
+                                <span class="font-semibold text-slate-700 dark:text-slate-300">${currentLocale === 'hi' ? 'à¤ªà¤¤à¤¾:' : 'Address:'}</span> ${(hosp.address || '')} ${hosp.city ? `, ${hosp.city}` : ''}
                             </p>
                             <div class="flex items-center justify-between text-slate-500 dark:text-slate-400 text-[11px] pt-1">
                                 <span class="flex items-center space-x-1 pr-1 truncate">
@@ -921,11 +940,11 @@ $locale === 'hi'
                             ${schemesHtml}
                             <div class="pt-2 mt-1 border-t border-slate-200/60 dark:border-slate-700/60 flex items-center justify-between gap-2">
                                 <span class="text-[10px] text-slate-400 dark:text-slate-500 italic">
-                                    ${hosp.emergency_phone ? `${currentLocale === 'hi' ? 'संपर्क:' : 'Tel:'} ${hosp.emergency_phone}` : ''}
+                                    ${hosp.emergency_phone ? `${currentLocale === 'hi' ? 'à¤¸à¤‚à¤ªà¤°à¥à¤•:' : 'Tel:'} ${hosp.emergency_phone}` : ''}
                                 </span>
                                 <a href="https://www.google.com/maps/dir/?api=1&destination=${encodeURIComponent((hosp.address || '') + ', ' + (hosp.city || 'India'))}" target="_blank" class="inline-flex items-center space-x-1.5 text-xs text-indigo-600 dark:text-indigo-400 hover:text-indigo-700 dark:hover:text-indigo-300 font-bold bg-indigo-50 dark:bg-indigo-950/40 hover:bg-indigo-100/80 dark:hover:bg-indigo-900/60 px-3 py-1.5 rounded-xl border border-indigo-100 dark:border-indigo-900 transition-all shadow-2xs">
                                     <i data-lucide="navigation" class="w-3.5 h-3.5 text-indigo-500"></i>
-                                    <span>${currentLocale === 'hi' ? 'नक्शा व दिशा-निर्देश' : 'Get Directions'}</span>
+                                    <span>${currentLocale === 'hi' ? 'à¤¨à¤•à¥à¤¶à¤¾ à¤µ à¤¦à¤¿à¤¶à¤¾-à¤¨à¤¿à¤°à¥à¤¦à¥‡à¤¶' : 'Get Directions'}</span>
                                 </a>
                             </div>
                         </div>
@@ -940,7 +959,7 @@ $locale === 'hi'
                         <div class="flex flex-col sm:flex-row gap-2.5 sm:gap-3">
                             <a href="${(doc.phone || emergencyPhone) ? `tel:${doc.phone || emergencyPhone}` : '#'}" class="w-full sm:flex-1 bg-teal-600 hover:bg-teal-700 text-white font-bold py-3 px-4 rounded-xl shadow-md hover:shadow-lg transition-all duration-200 text-xs uppercase tracking-wider flex items-center justify-center space-x-2">
                                 <i data-lucide="phone" class="w-4 h-4 text-teal-100"></i>
-                                <span>${currentLocale === 'hi' ? 'अभी कॉल करें' : 'Call Now'}</span>
+                                <span>${currentLocale === 'hi' ? 'à¤…à¤­à¥€ à¤•à¥‰à¤² à¤•à¤°à¥‡à¤‚' : 'Call Now'}</span>
                             </a>
                             ${(doc.phone || emergencyPhone) ? `
                                 <a href="${getWhatsAppLink(doc.phone || emergencyPhone, fullName)}" target="_blank" class="w-full sm:flex-1 bg-emerald-600 hover:bg-emerald-700 text-white font-bold py-3 px-4 rounded-xl shadow-md hover:shadow-lg transition-all duration-200 text-xs uppercase tracking-wider flex items-center justify-center space-x-2">
@@ -952,7 +971,7 @@ $locale === 'hi'
                         ${doc.website ? `
                             <a href="${doc.website.startsWith('http') ? doc.website : 'https://' + doc.website}" target="_blank" class="w-full bg-slate-900 dark:bg-slate-800 hover:bg-slate-850 dark:hover:bg-slate-750 text-white font-bold py-3 px-4 rounded-xl shadow-md hover:shadow-lg transition-all duration-200 text-xs uppercase tracking-wider flex items-center justify-center space-x-2 border border-slate-750/30">
                                 <i data-lucide="globe" class="w-4 h-4 text-teal-400"></i>
-                                <span>${currentLocale === 'hi' ? 'वेबसाइट देखें' : 'Visit Website'}</span>
+                                <span>${currentLocale === 'hi' ? 'à¤µà¥‡à¤¬à¤¸à¤¾à¤‡à¤Ÿ à¤¦à¥‡à¤–à¥‡à¤‚' : 'Visit Website'}</span>
                             </a>
                         ` : ''}
                     </div>
@@ -979,14 +998,14 @@ $locale === 'hi'
 
                 let textParts = [];
                 if (data.matched_disease) {
-                    textParts.push(`${currentLocale === 'hi' ? 'लक्षण:' : 'Symptom:'} "${data.matched_disease}"`);
+                    textParts.push(`${currentLocale === 'hi' ? 'à¤²à¤•à¥à¤·à¤£:' : 'Symptom:'} "${data.matched_disease}"`);
                 }
                 if (data.matched_department) {
                     textParts.push(
-                        `<span class="font-semibold text-teal-700 dark:text-teal-450">${currentLocale === 'hi' ? 'अनुशंसित विभाग:' : 'Recommended Department:'} ${data.matched_department}</span>`
+                        `<span class="font-semibold text-teal-700 dark:text-teal-450">${currentLocale === 'hi' ? 'à¤…à¤¨à¥à¤¶à¤‚à¤¸à¤¿à¤¤ à¤µà¤¿à¤­à¤¾à¤—:' : 'Recommended Department:'} ${data.matched_department}</span>`
                     );
                 }
-                matchText.innerHTML = textParts.join(' • ');
+                matchText.innerHTML = textParts.join(' â€¢ ');
             }
 
             allSearchDoctors = data.doctors || [];
@@ -1028,18 +1047,6 @@ $locale === 'hi'
                 }
             }
         }
-        const label = document.getElementById('rating-label-text');
-        if (label) {
-            const labels = {
-                0: currentLocale === 'hi' ? 'रेटिंग चुनने के लिए स्टार क्लिक करें' : 'Click a star to select your rating',
-                1: currentLocale === 'hi' ? '1 स्टार • बहुत खराब' : '1 Star • Very Poor',
-                2: currentLocale === 'hi' ? '2 स्टार • सुधार की जरूरत' : '2 Stars • Needs Improvement',
-                3: currentLocale === 'hi' ? '3 स्टार • ठीक-ठाक' : '3 Stars • Average',
-                4: currentLocale === 'hi' ? '4 स्टार • बहुत अच्छा' : '4 Stars • Very Good',
-                5: currentLocale === 'hi' ? '5 स्टार • उत्कृष्ट' : '5 Stars • Excellent',
-            };
-            label.textContent = labels[stars] ?? labels[0];
-        }
     }
 
     const feedbackForm = document.querySelector('form[action="{{ route('feedback.submit') }}"]');
@@ -1048,7 +1055,7 @@ $locale === 'hi'
             const ratingValue = Number(document.getElementById('feedback-rating-input')?.value || 0);
             if (!ratingValue) {
                 e.preventDefault();
-                alert(currentLocale === 'hi' ? 'कृपया पहले स्टार रेटिंग चुनें।' :
+                alert(currentLocale === 'hi' ? 'à¤•à¥ƒà¤ªà¤¯à¤¾ à¤ªà¤¹à¤²à¥‡ à¤¸à¥à¤Ÿà¤¾à¤° à¤°à¥‡à¤Ÿà¤¿à¤‚à¤— à¤šà¥à¤¨à¥‡à¤‚à¥¤' :
                     'Please select a star rating before submitting.');
             }
         });

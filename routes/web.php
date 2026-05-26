@@ -170,6 +170,9 @@ Route::get('/diseases', [PageController::class, 'diseases'])->name('diseases.ind
 Route::get('/contact', [PageController::class, 'contact'])->name('contact');
 Route::post('/contact', [PageController::class, 'submitContact'])->name('contact.submit');
 Route::post('/feedback', [PageController::class, 'submitFeedback'])->name('feedback.submit');
+Route::post('/lead-capture', [PageController::class, 'submitLeadCapture'])->name('lead.capture.submit');
+Route::post('/listing-report', [PageController::class, 'submitListingReport'])->name('listing.report.submit');
+Route::post('/listing-vote', [PageController::class, 'submitListingVote'])->name('listing.vote.submit');
 
 Route::get('/privacy-policy', [LegalController::class, 'privacyPolicy'])->name('privacy.policy');
 Route::get('/terms-of-service', [LegalController::class, 'termsOfService'])->name('terms.service');

@@ -266,20 +266,36 @@ $hasActiveMobileFilters = !empty(array_filter((array) request('blood_group', [])
 
             <!-- Card Header -->
             <div class="p-6 pb-4 bg-gradient-to-br from-slate-50/50 via-white/50 to-slate-50/50 dark:from-slate-800/30 dark:via-transparent dark:to-slate-800/30 border-b border-slate-100 dark:border-slate-800/60 flex items-start space-x-4">
-                <div class="w-12 h-12 bg-gradient-to-tr from-red-500 to-rose-600 rounded-xl p-0.5 shadow-md shrink-0 group-hover:scale-105 transition-transform duration-300">
+                <div class="w-10 h-10 bg-gradient-to-tr from-red-500 to-rose-600 rounded-xl p-0.5 shadow-md shrink-0 group-hover:scale-105 transition-transform duration-300">
                     <div class="w-full h-full bg-slate-900 rounded-[10px] flex items-center justify-center text-white font-extrabold text-sm tracking-wider">
-                        <i data-lucide="droplet" class="w-6 h-6 text-red-500 fill-red-500"></i>
+                        <i data-lucide="droplet" class="w-5 h-5 text-red-500 fill-red-500"></i>
                     </div>
                 </div>
 
                 <div class="flex-1 min-w-0">
-                    <div class="flex items-start space-x-1.5 mb-1">
+                    <div class="flex items-start justify-between gap-2 mb-1">
                         <h3 class="font-extrabold text-lg text-slate-900 dark:text-white line-clamp-3 leading-snug group-hover:text-red-600 transition-colors duration-200">
                             {{ $bName }}
                         </h3>
-                        @if ($bank->is_verified)
-                        <i data-lucide="check-circle-2" class="w-4 h-4 text-teal-500 shrink-0 mt-1"></i>
-                        @endif
+                        <div class="shrink-0 flex items-center gap-1.5 mt-0.5">
+                            @if ($bank->is_verified)
+                            <i data-lucide="check-circle-2" class="w-4 h-4 text-teal-500"></i>
+                            @endif
+                            <button
+                                type="button"
+                                onclick="submitGreenVote('blood_bank', {{ $bank->id }}, @js($bName))"
+                                aria-label="{{ $locale === 'hi' ? 'सही जानकारी के लिए वोट करें' : 'Vote as correct' }}"
+                                class="w-7 h-7 inline-flex items-center justify-center rounded-full border border-emerald-300 dark:border-emerald-800 text-emerald-700 dark:text-emerald-300 bg-emerald-50/95 dark:bg-emerald-950/55 hover:bg-emerald-100 dark:hover:bg-emerald-900/70 shadow-sm transition-all duration-200">
+                                <i data-lucide="flag" class="w-3.5 h-3.5"></i>
+                            </button>
+                            <button
+                                type="button"
+                                onclick="openListingReportModal('blood_bank', {{ $bank->id }}, @js($bName))"
+                                aria-label="{{ $locale === 'hi' ? 'गलत जानकारी रिपोर्ट करें' : 'Report incorrect details' }}"
+                                class="w-7 h-7 inline-flex items-center justify-center rounded-full border border-rose-300 dark:border-rose-800 text-rose-700 dark:text-rose-300 bg-rose-50/95 dark:bg-rose-950/55 hover:bg-rose-100 dark:hover:bg-rose-900/70 shadow-sm transition-all duration-200">
+                                <i data-lucide="flag" class="w-3.5 h-3.5"></i>
+                            </button>
+                        </div>
                     </div>
                     <div class="flex flex-wrap gap-1 mb-2">
                         @if ($bank->distance_km !== null)
@@ -685,4 +701,7 @@ $hasActiveMobileFilters = !empty(array_filter((array) request('blood_group', [])
 
 </script>
 @endpush
+
+
+
 
