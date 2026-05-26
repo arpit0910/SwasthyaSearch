@@ -14,6 +14,7 @@
                         <input type="file" name="file" class="form-control" accept=".csv" required>
                         <div class="form-text mt-2">
                             Ensure your CSV file matches the required columns.
+                            <div class="mt-1"><code>name_en,name_hi,department_name_en,symptoms_en,symptoms_hi</code></div>
                             <a href="{{ route('sample.download', ['type' => 'diseases']) }}" class="text-primary fw-semibold d-inline-block mt-1">
                                 <i class="fa-solid fa-download me-1"></i> Download Sample CSV Template
                             </a>

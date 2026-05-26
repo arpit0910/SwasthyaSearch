@@ -11,6 +11,7 @@ use App\Models\Disease;
 use App\Models\Doctor;
 use App\Models\Faq;
 use App\Models\Hospital;
+use App\Models\Symptom;
 use App\Services\DirectorySyncService;
 use App\Services\ScraperService;
 use Illuminate\Http\Request;
@@ -1057,7 +1058,7 @@ class AdminDashboardController extends Controller
     // --- DISEASES CRUD & IMPORT ---
     public function diseases(Request $request)
     {
-        $query = Disease::with('department');
+        $query = Disease::with(['department', 'symptoms']);
         if ($search = $request->query('search')) {
             $query->where('name_en', 'like', "%{$search}%")
                 ->orWhere('name_hi', 'like', "%{$search}%");
@@ -1073,13 +1074,17 @@ class AdminDashboardController extends Controller
             'name_en' => 'required|string|max:255',
             'name_hi' => 'required|string|max:255',
             'department_id' => 'required|exists:departments,id',
+            'symptoms_en' => 'nullable|string',
+            'symptoms_hi' => 'nullable|string',
         ]);
 
-        Disease::create([
+        $disease = Disease::create([
             'name_en' => $data['name_en'],
             'name_hi' => $data['name_hi'],
             'department_id' => $data['department_id'],
         ]);
+
+        $this->syncDiseaseSymptoms($disease, $data['symptoms_en'] ?? '', $data['symptoms_hi'] ?? '');
 
         return back()->with('success', 'Disease/Symptom created successfully.');
     }
@@ -1090,6 +1095,8 @@ class AdminDashboardController extends Controller
             'name_en' => 'required|string|max:255',
             'name_hi' => 'required|string|max:255',
             'department_id' => 'required|exists:departments,id',
+            'symptoms_en' => 'nullable|string',
+            'symptoms_hi' => 'nullable|string',
         ]);
 
         $disease->update([
@@ -1097,6 +1104,8 @@ class AdminDashboardController extends Controller
             'name_hi' => $data['name_hi'],
             'department_id' => $data['department_id'],
         ]);
+
+        $this->syncDiseaseSymptoms($disease, $data['symptoms_en'] ?? '', $data['symptoms_hi'] ?? '');
 
         return back()->with('success', 'Disease/Symptom updated successfully.');
     }
@@ -1129,7 +1138,7 @@ class AdminDashboardController extends Controller
                 ]);
             }
 
-            Disease::firstOrCreate(
+            $disease = Disease::firstOrCreate(
                 ['name_en' => $data['name_en']],
                 [
                     'name_en' => $data['name_en'],
@@ -1137,9 +1146,82 @@ class AdminDashboardController extends Controller
                     'department_id' => $dept ? $dept->id : 1,
                 ]
             );
+
+            $symptomsEn = $data['symptoms_en'] ?? ($data['symptom_en'] ?? '');
+            $symptomsHi = $data['symptoms_hi'] ?? ($data['symptom_hi'] ?? '');
+            $this->syncDiseaseSymptoms($disease, $symptomsEn, $symptomsHi);
         }
         fclose($file);
         return back()->with('success', 'Diseases imported successfully.');
+    }
+
+    public function exportDiseases()
+    {
+        $diseases = Disease::with(['department', 'symptoms'])->get();
+        $headers = [
+            'Content-type' => 'text/csv',
+            'Content-Disposition' => 'attachment; filename=disease_symptom_mapping_export.csv',
+            'Pragma' => 'no-cache',
+            'Cache-Control' => 'must-revalidate, post-check=0, pre-check=0',
+            'Expires' => '0',
+        ];
+
+        $callback = function () use ($diseases) {
+            $file = fopen('php://output', 'w');
+            fputcsv($file, [
+                'id',
+                'disease_name_en',
+                'disease_name_hi',
+                'department_name_en',
+                'department_name_hi',
+                'symptoms_en',
+                'symptoms_hi',
+            ]);
+
+            foreach ($diseases as $disease) {
+                fputcsv($file, [
+                    $disease->id,
+                    $disease->name_en,
+                    $disease->name_hi,
+                    $disease->department?->name_en,
+                    $disease->department?->name_hi,
+                    $disease->symptoms->pluck('name_en')->implode('; '),
+                    $disease->symptoms->pluck('name_hi')->filter()->implode('; '),
+                ]);
+            }
+            fclose($file);
+        };
+
+        return response()->stream($callback, 200, $headers);
+    }
+
+    private function syncDiseaseSymptoms(Disease $disease, string $symptomsEnRaw, string $symptomsHiRaw = ''): void
+    {
+        $symptomsEn = collect(preg_split('/[,;\n]+/', $symptomsEnRaw))
+            ->map(fn ($value) => trim((string) $value))
+            ->filter()
+            ->values();
+
+        $symptomsHi = collect(preg_split('/[,;\n]+/', $symptomsHiRaw))
+            ->map(fn ($value) => trim((string) $value))
+            ->values();
+
+        $symptomIds = [];
+        foreach ($symptomsEn as $index => $symptomEn) {
+            $symptomHi = $symptomsHi->get($index);
+            $symptom = Symptom::firstOrCreate(
+                ['name_en' => $symptomEn],
+                ['name_hi' => $symptomHi ?: null]
+            );
+
+            if (!$symptom->name_hi && $symptomHi) {
+                $symptom->update(['name_hi' => $symptomHi]);
+            }
+
+            $symptomIds[] = $symptom->id;
+        }
+
+        $disease->symptoms()->sync($symptomIds);
     }
 
     // --- ARTICLES CRUD ---

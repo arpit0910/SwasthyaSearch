@@ -27,46 +27,31 @@ class EnrichFreeCommunityDataCommand extends Command
         $this->line('Module: ' . $module);
         $this->line('Limit per module: ' . $limit);
 
-        if ($module === 'all') {
-            $report = $service->enrichAll($city, $limit);
-            $this->table(
-                ['Metric', 'Value'],
-                [
-                    ['Hospitals Processed', $report['hospitals_processed']],
-                    ['Hospitals Updated', $report['hospitals_updated']],
-                    ['Hospitals Failed', $report['hospitals_failed']],
-                    ['Doctors Processed', $report['doctors_processed']],
-                    ['Doctors Updated', $report['doctors_updated']],
-                    ['Doctors Failed', $report['doctors_failed']],
-                    ['Blood Banks Processed', $report['blood_banks_processed']],
-                    ['Blood Banks Updated', $report['blood_banks_updated']],
-                    ['Blood Banks Failed', $report['blood_banks_failed']],
-                ]
-            );
-            return Command::SUCCESS;
-        }
+        // Map modules to their respective service methods
+        $report = match ($module) {
+            'all' => $service->enrichAll($city, $limit),
+            'hospitals' => $service->enrichHospitals($city, $limit),
+            'doctors' => $service->enrichDoctors($city, $limit),
+            'blood-banks' => $service->enrichBloodBanks($city, $limit),
+            default => null,
+        };
 
-        if ($module === 'hospitals') {
-            $r = $service->enrichHospitals($city, $limit);
-        } elseif ($module === 'doctors') {
-            $r = $service->enrichDoctors($city, $limit);
-        } elseif ($module === 'blood-banks') {
-            $r = $service->enrichBloodBanks($city, $limit);
-        } else {
+        if ($report === null) {
             $this->error('Invalid module. Use all|hospitals|doctors|blood-banks');
             return Command::FAILURE;
         }
 
-        $this->table(
-            ['Metric', 'Value'],
-            [
-                ['Processed', $r['processed']],
-                ['Updated', $r['updated']],
-                ['Failed', $r['failed']],
-            ]
-        );
+        // Dynamically build the table rows from the returned report keys
+        $tableRows = [];
+        foreach ($report as $key => $value) {
+            // Prettify keys: 'hospitals_processed' -> 'Hospitals Processed'
+            $metricName = ucwords(str_replace('_', ' ', $key));
+            $tableRows[] = [$metricName, $value];
+        }
+
+        $this->table(['Metric', 'Value'], $tableRows);
+        $this->info('Enrichment completed successfully.');
 
         return Command::SUCCESS;
     }
 }
-

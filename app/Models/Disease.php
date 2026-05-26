@@ -27,6 +27,11 @@ class Disease extends Model
         return $this->belongsTo(Department::class);
     }
 
+    public function symptoms()
+    {
+        return $this->belongsToMany(Symptom::class, 'disease_symptom')->withTimestamps();
+    }
+
     public function getNameAttribute(): array
     {
         return [

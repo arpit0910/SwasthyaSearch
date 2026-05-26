@@ -21,11 +21,11 @@ class SampleDownloadController extends Controller
         switch ($type) {
             case 'departments':
                 $content .= "name_en,name_hi,description_en,description_hi\n";
-                $content .= "Cardiology,हृदय रोग विभाग,Heart specialist department,हृदय विशेषज्ञ\n";
+                $content .= "Cardiology,हृदय रोग विभाग,Heart specialist department,हृदय विशेषज्ञ विभाग\n";
                 break;
             case 'diseases':
-                $content .= "name_en,name_hi,department_name_en\n";
-                $content .= "Chest Pain,छाती में दर्द,Cardiologist\n";
+                $content .= "name_en,name_hi,department_name_en,symptoms_en,symptoms_hi\n";
+                $content .= "Angina,एंजाइना,Cardiology,\"chest pain; shortness of breath; sweating\",\"छाती में दर्द; सांस फूलना; पसीना आना\"\n";
                 break;
             case 'hospitals':
                 $content .= "name_en,name_hi,type,address,city,emergency_phone,latitude,longitude\n";

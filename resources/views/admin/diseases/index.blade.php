@@ -8,6 +8,9 @@
                 <p class="text-muted mb-0">Manage symptoms and diseases mapped to medical specialties for AI matching.</p>
             </div>
             <div class="d-flex gap-2">
+                <a href="{{ route('admin.diseases.export') }}" class="btn btn-outline-success d-flex align-items-center gap-2">
+                    <i class="fa-solid fa-file-export"></i> Export CSV
+                </a>
                 <button class="btn btn-outline-secondary d-flex align-items-center gap-2" data-bs-toggle="modal"
                     data-bs-target="#importModal">
                     <i class="fa-solid fa-file-import"></i> Import CSV
@@ -28,6 +31,7 @@
                             <tr>
                                 <th class="ps-4">Symptom / Disease (EN / HI)</th>
                                 <th>Matched Department</th>
+                                <th>Symptoms</th>
                                 <th class="text-end pe-4">Actions</th>
                             </tr>
                         </thead>
@@ -40,6 +44,11 @@
                                     </td>
                                     <td><span
                                             class="badge badge-teal fs-7 border">{{ $disease->department->getTranslation('name', 'en') ?? 'General' }}</span>
+                                    </td>
+                                    <td>
+                                        <div class="small text-muted">
+                                            {{ $disease->symptoms->pluck('name_en')->implode(', ') ?: 'N/A' }}
+                                        </div>
                                     </td>
                                     <td class="text-end pe-4">
                                         <button class="btn btn-sm btn-outline-primary me-1" data-bs-toggle="modal"

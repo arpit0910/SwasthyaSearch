@@ -75,6 +75,7 @@ Route::prefix('admin')->middleware('web')->group(function () {
         Route::put('/diseases/{disease}', [AdminDashboardController::class, 'updateDisease'])->name('admin.diseases.update');
         Route::delete('/diseases/{disease}', [AdminDashboardController::class, 'destroyDisease'])->name('admin.diseases.destroy');
         Route::post('/diseases/import', [AdminDashboardController::class, 'importDiseases'])->name('admin.diseases.import');
+        Route::get('/diseases/export', [AdminDashboardController::class, 'exportDiseases'])->name('admin.diseases.export');
 
         // Articles
         Route::get('/articles', [AdminDashboardController::class, 'articles'])->name('admin.articles');
