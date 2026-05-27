@@ -6,9 +6,10 @@ class SpreadsheetService
 {
     private static function splitTwoPhones(string $value): array
     {
+        // Split values like "value1, value2" into 2 columns.
         $parts = array_values(array_filter(array_map(
             static fn ($part) => trim($part),
-            explode(',', $value)
+            preg_split('/\s*,\s*/', $value) ?: []
         ), static fn ($part) => $part !== ''));
 
         return [

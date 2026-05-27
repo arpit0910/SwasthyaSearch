@@ -267,6 +267,13 @@ class AdminDashboardController extends Controller
             $phone2 = $data['phone_2'] ?? ($data['emergency_phone_2'] ?? null);
             $countryCode1 = $data['country_code_1'] ?? ($data['emergency_country_code_1'] ?? ($data['emergency_country_code'] ?? '+91'));
             $countryCode2 = $data['country_code_2'] ?? ($data['emergency_country_code_2'] ?? null);
+
+            if ($phone2 === null && is_string($data['emergency_phone'] ?? null) && str_contains($data['emergency_phone'], ',')) {
+                [$phone1, $phone2] = array_pad(array_map('trim', explode(',', $data['emergency_phone'], 2)), 2, null);
+            }
+            if ($countryCode2 === null && is_string($data['emergency_country_code'] ?? null) && str_contains($data['emergency_country_code'], ',')) {
+                [$countryCode1, $countryCode2] = array_pad(array_map('trim', explode(',', $data['emergency_country_code'], 2)), 2, null);
+            }
             if ($phone2 === null && is_string($phone1) && str_contains($phone1, ',')) {
                 [$phone1, $phone2] = array_pad(array_map('trim', explode(',', $phone1, 2)), 2, null);
             }

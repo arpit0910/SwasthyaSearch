@@ -70,11 +70,18 @@
                                     <td>
                                         @php
                                             $hospitalPhones = [];
+                                            $formatCode = static function ($code) {
+                                                $code = trim((string) $code);
+                                                if ($code === '') {
+                                                    return '';
+                                                }
+                                                return '+' . ltrim($code, '+');
+                                            };
                                             if (!empty($hospital->phone_1)) {
-                                                $hospitalPhones[] = trim(($hospital->country_code_1 ?? '') . ' ' . $hospital->phone_1);
+                                                $hospitalPhones[] = trim($formatCode($hospital->country_code_1 ?? '') . ' ' . $hospital->phone_1);
                                             }
                                             if (!empty($hospital->phone_2)) {
-                                                $hospitalPhones[] = trim(($hospital->country_code_2 ?? $hospital->country_code_1 ?? '') . ' ' . $hospital->phone_2);
+                                                $hospitalPhones[] = trim($formatCode($hospital->country_code_2 ?? $hospital->country_code_1 ?? '') . ' ' . $hospital->phone_2);
                                             }
                                             if (empty($hospitalPhones) && !empty($hospital->phone)) {
                                                 $hospitalPhones[] = $hospital->phone;

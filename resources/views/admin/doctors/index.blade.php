@@ -84,11 +84,18 @@
                                     <td>
                                         @php
                                             $doctorPhones = [];
+                                            $formatCode = static function ($code) {
+                                                $code = trim((string) $code);
+                                                if ($code === '') {
+                                                    return '';
+                                                }
+                                                return '+' . ltrim($code, '+');
+                                            };
                                             if (!empty($doctor->phone_1)) {
-                                                $doctorPhones[] = trim(($doctor->country_code_1 ?? '') . ' ' . $doctor->phone_1);
+                                                $doctorPhones[] = trim($formatCode($doctor->country_code_1 ?? '') . ' ' . $doctor->phone_1);
                                             }
                                             if (!empty($doctor->phone_2)) {
-                                                $doctorPhones[] = trim(($doctor->country_code_2 ?? $doctor->country_code_1 ?? '') . ' ' . $doctor->phone_2);
+                                                $doctorPhones[] = trim($formatCode($doctor->country_code_2 ?? $doctor->country_code_1 ?? '') . ' ' . $doctor->phone_2);
                                             }
                                         @endphp
                                         @if(!empty($doctorPhones))
