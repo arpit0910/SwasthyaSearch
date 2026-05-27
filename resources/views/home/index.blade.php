@@ -779,7 +779,7 @@ $locale === 'hi'
             const fullName = `Dr. ${doc.first_name} ${doc.last_name}`;
             const deptName = doc.department ? (currentLocale === 'hi' ? doc.department.name.hi : doc
                 .department.name.en) : '';
-            const emergencyPhone = doc.hospitals?.[0]?.emergency_phone_1 || doc.hospitals?.[0]?.emergency_phone_2 || doc.hospitals?.[0]?.emergency_phone || '';
+            const emergencyPhone = doc.hospitals?.[0]?.phone_1 || doc.hospitals?.[0]?.phone_2 || doc.hospitals?.[0]?.phone || '';
             const doctorPhone = doc.phone_1 || doc.phone_2 || doc.phone || '';
             const aboutText = doc.about ? (currentLocale === 'hi' ? doc.about.hi : doc.about.en) : '';
 
@@ -941,7 +941,7 @@ $locale === 'hi'
                             ${schemesHtml}
                             <div class="pt-2 mt-1 border-t border-slate-200/60 dark:border-slate-700/60 flex items-center justify-between gap-2">
                                 <span class="text-[10px] text-slate-400 dark:text-slate-500 italic">
-                                    ${(hosp.emergency_phone_1 || hosp.emergency_phone_2 || hosp.emergency_phone) ? `${currentLocale === 'hi' ? 'à¤¸à¤‚à¤ªà¤°à¥à¤•:' : 'Tel:'} ${[hosp.emergency_phone_1, hosp.emergency_phone_2, hosp.emergency_phone].filter(Boolean).join(', ')}` : ''}
+                                    ${(hosp.phone_1 || hosp.phone_2 || hosp.phone) ? `${currentLocale === 'hi' ? 'à¤¸à¤‚à¤ªà¤°à¥à¤•:' : 'Tel:'} ${[hosp.phone_1, hosp.phone_2, hosp.phone].filter(Boolean).join(', ')}` : ''}
                                 </span>
                                 <a href="https://www.google.com/maps/dir/?api=1&destination=${encodeURIComponent((hosp.address || '') + ', ' + (hosp.city || 'India'))}" target="_blank" class="inline-flex items-center space-x-1.5 text-xs text-indigo-600 dark:text-indigo-400 hover:text-indigo-700 dark:hover:text-indigo-300 font-bold bg-indigo-50 dark:bg-indigo-950/40 hover:bg-indigo-100/80 dark:hover:bg-indigo-900/60 px-3 py-1.5 rounded-xl border border-indigo-100 dark:border-indigo-900 transition-all shadow-2xs">
                                     <i data-lucide="navigation" class="w-3.5 h-3.5 text-indigo-500"></i>

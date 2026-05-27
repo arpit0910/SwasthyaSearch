@@ -19,10 +19,22 @@ class SpreadsheetService
 
     private static function hydratePhoneVariants(array $row): array
     {
+        if (array_key_exists('country_code', $row)) {
+            [$first, $second] = self::splitTwoPhones((string) ($row['country_code'] ?? ''));
+            $row['country_code_1'] = $first;
+            $row['country_code_2'] = $second;
+        }
+
+        if (array_key_exists('emergency_country_code', $row)) {
+            [$first, $second] = self::splitTwoPhones((string) ($row['emergency_country_code'] ?? ''));
+            $row['country_code_1'] = $row['country_code_1'] ?? $first;
+            $row['country_code_2'] = $row['country_code_2'] ?? $second;
+        }
+
         if (array_key_exists('emergency_phone', $row)) {
             [$first, $second] = self::splitTwoPhones((string) ($row['emergency_phone'] ?? ''));
-            $row['emergency_phone_1'] = $first;
-            $row['emergency_phone_2'] = $second;
+            $row['phone_1'] = $row['phone_1'] ?? $first;
+            $row['phone_2'] = $row['phone_2'] ?? $second;
         }
 
         if (array_key_exists('phone', $row)) {

@@ -60,6 +60,8 @@ class ListDoctors extends ListRecords
 
                         $phone1 = $row['phone_1'] ?? null;
                         $phone2 = $row['phone_2'] ?? null;
+                        $countryCode1 = $row['country_code_1'] ?? ($row['country_code'] ?? '+91');
+                        $countryCode2 = $row['country_code_2'] ?? null;
 
                         Doctor::firstOrCreate(
                             ['registration_number' => $row['registration_number']],
@@ -72,6 +74,8 @@ class ListDoctors extends ListRecords
                                 'experience_years' => (int)($row['experience_years'] ?? 5),
                                 'about_en' => $row['about_en'] ?? '',
                                 'about_hi' => $row['about_hi'] ?? '',
+                                'country_code_1' => $countryCode1,
+                                'country_code_2' => $countryCode2,
                                 'phone_1' => $phone1 ?? ($row['phone'] ?? null),
                                 'phone_2' => $phone2,
                                 'is_verified' => true,

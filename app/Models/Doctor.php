@@ -24,7 +24,8 @@ class Doctor extends Model implements HasMedia
         'about_hi',
         'is_verified',
         'email',
-        'country_code',
+        'country_code_1',
+        'country_code_2',
         'phone_1',
         'phone_2',
         'address_line1',
@@ -113,14 +114,14 @@ class Doctor extends Model implements HasMedia
         ];
     }
 
-    public function getPhoneAttribute(): ?string
+    public function getCountryCodeAttribute(): ?string
     {
-        return $this->phone_1;
+        return $this->country_code_1;
     }
 
-    public function setPhoneAttribute($value): void
+    public function setCountryCodeAttribute($value): void
     {
-        $this->attributes['phone_1'] = $value;
+        $this->attributes['country_code_1'] = $value;
     }
 
     public function setAboutAttribute($value)

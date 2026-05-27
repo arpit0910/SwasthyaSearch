@@ -51,8 +51,10 @@ class ListHospitals extends ListRecords
                             continue;
                         }
 
-                        $emergencyPhone1 = $row['emergency_phone_1'] ?? null;
-                        $emergencyPhone2 = $row['emergency_phone_2'] ?? null;
+                        $phone1 = $row['phone_1'] ?? ($row['emergency_phone_1'] ?? null);
+                        $phone2 = $row['phone_2'] ?? ($row['emergency_phone_2'] ?? null);
+                        $countryCode1 = $row['country_code_1'] ?? ($row['emergency_country_code_1'] ?? ($row['emergency_country_code'] ?? '+91'));
+                        $countryCode2 = $row['country_code_2'] ?? ($row['emergency_country_code_2'] ?? null);
 
                         Hospital::firstOrCreate(
                             ['name_en' => $row['name_en']],
@@ -62,8 +64,10 @@ class ListHospitals extends ListRecords
                                 'type' => $row['type'] ?? 'Hospital',
                                 'address' => $row['address'] ?? '',
                                 'city' => $row['city'] ?? '',
-                                'emergency_phone_1' => $emergencyPhone1 ?? ($row['emergency_phone'] ?? null),
-                                'emergency_phone_2' => $emergencyPhone2,
+                                'country_code_1' => $countryCode1,
+                                'country_code_2' => $countryCode2,
+                                'phone_1' => $phone1 ?? ($row['phone'] ?? ($row['emergency_phone'] ?? null)),
+                                'phone_2' => $phone2,
                                 'latitude' => is_numeric($row['latitude'] ?? null) ? (float)$row['latitude'] : null,
                                 'longitude' => is_numeric($row['longitude'] ?? null) ? (float)$row['longitude'] : null,
                                 'is_verified' => true,

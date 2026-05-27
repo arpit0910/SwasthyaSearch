@@ -34,7 +34,7 @@
                                 <th>Type</th>
                                 <th>City</th>
                                 <th>Address</th>
-                                <th>Emergency Phone</th>
+                                <th>Phone Numbers</th>
                                 <th>Status</th>
                                 <th class="text-end pe-4">Actions</th>
                             </tr>
@@ -67,7 +67,27 @@
                                             <div class="small text-muted">{{ implode(', ', $locationParts) }}</div>
                                         @endif
                                     </td>
-                                    <td><span class="font-monospace">{{ $hospital->emergency_phone }}</span></td>
+                                    <td>
+                                        @php
+                                            $hospitalPhones = [];
+                                            if (!empty($hospital->phone_1)) {
+                                                $hospitalPhones[] = trim(($hospital->country_code_1 ?? '') . ' ' . $hospital->phone_1);
+                                            }
+                                            if (!empty($hospital->phone_2)) {
+                                                $hospitalPhones[] = trim(($hospital->country_code_2 ?? $hospital->country_code_1 ?? '') . ' ' . $hospital->phone_2);
+                                            }
+                                            if (empty($hospitalPhones) && !empty($hospital->phone)) {
+                                                $hospitalPhones[] = $hospital->phone;
+                                            }
+                                        @endphp
+                                        @if(!empty($hospitalPhones))
+                                            @foreach($hospitalPhones as $num)
+                                                <div class="font-monospace small">{{ $num }}</div>
+                                            @endforeach
+                                        @else
+                                            <span class="text-muted fst-italic fs-7">Not Available</span>
+                                        @endif
+                                    </td>
                                     <td>
                                         @if($hospital->is_verified)
                                             <span class="badge badge-teal"><i class="fa-solid fa-circle-check me-1"></i> Verified</span>

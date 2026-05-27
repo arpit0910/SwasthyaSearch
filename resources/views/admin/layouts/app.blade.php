@@ -9,42 +9,56 @@
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
     <!-- FontAwesome 6 Icons -->
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css" rel="stylesheet">
-    <!-- Google Fonts Inter -->
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <!-- Typography aligned with public website -->
+    <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&display=swap" rel="stylesheet">
     <!-- Chart.js -->
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     @stack('styles')
     <style>
+        :root {
+            --ss-bg: #f1f5f9;
+            --ss-surface: #ffffff;
+            --ss-text: #0f172a;
+            --ss-muted: #64748b;
+            --ss-primary: #14b8a6;
+            --ss-primary-dark: #0f766e;
+            --ss-indigo: #312e81;
+            --ss-navy: #0b1220;
+            --ss-border: #dbe7f3;
+        }
         body {
-            font-family: 'Inter', sans-serif;
-            background-color: #f8fafc; /* slate-50 */
-            color: #1e293b; /* slate-800 */
+            font-family: 'Manrope', sans-serif;
+            background:
+                radial-gradient(900px 500px at 95% -10%, rgba(20,184,166,0.13), transparent 60%),
+                radial-gradient(700px 450px at -10% 20%, rgba(49,46,129,0.12), transparent 60%),
+                var(--ss-bg);
+            color: var(--ss-text);
             overflow-x: hidden;
         }
         /* Sidebar Styling */
         .admin-sidebar {
             width: 280px;
             min-height: 100vh;
-            background-color: #0F172B; /* Premium Dark Navy */
-            color: #cbd5e1; /* slate-300 */
+            background: linear-gradient(180deg, #0b1220 0%, #101a33 60%, #131d3a 100%);
+            color: #cbd5e1;
             position: fixed;
             top: 0;
             left: 0;
             z-index: 1040;
             transition: all 0.3s ease;
-            box-shadow: 4px 0 15px rgba(0, 0, 0, 0.1);
+            box-shadow: 10px 0 30px rgba(2, 6, 23, 0.3);
         }
         .admin-sidebar .sidebar-brand {
             padding: 1.5rem 1.5rem;
             font-size: 1.5rem;
-            font-weight: 700;
+            font-weight: 800;
             color: #ffffff;
             text-decoration: none;
             display: block;
-            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.08);
         }
         .admin-sidebar .sidebar-brand span {
-            color: #14b8a6; /* Teal accent */
+            color: #2dd4bf;
         }
         .admin-sidebar .nav-group-title {
             padding: 1.5rem 1.5rem 0.5rem;
@@ -66,13 +80,13 @@
         }
         .admin-sidebar .nav-link:hover {
             color: #ffffff;
-            background-color: rgba(255, 255, 255, 0.05);
-            border-left-color: #14b8a6;
+            background-color: rgba(45, 212, 191, 0.12);
+            border-left-color: #2dd4bf;
         }
         .admin-sidebar .nav-link.active {
             color: #ffffff;
-            background-color: #14b8a6;
-            border-left-color: #0d9488;
+            background: linear-gradient(90deg, rgba(20, 184, 166, 0.9) 0%, rgba(15, 118, 110, 0.95) 100%);
+            border-left-color: #5eead4;
         }
         .admin-sidebar .nav-link i {
             font-size: 1.1rem;
@@ -87,13 +101,15 @@
             transition: all 0.3s ease;
         }
         .admin-header {
-            background-color: #ffffff;
+            background: rgba(255, 255, 255, 0.92);
+            backdrop-filter: blur(8px);
             height: 70px;
             display: flex;
             align-items: center;
             justify-content: space-between;
             padding: 0 2rem;
-            box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.05);
+            border-bottom: 1px solid var(--ss-border);
+            box-shadow: 0 4px 20px rgba(15, 23, 42, 0.05);
             z-index: 1030;
         }
         .admin-content {
@@ -102,30 +118,62 @@
         }
         /* Card Styling */
         .card {
-            border: none;
-            border-radius: 0.75rem;
-            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05), 0 2px 4px -2px rgba(0, 0, 0, 0.05);
+            border: 1px solid var(--ss-border);
+            border-radius: 1rem;
+            background: linear-gradient(180deg, #ffffff 0%, #fbfdff 100%);
+            box-shadow: 0 10px 30px rgba(15, 23, 42, 0.06);
             transition: transform 0.2s ease, box-shadow 0.2s ease;
         }
+        .card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 14px 34px rgba(15, 23, 42, 0.08);
+        }
         .card-header {
-            background-color: #ffffff;
-            border-bottom: 1px solid #f1f5f9;
+            background-color: rgba(255, 255, 255, 0.9);
+            border-bottom: 1px solid var(--ss-border);
             padding: 1.25rem 1.5rem;
             font-weight: 600;
             border-top-left-radius: 0.75rem !important;
             border-top-right-radius: 0.75rem !important;
         }
         .btn-primary {
-            background-color: #14b8a6;
-            border-color: #14b8a6;
+            background: linear-gradient(90deg, var(--ss-primary) 0%, var(--ss-primary-dark) 100%);
+            border-color: var(--ss-primary-dark);
+            box-shadow: 0 8px 20px rgba(20, 184, 166, 0.25);
+            font-weight: 700;
         }
         .btn-primary:hover {
-            background-color: #0d9488;
-            border-color: #0d9488;
+            filter: brightness(0.97);
+            border-color: var(--ss-primary-dark);
+        }
+        .btn-outline-primary {
+            border-color: #99f6e4;
+            color: var(--ss-primary-dark);
+        }
+        .btn-outline-primary:hover {
+            background: rgba(45, 212, 191, 0.14);
+            color: #0f172a;
+            border-color: #2dd4bf;
         }
         .badge-teal {
             background-color: #ccfbf1;
             color: #115e59;
+        }
+        .table {
+            --bs-table-hover-bg: #f0fdfa;
+            --bs-table-striped-bg: #f8fafc;
+        }
+        .table-light {
+            --bs-table-bg: #f8fafc;
+        }
+        .dropdown-menu {
+            border-radius: 0.9rem;
+            border: 1px solid var(--ss-border);
+            box-shadow: 0 10px 30px rgba(15, 23, 42, 0.12);
+        }
+        .alert {
+            border-radius: 0.9rem;
+            border-width: 1px;
         }
         @media (max-width: 991.98px) {
             .admin-sidebar {

@@ -471,7 +471,7 @@ $hasActiveMobileFilters = !empty(array_filter((array) request('type', [])))
                                 <span>{{ $locale === 'hi' ? 'आपातकालीन फ़ोन:' : 'Emergency Phone:' }}</span>
                             </div>
                             <span class="text-slate-900 dark:text-slate-100 font-extrabold tracking-wide select-all">
-                                {{ $h->emergency_phone }}
+                                {{ implode(', ', array_filter([$h->phone_1, $h->phone_2, $h->phone])) }}
                             </span>
                         </div>
                     </div>
@@ -486,7 +486,7 @@ $hasActiveMobileFilters = !empty(array_filter((array) request('type', [])))
                         <i data-lucide="users" class="w-4 h-4 text-teal-300"></i>
                         <span>{{ $locale === 'hi' ? 'डॉक्टर देखें' : 'View Doctors' }}</span>
                     </a>
-                    <a href="tel:{{ $h->emergency_phone }}"
+                    <a href="tel:{{ $h->phone_1 ?: $h->phone_2 ?: $h->phone }}"
                         class="w-full bg-gradient-to-tr from-teal-500 to-indigo-600 hover:from-teal-600 hover:to-indigo-700 text-white font-bold py-3 rounded-xl shadow-md hover:shadow-lg transition-all duration-200 text-xs uppercase tracking-wider flex items-center justify-center space-x-2 transform active:scale-98">
                         <i data-lucide="phone-call" class="w-4 h-4 text-white"></i>
                         <span>{{ $locale === 'hi' ? 'अभी कॉल करें' : 'Call Now' }}</span>

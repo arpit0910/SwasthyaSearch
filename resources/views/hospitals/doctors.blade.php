@@ -38,8 +38,9 @@
             <span class="inline-flex items-center gap-1.5 bg-slate-50 border border-slate-200 px-3 py-1 rounded-full font-semibold">
                 <i data-lucide="map-pin" class="w-4 h-4 text-teal-600"></i>{{ $hospitalCity }}
             </span>
-            @if(!empty($hospital['emergency_phone']))
-                <a href="tel:{{ $hospital['emergency_phone'] }}" class="inline-flex items-center gap-1.5 bg-teal-50 border border-teal-200 px-3 py-1 rounded-full font-semibold text-teal-800">
+            @php $hospitalPrimaryPhone = $hospital['phone_1'] ?? ($hospital['phone_2'] ?? ($hospital['phone'] ?? null)); @endphp
+            @if(!empty($hospitalPrimaryPhone))
+                <a href="tel:{{ $hospitalPrimaryPhone }}" class="inline-flex items-center gap-1.5 bg-teal-50 border border-teal-200 px-3 py-1 rounded-full font-semibold text-teal-800">
                     <i data-lucide="phone-call" class="w-4 h-4"></i>{{ $locale === 'hi' ? 'कॉल करें' : 'Call Hospital' }}
                 </a>
             @endif

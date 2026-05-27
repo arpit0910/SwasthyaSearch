@@ -36,6 +36,7 @@
                                 <th class="ps-4">Doctor Name</th>
                                 <th>Specialty / Dept</th>
                                 <th>Registration No.</th>
+                                <th>Phone Numbers</th>
                                 <th>Experience</th>
                                 <th>Status</th>
                                 <th class="text-end pe-4">Actions</th>
@@ -78,6 +79,24 @@
                                             <span class="font-monospace">{{ $doctor->registration_number }}</span>
                                         @else
                                             <span class="text-muted fst-italic fs-7">Not Publicly Listed</span>
+                                        @endif
+                                    </td>
+                                    <td>
+                                        @php
+                                            $doctorPhones = [];
+                                            if (!empty($doctor->phone_1)) {
+                                                $doctorPhones[] = trim(($doctor->country_code_1 ?? '') . ' ' . $doctor->phone_1);
+                                            }
+                                            if (!empty($doctor->phone_2)) {
+                                                $doctorPhones[] = trim(($doctor->country_code_2 ?? $doctor->country_code_1 ?? '') . ' ' . $doctor->phone_2);
+                                            }
+                                        @endphp
+                                        @if(!empty($doctorPhones))
+                                            @foreach($doctorPhones as $num)
+                                                <div class="font-monospace small">{{ $num }}</div>
+                                            @endforeach
+                                        @else
+                                            <span class="text-muted fst-italic fs-7">Not Available</span>
                                         @endif
                                     </td>
                                     <td>{{ $doctor->experience_years }} years</td>

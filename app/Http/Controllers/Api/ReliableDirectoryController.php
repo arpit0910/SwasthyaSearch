@@ -27,8 +27,10 @@ class ReliableDirectoryController extends Controller
                 'department' => $d->department?->name_en,
                 'registration_number' => $d->registration_number,
                 'medical_council' => $d->medical_council,
-                'phone' => $d->phone,
-                'country_code' => $d->country_code,
+                'phone_1' => $d->phone_1,
+                'phone_2' => $d->phone_2,
+                'country_code_1' => $d->country_code_1,
+                'country_code_2' => $d->country_code_2,
                 'address_line1' => $d->address_line1,
                 'address_line2' => $d->address_line2,
                 'city' => $d->city,
@@ -64,8 +66,10 @@ class ReliableDirectoryController extends Controller
                 'city' => $h->city,
                 'state' => $h->state,
                 'pincode' => $h->pincode,
-                'emergency_phone' => $h->emergency_phone,
-                'emergency_country_code' => $h->emergency_country_code,
+                'phone_1' => $h->phone_1,
+                'phone_2' => $h->phone_2,
+                'country_code_1' => $h->country_code_1,
+                'country_code_2' => $h->country_code_2,
                 'latitude' => $h->latitude,
                 'longitude' => $h->longitude,
                 'source_name' => $h->source_name,
@@ -104,4 +108,3 @@ class ReliableDirectoryController extends Controller
         ]);
     }
 }
-
