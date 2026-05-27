@@ -23,7 +23,8 @@ class SearchController extends Controller
             'departments' => Department::where('is_active', true)->orderBy($nameColumn)->get()->map(fn(Department $department) => $this->formatDepartment($department)),
             'doctors' => Doctor::with(['department', 'hospitals'])->where('is_verified', true)->latest()->take(6)->get()->map(fn(Doctor $doctor) => $this->formatDoctor($doctor)),
             'articles' => Article::with('comments')->where('is_published', true)->latest()->take(6)->get(),
-            'faqs' => Faq::latest()->get(),
+            // Homepage FAQ section must always come from FAQ module entries.
+            'faqs' => Faq::query()->latest('id')->get(),
             'stats' => [
                 'cities' => Hospital::distinct('city')->count('city') ?: 1,
                 'doctors' => Doctor::count(),

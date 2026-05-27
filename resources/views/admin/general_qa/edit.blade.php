@@ -1,4 +1,4 @@
-﻿<div class="modal" id="editModal{{ $faq->id }}" tabindex="-1">
+<div class="modal" id="editModal{{ $faq->id }}" tabindex="-1">
     <div class="modal-dialog modal-lg modal-dialog-centered">
         <div class="modal-content border-0 shadow">
             <div class="modal-header bg-light border-0 py-3">
@@ -36,5 +36,6 @@
         </div>
     </div>
 </div>
+
 
 

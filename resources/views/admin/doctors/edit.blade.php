@@ -1,4 +1,4 @@
-﻿<!-- Edit Modal -->
+<!-- Edit Modal -->
 <div class="modal" id="editModal{{ $doctor->id }}" tabindex="-1">
     <div class="modal-dialog modal-xl modal-dialog-centered">
         <div class="modal-content border-0 shadow">
@@ -218,4 +218,5 @@
         </div>
     </div>
 </div>
+
 

@@ -1,4 +1,4 @@
-﻿<!-- Create Modal -->
+<!-- Create Modal -->
 <div class="modal" id="createModal" tabindex="-1">
     <div class="modal-dialog modal-lg modal-dialog-centered">
         <div class="modal-content border-0 shadow">
@@ -16,7 +16,7 @@
                         </div>
                         <div class="col-md-6">
                             <label class="form-label fw-semibold">Blood Bank Name (Hindi)</label>
-                            <input type="text" name="name_hi" class="form-control" required placeholder="à¤à¤¸à¤à¤®à¤à¤¸ à¤…à¤¸à¥à¤ªà¤¤à¤¾à¤² à¤¬à¥à¤²à¤¡ à¤¬à¥ˆà¤‚à¤•">
+                            <input type="text" name="name_hi" class="form-control" required placeholder="एसएमएस अस्पताल ब्लड बैंक">
                         </div>
                         <div class="col-md-6">
                             <label class="form-label fw-semibold">City</label>
@@ -32,7 +32,7 @@
                         </div>
                         <div class="col-12">
                             <label class="form-label fw-semibold">Complete Address (Hindi)</label>
-                            <input type="text" name="address_hi" class="form-control" required placeholder="à¤œà¥‡à¤à¤²à¤à¤¨ à¤®à¤¾à¤°à¥à¤—, à¤œà¤¯à¤ªà¥à¤°">
+                            <input type="text" name="address_hi" class="form-control" required placeholder="जेएलएन मार्ग, जयपुर">
                         </div>
                         <div class="col-md-4">
                             <label class="form-label fw-semibold">Pincode</label>
@@ -130,4 +130,5 @@
         </div>
     </div>
 </div>
+
 

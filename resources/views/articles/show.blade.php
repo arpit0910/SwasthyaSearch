@@ -107,7 +107,7 @@
                 <i data-lucide="message-square" class="w-6 h-6 text-teal-600"></i>
                 <span>{{ $locale === 'hi' ? 'पाठक प्रतिक्रियाएं' : 'Reader Comments' }}</span>
             </h2>
-            <span class="text-sm font-semibold bg-indigo-50 dark:bg-indigo-950/40 text-indigo-700 dark:text-indigo-300 px-3.5 py-1.5 rounded-full border border-indigo-100 dark:border-indigo-800" id="comments-count-badge">
+            <span class="text-sm font-semibold bg-cyan-50 dark:bg-indigo-950/40 text-cyan-700 dark:text-indigo-300 px-3.5 py-1.5 rounded-full border border-cyan-100 dark:border-indigo-800" id="comments-count-badge">
                 {{ is_array($article->comments) ? count($article->comments) : ($article->comments ? $article->comments->count() : 0) }} {{ $locale === 'hi' ? 'टिप्पणियां' : 'Comments' }}
             </span>
         </div>
@@ -182,7 +182,7 @@
                 <button
                     type="submit"
                     id="comment-submit-btn"
-                    class="bg-gradient-to-tr from-teal-500 to-indigo-600 hover:from-teal-600 hover:to-indigo-700 text-white font-bold px-8 py-3 rounded-xl shadow-md hover:shadow-lg transition-all duration-200 text-sm tracking-wider uppercase disabled:opacity-50 flex items-center space-x-2 transform active:scale-98"
+                    class="bg-gradient-to-tr from-teal-500 to-cyan-600 hover:from-teal-600 hover:to-cyan-700 text-white font-bold px-8 py-3 rounded-xl shadow-md hover:shadow-lg transition-all duration-200 text-sm tracking-wider uppercase disabled:opacity-50 flex items-center space-x-2 transform active:scale-98"
                 >
                     <span>{{ $locale === 'hi' ? 'टिप्पणी करें' : 'Post Comment' }}</span>
                 </button>
@@ -261,3 +261,4 @@
     }
 </script>
 @endpush
+

@@ -8,7 +8,7 @@
 $hasActiveMobileFilters = !empty(array_filter((array) request('category', [])));
 @endphp
 @section('content')
-<header class="bg-gradient-to-r from-slate-900 via-indigo-950 to-slate-900 text-white py-16 px-4 sm:px-6 lg:px-8 border-b border-slate-800 shadow-xl relative overflow-hidden">
+<header class="bg-gradient-to-r from-cyan-800 via-teal-700 to-emerald-700 text-white py-16 px-4 sm:px-6 lg:px-8 border-b border-slate-800 shadow-xl relative overflow-hidden">
     <div class="absolute inset-0 bg-[radial-gradient(circle_at_top_right,rgba(20,184,166,0.15),transparent_50%)]"></div>
     <div class="max-w-7xl mx-auto text-center relative z-10">
         <span class="bg-teal-500/20 text-teal-300 border border-teal-500/30 px-4 py-1.5 rounded-full text-xs font-semibold tracking-wider uppercase inline-block mb-4 shadow-sm">Expert Medical Knowledge</span>
@@ -58,7 +58,7 @@ $hasActiveMobileFilters = !empty(array_filter((array) request('category', [])));
                     </select>
                 </div>
                 <div class="space-y-2.5 pt-3 border-t border-slate-200 dark:border-slate-700">
-                    <button type="submit" class="w-full h-11 px-4 rounded-xl border border-indigo-300 dark:border-indigo-700 bg-indigo-600 hover:bg-indigo-700 text-white font-bold text-sm transition-all duration-200 flex items-center justify-center space-x-2 shadow-2xs"><i data-lucide="filter" class="w-4 h-4"></i><span>Apply Filters</span></button>
+                    <button type="submit" class="w-full h-11 px-4 rounded-xl border border-indigo-300 dark:border-indigo-700 bg-cyan-600 hover:bg-cyan-700 text-white font-bold text-sm transition-all duration-200 flex items-center justify-center space-x-2 shadow-2xs"><i data-lucide="filter" class="w-4 h-4"></i><span>Apply Filters</span></button>
                     <a href="{{ route('articles.index') }}" class="w-full h-11 px-4 rounded-xl border border-slate-200 dark:border-slate-700 hover:border-slate-300 dark:hover:border-slate-600 text-slate-600 dark:text-slate-300 hover:text-slate-800 dark:hover:text-slate-100 hover:bg-slate-50 dark:hover:bg-slate-800 font-bold text-sm transition-all duration-200 flex items-center justify-center space-x-2 shadow-2xs"><i data-lucide="rotate-ccw" class="w-4 h-4"></i><span>Reset</span></a>
                 </div>
             </form>
@@ -148,3 +148,4 @@ function closeMobileFilters(){const sidebar=document.getElementById('mobile-filt
 document.addEventListener('DOMContentLoaded',function(){initMultiSelectBadges(document);document.querySelectorAll('[data-open-mobile-filters]').forEach((btn)=>btn.addEventListener('click',openMobileFilters));document.getElementById('mobile-filter-close')?.addEventListener('click',closeMobileFilters);document.getElementById('mobile-filter-backdrop')?.addEventListener('click',closeMobileFilters);document.addEventListener('keydown',(event)=>{if(event.key==='Escape')closeMobileFilters();});});
 </script>
 @endpush
+

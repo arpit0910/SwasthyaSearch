@@ -13,7 +13,7 @@
 @section('meta_description', "View doctors associated with {$hospital['name_en']} in {$hospital['city']}. Check specialty, experience, and contact details before visiting.")
 
 @section('content')
-<header class="bg-gradient-to-r from-slate-900 via-indigo-950 to-slate-900 text-white py-14 px-4 sm:px-6 lg:px-8 border-b border-slate-800 shadow-xl relative overflow-hidden">
+<header class="bg-gradient-to-r from-cyan-800 via-teal-700 to-emerald-700 text-white py-14 px-4 sm:px-6 lg:px-8 border-b border-slate-800 shadow-xl relative overflow-hidden">
     <div class="absolute inset-0 bg-[radial-gradient(circle_at_top_right,rgba(20,184,166,0.15),transparent_50%)]"></div>
     <div class="max-w-7xl mx-auto relative z-10">
         <a href="{{ route('hospitals.index') }}" class="inline-flex items-center gap-2 mb-4 text-teal-300 hover:text-teal-200 text-sm font-semibold">
@@ -32,8 +32,8 @@
 <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10">
     <div class="bg-white border border-slate-200 rounded-2xl p-5 mb-8">
         <div class="flex flex-wrap gap-3 text-sm text-slate-700">
-            <span class="inline-flex items-center gap-1.5 bg-indigo-50 border border-indigo-200 px-3 py-1 rounded-full font-semibold">
-                <i data-lucide="building-2" class="w-4 h-4 text-indigo-600"></i>{{ $hospital['type'] }}
+            <span class="inline-flex items-center gap-1.5 bg-cyan-50 border border-indigo-200 px-3 py-1 rounded-full font-semibold">
+                <i data-lucide="building-2" class="w-4 h-4 text-cyan-600"></i>{{ $hospital['type'] }}
             </span>
             <span class="inline-flex items-center gap-1.5 bg-slate-50 border border-slate-200 px-3 py-1 rounded-full font-semibold">
                 <i data-lucide="map-pin" class="w-4 h-4 text-teal-600"></i>{{ $hospitalCity }}
@@ -70,7 +70,7 @@
                     <p class="text-sm text-teal-700 font-semibold mt-1">{{ $deptName }}</p>
                     <p class="text-xs text-slate-600 mt-2">{{ $doc['experience_years'] }}+ {{ $locale === 'hi' ? 'वर्ष अनुभव' : 'years experience' }}</p>
                     @if(!empty($doc['phone']))
-                        <a href="tel:{{ $doc['phone'] }}" class="mt-4 inline-flex items-center gap-2 text-sm font-semibold bg-indigo-600 text-white px-3 py-2 rounded-xl">
+                        <a href="tel:{{ $doc['phone'] }}" class="mt-4 inline-flex items-center gap-2 text-sm font-semibold bg-cyan-600 text-white px-3 py-2 rounded-xl">
                             <i data-lucide="phone" class="w-4 h-4"></i>{{ $locale === 'hi' ? 'कॉल डॉक्टर' : 'Call Doctor' }}
                         </a>
                     @endif
@@ -80,3 +80,4 @@
     @endif
 </main>
 @endsection
+

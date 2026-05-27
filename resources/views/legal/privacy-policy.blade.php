@@ -1,4 +1,4 @@
-﻿@extends('layouts.public')
+@extends('layouts.public')
 
 @section('title', ($locale === 'hi' ? 'Privacy Policy' : 'Privacy Policy') . ' - SwasthyaSearch')
 @section('meta_title', 'Privacy Policy | SwasthyaSearch')
@@ -9,7 +9,7 @@
     <div class="bg-white rounded-3xl border border-slate-200 shadow-sm overflow-hidden">
         <div class="px-6 sm:px-10 py-8 border-b border-slate-100 bg-gradient-to-r from-slate-50 to-white">
             <div class="flex flex-wrap items-center justify-between gap-3 mb-4">
-                <a href="{{ route('home') }}" class="inline-flex items-center space-x-2 text-sm font-semibold text-indigo-700 hover:text-indigo-900">
+                <a href="{{ route('home') }}" class="inline-flex items-center space-x-2 text-sm font-semibold text-cyan-700 hover:text-indigo-900">
                     <i data-lucide="arrow-left" class="w-4 h-4"></i>
                     <span>Back to Home</span>
                 </a>
@@ -64,9 +64,10 @@
 
             <section>
                 <h2 class="text-xl font-bold text-slate-900 mb-2">6. Contact</h2>
-                <p>For privacy-related questions: <a href="mailto:privacy@swasthyasearch.com" class="text-indigo-700 font-semibold hover:underline">privacy@swasthyasearch.com</a></p>
+                <p>For privacy-related questions: <a href="mailto:privacy@swasthyasearch.com" class="text-cyan-700 font-semibold hover:underline">privacy@swasthyasearch.com</a></p>
             </section>
         </div>
     </div>
 </main>
 @endsection
+

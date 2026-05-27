@@ -1,11 +1,11 @@
-﻿@extends('layouts.public')
+@extends('layouts.public')
 
 @section('title', ($locale === 'hi' ? 'Contact Us' : 'Contact Us') . ' - SwasthyaSearch')
 @section('meta_title', 'Contact SwasthyaSearch | Support & Corrections')
 @section('meta_description', 'Contact SwasthyaSearch for support, listing corrections, and general questions.')
 
 @section('content')
-<header class="bg-gradient-to-r from-slate-900 via-indigo-950 to-slate-900 text-white py-14 px-4 sm:px-6 lg:px-8 border-b border-slate-800 shadow-xl relative overflow-hidden">
+<header class="bg-gradient-to-r from-cyan-800 via-teal-700 to-emerald-700 text-white py-14 px-4 sm:px-6 lg:px-8 border-b border-slate-800 shadow-xl relative overflow-hidden">
     <div class="absolute inset-0 bg-[radial-gradient(circle_at_top_right,rgba(20,184,166,0.15),transparent_50%)]"></div>
     <div class="max-w-5xl mx-auto text-center relative z-10">
         <span class="bg-teal-500/20 text-teal-300 border border-teal-500/30 px-4 py-1.5 rounded-full text-xs font-semibold tracking-wider uppercase inline-block mb-4">Support Center</span>
@@ -71,7 +71,7 @@
                     @error('message')<p class="mt-1 text-xs text-rose-500">{{ $message }}</p>@enderror
                 </div>
 
-                <button type="submit" class="w-full bg-gradient-to-tr from-teal-500 to-indigo-600 hover:from-teal-600 hover:to-indigo-700 text-white font-bold py-3.5 rounded-xl shadow-md transition-all text-sm uppercase tracking-wider inline-flex items-center justify-center gap-2">
+                <button type="submit" class="w-full bg-gradient-to-tr from-teal-500 to-cyan-600 hover:from-teal-600 hover:to-cyan-700 text-white font-bold py-3.5 rounded-xl shadow-md transition-all text-sm uppercase tracking-wider inline-flex items-center justify-center gap-2">
                     <i data-lucide="send" class="w-4 h-4"></i>
                     <span>Send Message</span>
                 </button>
@@ -80,3 +80,4 @@
     </div>
 </main>
 @endsection
+

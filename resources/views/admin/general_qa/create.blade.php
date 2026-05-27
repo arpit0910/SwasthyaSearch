@@ -1,4 +1,4 @@
-﻿<div class="modal" id="createModal" tabindex="-1">
+<div class="modal" id="createModal" tabindex="-1">
     <div class="modal-dialog modal-lg modal-dialog-centered">
         <div class="modal-content border-0 shadow">
             <div class="modal-header bg-light border-0 py-3">
@@ -15,7 +15,7 @@
                         </div>
                         <div class="col-md-6">
                             <label class="form-label fw-semibold">Question (Hindi)</label>
-                            <input type="text" name="question_hi" class="form-control" required placeholder="à¤…à¤—à¤° à¤¸à¤¿à¤° à¤¦à¤°à¥à¤¦ à¤¹à¥‹ à¤¤à¥‹ à¤•à¥à¤¯à¤¾ à¤•à¤°à¥‡à¤‚?">
+                            <input type="text" name="question_hi" class="form-control" required placeholder="अगर सिर दर्द हो तो क्या करें?">
                         </div>
                         <div class="col-md-6">
                             <label class="form-label fw-semibold">Answer (English)</label>
@@ -23,7 +23,7 @@
                         </div>
                         <div class="col-md-6">
                             <label class="form-label fw-semibold">Answer (Hindi)</label>
-                            <textarea name="answer_hi" class="form-control" rows="4" required placeholder="à¤†à¤°à¤¾à¤® à¤•à¤°à¥‡à¤‚, à¤ªà¤¾à¤¨à¥€ à¤ªà¤¿à¤à¤‚, à¤¸à¥à¤•à¥à¤°à¥€à¤¨ à¤•à¤® à¤¦à¥‡à¤–à¥‡à¤‚..."></textarea>
+                            <textarea name="answer_hi" class="form-control" rows="4" required placeholder="आराम करें, पानी पिएं, स्क्रीन कम देखें..."></textarea>
                         </div>
                     </div>
                 </div>
@@ -35,5 +35,6 @@
         </div>
     </div>
 </div>
+
 
 

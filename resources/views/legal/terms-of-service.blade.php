@@ -1,4 +1,4 @@
-﻿@extends('layouts.public')
+@extends('layouts.public')
 
 @section('title', ($locale === 'hi' ? 'Terms of Service' : 'Terms of Service') . ' - SwasthyaSearch')
 @section('meta_title', 'Terms of Service | SwasthyaSearch')
@@ -9,7 +9,7 @@
     <div class="bg-white rounded-3xl border border-slate-200 shadow-sm overflow-hidden">
         <div class="px-6 sm:px-10 py-8 border-b border-slate-100 bg-gradient-to-r from-slate-50 to-white">
             <div class="flex flex-wrap items-center justify-between gap-3 mb-4">
-                <a href="{{ route('home') }}" class="inline-flex items-center space-x-2 text-sm font-semibold text-indigo-700 hover:text-indigo-900">
+                <a href="{{ route('home') }}" class="inline-flex items-center space-x-2 text-sm font-semibold text-cyan-700 hover:text-indigo-900">
                     <i data-lucide="arrow-left" class="w-4 h-4"></i>
                     <span>Back to Home</span>
                 </a>
@@ -71,3 +71,4 @@
     </div>
 </main>
 @endsection
+

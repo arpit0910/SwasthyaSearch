@@ -309,7 +309,7 @@ $hasActiveMobileFilters = !empty(array_filter((array) request('blood_group', [])
                         </span>
                         @endif
                         @if ($bank->is_government)
-                        <span class="text-[9px] font-bold uppercase tracking-wider text-indigo-600 dark:text-indigo-300 bg-indigo-50 dark:bg-indigo-950/40 border border-indigo-100 dark:border-indigo-900/60 px-1.5 py-0.5 rounded-md shadow-2xs">
+                        <span class="text-[9px] font-bold uppercase tracking-wider text-cyan-600 dark:text-indigo-300 bg-cyan-50 dark:bg-indigo-950/40 border border-cyan-100 dark:border-indigo-900/60 px-1.5 py-0.5 rounded-md shadow-2xs">
                             {{ $locale === 'hi' ? 'सरकारी' : 'Govt' }}
                         </span>
                         @else
@@ -701,6 +701,7 @@ $hasActiveMobileFilters = !empty(array_filter((array) request('blood_group', [])
 
 </script>
 @endpush
+
 
 
 

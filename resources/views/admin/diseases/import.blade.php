@@ -1,4 +1,4 @@
-﻿<!-- Import Modal -->
+<!-- Import Modal -->
 <div class="modal" id="importModal" tabindex="-1">
     <div class="modal-dialog modal-dialog-centered">
         <div class="modal-content border-0 shadow">
@@ -29,4 +29,5 @@
         </div>
     </div>
 </div>
+
 

@@ -32,7 +32,7 @@
                     @endif
 
                     @if ($page == $current)
-                        <span aria-current="page" class="min-w-9 px-3 py-2 rounded-xl text-xs font-extrabold bg-gradient-to-tr from-teal-500 to-indigo-600 text-white text-center shadow-sm">
+                        <span aria-current="page" class="min-w-9 px-3 py-2 rounded-xl text-xs font-extrabold bg-gradient-to-tr from-teal-500 to-cyan-600 text-white text-center shadow-sm">
                             {{ $page }}
                         </span>
                     @else
@@ -71,3 +71,4 @@
         </div>
     </nav>
 @endif
+

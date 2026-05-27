@@ -1,4 +1,4 @@
-﻿@extends('admin.layouts.app')
+@extends('admin.layouts.app')
 
 @section('content')
 <div class="container-fluid p-0">
@@ -122,7 +122,7 @@
                         </div>
                         <div class="col-md-6">
                             <label class="form-label fw-semibold">About Doctor (Hindi) <span class="text-danger">*</span></label>
-                            <textarea name="about_hi" class="form-control" rows="3" required placeholder="à¤µà¤°à¤¿à¤·à¥à¤  à¤¸à¤²à¤¾à¤¹à¤•à¤¾à¤°..."></textarea>
+                            <textarea name="about_hi" class="form-control" rows="3" required placeholder="वरिष्ठ सलाहकार..."></textarea>
                         </div>
                     </div>
 
@@ -170,6 +170,7 @@
     </div>
 </div>
 @endsection
+
 
 
 

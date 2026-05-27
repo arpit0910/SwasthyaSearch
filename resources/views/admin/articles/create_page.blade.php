@@ -1,4 +1,4 @@
-﻿@extends('admin.layouts.app')
+@extends('admin.layouts.app')
 
 @section('content')
 <div class="container-fluid p-0">
@@ -17,7 +17,7 @@
                         </div>
                         <div class="col-md-6">
                             <label class="form-label fw-semibold">Article Title (Hindi)</label>
-                            <input type="text" name="title_hi" class="form-control" required placeholder="à¤¹à¥ƒà¤¦à¤¯ à¤¸à¥à¤µà¤¾à¤¸à¥à¤¥à¥à¤¯ à¤•à¥‹ à¤¸à¤®à¤à¤¨à¤¾">
+                            <input type="text" name="title_hi" class="form-control" required placeholder="हृदय स्वास्थ्य को समझना">
                         </div>
                         <div class="col-md-6">
                             <label class="form-label fw-semibold">Excerpt (English)</label>
@@ -25,7 +25,7 @@
                         </div>
                         <div class="col-md-6">
                             <label class="form-label fw-semibold">Excerpt (Hindi)</label>
-                            <textarea name="excerpt_hi" class="form-control" rows="2" required placeholder="à¤…à¤ªà¤¨à¥‡ à¤¦à¤¿à¤² à¤•à¥‹ à¤¸à¥à¤µà¤¸à¥à¤¥ à¤°à¤–à¤¨à¥‡ à¤•à¥‡ à¤²à¤¿à¤ à¤à¤• à¤µà¥à¤¯à¤¾à¤ªà¤• à¤—à¤¾à¤‡à¤¡..."></textarea>
+                            <textarea name="excerpt_hi" class="form-control" rows="2" required placeholder="अपने दिल को स्वस्थ रखने के लिए एक व्यापक गाइड..."></textarea>
                         </div>
                         <div class="col-md-6">
                             <label class="form-label fw-semibold">Full Content (English - Markdown Supported)</label>
@@ -33,7 +33,7 @@
                         </div>
                         <div class="col-md-6">
                             <label class="form-label fw-semibold">Full Content (Hindi - Markdown Supported)</label>
-                            <textarea name="content_hi" class="form-control font-monospace fs-7" rows="10" required placeholder="## à¤ªà¤°à¤¿à¤šà¤¯&#10;&#10;à¤¹à¥ƒà¤¦à¤¯ à¤°à¥‹à¤—..."></textarea>
+                            <textarea name="content_hi" class="form-control font-monospace fs-7" rows="10" required placeholder="## परिचय&#10;&#10;हृदय रोग..."></textarea>
                         </div>
                     </div>
                 </div>
@@ -45,6 +45,7 @@
     </div>
 </div>
 @endsection
+
 
 
 

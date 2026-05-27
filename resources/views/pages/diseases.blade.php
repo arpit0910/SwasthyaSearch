@@ -9,7 +9,7 @@
 @section('content')
     <!-- Hero Section -->
     <header
-        class="bg-gradient-to-r from-slate-900 via-indigo-950 to-slate-900 text-white py-16 px-4 sm:px-6 lg:px-8 border-b border-slate-800 shadow-xl relative overflow-hidden">
+        class="bg-gradient-to-r from-cyan-800 via-teal-700 to-emerald-700 text-white py-16 px-4 sm:px-6 lg:px-8 border-b border-slate-800 shadow-xl relative overflow-hidden">
         <div class="absolute inset-0 bg-[radial-gradient(circle_at_top_right,rgba(20,184,166,0.15),transparent_50%)]"></div>
         <div class="max-w-7xl mx-auto">
             <div class="max-w-3xl">
@@ -105,7 +105,7 @@
                         class="bg-white rounded-2xl border border-slate-200 p-5 shadow-2xs hover:shadow-lg hover:border-teal-200 transition-all group">
                         <div class="flex items-start gap-4">
                             <div
-                                class="w-11 h-11 rounded-xl bg-indigo-50 border border-indigo-100 text-indigo-700 flex items-center justify-center shrink-0 group-hover:scale-110 transition-transform">
+                                class="w-11 h-11 rounded-xl bg-cyan-50 border border-cyan-100 text-cyan-700 flex items-center justify-center shrink-0 group-hover:scale-110 transition-transform">
                                 <i data-lucide="activity" class="w-5 h-5"></i>
                             </div>
                             <div class="min-w-0">
@@ -125,3 +125,4 @@
         @endif
     </main>
 @endsection
+

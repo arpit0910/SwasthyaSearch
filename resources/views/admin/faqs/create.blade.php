@@ -1,4 +1,4 @@
-﻿<!-- Create Modal -->
+<!-- Create Modal -->
 <div class="modal" id="createModal" tabindex="-1">
     <div class="modal-dialog modal-lg modal-dialog-centered">
         <div class="modal-content border-0 shadow">
@@ -16,7 +16,7 @@
                         </div>
                         <div class="col-md-6">
                             <label class="form-label fw-semibold">Question (Hindi)</label>
-                            <input type="text" name="question_hi" class="form-control" required placeholder="à¤®à¥ˆà¤‚ à¤…à¤ªà¥‰à¤‡à¤‚à¤Ÿà¤®à¥‡à¤‚à¤Ÿ à¤•à¥ˆà¤¸à¥‡ à¤¬à¥à¤• à¤•à¤°à¥‚à¤‚?">
+                            <input type="text" name="question_hi" class="form-control" required placeholder="मैं अपॉइंटमेंट कैसे बुक करूं?">
                         </div>
                         <div class="col-md-6">
                             <label class="form-label fw-semibold">Answer (English)</label>
@@ -24,7 +24,7 @@
                         </div>
                         <div class="col-md-6">
                             <label class="form-label fw-semibold">Answer (Hindi)</label>
-                            <textarea name="answer_hi" class="form-control" rows="3" required placeholder="à¤†à¤ª à¤¡à¥‰à¤•à¥à¤Ÿà¤° à¤•à¥€ à¤ªà¥à¤°à¥‹à¤«à¤¼à¤¾à¤‡à¤² à¤¸à¥‡ à¤¸à¥€à¤§à¥‡ à¤¬à¥à¤• à¤•à¤° à¤¸à¤•à¤¤à¥‡ à¤¹à¥ˆà¤‚..."></textarea>
+                            <textarea name="answer_hi" class="form-control" rows="3" required placeholder="आप डॉक्टर की प्रोफ़ाइल से सीधे बुक कर सकते हैं..."></textarea>
                         </div>
                         <div class="col-12">
                             <label class="form-label fw-semibold">Category</label>
@@ -40,4 +40,5 @@
         </div>
     </div>
 </div>
+
 

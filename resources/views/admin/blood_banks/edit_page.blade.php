@@ -1,4 +1,4 @@
-﻿@extends('admin.layouts.app')
+@extends('admin.layouts.app')
 
 @section('content')
 <div class="container-fluid p-0">
@@ -135,6 +135,7 @@
     </div>
 </div>
 @endsection
+
 
 
 

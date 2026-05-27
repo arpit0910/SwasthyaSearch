@@ -8,7 +8,7 @@
     : 'Browse major medical departments and understand which specialties are relevant for different diseases and symptoms.')
 @section('content')
 <!-- Hero Section -->
-<header class="bg-gradient-to-r from-slate-900 via-indigo-950 to-slate-900 text-white py-16 px-4 sm:px-6 lg:px-8 border-b border-slate-800 shadow-xl relative overflow-hidden">
+<header class="bg-gradient-to-r from-cyan-800 via-teal-700 to-emerald-700 text-white py-16 px-4 sm:px-6 lg:px-8 border-b border-slate-800 shadow-xl relative overflow-hidden">
     <div class="absolute inset-0 bg-[radial-gradient(circle_at_top_right,rgba(20,184,166,0.15),transparent_50%)]"></div>
     <div class="max-w-7xl mx-auto">
         <div class="max-w-3xl">
@@ -61,7 +61,7 @@
                     <div class="w-12 h-12 rounded-xl bg-teal-50 border border-teal-100 text-teal-700 flex items-center justify-center shrink-0 group-hover:scale-110 transition-transform">
                         <i data-lucide="stethoscope" class="w-6 h-6"></i>
                     </div>
-                    <span class="text-xs font-bold text-indigo-700 bg-indigo-50 border border-indigo-100 px-3 py-1 rounded-full shadow-2xs">
+                    <span class="text-xs font-bold text-cyan-700 bg-cyan-50 border border-cyan-100 px-3 py-1 rounded-full shadow-2xs">
                         {{ $locale === 'hi' ? 'विभाग' : 'Department' }}
                     </span>
                 </div>
@@ -75,7 +75,7 @@
                         <span class="font-semibold">{{ $dept->diseases_count ?? 0 }} {{ $locale === 'hi' ? 'रोग' : 'diseases' }}</span>
                     </div>
                     <div class="flex items-center gap-2 text-xs text-slate-600">
-                        <i data-lucide="users" class="w-4 h-4 text-indigo-600"></i>
+                        <i data-lucide="users" class="w-4 h-4 text-cyan-600"></i>
                         <span class="font-semibold">{{ $dept->doctors_count ?? 0 }} {{ $locale === 'hi' ? 'डॉक्टर' : 'doctors' }}</span>
                     </div>
                 </div>
@@ -105,3 +105,4 @@
     }
 </script>
 @endpush
+

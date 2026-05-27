@@ -7,7 +7,7 @@
 @section('content')
 <main class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-20 flex-1 w-full">
     <section class="bg-white rounded-3xl border border-slate-200 shadow-sm p-8 sm:p-12 text-center">
-        <p class="text-sm font-semibold uppercase tracking-wider text-indigo-600 mb-3">404</p>
+        <p class="text-sm font-semibold uppercase tracking-wider text-cyan-600 mb-3">404</p>
         <h1 class="text-3xl sm:text-4xl font-extrabold text-slate-900 mb-4">Page Not Found</h1>
         <p class="text-slate-600 max-w-2xl mx-auto mb-8">
             The page may have moved or the URL may be incorrect. You can continue with trusted healthcare discovery below.
@@ -22,3 +22,4 @@
     </section>
 </main>
 @endsection
+

@@ -1,4 +1,4 @@
-﻿@extends('admin.layouts.app')
+@extends('admin.layouts.app')
 
 @section('content')
 <div class="container-fluid p-0">
@@ -17,7 +17,7 @@
                         </div>
                         <div class="col-12">
                             <label class="form-label fw-semibold">Disease Name (Hindi)</label>
-                            <input type="text" name="name_hi" class="form-control" required placeholder="à¤›à¤¾à¤¤à¥€ à¤®à¥‡à¤‚ à¤¦à¤°à¥à¤¦">
+                            <input type="text" name="name_hi" class="form-control" required placeholder="छाती में दर्द">
                         </div>
                         <div class="col-12">
                             <label class="form-label fw-semibold">Symptoms (English)</label>
@@ -26,7 +26,7 @@
                         </div>
                         <div class="col-12">
                             <label class="form-label fw-semibold">Symptoms (Hindi)</label>
-                            <textarea name="symptoms_hi" class="form-control" rows="2" placeholder="à¤›à¤¾à¤¤à¥€ à¤®à¥‡à¤‚ à¤¦à¤°à¥à¤¦, à¤¸à¤¾à¤‚à¤¸ à¤«à¥‚à¤²à¤¨à¤¾, à¤ªà¤¸à¥€à¤¨à¤¾ à¤†à¤¨à¤¾"></textarea>
+                            <textarea name="symptoms_hi" class="form-control" rows="2" placeholder="छाती में दर्द, सांस फूलना, पसीना आना"></textarea>
                             <small class="text-muted">Order should match English symptoms if provided.</small>
                         </div>
                         <div class="col-12">
@@ -47,6 +47,7 @@
     </div>
 </div>
 @endsection
+
 
 
 

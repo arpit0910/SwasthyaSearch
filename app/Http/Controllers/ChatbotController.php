@@ -59,7 +59,9 @@ class ChatbotController extends Controller
             $selectedCity = (string) ($lastCityMessage['city'] ?? '');
         }
 
-        if ($userMessage !== '' && empty($validated['load_type'])) {
+        // Always try GeneralQuestion module first for conversational/help queries
+        // before any directory-loading or AI-powered medical flow.
+        if ($userMessage !== '') {
             $generalHelpPayload = $this->findGeneralHelpResponse($userMessage, $locale, $selectedCity, $messages);
             if ($generalHelpPayload !== null) {
                 $messages[] = [

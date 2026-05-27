@@ -1,4 +1,4 @@
-﻿<!-- Create Modal -->
+<!-- Create Modal -->
 <div class="modal" id="createModal" tabindex="-1">
     <div class="modal-dialog modal-xl modal-dialog-centered">
         <div class="modal-content border-0 shadow">
@@ -121,7 +121,7 @@
                         </div>
                         <div class="col-md-6">
                             <label class="form-label fw-semibold">About Doctor (Hindi) <span class="text-danger">*</span></label>
-                            <textarea name="about_hi" class="form-control" rows="3" required placeholder="à¤µà¤°à¤¿à¤·à¥à¤  à¤¸à¤²à¤¾à¤¹à¤•à¤¾à¤°..."></textarea>
+                            <textarea name="about_hi" class="form-control" rows="3" required placeholder="वरिष्ठ सलाहकार..."></textarea>
                         </div>
                     </div>
 
@@ -169,4 +169,5 @@
         </div>
     </div>
 </div>
+
 

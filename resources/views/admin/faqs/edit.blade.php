@@ -1,4 +1,4 @@
-﻿<!-- Edit Modal -->
+<!-- Edit Modal -->
 <div class="modal" id="editModal{{ $faq->id }}" tabindex="-1">
     <div class="modal-dialog modal-lg modal-dialog-centered">
         <div class="modal-content border-0 shadow">
@@ -41,4 +41,5 @@
         </div>
     </div>
 </div>
+
 

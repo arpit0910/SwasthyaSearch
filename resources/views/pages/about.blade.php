@@ -8,7 +8,7 @@
     : 'Learn about SwasthyaSearch mission, 100% ad-free model, transparent listings, and patient-first healthcare discovery approach.')
 @section('content')
 <!-- Hero Section -->
-<header class="bg-gradient-to-r from-slate-900 via-indigo-950 to-slate-900 text-white py-20 px-4 sm:px-6 lg:px-8 border-b border-slate-800 shadow-xl relative overflow-hidden">
+<header class="bg-gradient-to-r from-cyan-800 via-teal-700 to-emerald-700 text-white py-20 px-4 sm:px-6 lg:px-8 border-b border-slate-800 shadow-xl relative overflow-hidden">
     <div class="absolute inset-0 bg-[radial-gradient(circle_at_top_right,rgba(20,184,166,0.15),transparent_50%)]"></div>
     <div class="max-w-5xl mx-auto text-center relative z-10">
         <span class="bg-teal-500/20 text-teal-300 border border-teal-500/30 px-4 py-1.5 rounded-full text-xs font-semibold tracking-wider uppercase inline-block mb-4 shadow-sm">
@@ -28,7 +28,7 @@
     <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-10">
         <!-- Value 1 -->
         <div class="bg-white rounded-3xl border border-slate-200/80 p-8 shadow-2xs hover:shadow-xl transition-all duration-300 flex flex-col group hover:-translate-y-1">
-            <div class="w-16 h-16 bg-gradient-to-tr from-teal-500 to-indigo-600 rounded-2xl p-0.5 shadow-md mb-6 group-hover:scale-105 transition-transform duration-300 flex items-center justify-center">
+            <div class="w-16 h-16 bg-gradient-to-tr from-teal-500 to-cyan-600 rounded-2xl p-0.5 shadow-md mb-6 group-hover:scale-105 transition-transform duration-300 flex items-center justify-center">
                 <div class="w-full h-full bg-slate-900 rounded-[14px] flex items-center justify-center text-white">
                     <i data-lucide="shield-check" class="w-8 h-8 text-teal-400"></i>
                 </div>
@@ -43,12 +43,12 @@
 
         <!-- Value 2 -->
         <div class="bg-white rounded-3xl border border-slate-200/80 p-8 shadow-2xs hover:shadow-xl transition-all duration-300 flex flex-col group hover:-translate-y-1">
-            <div class="w-16 h-16 bg-gradient-to-tr from-teal-500 to-indigo-600 rounded-2xl p-0.5 shadow-md mb-6 group-hover:scale-105 transition-transform duration-300 flex items-center justify-center">
+            <div class="w-16 h-16 bg-gradient-to-tr from-teal-500 to-cyan-600 rounded-2xl p-0.5 shadow-md mb-6 group-hover:scale-105 transition-transform duration-300 flex items-center justify-center">
                 <div class="w-full h-full bg-slate-900 rounded-[14px] flex items-center justify-center text-white">
                     <i data-lucide="heart-handshake" class="w-8 h-8 text-indigo-400"></i>
                 </div>
             </div>
-            <h3 class="text-2xl font-extrabold text-slate-900 mb-4 group-hover:text-indigo-600 transition-colors duration-200">
+            <h3 class="text-2xl font-extrabold text-slate-900 mb-4 group-hover:text-cyan-600 transition-colors duration-200">
                 {{ $locale === 'hi' ? 'शून्य कमीशन व कोई विज्ञापन नहीं' : 'Zero Commission & Ad-Free' }}
             </h3>
             <p class="text-slate-600 text-base leading-relaxed flex-1">
@@ -58,7 +58,7 @@
 
         <!-- Value 3 -->
         <div class="bg-white rounded-3xl border border-slate-200/80 p-8 shadow-2xs hover:shadow-xl transition-all duration-300 flex flex-col group hover:-translate-y-1">
-            <div class="w-16 h-16 bg-gradient-to-tr from-teal-500 to-indigo-600 rounded-2xl p-0.5 shadow-md mb-6 group-hover:scale-105 transition-transform duration-300 flex items-center justify-center">
+            <div class="w-16 h-16 bg-gradient-to-tr from-teal-500 to-cyan-600 rounded-2xl p-0.5 shadow-md mb-6 group-hover:scale-105 transition-transform duration-300 flex items-center justify-center">
                 <div class="w-full h-full bg-slate-900 rounded-[14px] flex items-center justify-center text-white">
                     <i data-lucide="cpu" class="w-8 h-8 text-teal-400"></i>
                 </div>
@@ -105,3 +105,4 @@
     </section>
 </main>
 @endsection
+

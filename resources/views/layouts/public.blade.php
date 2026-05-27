@@ -216,7 +216,7 @@
     <script src="https://unpkg.com/lucide@latest"></script>
 </head>
 
-<body class="bg-[#F8FAFC] dark:bg-slate-950 font-sans antialiased text-[#2D3748] dark:text-slate-100 min-h-screen flex flex-col selection:bg-teal-500 selection:text-white relative overflow-x-hidden {{ session('locale', app()->getLocale()) === 'hi' ? 'lang-hi' : '' }}">
+<body class="bg-[#F4FAF8] dark:bg-slate-950 font-sans antialiased text-[#2D3748] dark:text-slate-100 min-h-screen flex flex-col selection:bg-teal-500 selection:text-white relative overflow-x-hidden {{ session('locale', app()->getLocale()) === 'hi' ? 'lang-hi' : '' }}">
     <div class="pointer-events-none fixed inset-0 -z-10 overflow-hidden">
         <div class="absolute -top-40 -left-40 w-[500px] h-[500px] rounded-full bg-gradient-to-tr from-teal-400/20 to-emerald-400/20 dark:from-teal-500/10 dark:to-emerald-500/10 blur-[100px] opacity-75"></div>
         <div class="absolute top-1/4 -right-40 w-[600px] h-[600px] rounded-full bg-gradient-to-tr from-indigo-400/20 to-purple-400/20 dark:from-indigo-500/10 dark:to-purple-500/10 blur-[120px] opacity-75"></div>
@@ -238,7 +238,7 @@
             <div class="flex justify-between min-h-16 py-2 items-center gap-2 sm:gap-4">
                 <div class="flex items-center min-w-0">
                     <a href="{{ route('home') }}" class="flex items-center space-x-1.5 sm:space-x-3 group mr-1 sm:mr-6 shrink min-w-0">
-                        <div class="p-2 sm:p-2.5 bg-gradient-to-tr from-teal-500 to-indigo-600 rounded-2xl shadow-md group-hover:shadow-lg transition-all duration-300 transform group-hover:-translate-y-0.5 shrink-0">
+                        <div class="p-2 sm:p-2.5 bg-gradient-to-tr from-teal-500 to-cyan-600 rounded-2xl shadow-md group-hover:shadow-lg transition-all duration-300 transform group-hover:-translate-y-0.5 shrink-0">
                             <i data-lucide="heart-pulse" class="w-6 h-6 text-white animate-pulse"></i>
                         </div>
                         <span class="brand-wordmark text-lg sm:text-2xl font-bold bg-gradient-to-r from-slate-800 to-indigo-900 dark:from-slate-100 dark:to-indigo-300 bg-clip-text text-transparent tracking-tight py-1 leading-normal truncate">
@@ -399,7 +399,7 @@
     <!-- Floating Chatbot Widget -->
     <div class="fixed bottom-5 right-4 sm:bottom-6 sm:right-6 z-[80]" id="chatbot-container">
         <!-- Chat Button -->
-        <button id="chatbot-toggle-btn" aria-label="Open AI assistant" onclick="toggleChatbot()" class="chatbot-fab flex items-center gap-3 bg-gradient-to-tr from-teal-500 to-indigo-600 text-white px-6 py-3.5 rounded-full shadow-2xl hover:shadow-indigo-500/50 hover:scale-105 transition-all duration-300 transform group ring-1 ring-white/20">
+        <button id="chatbot-toggle-btn" aria-label="Open AI assistant" onclick="toggleChatbot()" class="chatbot-fab flex items-center gap-3 bg-gradient-to-tr from-teal-500 to-cyan-600 text-white px-6 py-3.5 rounded-full shadow-2xl hover:shadow-indigo-500/50 hover:scale-105 transition-all duration-300 transform group ring-1 ring-white/20">
             <div class="chatbot-fab-icon w-6 h-6 flex items-center justify-center shrink-0">
                 <i data-lucide="message-square" class="w-6 h-6 text-white"></i>
             </div>
@@ -411,7 +411,7 @@
         <!-- Chat Window -->
         <div id="chatbot-window" class="hidden w-[94vw] sm:w-[420px] h-[74vh] max-h-[680px] min-h-[520px] bg-white dark:bg-slate-950 rounded-3xl shadow-2xl border border-slate-300/90 dark:border-slate-800 flex flex-col overflow-hidden animate-in fade-in duration-300 chatbot-window">
             <!-- Header -->
-            <div id="chatbot-header" class="relative bg-gradient-to-r from-slate-900 via-indigo-900 to-slate-900 text-white p-4 flex justify-between items-start shadow-md">
+            <div id="chatbot-header" class="relative bg-gradient-to-r from-cyan-900 via-teal-800 to-cyan-900 text-white p-4 flex justify-between items-start shadow-md">
                 <div class="flex items-start space-x-3 min-w-0 pr-2">
                     <div class="p-2 bg-teal-500/20 rounded-2xl border border-teal-500/30">
                         <i data-lucide="bot" class="w-6 h-6 text-teal-400"></i>
@@ -464,7 +464,7 @@
                             <span class="text-slate-500 mr-1 shrink-0 font-medium">{{ $locale === 'hi' ? 'शहर:' : 'City:' }}</span>
                             <span id="chatbot-selected-city-label" class="font-extrabold text-slate-900 dark:text-slate-100 truncate"></span>
                         </div>
-                        <button type="button" id="chatbot-change-city-btn" onclick="enableCitySelection()" class="shrink-0 text-[11px] font-bold text-indigo-700 hover:text-indigo-850 dark:text-indigo-400 dark:hover:text-indigo-350 bg-indigo-50 dark:bg-indigo-950/40 hover:bg-indigo-100 dark:hover:bg-indigo-900/60 border border-indigo-200 dark:border-indigo-800 rounded-lg px-2.5 py-1.5 leading-none transition-all">
+                        <button type="button" id="chatbot-change-city-btn" onclick="enableCitySelection()" class="shrink-0 text-[11px] font-bold text-cyan-700 hover:text-indigo-850 dark:text-indigo-400 dark:hover:text-indigo-350 bg-cyan-50 dark:bg-indigo-950/40 hover:bg-indigo-100 dark:hover:bg-indigo-900/60 border border-indigo-200 dark:border-indigo-800 rounded-lg px-2.5 py-1.5 leading-none transition-all">
                             {{ $locale === 'hi' ? 'बदलें' : 'Change' }}
                         </button>
                     </div>
@@ -482,6 +482,18 @@
                         <div id="chatbot-initial-message" class="p-3.5 rounded-2xl text-sm shadow-sm leading-relaxed bg-white text-slate-800 border border-slate-200/60 rounded-tl-none">
                             {{ $locale === 'hi' ? 'नमस्ते, मैं Swasthya AI Assistant हूँ। कृपया पहले अपना शहर चुनें, फिर मैं आपके लिए सही विकल्प ढूँढने में मदद करूँगा।' : 'Hi, I’m Swasthya AI Assistant. Please select your city first, then I’ll help you find the right nearby healthcare options.' }}
                         </div>
+                    </div>
+                </div>
+                <div id="chatbot-city-select-message" class="hidden ml-9 max-w-[85%] rounded-xl border border-indigo-200 bg-cyan-50 px-3 py-2.5 dark:border-indigo-800 dark:bg-indigo-950/30">
+                    <p class="text-xs font-bold text-indigo-900 dark:text-indigo-100 mb-2 leading-relaxed">
+                        {{ $locale === 'hi' ? 'कृपया अपना शहर चुनें' : 'Please select your city' }}
+                    </p>
+                    <div class="flex flex-wrap gap-1.5">
+                        @foreach($chatbotCityPills as $city)
+                        <button type="button" class="chatbot-city-pill" data-city="{{ $city }}" onclick="selectChatbotCity('{{ addslashes($city) }}')">
+                            {{ $city }}
+                        </button>
+                        @endforeach
                     </div>
                 </div>
                 <div id="chatbot-post-city-questions-wrapper" class="hidden ml-9 max-w-[85%] rounded-xl border border-teal-100 bg-teal-50/80 px-3 py-2">
@@ -513,7 +525,7 @@
             </div>
 
             <!-- Loading Indicator -->
-            <div id="chatbot-loading" class="hidden px-4 py-2.5 flex space-x-2.5 items-center text-slate-700 text-sm bg-indigo-50/70 border-y border-indigo-100">
+            <div id="chatbot-loading" class="hidden px-4 py-2.5 flex space-x-2.5 items-center text-slate-700 text-sm bg-cyan-50/70 border-y border-cyan-100">
                 <div class="typing-dots" aria-hidden="true">
                     <span></span><span></span><span></span>
                 </div>
@@ -525,7 +537,7 @@
                 <button type="button" id="chatbot-voice-btn" onclick="toggleVoiceTyping()" class="bg-teal-600 hover:bg-teal-500 text-white p-2.5 rounded-2xl shadow-md transition-all duration-200 transform active:scale-95" title="{{ $locale === 'hi' ? 'वॉइस टाइपिंग चालू/बंद करें' : 'Start/Stop voice typing' }}">
                     <i data-lucide="mic" class="w-5 h-5"></i>
                 </button>
-                <button type="submit" aria-label="Send message" class="bg-indigo-600 hover:bg-indigo-500 text-white p-2.5 rounded-2xl shadow-md transition-all duration-200 transform active:scale-95">
+                <button type="submit" aria-label="Send message" class="bg-cyan-600 hover:bg-cyan-500 text-white p-2.5 rounded-2xl shadow-md transition-all duration-200 transform active:scale-95">
                     <i data-lucide="send" class="w-5 h-5"></i>
                 </button>
             </form>
@@ -533,12 +545,12 @@
     </div>
 
     <!-- Footer -->
-    <footer class="bg-slate-950 text-white border-t border-slate-800 py-12 mt-auto">
+    <footer class="bg-cyan-950 text-white border-t border-cyan-900 py-12 mt-auto">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-8">
                 <div class="lg:col-span-2">
                     <div class="flex items-center space-x-3 mb-3">
-                        <div class="p-2 bg-gradient-to-tr from-teal-500 to-indigo-600 rounded-xl shadow-md">
+                        <div class="p-2 bg-gradient-to-tr from-teal-500 to-cyan-600 rounded-xl shadow-md">
                             <i data-lucide="heart-pulse" class="w-6 h-6 text-white"></i>
                         </div>
                         <span class="text-xl font-bold tracking-tight">Swasthya<span class="text-teal-400">Search</span></span>
@@ -582,7 +594,7 @@
     <div id="compare-dock" class="glass-panel py-4 px-6 z-[60] flex flex-col sm:flex-row items-center justify-between gap-4">
         <div class="flex flex-col sm:flex-row sm:items-center gap-3">
             <div class="flex items-center gap-2">
-                <div class="w-8 h-8 rounded-lg bg-indigo-650/10 dark:bg-indigo-400/15 flex items-center justify-center text-indigo-600 dark:text-indigo-400 shrink-0">
+                <div class="w-8 h-8 rounded-lg bg-indigo-650/10 dark:bg-indigo-400/15 flex items-center justify-center text-cyan-600 dark:text-indigo-400 shrink-0">
                     <i data-lucide="git-compare" class="w-4 h-4"></i>
                 </div>
                 <div>
@@ -597,7 +609,7 @@
             <button onclick="clearCompare()" class="w-1/2 sm:w-auto px-4 py-2 border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 text-slate-700 dark:text-slate-200 font-bold text-xs rounded-xl hover:bg-slate-50 dark:hover:bg-slate-755 transition-colors uppercase tracking-wider">
                 {{ $locale === 'hi' ? 'साफ़ करें' : 'Clear All' }}
             </button>
-            <button onclick="openCompareModal()" class="w-1/2 sm:w-auto px-5 py-2.5 bg-indigo-600 hover:bg-indigo-700 text-white font-extrabold text-xs rounded-xl shadow-lg hover:shadow-indigo-500/20 transition-all uppercase tracking-wider">
+            <button onclick="openCompareModal()" class="w-1/2 sm:w-auto px-5 py-2.5 bg-cyan-600 hover:bg-cyan-700 text-white font-extrabold text-xs rounded-xl shadow-lg hover:shadow-indigo-500/20 transition-all uppercase tracking-wider">
                 {{ $locale === 'hi' ? 'तुलना करें' : 'Compare Now' }}
             </button>
         </div>
@@ -610,7 +622,7 @@
             <!-- Header -->
             <div class="p-5 border-b border-slate-100 dark:border-slate-800 flex justify-between items-center bg-slate-50 dark:bg-slate-850 shrink-0">
                 <div class="flex items-center gap-2.5">
-                    <div class="p-2 bg-indigo-50 dark:bg-indigo-950/40 text-indigo-600 dark:text-indigo-400 rounded-xl">
+                    <div class="p-2 bg-cyan-50 dark:bg-indigo-950/40 text-cyan-600 dark:text-indigo-400 rounded-xl">
                         <i data-lucide="git-compare" class="w-5 h-5"></i>
                     </div>
                     <div>
@@ -766,7 +778,7 @@
                             <div class="compare-thumb shrink-0 shadow-2xs">${h.name.substring(0, 2).toUpperCase()}</div>
                             <div>
                                 <h4 class="font-extrabold text-sm text-slate-900 dark:text-white line-clamp-2">${h.name}</h4>
-                                <span class="inline-block text-[10px] font-bold text-indigo-700 dark:text-indigo-400 bg-indigo-50 dark:bg-indigo-950/40 px-2 py-0.5 rounded-md mt-1 uppercase tracking-wider">${h.type}</span>
+                                <span class="inline-block text-[10px] font-bold text-cyan-700 dark:text-indigo-400 bg-cyan-50 dark:bg-indigo-950/40 px-2 py-0.5 rounded-md mt-1 uppercase tracking-wider">${h.type}</span>
                             </div>
                         </div>
                     </th>
@@ -1312,9 +1324,10 @@
             const selectWrapper = document.getElementById('chatbot-city-select-wrapper');
             const lockedWrapper = document.getElementById('chatbot-city-locked-wrapper');
             const selectedLabel = document.getElementById('chatbot-selected-city-label');
-            const cityPills = document.querySelectorAll('#chatbot-city-pill-wrap .chatbot-city-pill');
+            const cityPills = document.querySelectorAll('.chatbot-city-pill');
             const quickPromptsWrap = document.getElementById('chatbot-quick-prompts-wrap');
             const postCityQuestionsWrapper = document.getElementById('chatbot-post-city-questions-wrapper');
+            const citySelectMessage = document.getElementById('chatbot-city-select-message');
             const input = document.getElementById('chatbot-input');
             const sendBtn = document.querySelector('#chatbot-form button[type="submit"]');
             const voiceBtn = document.getElementById('chatbot-voice-btn');
@@ -1327,6 +1340,7 @@
             if (isCityLocked && chatbotCity) {
                 selectedLabel.textContent = chatbotCity;
                 selectWrapper.classList.add('hidden');
+                if (citySelectMessage) citySelectMessage.classList.add('hidden');
                 lockedWrapper.classList.remove('hidden');
                 lockedWrapper.classList.add('flex');
                 quickPromptsWrap.classList.remove('hidden');
@@ -1341,14 +1355,14 @@
                 scrollToChatBottom();
             } else {
                 selectedLabel.textContent = '';
-                selectWrapper.classList.remove('hidden');
-                selectWrapper.classList.add('flex');
+                selectWrapper.classList.add('hidden');
                 lockedWrapper.classList.add('hidden');
                 quickPromptsWrap.classList.add('hidden');
                 if (postCityQuestionsWrapper) postCityQuestionsWrapper.classList.add('hidden');
+                if (citySelectMessage) citySelectMessage.classList.remove('hidden');
                 if (input) {
                     input.disabled = true;
-                    input.placeholder = chatbotLocale === 'hi' ? 'पहले शहर चुनें...' : 'Select city first...';
+                    input.placeholder = chatbotLocale === 'hi' ? 'पहले शहर चुनें...' : 'Choose a city from the pills above';
                 }
                 if (sendBtn) sendBtn.disabled = true;
                 if (voiceBtn) voiceBtn.disabled = true;
@@ -1533,23 +1547,6 @@
 
         function handleChatbotKeyboardViewport() {
             if (window.innerWidth >= 640 || !chatbotOpen) return;
-            const win = document.getElementById('chatbot-window');
-            const viewport = window.visualViewport;
-            if (!win || !viewport) return;
-
-            const keyboardHeight = Math.max(0, window.innerHeight - viewport.height - viewport.offsetTop);
-            if (keyboardHeight > 90) {
-                const safeHeight = Math.max(340, Math.floor(viewport.height - 20));
-                win.style.height = `${safeHeight}px`;
-                win.style.maxHeight = `${safeHeight}px`;
-                win.style.minHeight = `${Math.min(520, safeHeight)}px`;
-                win.style.bottom = `${Math.max(8, keyboardHeight + 8)}px`;
-            } else {
-                win.style.height = '';
-                win.style.maxHeight = '';
-                win.style.minHeight = '';
-                win.style.bottom = '';
-            }
             scrollToChatBottom();
         }
 
@@ -1565,27 +1562,14 @@
             });
 
             input.addEventListener('input', () => {
-                handleChatbotKeyboardViewport();
                 scrollToChatBottom();
             });
 
-            input.addEventListener('blur', () => {
-                setTimeout(() => {
-                    const win = document.getElementById('chatbot-window');
-                    if (win) {
-                        win.style.height = '';
-                        win.style.maxHeight = '';
-                        win.style.minHeight = '';
-                        win.style.bottom = '';
-                    }
-                }, 140);
-            });
-
             if (window.visualViewport) {
-                window.visualViewport.addEventListener('resize', handleChatbotKeyboardViewport);
-                window.visualViewport.addEventListener('scroll', handleChatbotKeyboardViewport);
+                window.visualViewport.addEventListener('resize', scrollToChatBottom);
+                window.visualViewport.addEventListener('scroll', scrollToChatBottom);
             }
-            window.addEventListener('orientationchange', handleChatbotKeyboardViewport);
+            window.addEventListener('orientationchange', scrollToChatBottom);
         }
 
         function getLocalizedText(field, fallback = '') {
@@ -1947,7 +1931,7 @@
             let html = `
                 <div class="flex ${isUser ? 'justify-end' : 'justify-start'} animate-in fade-in duration-200">
                     <div class="flex space-x-2 max-w-[85%] ${isUser ? 'flex-row-reverse space-x-reverse' : 'flex-row'}">
-                        <div class="w-7 h-7 rounded-full flex items-center justify-center shrink-0 shadow-sm ${isUser ? 'bg-indigo-600 text-white' : 'bg-teal-500 text-white'}">
+                        <div class="w-7 h-7 rounded-full flex items-center justify-center shrink-0 shadow-sm ${isUser ? 'bg-cyan-600 text-white' : 'bg-teal-500 text-white'}">
                             <i data-lucide="${isUser ? 'user' : 'bot'}" class="w-4 h-4"></i>
                         </div>
                         <div class="space-y-2">
@@ -1956,7 +1940,7 @@
                             </div>
                             <div class="flex flex-wrap gap-2 items-center">
                                 ${!isUser ? `<button type="button" onclick="toggleMessageListen('${spokenEncoded}', this)" class="inline-flex items-center gap-1 text-[11px] text-slate-500 hover:text-teal-600 text-left px-2.5 py-1 rounded-lg hover:bg-teal-50 border border-slate-200/60 bg-white transition-all">🔊 ${chatbotLocale === 'hi' ? 'सुनें' : 'Listen'}</button>` : ''}
-                                ${(!isUser && msg.suggest_details && isLastBotMsg) ? `<button type="button" onclick="submitChatbotMessage('${chatbotLocale === 'hi' ? 'कृपया विस्तार से समझाएं' : 'Please explain in detail'}')" class="inline-flex items-center gap-1 text-[11px] font-semibold text-indigo-700 hover:text-indigo-900 border border-indigo-200 hover:border-indigo-300 bg-white hover:bg-indigo-50 rounded-lg px-2.5 py-1 transition-all">💬 ${chatbotLocale === 'hi' ? 'विस्तार से समझाएं' : 'Explain in Detail'}</button>` : ''}
+                                ${(!isUser && msg.suggest_details && isLastBotMsg) ? `<button type="button" onclick="submitChatbotMessage('${chatbotLocale === 'hi' ? 'कृपया विस्तार से समझाएं' : 'Please explain in detail'}')" class="inline-flex items-center gap-1 text-[11px] font-semibold text-cyan-700 hover:text-indigo-900 border border-indigo-200 hover:border-indigo-300 bg-white hover:bg-cyan-50 rounded-lg px-2.5 py-1 transition-all">💬 ${chatbotLocale === 'hi' ? 'विस्तार से समझाएं' : 'Explain in Detail'}</button>` : ''}
                             </div>
                             ${(!isUser && msg.show_options && isLastBotMsg && idx >= 0) ? (() => {
                                 const loaded = getLoadedResourcesInCurrentTurn(history, idx);
@@ -1972,7 +1956,7 @@
                                 }
                                 if (!loaded.hospitals) {
                                     optionsHtml += `
-                                        <button type="button" onclick="loadChatbotResource('hospitals')" class="inline-flex items-center gap-1.5 text-[11px] font-bold text-indigo-700 hover:text-indigo-900 border border-indigo-200 hover:border-indigo-300 bg-white dark:bg-slate-900 dark:border-slate-800 dark:text-indigo-400 dark:hover:bg-slate-800/80 hover:bg-indigo-50 rounded-lg px-2.5 py-1.5 transition-all">
+                                        <button type="button" onclick="loadChatbotResource('hospitals')" class="inline-flex items-center gap-1.5 text-[11px] font-bold text-cyan-700 hover:text-indigo-900 border border-indigo-200 hover:border-indigo-300 bg-white dark:bg-slate-900 dark:border-slate-800 dark:text-indigo-400 dark:hover:bg-slate-800/80 hover:bg-cyan-50 rounded-lg px-2.5 py-1.5 transition-all">
                                             <i data-lucide="building-2" class="w-3.5 h-3.5 text-indigo-500 shrink-0"></i>
                                             <span>${chatbotLocale === 'hi' ? 'अस्पताल व क्लीनिक' : 'Hospitals & Clinics'}</span>
                                         </button>
@@ -2036,12 +2020,12 @@
                                 data-more-label="${moreLabel}"
                                 data-less-label="${lessLabel}"
                                 onclick="toggleChatbotDetails('${buttonId}','${contentId}')"
-                                class="inline-flex items-center gap-1 text-[11px] font-semibold text-indigo-700 hover:text-indigo-900 border border-indigo-200 hover:border-indigo-300 bg-white hover:bg-indigo-50 rounded-full px-3 py-1 transition-all"
+                                class="inline-flex items-center gap-1 text-[11px] font-semibold text-cyan-700 hover:text-indigo-900 border border-indigo-200 hover:border-indigo-300 bg-white hover:bg-cyan-50 rounded-full px-3 py-1 transition-all"
                             >
                                 <i data-lucide="info" class="w-3 h-3"></i>
                                 <span>${moreLabel}</span>
                             </button>
-                            <div id="${contentId}" class="hidden mt-2 rounded-xl border border-indigo-100 bg-indigo-50/70 p-3 text-xs leading-relaxed text-slate-700">
+                            <div id="${contentId}" class="hidden mt-2 rounded-xl border border-cyan-100 bg-cyan-50/70 p-3 text-xs leading-relaxed text-slate-700">
                                 ${formatDetailedAnswer(detailedAnswer)}
                             </div>
                         </div>
@@ -2064,13 +2048,13 @@
                         const hospName = doc.hospitals?.[0] ? getLocalizedText(doc.hospitals[0].name) : '';
 
                         html += `
-                            <div class="bg-white p-3 rounded-2xl border border-indigo-100 shadow-xs hover:shadow-md transition-all duration-200 text-slate-800">
+                            <div class="bg-white p-3 rounded-2xl border border-cyan-100 shadow-xs hover:shadow-md transition-all duration-200 text-slate-800">
                                 <div class="flex justify-between items-start">
                                     <h4 class="font-bold text-sm text-indigo-950 flex items-center space-x-1">
                                         <span>${fullName}</span>
                                         ${doc.is_verified ? '<i data-lucide="check-circle-2" class="w-3.5 h-3.5 text-teal-600 inline"></i>' : ''}
                                     </h4>
-                                    <span class="text-[10px] bg-indigo-50 text-indigo-700 px-2 py-0.5 rounded-lg font-medium shrink-0">
+                                    <span class="text-[10px] bg-cyan-50 text-cyan-700 px-2 py-0.5 rounded-lg font-medium shrink-0">
                                         ${doc.experience_years} ${currentLocale === 'hi' ? 'वर्ष अनुभव' : 'yrs exp'}
                                     </span>
                                 </div>
@@ -2154,7 +2138,7 @@
                     if (msg.see_all_hospitals_url) {
                         html += `
                             <div class="pt-1 flex justify-end">
-                                <a href="${msg.see_all_hospitals_url}" class="inline-flex items-center space-x-1 text-xs bg-indigo-50 hover:bg-indigo-600 hover:text-white text-indigo-700 font-medium px-3 py-1.5 rounded-xl shadow-xs transition-all duration-200">
+                                <a href="${msg.see_all_hospitals_url}" class="inline-flex items-center space-x-1 text-xs bg-cyan-50 hover:bg-cyan-600 hover:text-white text-cyan-700 font-medium px-3 py-1.5 rounded-xl shadow-xs transition-all duration-200">
                                     <span>${currentLocale === 'hi' ? 'सभी अस्पताल देखें' : 'See all hospitals'}</span>
                                     <i data-lucide="arrow-right" class="w-3.5 h-3.5"></i>
                                 </a>
@@ -2233,11 +2217,11 @@
                         const artExcerpt = getLocalizedText(art.excerpt) || (getLocalizedText(art.content) || '').substring(0, 80) + '...';
 
                         html += `
-                            <div class="bg-white p-3 rounded-2xl border border-indigo-100 shadow-xs hover:shadow-md transition-all duration-200 text-slate-800">
+                            <div class="bg-white p-3 rounded-2xl border border-cyan-100 shadow-xs hover:shadow-md transition-all duration-200 text-slate-800">
                                 <h4 class="font-bold text-sm text-slate-900 line-clamp-1">${artTitle}</h4>
                                 <p class="text-xs text-slate-600 mt-1 line-clamp-2">${artExcerpt}</p>
                                 <div class="mt-2 pt-2 border-t border-slate-100 flex justify-end">
-                                    <a href="/articles/${art.id}" target="_blank" class="text-xs bg-indigo-50 hover:bg-indigo-600 hover:text-white text-indigo-700 font-medium px-3 py-1 rounded-xl shadow-xs transition-all duration-200 flex items-center space-x-1">
+                                    <a href="/articles/${art.id}" target="_blank" class="text-xs bg-cyan-50 hover:bg-cyan-600 hover:text-white text-cyan-700 font-medium px-3 py-1 rounded-xl shadow-xs transition-all duration-200 flex items-center space-x-1">
                                         <span>${currentLocale === 'hi' ? 'पूरा लेख पढ़ें' : 'Read Article'}</span>
                                         <i data-lucide="external-link" class="w-3 h-3"></i>
                                     </a>
@@ -2248,7 +2232,7 @@
                     if (msg.see_all_articles_url) {
                         html += `
                             <div class="pt-1 flex justify-end">
-                                <a href="${msg.see_all_articles_url}" class="inline-flex items-center space-x-1 text-xs bg-indigo-50 hover:bg-indigo-600 hover:text-white text-indigo-700 font-medium px-3 py-1.5 rounded-xl shadow-xs transition-all duration-200">
+                                <a href="${msg.see_all_articles_url}" class="inline-flex items-center space-x-1 text-xs bg-cyan-50 hover:bg-cyan-600 hover:text-white text-cyan-700 font-medium px-3 py-1.5 rounded-xl shadow-xs transition-all duration-200">
                                     <span>${currentLocale === 'hi' ? 'सभी लेख देखें' : 'See all articles'}</span>
                                     <i data-lucide="arrow-right" class="w-3.5 h-3.5"></i>
                                 </a>
@@ -2758,7 +2742,7 @@
         .dark .border-slate-200\/60,
         .dark .border-slate-300\/80,
         .dark .border-slate-300\/90,
-        .dark .border-indigo-100,
+        .dark .border-cyan-100,
         .dark .border-teal-100,
         .dark .border-slate-200\/50,
         .dark .border-slate-100\/50 {
@@ -2797,8 +2781,8 @@
         }
 
         /* Links / Info blocks (Indigo) */
-        .dark .bg-indigo-50,
-        .dark .bg-indigo-50\/70 {
+        .dark .bg-cyan-50,
+        .dark .bg-cyan-50\/70 {
             background-color: rgba(30, 27, 75, 0.45) !important;
             /* indigo-950/45 */
             border-color: rgba(49, 46, 129, 0.4) !important;
@@ -2807,7 +2791,7 @@
 
         .dark .text-indigo-900,
         .dark .text-indigo-950,
-        .dark .text-indigo-700 {
+        .dark .text-cyan-700 {
             color: #a5b4fc !important;
         }
 
@@ -3396,6 +3380,13 @@
 </body>
 
 </html>
+
+
+
+
+
+
+
 
 
 

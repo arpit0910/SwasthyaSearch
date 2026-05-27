@@ -1,4 +1,4 @@
-﻿<!-- Create Modal -->
+<!-- Create Modal -->
 <div class="modal" id="createModal" tabindex="-1">
     <div class="modal-dialog modal-lg modal-dialog-centered">
         <div class="modal-content border-0 shadow">
@@ -18,7 +18,7 @@
                         <div class="col-md-6">
                             <label class="form-label fw-semibold">Hospital Name (Hindi)</label>
                             <input type="text" name="name_hi" class="form-control" required
-                                placeholder="à¤…à¤ªà¥‹à¤²à¥‹ à¤…à¤¸à¥à¤ªà¤¤à¤¾à¤²">
+                                placeholder="अपोलो अस्पताल">
                         </div>
                         <div class="col-md-6">
                             <label class="form-label fw-semibold">Facility Type</label>
@@ -125,4 +125,5 @@
         </div>
     </div>
 </div>
+
 

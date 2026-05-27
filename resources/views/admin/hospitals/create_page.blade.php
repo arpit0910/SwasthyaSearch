@@ -1,4 +1,4 @@
-﻿@extends('admin.layouts.app')
+@extends('admin.layouts.app')
 
 @section('content')
 <div class="container-fluid p-0">
@@ -19,7 +19,7 @@
                         <div class="col-md-6">
                             <label class="form-label fw-semibold">Hospital Name (Hindi)</label>
                             <input type="text" name="name_hi" class="form-control" required
-                                placeholder="à¤…à¤ªà¥‹à¤²à¥‹ à¤…à¤¸à¥à¤ªà¤¤à¤¾à¤²">
+                                placeholder="अपोलो अस्पताल">
                         </div>
                         <div class="col-md-6">
                             <label class="form-label fw-semibold">Facility Type</label>
@@ -126,6 +126,7 @@
     </div>
 </div>
 @endsection
+
 
 
 

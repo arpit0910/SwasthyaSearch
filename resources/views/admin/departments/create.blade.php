@@ -1,4 +1,4 @@
-﻿<!-- Create Modal -->
+<!-- Create Modal -->
 <div class="modal" id="createModal" tabindex="-1">
     <div class="modal-dialog modal-lg modal-dialog-centered">
         <div class="modal-content border-0 shadow">
@@ -16,7 +16,7 @@
                         </div>
                         <div class="col-md-6">
                             <label class="form-label fw-semibold">Department Name (Hindi)</label>
-                            <input type="text" name="name_hi" class="form-control" required placeholder="à¤¹à¥ƒà¤¦à¤¯ à¤°à¥‹à¤— à¤µà¤¿à¤­à¤¾à¤—">
+                            <input type="text" name="name_hi" class="form-control" required placeholder="हृदय रोग विभाग">
                         </div>
                         <div class="col-md-6">
                             <label class="form-label fw-semibold">Description (English)</label>
@@ -24,7 +24,7 @@
                         </div>
                         <div class="col-md-6">
                             <label class="form-label fw-semibold">Description (Hindi)</label>
-                            <textarea name="description_hi" class="form-control" rows="3" required placeholder="à¤¹à¥ƒà¤¦à¤¯ à¤¸à¥‡ à¤¸à¤‚à¤¬à¤‚à¤§à¤¿à¤¤ à¤°à¥‹à¤—à¥‹à¤‚ à¤•à¤¾ à¤‰à¤ªà¤šà¤¾à¤°..."></textarea>
+                            <textarea name="description_hi" class="form-control" rows="3" required placeholder="हृदय से संबंधित रोगों का उपचार..."></textarea>
                         </div>
                         <div class="col-12">
                             <div class="form-check">
@@ -42,4 +42,5 @@
         </div>
     </div>
 </div>
+
 

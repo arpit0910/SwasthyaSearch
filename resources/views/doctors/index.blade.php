@@ -20,11 +20,11 @@ $hasActiveMobileFilters = !empty(array_filter((array) request('department', []))
 @section('meta_description', $pageDescription)
 @section('content')
 <!-- Hero Section -->
-<header class="bg-gradient-to-r from-slate-900 via-indigo-950 to-slate-900 text-white py-16 px-4 sm:px-6 lg:px-8 border-b border-slate-800 shadow-xl relative overflow-hidden">
+<header class="bg-gradient-to-r from-cyan-800 via-teal-700 to-emerald-700 text-white py-16 px-4 sm:px-6 lg:px-8 border-b border-slate-800 shadow-xl relative overflow-hidden">
     <div class="absolute inset-0 bg-[radial-gradient(circle_at_top_right,rgba(20,184,166,0.15),transparent_50%)]"></div>
     <!-- Glowing background blobs -->
     <div class="glow-blob w-[300px] h-[300px] bg-teal-500/10 top-0 left-0 absolute rounded-full blur-3xl"></div>
-    <div class="glow-blob w-[400px] h-[400px] bg-indigo-500/10 bottom-0 right-0 absolute rounded-full blur-3xl"></div>
+    <div class="glow-blob w-[400px] h-[400px] bg-cyan-500/10 bottom-0 right-0 absolute rounded-full blur-3xl"></div>
     <div class="max-w-7xl mx-auto text-center relative z-10">
         <span class="bg-teal-500/20 text-teal-300 border border-teal-500/30 px-4 py-1.5 rounded-full text-xs font-semibold tracking-wider uppercase inline-block mb-4 shadow-sm">
             {{ $locale === 'hi' ? 'सत्यापित विशेषज्ञ' : 'Verified Medical Experts' }}
@@ -175,7 +175,7 @@ $hasActiveMobileFilters = !empty(array_filter((array) request('department', []))
                         <i data-lucide="locate-fixed" class="w-4 h-4"></i>
                         <span>{{ $locale === 'hi' ? 'मेरे नजदीक' : 'Show Nearby' }}</span>
                     </button>
-                    <button type="submit" class="w-full h-11 px-4 rounded-xl border border-indigo-300 bg-indigo-600 hover:bg-indigo-700 text-white font-bold text-sm transition-all duration-200 flex items-center justify-center space-x-2 shadow-2xs">
+                    <button type="submit" class="w-full h-11 px-4 rounded-xl border border-indigo-300 bg-cyan-600 hover:bg-cyan-700 text-white font-bold text-sm transition-all duration-200 flex items-center justify-center space-x-2 shadow-2xs">
                         <i data-lucide="filter" class="w-4 h-4"></i>
                         <span>{{ $locale === 'hi' ? 'फ़िल्टर लागू करें' : 'Apply Filters' }}</span>
                     </button>
@@ -269,7 +269,7 @@ $hasActiveMobileFilters = !empty(array_filter((array) request('department', []))
                 <span>{{ $locale === 'hi' ? 'मेरे नजदीक दिखाएँ' : 'Show Nearby' }}</span>
             </button>
             <button type="submit"
-                class="h-12 px-5 rounded-xl border border-indigo-300 bg-indigo-600 hover:bg-indigo-700 text-white font-bold text-sm transition-all duration-200 flex items-center justify-center space-x-2 shadow-2xs">
+                class="h-12 px-5 rounded-xl border border-indigo-300 bg-cyan-600 hover:bg-cyan-700 text-white font-bold text-sm transition-all duration-200 flex items-center justify-center space-x-2 shadow-2xs">
                 <i data-lucide="filter" class="w-4 h-4"></i>
                 <span>{{ $locale === 'hi' ? 'फ़िल्टर लागू करें' : 'Apply Filters' }}</span>
             </button>
@@ -365,7 +365,7 @@ $hasActiveMobileFilters = !empty(array_filter((array) request('department', []))
 
             <!-- Card Header -->
             <div class="p-6 pb-4 bg-gradient-to-br from-slate-50/50 via-white/50 to-slate-50/50 dark:from-slate-800/30 dark:via-transparent dark:to-slate-800/30 border-b border-slate-100 dark:border-slate-800/60 flex items-start space-x-4">
-                <div class="w-10 h-10 bg-gradient-to-tr from-teal-500 to-indigo-600 rounded-xl p-0.5 shadow-md shrink-0 group-hover:scale-105 transition-transform duration-300">
+                <div class="w-10 h-10 bg-gradient-to-tr from-teal-500 to-cyan-600 rounded-xl p-0.5 shadow-md shrink-0 group-hover:scale-105 transition-transform duration-300">
                     <div class="w-full h-full bg-slate-900 rounded-[10px] flex items-center justify-center text-white font-extrabold text-xs tracking-wide">
                         {{ substr($doc->first_name, 0, 1) }}{{ substr($doc->last_name, 0, 1) }}
                     </div>
@@ -566,7 +566,7 @@ $hasActiveMobileFilters = !empty(array_filter((array) request('department', []))
                                 <a
                                     href="https://www.google.com/maps/dir/?api=1&destination={{ !empty($h->latitude) ? $h->latitude . ',' . $h->longitude : urlencode(($h->address ?? '') . ', ' . ($h->city ?? 'Nearby')) }}"
                                     target="_blank"
-                                    class="inline-flex items-center space-x-1.5 text-xs text-indigo-600 dark:text-indigo-400 hover:text-indigo-700 dark:hover:text-indigo-300 font-bold bg-indigo-50 dark:bg-indigo-950/40 hover:bg-indigo-100/80 dark:hover:bg-indigo-900/60 px-3 py-1.5 rounded-xl border border-indigo-100 dark:border-indigo-900 transition-all shadow-2xs">
+                                    class="inline-flex items-center space-x-1.5 text-xs text-cyan-600 dark:text-indigo-400 hover:text-cyan-700 dark:hover:text-indigo-300 font-bold bg-cyan-50 dark:bg-indigo-950/40 hover:bg-indigo-100/80 dark:hover:bg-indigo-900/60 px-3 py-1.5 rounded-xl border border-cyan-100 dark:border-indigo-900 transition-all shadow-2xs">
                                     <i data-lucide="navigation" class="w-3.5 h-3.5 text-indigo-500"></i>
                                     <span>{{ $locale === 'hi' ? 'नक्शा व दिशा-निर्देश' : 'Get Directions' }}</span>
                                 </a>
@@ -607,7 +607,7 @@ $hasActiveMobileFilters = !empty(array_filter((array) request('department', []))
                 </a>
                 @endif
                 @elseif($hasHospitalPhone)
-                <a href="tel:{{ $hospitalPhone }}" class="w-full sm:flex-1 bg-indigo-600 hover:bg-indigo-700 text-white font-bold py-3 px-4 rounded-xl shadow-md hover:shadow-lg transition-all duration-200 text-xs uppercase tracking-wider flex items-center justify-center space-x-2">
+                <a href="tel:{{ $hospitalPhone }}" class="w-full sm:flex-1 bg-cyan-600 hover:bg-cyan-700 text-white font-bold py-3 px-4 rounded-xl shadow-md hover:shadow-lg transition-all duration-200 text-xs uppercase tracking-wider flex items-center justify-center space-x-2">
                     <i data-lucide="phone-call" class="w-4 h-4 text-indigo-100"></i>
                     <span>Call Hospital</span>
                 </a>
@@ -924,6 +924,7 @@ $hasActiveMobileFilters = !empty(array_filter((array) request('department', []))
 
 </script>
 @endpush
+
 
 
 
