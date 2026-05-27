@@ -10,6 +10,7 @@ use App\Models\DirectorySyncHistory;
 use App\Models\Disease;
 use App\Models\Doctor;
 use App\Models\Faq;
+use App\Models\GeneralQuestion;
 use App\Models\Hospital;
 use App\Models\Symptom;
 use App\Services\DirectorySyncService;
@@ -1480,7 +1481,7 @@ class AdminDashboardController extends Controller
     // --- GENERAL MEDICAL Q&A CRUD ---
     public function generalQa(Request $request)
     {
-        $query = Faq::query()->where('category', 'General Medical');
+        $query = GeneralQuestion::query();
         if ($search = $request->query('search')) {
             $query->where(function ($q) use ($search) {
                 $q->where('question_en', 'like', "%{$search}%")
@@ -1490,8 +1491,8 @@ class AdminDashboardController extends Controller
             });
         }
 
-        $faqs = $query->latest()->get();
-        return view('admin.general_qa.index', compact('faqs'));
+        $generalQuestions = $query->latest()->get();
+        return view('admin.general_qa.index', compact('generalQuestions'));
     }
 
     public function createGeneralQa()
@@ -1499,10 +1500,9 @@ class AdminDashboardController extends Controller
         return view('admin.general_qa.create_page');
     }
 
-    public function editGeneralQa(Faq $faq)
+    public function editGeneralQa(GeneralQuestion $generalQuestion)
     {
-        abort_unless($faq->category === 'General Medical', 404);
-        return view('admin.general_qa.edit_page', compact('faq'));
+        return view('admin.general_qa.edit_page', compact('generalQuestion'));
     }
 
     public function storeGeneralQa(Request $request)
@@ -1512,47 +1512,49 @@ class AdminDashboardController extends Controller
             'question_hi' => 'required|string|max:255',
             'answer_en' => 'required|string',
             'answer_hi' => 'required|string',
+            'detailed_answer_en' => 'nullable|string',
+            'detailed_answer_hi' => 'nullable|string',
         ]);
 
-        Faq::create([
+        GeneralQuestion::create([
             'question_en' => $data['question_en'],
             'question_hi' => $data['question_hi'],
             'answer_en' => $data['answer_en'],
             'answer_hi' => $data['answer_hi'],
-            'category' => 'General Medical',
+            'detailed_answer_en' => $data['detailed_answer_en'] ?? null,
+            'detailed_answer_hi' => $data['detailed_answer_hi'] ?? null,
         ]);
 
-        return back()->with('success', 'General medical Q&A created successfully.');
+        return back()->with('success', 'General question created successfully.');
     }
 
-    public function updateGeneralQa(Request $request, Faq $faq)
+    public function updateGeneralQa(Request $request, GeneralQuestion $generalQuestion)
     {
-        abort_unless($faq->category === 'General Medical', 404);
-
         $data = $request->validate([
             'question_en' => 'required|string|max:255',
             'question_hi' => 'required|string|max:255',
             'answer_en' => 'required|string',
             'answer_hi' => 'required|string',
+            'detailed_answer_en' => 'nullable|string',
+            'detailed_answer_hi' => 'nullable|string',
         ]);
 
-        $faq->update([
+        $generalQuestion->update([
             'question_en' => $data['question_en'],
             'question_hi' => $data['question_hi'],
             'answer_en' => $data['answer_en'],
             'answer_hi' => $data['answer_hi'],
-            'category' => 'General Medical',
+            'detailed_answer_en' => $data['detailed_answer_en'] ?? null,
+            'detailed_answer_hi' => $data['detailed_answer_hi'] ?? null,
         ]);
 
-        return back()->with('success', 'General medical Q&A updated successfully.');
+        return back()->with('success', 'General question updated successfully.');
     }
 
-    public function destroyGeneralQa(Faq $faq)
+    public function destroyGeneralQa(GeneralQuestion $generalQuestion)
     {
-        abort_unless($faq->category === 'General Medical', 404);
-
-        $faq->delete();
-        return back()->with('success', 'General medical Q&A deleted successfully.');
+        $generalQuestion->delete();
+        return back()->with('success', 'General question deleted successfully.');
     }
 
     // --- CACHED MEDICAL QUESTIONS CRUD ---

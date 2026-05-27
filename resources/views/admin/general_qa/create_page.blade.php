@@ -27,6 +27,14 @@
                             <label class="form-label fw-semibold">Answer (Hindi)</label>
                             <textarea name="answer_hi" class="form-control" rows="4" required placeholder="à¤†à¤°à¤¾à¤® à¤•à¤°à¥‡à¤‚, à¤ªà¤¾à¤¨à¥€ à¤ªà¤¿à¤à¤‚, à¤¸à¥à¤•à¥à¤°à¥€à¤¨ à¤•à¤® à¤¦à¥‡à¤–à¥‡à¤‚..."></textarea>
                         </div>
+                        <div class="col-md-6">
+                            <label class="form-label fw-semibold">Detailed Answer (English)</label>
+                            <textarea name="detailed_answer_en" class="form-control" rows="4" placeholder="Optional detailed explanation for 'Explain in Detail'"></textarea>
+                        </div>
+                        <div class="col-md-6">
+                            <label class="form-label fw-semibold">Detailed Answer (Hindi)</label>
+                            <textarea name="detailed_answer_hi" class="form-control" rows="4" placeholder="Optional detailed explanation for 'विस्तार से समझाएं'"></textarea>
+                        </div>
                     </div>
                 </div>
                 <div class="card-footer bg-light py-3">

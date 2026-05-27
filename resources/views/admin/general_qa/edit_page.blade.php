@@ -7,26 +7,34 @@
         <a href="{{ route('admin.general_qa') }}" class="btn btn-outline-secondary">Back</a>
     </div>
     <div class="card">
-        <form action="{{ route('admin.general_qa.update', $faq) }}" method="POST">
+        <form action="{{ route('admin.general_qa.update', $generalQuestion) }}" method="POST">
                 @csrf
                 @method('PUT')
                 <div class="card-body p-4">
                     <div class="row g-3">
                         <div class="col-md-6">
                             <label class="form-label fw-semibold">Question (English)</label>
-                            <input type="text" name="question_en" class="form-control" value="{{ $faq->getTranslation('question', 'en') }}" required>
+                            <input type="text" name="question_en" class="form-control" value="{{ $generalQuestion->getTranslation('question', 'en') }}" required>
                         </div>
                         <div class="col-md-6">
                             <label class="form-label fw-semibold">Question (Hindi)</label>
-                            <input type="text" name="question_hi" class="form-control" value="{{ $faq->getTranslation('question', 'hi') }}" required>
+                            <input type="text" name="question_hi" class="form-control" value="{{ $generalQuestion->getTranslation('question', 'hi') }}" required>
                         </div>
                         <div class="col-md-6">
                             <label class="form-label fw-semibold">Answer (English)</label>
-                            <textarea name="answer_en" class="form-control" rows="4" required>{{ $faq->getTranslation('answer', 'en') }}</textarea>
+                            <textarea name="answer_en" class="form-control" rows="4" required>{{ $generalQuestion->getTranslation('answer', 'en') }}</textarea>
                         </div>
                         <div class="col-md-6">
                             <label class="form-label fw-semibold">Answer (Hindi)</label>
-                            <textarea name="answer_hi" class="form-control" rows="4" required>{{ $faq->getTranslation('answer', 'hi') }}</textarea>
+                            <textarea name="answer_hi" class="form-control" rows="4" required>{{ $generalQuestion->getTranslation('answer', 'hi') }}</textarea>
+                        </div>
+                        <div class="col-md-6">
+                            <label class="form-label fw-semibold">Detailed Answer (English)</label>
+                            <textarea name="detailed_answer_en" class="form-control" rows="4">{{ $generalQuestion->detailed_answer_en }}</textarea>
+                        </div>
+                        <div class="col-md-6">
+                            <label class="form-label fw-semibold">Detailed Answer (Hindi)</label>
+                            <textarea name="detailed_answer_hi" class="form-control" rows="4">{{ $generalQuestion->detailed_answer_hi }}</textarea>
                         </div>
                     </div>
                 </div>

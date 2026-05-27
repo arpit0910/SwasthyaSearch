@@ -16,7 +16,55 @@ class DoctorController extends Controller
         $userLng = $request->filled('user_lng') ? (float)$request->input('user_lng') : null;
         $hasUserLocation = is_numeric($userLat) && is_numeric($userLng);
 
-        $query = Doctor::with(['department', 'hospitals'])->where('is_verified', true)->latest();
+        $query = Doctor::with(['department', 'hospitals'])->where('is_verified', true);
+
+        // Treat nearby as the base filter: first limit to nearby doctors, then apply other filters.
+        if ($hasUserLocation) {
+            $nearbyDoctorIds = Doctor::with('hospitals')
+                ->where('is_verified', true)
+                ->get()
+                ->map(function (Doctor $doctor) use ($userLat, $userLng) {
+                    $primaryHospital = $doctor->hospitals->first();
+                    $distanceKm = $this->calculateDistanceKm(
+                        $userLat,
+                        $userLng,
+                        $doctor->latitude ?? $primaryHospital?->latitude,
+                        $doctor->longitude ?? $primaryHospital?->longitude
+                    );
+
+                    return [
+                        'id' => $doctor->id,
+                        'distance_km' => $distanceKm,
+                    ];
+                })
+                ->filter(fn(array $doctor) => $doctor['distance_km'] !== null && $doctor['distance_km'] < 50)
+                ->sortBy('distance_km')
+                ->pluck('id')
+                ->values();
+
+            if ($nearbyDoctorIds->isEmpty()) {
+                $doctors = $this->paginateCollection(collect(), $request, 30);
+
+                $nameColumn = app()->getLocale() === 'hi' ? 'name_hi' : 'name_en';
+                $departments = Department::where('is_active', true)
+                    ->whereNotNull('name_en')
+                    ->where('name_en', '!=', '')
+                    ->whereHas('doctors')
+                    ->orderBy($nameColumn)
+                    ->get();
+                $cities = Hospital::where('is_verified', true)->whereNotNull('city')->distinct()->pluck('city');
+
+                return view('doctors.index', [
+                    'doctors' => $doctors,
+                    'departments' => $departments->map(fn(Department $department) => $this->formatDepartment($department)),
+                    'cities' => $cities,
+                    'filters' => $request->only(['department', 'experience', 'city', 'search', 'user_lat', 'user_lng']),
+                    'hasUserLocation' => $hasUserLocation,
+                ]);
+            }
+
+            $query->whereIn('id', $nearbyDoctorIds->all());
+        }
 
         // Filter by Department - support multiple selections
         $departments = $request->input('department', []);
@@ -29,6 +77,10 @@ class DoctorController extends Controller
             $query->where(function ($q) use ($departments) {
                 foreach ($departments as $dept) {
                     $q->orWhereHas('department', function ($sq) use ($dept) {
+                        $sq->where('name_en', 'LIKE', "%{$dept}%")
+                            ->orWhere('name_hi', 'LIKE', "%{$dept}%")
+                            ->orWhere('id', $dept);
+                    })->orWhereHas('departments', function ($sq) use ($dept) {
                         $sq->where('name_en', 'LIKE', "%{$dept}%")
                             ->orWhere('name_hi', 'LIKE', "%{$dept}%")
                             ->orWhere('id', $dept);
@@ -86,18 +138,18 @@ class DoctorController extends Controller
             ->get();
         $cities = Hospital::where('is_verified', true)->whereNotNull('city')->distinct()->pluck('city');
 
-        // Get all doctors first
-        $doctors = $query->get();
-        
-        // If user location provided, calculate distances and sort
         if ($hasUserLocation) {
-            $nearbyDoctors = $doctors->map(fn(Doctor $doctor) => $this->formatDoctor($doctor, $userLat, $userLng))
+            $doctors = $query
+                ->latest()
+                ->get()
+                ->map(fn(Doctor $doctor) => $this->formatDoctor($doctor, $userLat, $userLng))
                 ->sortBy('distance_km')
-                ->filter(fn($d) => $d['distance_km'] !== null && $d['distance_km'] < 50)
                 ->values();
-            $doctors = $this->paginateCollection($nearbyDoctors, $request, 30);
+
+            $doctors = $this->paginateCollection($doctors, $request, 30);
         } else {
             $doctors = $query
+                ->latest()
                 ->paginate(30)
                 ->through(fn(Doctor $doctor) => $this->formatDoctor($doctor, $userLat, $userLng));
         }

@@ -308,6 +308,9 @@ $hasActiveMobileFilters = !empty(array_filter((array) request('type', [])))
         $hCity = $locale === 'hi' ? ($h->city_hi ?? $h->city) : $h->city;
         $hState = $locale === 'hi' ? ($h->state_hi ?? $h->state) : $h->state;
         $hAddress = $locale === 'hi' ? ($h->address_hi ?? $h->address) : $h->address;
+        $hPhone1 = data_get($h, 'phone_1');
+        $hPhone2 = data_get($h, 'phone_2');
+        $hPhone = data_get($h, 'phone_1') ?: data_get($h, 'phone_2') ?: data_get($h, 'phone');
         @endphp
         <div
             class="glass-card rounded-3xl border border-slate-200/80 dark:border-slate-800 shadow-2xs hover:shadow-xl transition-all duration-300 overflow-hidden flex flex-col group hover:-translate-y-1 relative"
@@ -463,18 +466,20 @@ $hasActiveMobileFilters = !empty(array_filter((array) request('type', [])))
                     </div>
                     @endif
 
+                    @if (!empty($hPhone2))
                     <div class="flex-grow flex flex-col justify-end space-y-3 pt-2">
                         <div
                             class="flex items-center justify-between text-xs p-3.5 bg-teal-50/50 dark:bg-teal-950/20 rounded-2xl border border-teal-100 dark:border-teal-900/60">
                             <div class="flex items-center space-x-2 text-teal-900 dark:text-teal-350 font-bold">
                                 <i data-lucide="phone-call" class="w-4 h-4 text-teal-600 dark:text-teal-400 animate-pulse"></i>
-                                <span>{{ $locale === 'hi' ? 'आपातकालीन फ़ोन:' : 'Emergency Phone:' }}</span>
+                                <span>{{ $locale === 'hi' ? 'द्वितीयक नंबर:' : 'Secondary Number:' }}</span>
                             </div>
-                            <span class="text-slate-900 dark:text-slate-100 font-extrabold tracking-wide select-all">
-                                {{ implode(', ', array_filter([$h->phone_1, $h->phone_2, $h->phone])) }}
-                            </span>
+                            <a href="tel:{{ $hPhone2 }}" class="text-slate-900 dark:text-slate-100 font-extrabold tracking-wide select-all hover:text-teal-700 dark:hover:text-teal-300">
+                                {{ $hPhone2 }}
+                            </a>
                         </div>
                     </div>
+                    @endif
                 </div>
             </div>
 
@@ -486,11 +491,13 @@ $hasActiveMobileFilters = !empty(array_filter((array) request('type', [])))
                         <i data-lucide="users" class="w-4 h-4 text-teal-300"></i>
                         <span>{{ $locale === 'hi' ? 'डॉक्टर देखें' : 'View Doctors' }}</span>
                     </a>
-                    <a href="tel:{{ $h->phone_1 ?: $h->phone_2 ?: $h->phone }}"
+                    @if (!empty($hPhone))
+                    <a href="tel:{{ $hPhone }}"
                         class="w-full bg-gradient-to-tr from-teal-500 to-indigo-600 hover:from-teal-600 hover:to-indigo-700 text-white font-bold py-3 rounded-xl shadow-md hover:shadow-lg transition-all duration-200 text-xs uppercase tracking-wider flex items-center justify-center space-x-2 transform active:scale-98">
                         <i data-lucide="phone-call" class="w-4 h-4 text-white"></i>
                         <span>{{ $locale === 'hi' ? 'अभी कॉल करें' : 'Call Now' }}</span>
                     </a>
+                    @endif
                 </div>
             </div>
         </div>

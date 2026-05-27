@@ -15,7 +15,39 @@ class HospitalController extends Controller
         $userLng = $request->filled('user_lng') ? (float)$request->input('user_lng') : null;
         $hasUserLocation = is_numeric($userLat) && is_numeric($userLng);
 
-        $query = Hospital::where('is_verified', true)->latest();
+        $query = Hospital::where('is_verified', true);
+
+        // Nearby-first behavior: limit to nearby hospitals first, then apply all other filters.
+        if ($hasUserLocation) {
+            $nearbyHospitalIds = Hospital::where('is_verified', true)
+                ->get()
+                ->map(function (Hospital $hospital) use ($userLat, $userLng) {
+                    return [
+                        'id' => $hospital->id,
+                        'distance_km' => $this->calculateDistanceKm($userLat, $userLng, $hospital->latitude, $hospital->longitude),
+                    ];
+                })
+                ->filter(fn(array $hospital) => $hospital['distance_km'] !== null && $hospital['distance_km'] < 50)
+                ->sortBy('distance_km')
+                ->pluck('id')
+                ->values();
+
+            if ($nearbyHospitalIds->isEmpty()) {
+                $hospitals = $this->paginateCollection(collect(), $request, 30);
+                $cities = Hospital::where('is_verified', true)->whereNotNull('city')->distinct()->pluck('city');
+                $types = Hospital::where('is_verified', true)->whereNotNull('type')->distinct()->pluck('type');
+
+                return view('hospitals.index', [
+                    'hospitals' => $hospitals,
+                    'cities' => $cities,
+                    'types' => $types,
+                    'filters' => $request->only(['type', 'city', 'search', 'benefit', 'user_lat', 'user_lng']),
+                    'hasUserLocation' => $hasUserLocation,
+                ]);
+            }
+
+            $query->whereIn('id', $nearbyHospitalIds->all());
+        }
 
         // Filter by Type (Hospital vs Clinic) - support multiple selections
         $types = $request->input('type', []);
@@ -79,86 +111,22 @@ class HospitalController extends Controller
         $cities = Hospital::where('is_verified', true)->whereNotNull('city')->distinct()->pluck('city');
         $types = Hospital::where('is_verified', true)->whereNotNull('type')->distinct()->pluck('type');
 
-        // Get all results first
-        $hospitals = $query->get();
-        
-        // If user location provided, calculate distances and sort
+        // If user location provided, keep distance sorting after applying all other filters.
         if ($hasUserLocation) {
-            $nearbyHospitals = $hospitals->map(fn(Hospital $hospital) => [
-                'id' => $hospital->id,
-                'name_en' => $hospital->name_en,
-                'name_hi' => $hospital->name_hi ?: $this->buildHindiHospitalName($hospital),
-                'name' => [
-                    'en' => $hospital->name_en,
-                    'hi' => $hospital->name_hi ?: $this->buildHindiHospitalName($hospital),
-                ],
-                'type' => $hospital->type,
-                'address' => $hospital->display_address,
-                'address_hi' => $this->toHindiAddress($hospital->display_address),
-                'address_line1' => $hospital->address_line1,
-                'address_line1_hi' => $this->toHindiAddress($hospital->address_line1),
-                'address_line2' => $hospital->address_line2,
-                'address_line2_hi' => $this->toHindiAddress($hospital->address_line2),
-                'state' => $hospital->state,
-                'state_hi' => $this->toHindiState($hospital->state),
-                'pincode' => $hospital->pincode,
-                'city' => $hospital->city,
-                'city_hi' => $this->toHindiCity($hospital->city),
-                'latitude' => $hospital->latitude,
-                'longitude' => $hospital->longitude,
-                'phone_1' => $hospital->phone_1,
-                'phone_2' => $hospital->phone_2,
-                'country_code_1' => $hospital->country_code_1,
-                'country_code_2' => $hospital->country_code_2,
-                'is_verified' => $hospital->is_verified,
-                'accepts_ayushman' => $hospital->accepts_ayushman,
-                'accepts_janaadhaar' => $hospital->accepts_janaadhaar,
-                'accepts_cghs' => $hospital->accepts_cghs,
-                'is_cashless' => $hospital->is_cashless,
-                'cashless_schemes_list' => $hospital->cashless_schemes_list,
-                'distance_km' => $this->calculateDistanceKm($userLat, $userLng, $hospital->latitude, $hospital->longitude),
-            ])->sortBy('distance_km')
-            ->filter(fn($h) => $h['distance_km'] !== null && $h['distance_km'] < 50)
-            ->values();
-            $hospitals = $this->paginateCollection($nearbyHospitals, $request, 30);
+            $hospitals = $query
+                ->latest()
+                ->get()
+                ->map(fn(Hospital $hospital) => $this->formatHospital($hospital, $userLat, $userLng))
+                ->sortBy('distance_km')
+                ->values();
+
+            $hospitals = $this->paginateCollection($hospitals, $request, 30);
         } else {
             // Original formatting for non-location queries
             $hospitals = $query
+                ->latest()
                 ->paginate(30)
-                ->through(fn(Hospital $hospital) => [
-                    'id' => $hospital->id,
-                    'name_en' => $hospital->name_en,
-                    'name_hi' => $hospital->name_hi ?: $this->buildHindiHospitalName($hospital),
-                    'name' => [
-                        'en' => $hospital->name_en,
-                        'hi' => $hospital->name_hi ?: $this->buildHindiHospitalName($hospital),
-                    ],
-                    'type' => $hospital->type,
-                    'address' => $hospital->display_address,
-                    'address_hi' => $this->toHindiAddress($hospital->display_address),
-                    'address_line1' => $hospital->address_line1,
-                    'address_line1_hi' => $this->toHindiAddress($hospital->address_line1),
-                    'address_line2' => $hospital->address_line2,
-                    'address_line2_hi' => $this->toHindiAddress($hospital->address_line2),
-                    'state' => $hospital->state,
-                    'state_hi' => $this->toHindiState($hospital->state),
-                    'pincode' => $hospital->pincode,
-                    'city' => $hospital->city,
-                    'city_hi' => $this->toHindiCity($hospital->city),
-                    'latitude' => $hospital->latitude,
-                    'longitude' => $hospital->longitude,
-                    'phone_1' => $hospital->phone_1,
-                    'phone_2' => $hospital->phone_2,
-                    'country_code_1' => $hospital->country_code_1,
-                    'country_code_2' => $hospital->country_code_2,
-                    'is_verified' => $hospital->is_verified,
-                    'accepts_ayushman' => $hospital->accepts_ayushman,
-                    'accepts_janaadhaar' => $hospital->accepts_janaadhaar,
-                    'accepts_cghs' => $hospital->accepts_cghs,
-                    'is_cashless' => $hospital->is_cashless,
-                    'cashless_schemes_list' => $hospital->cashless_schemes_list,
-                    'distance_km' => null,
-                ]);
+                ->through(fn(Hospital $hospital) => $this->formatHospital($hospital, null, null));
         }
 
         return view('hospitals.index', [
@@ -168,6 +136,44 @@ class HospitalController extends Controller
             'filters' => $request->only(['type', 'city', 'search', 'benefit', 'user_lat', 'user_lng']),
             'hasUserLocation' => $hasUserLocation,
         ]);
+    }
+
+    private function formatHospital(Hospital $hospital, ?float $userLat = null, ?float $userLng = null): array
+    {
+        return [
+            'id' => $hospital->id,
+            'name_en' => $hospital->name_en,
+            'name_hi' => $hospital->name_hi ?: $this->buildHindiHospitalName($hospital),
+            'name' => [
+                'en' => $hospital->name_en,
+                'hi' => $hospital->name_hi ?: $this->buildHindiHospitalName($hospital),
+            ],
+            'type' => $hospital->type,
+            'address' => $hospital->display_address,
+            'address_hi' => $this->toHindiAddress($hospital->display_address),
+            'address_line1' => $hospital->address_line1,
+            'address_line1_hi' => $this->toHindiAddress($hospital->address_line1),
+            'address_line2' => $hospital->address_line2,
+            'address_line2_hi' => $this->toHindiAddress($hospital->address_line2),
+            'state' => $hospital->state,
+            'state_hi' => $this->toHindiState($hospital->state),
+            'pincode' => $hospital->pincode,
+            'city' => $hospital->city,
+            'city_hi' => $this->toHindiCity($hospital->city),
+            'latitude' => $hospital->latitude,
+            'longitude' => $hospital->longitude,
+            'phone_1' => $hospital->phone_1,
+            'phone_2' => $hospital->phone_2,
+            'country_code_1' => $hospital->country_code_1,
+            'country_code_2' => $hospital->country_code_2,
+            'is_verified' => $hospital->is_verified,
+            'accepts_ayushman' => $hospital->accepts_ayushman,
+            'accepts_janaadhaar' => $hospital->accepts_janaadhaar,
+            'accepts_cghs' => $hospital->accepts_cghs,
+            'is_cashless' => $hospital->is_cashless,
+            'cashless_schemes_list' => $hospital->cashless_schemes_list,
+            'distance_km' => $this->calculateDistanceKm($userLat, $userLng, $hospital->latitude, $hospital->longitude),
+        ];
     }
 
     private function calculateDistanceKm(?float $userLat, ?float $userLng, $targetLat, $targetLng): ?float

@@ -16,6 +16,7 @@ class DatabaseSeeder extends Seeder
             DepartmentSeeder::class,
             DiseaseSeeder::class,
             FaqSeeder::class,
+            GeneralQuestionSeeder::class,
             ArticleSeeder::class,
         ]);
     }

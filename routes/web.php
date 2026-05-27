@@ -106,10 +106,10 @@ Route::prefix('admin')->middleware('web')->group(function () {
         // General Medical Q&A
         Route::get('/general-qa', [AdminDashboardController::class, 'generalQa'])->name('admin.general_qa');
         Route::get('/general-qa/create', [AdminDashboardController::class, 'createGeneralQa'])->name('admin.general_qa.create');
-        Route::get('/general-qa/{faq}/edit', [AdminDashboardController::class, 'editGeneralQa'])->name('admin.general_qa.edit');
+        Route::get('/general-qa/{generalQuestion}/edit', [AdminDashboardController::class, 'editGeneralQa'])->name('admin.general_qa.edit');
         Route::post('/general-qa', [AdminDashboardController::class, 'storeGeneralQa'])->name('admin.general_qa.store');
-        Route::put('/general-qa/{faq}', [AdminDashboardController::class, 'updateGeneralQa'])->name('admin.general_qa.update');
-        Route::delete('/general-qa/{faq}', [AdminDashboardController::class, 'destroyGeneralQa'])->name('admin.general_qa.destroy');
+        Route::put('/general-qa/{generalQuestion}', [AdminDashboardController::class, 'updateGeneralQa'])->name('admin.general_qa.update');
+        Route::delete('/general-qa/{generalQuestion}', [AdminDashboardController::class, 'destroyGeneralQa'])->name('admin.general_qa.destroy');
 
         // Cached Medical Questions
         Route::get('/cached-medical-questions', [AdminDashboardController::class, 'cachedMedicalQuestions'])->name('admin.cached_medical_questions');

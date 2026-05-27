@@ -9,6 +9,7 @@ use App\Models\ChatSession;
 use App\Models\Department;
 use App\Models\Disease;
 use App\Models\Doctor;
+use App\Models\GeneralQuestion;
 use App\Models\Hospital;
 use App\Services\MedicalQaService;
 use Exception;
@@ -56,6 +57,52 @@ class ChatbotController extends Controller
         if ($selectedCity === '') {
             $lastCityMessage = collect($messages)->reverse()->first(fn($msg) => !empty($msg['city']));
             $selectedCity = (string) ($lastCityMessage['city'] ?? '');
+        }
+
+        if ($userMessage !== '' && empty($validated['load_type'])) {
+            $generalHelpPayload = $this->findGeneralHelpResponse($userMessage, $locale, $selectedCity, $messages);
+            if ($generalHelpPayload !== null) {
+                $messages[] = [
+                    'sender' => 'user',
+                    'text' => $userMessage,
+                    'city' => $selectedCity !== '' ? $selectedCity : null,
+                    'locale' => $locale,
+                    'timestamp' => now()->toIso8601String(),
+                ];
+
+                $messages[] = [
+                    'sender' => 'bot',
+                    'text' => $generalHelpPayload['text'],
+                    'qa_answer' => $generalHelpPayload['qa_answer'],
+                    'city' => $selectedCity !== '' ? $selectedCity : null,
+                    'locale' => $locale,
+                    'show_options' => true,
+                    'response_mode' => 'general_help',
+                    'suggest_details' => (bool) $generalHelpPayload['suggest_details'],
+                    'timestamp' => now()->toIso8601String(),
+                ];
+
+                $chatSession->update(['messages' => $messages]);
+
+                return response()->json([
+                    'session_token' => $sessionToken,
+                    'reply' => $generalHelpPayload['text'],
+                    'city' => $selectedCity,
+                    'city_options' => $cityOptions,
+                    'locale' => $locale,
+                    'qa_answer' => $generalHelpPayload['qa_answer'],
+                    'symptom_match' => false,
+                    'department_info' => null,
+                    'doctors' => [],
+                    'hospitals' => [],
+                    'articles' => [],
+                    'see_all_doctors_url' => route('doctors.index', ['city' => $selectedCity ?: 'All']),
+                    'see_all_hospitals_url' => route('hospitals.index', ['city' => $selectedCity ?: 'All']),
+                    'see_all_articles_url' => route('articles.index'),
+                    'suggest_details' => (bool) $generalHelpPayload['suggest_details'],
+                    'history' => $messages,
+                ]);
+            }
         }
 
         if ($selectedCity === '' || !in_array($selectedCity, $cityOptions, true)) {
@@ -962,5 +1009,88 @@ class ChatbotController extends Controller
             'see_all_articles_url' => route('articles.index'),
             'suggest_details' => false,
         ];
+    }
+
+        private function findGeneralHelpResponse(string $message, string $locale, string $selectedCity = '', array $messages = []): ?array
+    {
+        $normalized = mb_strtolower(trim($message));
+        if ($normalized === '') {
+            return null;
+        }
+
+        $isDetailRequest = collect(['detail', 'detailed', 'explain', 'more', 'deep dive', '???????', '?????'])
+            ->contains(fn($k) => mb_stripos($normalized, $k) !== false);
+
+        if ($isDetailRequest) {
+            $lastGeneralHelp = collect($messages)->reverse()->first(function ($msg) {
+                return ($msg['sender'] ?? null) === 'bot'
+                    && ($msg['response_mode'] ?? null) === 'general_help'
+                    && !empty($msg['qa_answer']);
+            });
+
+            if ($lastGeneralHelp) {
+                $qa = $lastGeneralHelp['qa_answer'];
+                $detailed = $locale === 'hi'
+                    ? ($qa['detailed_answer_hi'] ?? $qa['detailed_answer_en'] ?? null)
+                    : ($qa['detailed_answer_en'] ?? $qa['detailed_answer_hi'] ?? null);
+
+                if (!empty($detailed)) {
+                    return [
+                        'text' => (string) $detailed,
+                        'qa_answer' => $qa,
+                        'suggest_details' => false,
+                    ];
+                }
+            }
+        }
+
+        $records = GeneralQuestion::query()->get();
+        $best = null;
+        $bestScore = 0;
+        $tokens = $this->extractSearchTokens($normalized);
+
+        foreach ($records as $q) {
+            $qEn = mb_strtolower(trim((string) $q->question_en));
+            $qHi = mb_strtolower(trim((string) $q->question_hi));
+            $score = 0;
+
+            if ($qEn !== '' && (str_contains($normalized, $qEn) || str_contains($qEn, $normalized))) {
+                $score += 5;
+            }
+            if ($qHi !== '' && (str_contains($normalized, $qHi) || str_contains($qHi, $normalized))) {
+                $score += 5;
+            }
+            foreach ($tokens as $token) {
+                if (($qEn !== '' && str_contains($qEn, $token)) || ($qHi !== '' && str_contains($qHi, $token))) {
+                    $score += 1;
+                }
+            }
+
+            if ($score > $bestScore) {
+                $bestScore = $score;
+                $best = $q;
+            }
+        }
+
+        if ($best && $bestScore >= 3) {
+            $answer = $locale === 'hi' ? ($best->answer_hi ?: $best->answer_en) : ($best->answer_en ?: $best->answer_hi);
+            $detailed = $locale === 'hi'
+                ? ($best->detailed_answer_hi ?: $best->detailed_answer_en)
+                : ($best->detailed_answer_en ?: $best->detailed_answer_hi);
+
+            return [
+                'text' => (string) ($isDetailRequest && !empty($detailed) ? $detailed : $answer),
+                'qa_answer' => [
+                    'question' => $locale === 'hi' ? ($best->question_hi ?: $best->question_en) : ($best->question_en ?: $best->question_hi),
+                    'answer' => $answer,
+                    'detailed_answer_en' => $best->detailed_answer_en,
+                    'detailed_answer_hi' => $best->detailed_answer_hi,
+                    'source' => 'general_questions',
+                ],
+                'suggest_details' => !empty($detailed) && !$isDetailRequest,
+            ];
+        }
+
+        return null;
     }
 }

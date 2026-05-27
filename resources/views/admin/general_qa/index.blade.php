@@ -27,22 +27,22 @@
                         </tr>
                     </thead>
                     <tbody>
-                        @foreach($faqs as $faq)
+                        @foreach($generalQuestions as $generalQuestion)
                             <tr>
                                 <td class="ps-4" style="width: 30%;">
-                                    <div class="fw-bold text-dark">{{ $faq->getTranslation('question', 'en') }}</div>
-                                    <div class="text-muted fs-7">{{ $faq->getTranslation('question', 'hi') }}</div>
+                                    <div class="fw-bold text-dark">{{ $generalQuestion->getTranslation('question', 'en') }}</div>
+                                    <div class="text-muted fs-7">{{ $generalQuestion->getTranslation('question', 'hi') }}</div>
                                 </td>
                                 <td style="width: 45%;">
-                                    <div class="text-dark mb-1 fs-7">{{ Str::limit($faq->getTranslation('answer', 'en'), 120) }}</div>
-                                    <div class="text-muted fs-7">{{ Str::limit($faq->getTranslation('answer', 'hi'), 120) }}</div>
+                                    <div class="text-dark mb-1 fs-7">{{ Str::limit($generalQuestion->getTranslation('answer', 'en'), 120) }}</div>
+                                    <div class="text-muted fs-7">{{ Str::limit($generalQuestion->getTranslation('answer', 'hi'), 120) }}</div>
                                 </td>
-                                <td><span class="badge bg-light text-dark border">General Medical</span></td>
+                                <td><span class="badge bg-light text-dark border">General Questions</span></td>
                                 <td class="text-end pe-4">
-                                    <a class="btn btn-sm btn-outline-primary me-1" href="{{ route('admin.general_qa.edit', $faq) }}">
+                                    <a class="btn btn-sm btn-outline-primary me-1" href="{{ route('admin.general_qa.edit', $generalQuestion) }}">
                                         <i class="fa-solid fa-pen-to-square"></i>
                                     </a>
-                                    <form action="{{ route('admin.general_qa.destroy', $faq) }}" method="POST" class="d-inline" onsubmit="return confirm('Are you sure you want to delete this question?');">
+                                    <form action="{{ route('admin.general_qa.destroy', $generalQuestion) }}" method="POST" class="d-inline" onsubmit="return confirm('Are you sure you want to delete this question?');">
                                         @csrf
                                         @method('DELETE')
                                         <button type="submit" class="btn btn-sm btn-outline-danger">
