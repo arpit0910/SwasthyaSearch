@@ -8,9 +8,9 @@
             <p class="text-muted mb-0">Manage chatbot-ready guidance for common symptoms and first-aid questions.</p>
         </div>
         <div>
-            <button class="btn btn-primary d-flex align-items-center gap-2" data-bs-toggle="modal" data-bs-target="#createModal">
+            <a class="btn btn-primary d-flex align-items-center gap-2" href="{{ route('admin.general_qa.create') }}">
                 <i class="fa-solid fa-plus"></i> Add Question
-            </button>
+            </a>
         </div>
     </div>
 
@@ -39,9 +39,9 @@
                                 </td>
                                 <td><span class="badge bg-light text-dark border">General Medical</span></td>
                                 <td class="text-end pe-4">
-                                    <button class="btn btn-sm btn-outline-primary me-1" data-bs-toggle="modal" data-bs-target="#editModal{{ $faq->id }}">
+                                    <a class="btn btn-sm btn-outline-primary me-1" href="{{ route('admin.general_qa.edit', $faq) }}">
                                         <i class="fa-solid fa-pen-to-square"></i>
-                                    </button>
+                                    </a>
                                     <form action="{{ route('admin.general_qa.destroy', $faq) }}" method="POST" class="d-inline" onsubmit="return confirm('Are you sure you want to delete this question?');">
                                         @csrf
                                         @method('DELETE')
@@ -51,8 +51,6 @@
                                     </form>
                                 </td>
                             </tr>
-
-                            @include('admin.general_qa.edit', ['faq' => $faq])
                         @endforeach
                     </tbody>
                 </table>
@@ -60,8 +58,6 @@
         </div>
     </div>
 </div>
-
-@include('admin.general_qa.create')
 
 @endsection
 
@@ -92,4 +88,3 @@
         });
     </script>
 @endpush
-

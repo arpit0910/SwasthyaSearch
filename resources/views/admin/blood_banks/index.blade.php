@@ -17,9 +17,9 @@
             <button class="btn btn-outline-secondary d-flex align-items-center gap-2" data-bs-toggle="modal" data-bs-target="#importModal">
                 <i class="fa-solid fa-file-import"></i> Import CSV
             </button>
-            <button class="btn btn-primary d-flex align-items-center gap-2" data-bs-toggle="modal" data-bs-target="#createModal">
+            <a href="{{ route('admin.blood_banks.create') }}" class="btn btn-primary d-flex align-items-center gap-2">
                 <i class="fa-solid fa-plus"></i> Add Blood Bank
-            </button>
+            </a>
         </div>
     </div>
 
@@ -82,9 +82,9 @@
                                     @endif
                                 </td>
                                 <td class="text-end pe-4">
-                                    <button class="btn btn-sm btn-outline-primary me-1" data-bs-toggle="modal" data-bs-target="#editModal{{ $bb->id }}">
+                                    <a href="{{ route('admin.blood_banks.edit', $bb) }}" class="btn btn-sm btn-outline-primary me-1">
                                         <i class="fa-solid fa-pen-to-square"></i>
-                                    </button>
+                                    </a>
                                     <form action="{{ route('admin.blood_banks.destroy', $bb) }}" method="POST" class="d-inline" onsubmit="return confirm('Are you sure you want to delete this blood bank?');">
                                         @csrf
                                         @method('DELETE')
@@ -94,8 +94,6 @@
                                     </form>
                                 </td>
                             </tr>
-
-                            @include('admin.blood_banks.edit', ['bloodBank' => $bb])
                         @endforeach
                     </tbody>
                 </table>
@@ -104,7 +102,6 @@
     </div>
 </div>
 
-@include('admin.blood_banks.create')
 @include('admin.blood_banks.import')
 @include('admin.blood_banks.sync')
 

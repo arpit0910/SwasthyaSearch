@@ -1,5 +1,5 @@
-<!-- Import Modal -->
-<div class="modal fade" id="importModal" tabindex="-1">
+﻿<!-- Import Modal -->
+<div class="modal" id="importModal" tabindex="-1">
     <div class="modal-dialog modal-dialog-centered">
         <div class="modal-content border-0 shadow">
             <div class="modal-header bg-light border-0 py-3">
@@ -31,3 +31,4 @@
         </div>
     </div>
 </div>
+

@@ -11,9 +11,9 @@
             <button class="btn btn-outline-secondary d-flex align-items-center gap-2" data-bs-toggle="modal" data-bs-target="#importModal">
                 <i class="fa-solid fa-file-import"></i> Import CSV
             </button>
-            <button class="btn btn-primary d-flex align-items-center gap-2" data-bs-toggle="modal" data-bs-target="#createModal">
+            <a href="{{ route('admin.departments.create') }}" class="btn btn-primary d-flex align-items-center gap-2">
                 <i class="fa-solid fa-plus"></i> Add Department
-            </button>
+            </a>
         </div>
     </div>
 
@@ -49,9 +49,9 @@
                                         @endif
                                     </td>
                                     <td class="text-end pe-4">
-                                        <button class="btn btn-sm btn-outline-primary me-1" data-bs-toggle="modal" data-bs-target="#editModal{{ $department->id }}">
+                                        <a href="{{ route('admin.departments.edit', $department) }}" class="btn btn-sm btn-outline-primary me-1">
                                             <i class="fa-solid fa-pen-to-square"></i>
-                                        </button>
+                                        </a>
                                         <form action="{{ route('admin.departments.destroy', $department) }}" method="POST" class="d-inline" onsubmit="return confirm('Are you sure you want to delete this department?');">
                                             @csrf
                                             @method('DELETE')
@@ -61,8 +61,6 @@
                                         </form>
                                     </td>
                                 </tr>
-
-                                @include('admin.departments.edit', ['department' => $department])
                             @endforeach
                         </tbody>
                     </table>
@@ -71,7 +69,6 @@
         </div>
     </div>
 
-    @include('admin.departments.create')
     @include('admin.departments.import')
 
 @endsection

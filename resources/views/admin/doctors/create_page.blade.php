@@ -1,14 +1,15 @@
-﻿<!-- Create Modal -->
-<div class="modal" id="createModal" tabindex="-1">
-    <div class="modal-dialog modal-xl modal-dialog-centered">
-        <div class="modal-content border-0 shadow">
-            <div class="modal-header bg-light border-0 py-3">
-                <h5 class="modal-title fw-bold">Register New Doctor</h5>
-                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
-            </div>
-            <form action="{{ route('admin.doctors.store') }}" method="POST">
+﻿@extends('admin.layouts.app')
+
+@section('content')
+<div class="container-fluid p-0">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h1 class="h3 fw-bold mb-0">Create Doctors</h1>
+        <a href="{{ route('admin.doctors') }}" class="btn btn-outline-secondary">Back</a>
+    </div>
+    <div class="card">
+        <form action="{{ route('admin.doctors.store') }}" method="POST">
                 @csrf
-                <div class="modal-body p-4">
+                <div class="card-body p-4">
                     <h6 class="fw-bold text-primary mb-3"><i class="fa-solid fa-user-doctor me-2"></i>Core & Personal Details</h6>
                     <div class="row g-3 mb-4">
                         <div class="col-md-4">
@@ -56,14 +57,14 @@
                     <div class="row g-3 mb-4">
                         <div class="col-md-6">
                             <label class="form-label fw-semibold">Medical Specialties / Departments (Select Multiple) <span class="text-danger">*</span></label>
-                            <select class="form-select mb-2" data-department-picker="1" data-hidden-select="departments-create-modal-hidden" data-pills-container="departments-create-modal-pills">
+                            <select class="form-select mb-2" data-department-picker="1" data-hidden-select="departments-create-hidden" data-pills-container="departments-create-pills">
                                 <option value="">Select Department</option>
                                 @foreach($departments as $dept)
                                     <option value="{{ $dept->id }}">{{ $dept->getTranslation('name', 'en') }}</option>
                                 @endforeach
                             </select>
-                            <div id="departments-create-modal-pills" class="d-flex flex-wrap gap-2 mb-2"></div>
-                            <select id="departments-create-modal-hidden" name="departments[]" multiple class="d-none" required>
+                            <div id="departments-create-pills" class="d-flex flex-wrap gap-2 mb-2"></div>
+                            <select id="departments-create-hidden" name="departments[]" multiple class="d-none" required>
                                 @foreach($departments as $dept)
                                     <option value="{{ $dept->id }}">{{ $dept->getTranslation('name', 'en') }}</option>
                                 @endforeach
@@ -161,12 +162,14 @@
                         </div>
                     </div>
                 </div>
-                <div class="modal-footer border-0 bg-light py-3">
-                    <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">Cancel</button>
+                <div class="card-footer bg-light py-3">
+                    <a href="{{ route('admin.doctors') }}" class="btn btn-outline-secondary">Cancel</a>
                     <button type="submit" class="btn btn-primary px-4">Register Doctor</button>
                 </div>
             </form>
-        </div>
     </div>
 </div>
+@endsection
+
+
 

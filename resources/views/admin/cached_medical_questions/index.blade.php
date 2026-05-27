@@ -8,9 +8,9 @@
             <p class="text-muted mb-0">Manage MedicalQA cache entries used by chatbot responses.</p>
         </div>
         <div>
-            <button class="btn btn-primary d-flex align-items-center gap-2" data-bs-toggle="modal" data-bs-target="#createModal">
+            <a class="btn btn-primary d-flex align-items-center gap-2" href="{{ route('admin.cached_medical_questions.create') }}">
                 <i class="fa-solid fa-plus"></i> Add Cached Question
-            </button>
+            </a>
         </div>
     </div>
 
@@ -39,9 +39,9 @@
                                 </td>
                                 <td><span class="badge bg-light text-dark border">{{ $question->category }}</span></td>
                                 <td class="text-end pe-4">
-                                    <button class="btn btn-sm btn-outline-primary me-1" data-bs-toggle="modal" data-bs-target="#editModal{{ $question->id }}">
+                                    <a class="btn btn-sm btn-outline-primary me-1" href="{{ route('admin.cached_medical_questions.edit', $question) }}">
                                         <i class="fa-solid fa-pen-to-square"></i>
-                                    </button>
+                                    </a>
                                     <form action="{{ route('admin.cached_medical_questions.destroy', $question) }}" method="POST" class="d-inline" onsubmit="return confirm('Are you sure you want to delete this cached question?');">
                                         @csrf
                                         @method('DELETE')
@@ -51,8 +51,6 @@
                                     </form>
                                 </td>
                             </tr>
-
-                            @include('admin.cached_medical_questions.edit', ['question' => $question])
                         @endforeach
                     </tbody>
                 </table>
@@ -60,8 +58,6 @@
         </div>
     </div>
 </div>
-
-@include('admin.cached_medical_questions.create')
 
 @endsection
 
@@ -117,4 +113,3 @@
         });
     </script>
 @endpush
-

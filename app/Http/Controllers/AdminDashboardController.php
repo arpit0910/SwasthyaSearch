@@ -57,6 +57,16 @@ class AdminDashboardController extends Controller
         return view('admin.hospitals.index', compact('hospitals'));
     }
 
+    public function createHospital()
+    {
+        return view('admin.hospitals.create_page');
+    }
+
+    public function editHospital(Hospital $hospital)
+    {
+        return view('admin.hospitals.edit_page', compact('hospital'));
+    }
+
     public function storeHospital(Request $request)
     {
         $data = $request->validate([
@@ -73,7 +83,9 @@ class AdminDashboardController extends Controller
             'latitude' => 'nullable|numeric',
             'longitude' => 'nullable|numeric',
             'country_code_1' => 'nullable|string|max:10',
+            'country_code_2' => 'nullable|string|max:10',
             'phone_1' => 'required|string',
+            'phone_2' => 'nullable|string|max:20',
             'emergency_country_code' => 'nullable|string|max:10',
             'emergency_phone' => 'nullable|string',
             'is_verified' => 'boolean',
@@ -104,6 +116,8 @@ class AdminDashboardController extends Controller
             'longitude' => $data['longitude'] ?? null,
             'country_code_1' => $phoneParts['country_code'],
             'phone_1' => $phoneParts['phone'],
+            'country_code_2' => $data['country_code_2'] ?? null,
+            'phone_2' => $data['phone_2'] ?? null,
             'is_verified' => $request->boolean('is_verified', true),
             'accepts_ayushman' => $request->boolean('accepts_ayushman', false),
             'accepts_janaadhaar' => $request->boolean('accepts_janaadhaar', false),
@@ -131,7 +145,9 @@ class AdminDashboardController extends Controller
             'latitude' => 'nullable|numeric',
             'longitude' => 'nullable|numeric',
             'country_code_1' => 'nullable|string|max:10',
+            'country_code_2' => 'nullable|string|max:10',
             'phone_1' => 'required|string',
+            'phone_2' => 'nullable|string|max:20',
             'emergency_country_code' => 'nullable|string|max:10',
             'emergency_phone' => 'nullable|string',
             'is_verified' => 'boolean',
@@ -162,6 +178,8 @@ class AdminDashboardController extends Controller
             'longitude' => $data['longitude'] ?? null,
             'country_code_1' => $phoneParts['country_code'],
             'phone_1' => $phoneParts['phone'],
+            'country_code_2' => $data['country_code_2'] ?? null,
+            'phone_2' => $data['phone_2'] ?? null,
             'is_verified' => $request->boolean('is_verified', true),
             'accepts_ayushman' => $request->boolean('accepts_ayushman', false),
             'accepts_janaadhaar' => $request->boolean('accepts_janaadhaar', false),
@@ -352,6 +370,18 @@ class AdminDashboardController extends Controller
         return view('admin.doctors.index', compact('doctors', 'departments'));
     }
 
+    public function createDoctor()
+    {
+        $departments = Department::all();
+        return view('admin.doctors.create_page', compact('departments'));
+    }
+
+    public function editDoctor(Doctor $doctor)
+    {
+        $departments = Department::all();
+        return view('admin.doctors.edit_page', compact('doctor', 'departments'));
+    }
+
     public function storeDoctor(Request $request)
     {
         $data = $request->validate([
@@ -366,7 +396,9 @@ class AdminDashboardController extends Controller
             'is_verified' => 'boolean',
             'email' => 'nullable|email|max:255',
             'country_code_1' => 'nullable|string|max:10',
+            'country_code_2' => 'nullable|string|max:10',
             'phone_1' => 'nullable|string|max:20',
+            'phone_2' => 'nullable|string|max:20',
             'country_code' => 'nullable|string|max:10',
             'phone' => 'nullable|string|max:20',
             'date_of_birth' => 'nullable|date',
@@ -401,6 +433,8 @@ class AdminDashboardController extends Controller
             'email' => $data['email'] ?? null,
             'country_code_1' => $phoneParts['country_code'],
             'phone_1' => $phoneParts['phone'],
+            'country_code_2' => $data['country_code_2'] ?? null,
+            'phone_2' => $data['phone_2'] ?? null,
             'date_of_birth' => $data['date_of_birth'] ?? null,
             'gender' => $data['gender'] ?? null,
             'languages_spoken' => !empty($data['languages_spoken']) ? array_map('trim', explode(',', $data['languages_spoken'])) : null,
@@ -439,7 +473,9 @@ class AdminDashboardController extends Controller
             'is_verified' => 'boolean',
             'email' => 'nullable|email|max:255',
             'country_code_1' => 'nullable|string|max:10',
+            'country_code_2' => 'nullable|string|max:10',
             'phone_1' => 'nullable|string|max:20',
+            'phone_2' => 'nullable|string|max:20',
             'country_code' => 'nullable|string|max:10',
             'phone' => 'nullable|string|max:20',
             'date_of_birth' => 'nullable|date',
@@ -474,6 +510,8 @@ class AdminDashboardController extends Controller
             'email' => $data['email'] ?? null,
             'country_code_1' => $phoneParts['country_code'],
             'phone_1' => $phoneParts['phone'],
+            'country_code_2' => $data['country_code_2'] ?? null,
+            'phone_2' => $data['phone_2'] ?? null,
             'date_of_birth' => $data['date_of_birth'] ?? null,
             'gender' => $data['gender'] ?? null,
             'languages_spoken' => !empty($data['languages_spoken']) ? array_map('trim', explode(',', $data['languages_spoken'])) : null,
@@ -694,6 +732,16 @@ class AdminDashboardController extends Controller
         }
         $bloodBanks = $query->latest()->get();
         return view('admin.blood_banks.index', compact('bloodBanks'));
+    }
+
+    public function createBloodBank()
+    {
+        return view('admin.blood_banks.create_page');
+    }
+
+    public function editBloodBank(BloodBank $bloodBank)
+    {
+        return view('admin.blood_banks.edit_page', compact('bloodBank'));
     }
 
     public function storeBloodBank(Request $request)
@@ -1020,6 +1068,16 @@ class AdminDashboardController extends Controller
         return view('admin.departments.index', compact('departments'));
     }
 
+    public function createDepartment()
+    {
+        return view('admin.departments.create_page');
+    }
+
+    public function editDepartment(Department $department)
+    {
+        return view('admin.departments.edit_page', compact('department'));
+    }
+
     public function storeDepartment(Request $request)
     {
         $data = $request->validate([
@@ -1105,6 +1163,18 @@ class AdminDashboardController extends Controller
         $diseases = $query->latest()->get();
         $departments = Department::all();
         return view('admin.diseases.index', compact('diseases', 'departments'));
+    }
+
+    public function createDisease()
+    {
+        $departments = Department::all();
+        return view('admin.diseases.create_page', compact('departments'));
+    }
+
+    public function editDisease(Disease $disease)
+    {
+        $departments = Department::all();
+        return view('admin.diseases.edit_page', compact('disease', 'departments'));
     }
 
     public function storeDisease(Request $request)
@@ -1275,6 +1345,16 @@ class AdminDashboardController extends Controller
         return view('admin.articles.index', compact('articles'));
     }
 
+    public function createArticle()
+    {
+        return view('admin.articles.create_page');
+    }
+
+    public function editArticle(Article $article)
+    {
+        return view('admin.articles.edit_page', compact('article'));
+    }
+
     public function storeArticle(Request $request)
     {
         $data = $request->validate([
@@ -1337,6 +1417,16 @@ class AdminDashboardController extends Controller
         }
         $faqs = $query->latest()->get();
         return view('admin.faqs.index', compact('faqs'));
+    }
+
+    public function createFaq()
+    {
+        return view('admin.faqs.create_page');
+    }
+
+    public function editFaq(Faq $faq)
+    {
+        return view('admin.faqs.edit_page', compact('faq'));
     }
 
     public function storeFaq(Request $request)
@@ -1402,6 +1492,17 @@ class AdminDashboardController extends Controller
 
         $faqs = $query->latest()->get();
         return view('admin.general_qa.index', compact('faqs'));
+    }
+
+    public function createGeneralQa()
+    {
+        return view('admin.general_qa.create_page');
+    }
+
+    public function editGeneralQa(Faq $faq)
+    {
+        abort_unless($faq->category === 'General Medical', 404);
+        return view('admin.general_qa.edit_page', compact('faq'));
     }
 
     public function storeGeneralQa(Request $request)
@@ -1470,6 +1571,16 @@ class AdminDashboardController extends Controller
 
         $questions = $query->latest()->get();
         return view('admin.cached_medical_questions.index', compact('questions'));
+    }
+
+    public function createCachedMedicalQuestion()
+    {
+        return view('admin.cached_medical_questions.create_page');
+    }
+
+    public function editCachedMedicalQuestion(CachedMedicalQuestion $cachedMedicalQuestion)
+    {
+        return view('admin.cached_medical_questions.edit_page', compact('cachedMedicalQuestion'));
     }
 
     public function storeCachedMedicalQuestion(Request $request)

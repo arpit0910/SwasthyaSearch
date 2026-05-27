@@ -15,10 +15,9 @@
                     data-bs-target="#importModal">
                     <i class="fa-solid fa-file-import"></i> Import CSV
                 </button>
-                <button class="btn btn-primary d-flex align-items-center gap-2" data-bs-toggle="modal"
-                    data-bs-target="#createModal">
-                    <i class="fa-solid fa-plus"></i> Add Disease / Symptom
-                </button>
+            <a href="{{ route('admin.diseases.create') }}" class="btn btn-primary d-flex align-items-center gap-2">
+                <i class="fa-solid fa-plus"></i> Add Disease / Symptom
+            </a>
             </div>
         </div>
 
@@ -51,10 +50,9 @@
                                         </div>
                                     </td>
                                     <td class="text-end pe-4">
-                                        <button class="btn btn-sm btn-outline-primary me-1" data-bs-toggle="modal"
-                                            data-bs-target="#editModal{{ $disease->id }}">
+                                        <a href="{{ route('admin.diseases.edit', $disease) }}" class="btn btn-sm btn-outline-primary me-1">
                                             <i class="fa-solid fa-pen-to-square"></i>
-                                        </button>
+                                        </a>
                                         <form action="{{ route('admin.diseases.destroy', $disease) }}" method="POST"
                                             class="d-inline"
                                             onsubmit="return confirm('Are you sure you want to delete this disease/symptom?');">
@@ -66,8 +64,6 @@
                                         </form>
                                     </td>
                                 </tr>
-
-                                @include('admin.diseases.edit', ['disease' => $disease])
                             @endforeach
                         </tbody>
                     </table>
@@ -76,7 +72,6 @@
         </div>
     </div>
 
-    @include('admin.diseases.create')
     @include('admin.diseases.import')
 @endsection
 

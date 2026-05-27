@@ -1,5 +1,5 @@
-<!-- Sync Hospitals Modal -->
-<div class="modal fade" id="syncModal" tabindex="-1" aria-labelledby="syncModalLabel" aria-hidden="true">
+﻿<!-- Sync Hospitals Modal -->
+<div class="modal" id="syncModal" tabindex="-1" aria-labelledby="syncModalLabel" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered">
         <div class="modal-content border-0 shadow">
             <div class="modal-header bg-light border-0">
@@ -102,3 +102,4 @@ document.addEventListener('DOMContentLoaded', function () {
     });
 });
 </script>
+

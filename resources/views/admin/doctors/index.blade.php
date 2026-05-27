@@ -19,10 +19,9 @@
                     data-bs-target="#importModal">
                     <i class="fa-solid fa-file-import"></i> Import CSV
                 </button>
-                <button class="btn btn-primary d-flex align-items-center gap-2" data-bs-toggle="modal"
-                    data-bs-target="#createModal">
+                <a href="{{ route('admin.doctors.create') }}" class="btn btn-primary d-flex align-items-center gap-2">
                     <i class="fa-solid fa-plus"></i> Add Doctor
-                </button>
+                </a>
             </div>
         </div>
 
@@ -117,10 +116,9 @@
                                         @endif
                                     </td>
                                     <td class="text-end pe-4">
-                                        <button class="btn btn-sm btn-outline-primary me-1" data-bs-toggle="modal"
-                                            data-bs-target="#editModal{{ $doctor->id }}">
+                                        <a href="{{ route('admin.doctors.edit', $doctor) }}" class="btn btn-sm btn-outline-primary me-1">
                                             <i class="fa-solid fa-pen-to-square"></i>
-                                        </button>
+                                        </a>
                                         <form action="{{ route('admin.doctors.destroy', $doctor) }}" method="POST"
                                             class="d-inline"
                                             onsubmit="return confirm('Are you sure you want to delete this doctor?');">
@@ -132,8 +130,6 @@
                                         </form>
                                     </td>
                                 </tr>
-
-                                @include('admin.doctors.edit', ['doctor' => $doctor])
                             @endforeach
                         </tbody>
                     </table>
@@ -142,7 +138,6 @@
         </div>
     </div>
 
-    @include('admin.doctors.create')
     @include('admin.doctors.import')
     @include('admin.doctors.sync')
 

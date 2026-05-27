@@ -8,9 +8,9 @@
             <p class="text-muted mb-0">Publish and maintain expert health publications and educational guides.</p>
         </div>
         <div>
-            <button class="btn btn-primary d-flex align-items-center gap-2" data-bs-toggle="modal" data-bs-target="#createModal">
+            <a class="btn btn-primary d-flex align-items-center gap-2" href="{{ route('admin.articles.create') }}">
                 <i class="fa-solid fa-plus"></i> Publish New Article
-            </button>
+            </a>
         </div>
     </div>
 
@@ -40,9 +40,9 @@
                                     </td>
                                     <td><span class="badge bg-light text-dark border">{{ $article->created_at->format('M d, Y') }}</span></td>
                                     <td class="text-end pe-4">
-                                        <button class="btn btn-sm btn-outline-primary me-1" data-bs-toggle="modal" data-bs-target="#editModal{{ $article->id }}">
+                                        <a class="btn btn-sm btn-outline-primary me-1" href="{{ route('admin.articles.edit', $article) }}">
                                             <i class="fa-solid fa-pen-to-square"></i>
-                                        </button>
+                                        </a>
                                         <form action="{{ route('admin.articles.destroy', $article) }}" method="POST" class="d-inline" onsubmit="return confirm('Are you sure you want to delete this article?');">
                                             @csrf
                                             @method('DELETE')
@@ -52,8 +52,6 @@
                                         </form>
                                     </td>
                                 </tr>
-
-                                @include('admin.articles.edit', ['article' => $article])
                             @endforeach
                         </tbody>
                     </table>
@@ -61,8 +59,6 @@
             </div>
         </div>
     </div>
-
-    @include('admin.articles.create')
 
 @endsection
 

@@ -820,7 +820,7 @@ $locale === 'hi'
                                 <i data-lucide="file-text" class="w-4 h-4 text-teal-500 shrink-0"></i>
                                 <div class="truncate">
                                     <span class="text-slate-400 dark:text-slate-500 block text-[10px] uppercase">${currentLocale === 'hi' ? 'à¤ªà¤°à¤¾à¤®à¤°à¥à¤¶ à¤¶à¥à¤²à¥à¤•' : 'Fee'}</span>
-                                    <span class="text-slate-900 dark:text-white font-bold">â‚¹${doc.consultation_fee || 500}</span>
+                                    <span class="text-slate-900 dark:text-white font-bold">Rs. ${doc.consultation_fee || 500}</span>
                                 </div>
                             </div>
                         </div>
@@ -923,7 +923,7 @@ $locale === 'hi'
                                     ${hosp.type ? `<span class="text-[10px] font-semibold uppercase tracking-wider text-teal-600 bg-teal-50 dark:bg-teal-950/40 border border-teal-100 dark:border-teal-900/60 px-2 py-0.5 rounded-md inline-block mt-0.5">${hosp.type}</span>` : ''}
                                 </div>
                                 <span class="text-teal-700 dark:text-teal-400 shrink-0 font-extrabold bg-white dark:bg-slate-800 px-2.5 py-1 rounded-xl border border-teal-100 dark:border-teal-800 shadow-2xs">
-                                    â‚¹${hosp.pivot?.consultation_fee || doc.consultation_fee || 500}
+                                    Rs. ${hosp.pivot?.consultation_fee || doc.consultation_fee || 500}
                                 </span>
                             </div>
                             <p class="text-slate-600 dark:text-slate-350 text-[11px] leading-normal pt-1 border-t border-slate-200/60 dark:border-slate-700/60">

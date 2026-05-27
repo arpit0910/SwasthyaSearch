@@ -1,14 +1,16 @@
-﻿<div class="modal" id="editModal{{ $faq->id }}" tabindex="-1">
-    <div class="modal-dialog modal-lg modal-dialog-centered">
-        <div class="modal-content border-0 shadow">
-            <div class="modal-header bg-light border-0 py-3">
-                <h5 class="modal-title fw-bold">Edit General Medical Question</h5>
-                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
-            </div>
-            <form action="{{ route('admin.general_qa.update', $faq) }}" method="POST">
+﻿@extends('admin.layouts.app')
+
+@section('content')
+<div class="container-fluid p-0">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h1 class="h3 fw-bold mb-0">Edit General Qa</h1>
+        <a href="{{ route('admin.general_qa') }}" class="btn btn-outline-secondary">Back</a>
+    </div>
+    <div class="card">
+        <form action="{{ route('admin.general_qa.update', $faq) }}" method="POST">
                 @csrf
                 @method('PUT')
-                <div class="modal-body p-4">
+                <div class="card-body p-4">
                     <div class="row g-3">
                         <div class="col-md-6">
                             <label class="form-label fw-semibold">Question (English)</label>
@@ -28,13 +30,14 @@
                         </div>
                     </div>
                 </div>
-                <div class="modal-footer border-0 bg-light py-3">
-                    <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">Cancel</button>
+                <div class="card-footer bg-light py-3">
+                    <a href="{{ route('admin.general_qa') }}" class="btn btn-outline-secondary">Cancel</a>
                     <button type="submit" class="btn btn-primary px-4">Save Changes</button>
                 </div>
             </form>
-        </div>
     </div>
 </div>
+@endsection
+
 
 

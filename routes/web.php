@@ -30,6 +30,8 @@ Route::prefix('admin')->middleware('web')->group(function () {
 
         // Hospitals
         Route::get('/hospitals', [AdminDashboardController::class, 'hospitals'])->name('admin.hospitals');
+        Route::get('/hospitals/create', [AdminDashboardController::class, 'createHospital'])->name('admin.hospitals.create');
+        Route::get('/hospitals/{hospital}/edit', [AdminDashboardController::class, 'editHospital'])->name('admin.hospitals.edit');
         Route::post('/hospitals', [AdminDashboardController::class, 'storeHospital'])->name('admin.hospitals.store');
         Route::put('/hospitals/{hospital}', [AdminDashboardController::class, 'updateHospital'])->name('admin.hospitals.update');
         Route::delete('/hospitals/{hospital}', [AdminDashboardController::class, 'destroyHospital'])->name('admin.hospitals.destroy');
@@ -40,6 +42,8 @@ Route::prefix('admin')->middleware('web')->group(function () {
 
         // Doctors
         Route::get('/doctors', [AdminDashboardController::class, 'doctors'])->name('admin.doctors');
+        Route::get('/doctors/create', [AdminDashboardController::class, 'createDoctor'])->name('admin.doctors.create');
+        Route::get('/doctors/{doctor}/edit', [AdminDashboardController::class, 'editDoctor'])->name('admin.doctors.edit');
         Route::post('/doctors', [AdminDashboardController::class, 'storeDoctor'])->name('admin.doctors.store');
         Route::put('/doctors/{doctor}', [AdminDashboardController::class, 'updateDoctor'])->name('admin.doctors.update');
         Route::delete('/doctors/{doctor}', [AdminDashboardController::class, 'destroyDoctor'])->name('admin.doctors.destroy');
@@ -50,6 +54,8 @@ Route::prefix('admin')->middleware('web')->group(function () {
 
         // Blood Banks
         Route::get('/blood-banks', [AdminDashboardController::class, 'bloodBanks'])->name('admin.blood_banks');
+        Route::get('/blood-banks/create', [AdminDashboardController::class, 'createBloodBank'])->name('admin.blood_banks.create');
+        Route::get('/blood-banks/{bloodBank}/edit', [AdminDashboardController::class, 'editBloodBank'])->name('admin.blood_banks.edit');
         Route::post('/blood-banks', [AdminDashboardController::class, 'storeBloodBank'])->name('admin.blood_banks.store');
         Route::put('/blood-banks/{bloodBank}', [AdminDashboardController::class, 'updateBloodBank'])->name('admin.blood_banks.update');
         Route::delete('/blood-banks/{bloodBank}', [AdminDashboardController::class, 'destroyBloodBank'])->name('admin.blood_banks.destroy');
@@ -64,6 +70,8 @@ Route::prefix('admin')->middleware('web')->group(function () {
 
         // Departments
         Route::get('/departments', [AdminDashboardController::class, 'departments'])->name('admin.departments');
+        Route::get('/departments/create', [AdminDashboardController::class, 'createDepartment'])->name('admin.departments.create');
+        Route::get('/departments/{department}/edit', [AdminDashboardController::class, 'editDepartment'])->name('admin.departments.edit');
         Route::post('/departments', [AdminDashboardController::class, 'storeDepartment'])->name('admin.departments.store');
         Route::put('/departments/{department}', [AdminDashboardController::class, 'updateDepartment'])->name('admin.departments.update');
         Route::delete('/departments/{department}', [AdminDashboardController::class, 'destroyDepartment'])->name('admin.departments.destroy');
@@ -71,6 +79,8 @@ Route::prefix('admin')->middleware('web')->group(function () {
 
         // Diseases
         Route::get('/diseases', [AdminDashboardController::class, 'diseases'])->name('admin.diseases');
+        Route::get('/diseases/create', [AdminDashboardController::class, 'createDisease'])->name('admin.diseases.create');
+        Route::get('/diseases/{disease}/edit', [AdminDashboardController::class, 'editDisease'])->name('admin.diseases.edit');
         Route::post('/diseases', [AdminDashboardController::class, 'storeDisease'])->name('admin.diseases.store');
         Route::put('/diseases/{disease}', [AdminDashboardController::class, 'updateDisease'])->name('admin.diseases.update');
         Route::delete('/diseases/{disease}', [AdminDashboardController::class, 'destroyDisease'])->name('admin.diseases.destroy');
@@ -79,24 +89,32 @@ Route::prefix('admin')->middleware('web')->group(function () {
 
         // Articles
         Route::get('/articles', [AdminDashboardController::class, 'articles'])->name('admin.articles');
+        Route::get('/articles/create', [AdminDashboardController::class, 'createArticle'])->name('admin.articles.create');
+        Route::get('/articles/{article}/edit', [AdminDashboardController::class, 'editArticle'])->name('admin.articles.edit');
         Route::post('/articles', [AdminDashboardController::class, 'storeArticle'])->name('admin.articles.store');
         Route::put('/articles/{article}', [AdminDashboardController::class, 'updateArticle'])->name('admin.articles.update');
         Route::delete('/articles/{article}', [AdminDashboardController::class, 'destroyArticle'])->name('admin.articles.destroy');
 
         // FAQs
         Route::get('/faqs', [AdminDashboardController::class, 'faqs'])->name('admin.faqs');
+        Route::get('/faqs/create', [AdminDashboardController::class, 'createFaq'])->name('admin.faqs.create');
+        Route::get('/faqs/{faq}/edit', [AdminDashboardController::class, 'editFaq'])->name('admin.faqs.edit');
         Route::post('/faqs', [AdminDashboardController::class, 'storeFaq'])->name('admin.faqs.store');
         Route::put('/faqs/{faq}', [AdminDashboardController::class, 'updateFaq'])->name('admin.faqs.update');
         Route::delete('/faqs/{faq}', [AdminDashboardController::class, 'destroyFaq'])->name('admin.faqs.destroy');
 
         // General Medical Q&A
         Route::get('/general-qa', [AdminDashboardController::class, 'generalQa'])->name('admin.general_qa');
+        Route::get('/general-qa/create', [AdminDashboardController::class, 'createGeneralQa'])->name('admin.general_qa.create');
+        Route::get('/general-qa/{faq}/edit', [AdminDashboardController::class, 'editGeneralQa'])->name('admin.general_qa.edit');
         Route::post('/general-qa', [AdminDashboardController::class, 'storeGeneralQa'])->name('admin.general_qa.store');
         Route::put('/general-qa/{faq}', [AdminDashboardController::class, 'updateGeneralQa'])->name('admin.general_qa.update');
         Route::delete('/general-qa/{faq}', [AdminDashboardController::class, 'destroyGeneralQa'])->name('admin.general_qa.destroy');
 
         // Cached Medical Questions
         Route::get('/cached-medical-questions', [AdminDashboardController::class, 'cachedMedicalQuestions'])->name('admin.cached_medical_questions');
+        Route::get('/cached-medical-questions/create', [AdminDashboardController::class, 'createCachedMedicalQuestion'])->name('admin.cached_medical_questions.create');
+        Route::get('/cached-medical-questions/{cachedMedicalQuestion}/edit', [AdminDashboardController::class, 'editCachedMedicalQuestion'])->name('admin.cached_medical_questions.edit');
         Route::post('/cached-medical-questions', [AdminDashboardController::class, 'storeCachedMedicalQuestion'])->name('admin.cached_medical_questions.store');
         Route::put('/cached-medical-questions/{cachedMedicalQuestion}', [AdminDashboardController::class, 'updateCachedMedicalQuestion'])->name('admin.cached_medical_questions.update');
         Route::delete('/cached-medical-questions/{cachedMedicalQuestion}', [AdminDashboardController::class, 'destroyCachedMedicalQuestion'])->name('admin.cached_medical_questions.destroy');

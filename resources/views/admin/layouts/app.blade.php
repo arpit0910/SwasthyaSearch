@@ -122,11 +122,10 @@
             border-radius: 1rem;
             background: linear-gradient(180deg, #ffffff 0%, #fbfdff 100%);
             box-shadow: 0 10px 30px rgba(15, 23, 42, 0.06);
-            transition: transform 0.2s ease, box-shadow 0.2s ease;
         }
         .card:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 14px 34px rgba(15, 23, 42, 0.08);
+            transform: none;
+            box-shadow: 0 10px 30px rgba(15, 23, 42, 0.06);
         }
         .card-header {
             background-color: rgba(255, 255, 255, 0.9);
@@ -174,6 +173,71 @@
         .alert {
             border-radius: 0.9rem;
             border-width: 1px;
+        }
+        /* Standardize row action buttons (Edit/Delete) on admin list tables. */
+        .admin-content td.text-end {
+            white-space: nowrap;
+        }
+        .admin-content td.text-end .btn.btn-sm {
+            min-width: 36px;
+            height: 36px;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 0.55rem;
+            padding: 0 0.6rem;
+            line-height: 1;
+            vertical-align: middle;
+        }
+        .admin-content td.text-end form.d-inline {
+            display: inline-block !important;
+            margin: 0;
+            vertical-align: middle;
+        }
+        .admin-content td.text-end a.btn + form.d-inline,
+        .admin-content td.text-end form.d-inline + a.btn {
+            margin-left: 0.35rem;
+        }
+        .admin-content td.text-end .fa-pen-to-square,
+        .admin-content td.text-end .fa-trash {
+            font-size: 0.9rem;
+        }
+        .department-pill {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.35rem;
+            border: 1px solid #99f6e4;
+            background: #f0fdfa;
+            color: #115e59;
+            border-radius: 999px;
+            padding: 0.25rem 0.6rem;
+            font-size: 0.82rem;
+            font-weight: 600;
+        }
+        .department-pill button {
+            border: 0;
+            background: transparent;
+            color: #0f766e;
+            line-height: 1;
+            padding: 0;
+            font-size: 0.9rem;
+            cursor: pointer;
+        }
+        /* Keep admin forms fully static (no hover/focus motion). */
+        .admin-content form,
+        .admin-content form * {
+            animation: none !important;
+            transition: none !important;
+        }
+        /* Prevent modal flicker on open/close in heavy admin forms */
+        .modal,
+        .modal-dialog,
+        .modal-content {
+            backface-visibility: hidden;
+            transform: translateZ(0);
+        }
+        .modal .modal-content {
+            will-change: transform, opacity;
         }
         @media (max-width: 991.98px) {
             .admin-sidebar {
@@ -292,6 +356,64 @@
 
     <!-- Bootstrap 5 JS Bundle -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            document.querySelectorAll('[data-department-picker]').forEach(function (picker) {
+                if (picker.dataset.initialized === '1') {
+                    return;
+                }
+                picker.dataset.initialized = '1';
+
+                var hiddenId = picker.getAttribute('data-hidden-select');
+                var pillsId = picker.getAttribute('data-pills-container');
+                var hidden = document.getElementById(hiddenId);
+                var pills = document.getElementById(pillsId);
+
+                if (!hidden || !pills) {
+                    return;
+                }
+
+                function renderPills() {
+                    pills.innerHTML = '';
+                    Array.from(hidden.options).forEach(function (option) {
+                        if (!option.selected) {
+                            return;
+                        }
+                        var pill = document.createElement('span');
+                        pill.className = 'department-pill';
+                        pill.innerHTML = '<span>' + option.text + '</span>';
+
+                        var remove = document.createElement('button');
+                        remove.type = 'button';
+                        remove.setAttribute('aria-label', 'Remove department');
+                        remove.textContent = 'x';
+                        remove.addEventListener('click', function () {
+                            option.selected = false;
+                            renderPills();
+                        });
+
+                        pill.appendChild(remove);
+                        pills.appendChild(pill);
+                    });
+                }
+
+                picker.addEventListener('change', function () {
+                    var selectedValue = picker.value;
+                    if (!selectedValue) {
+                        return;
+                    }
+                    var target = hidden.querySelector('option[value="' + selectedValue.replace(/"/g, '\\"') + '"]');
+                    if (target) {
+                        target.selected = true;
+                    }
+                    picker.value = '';
+                    renderPills();
+                });
+
+                renderPills();
+            });
+        });
+    </script>
     @stack('scripts')
 </body>
 </html>

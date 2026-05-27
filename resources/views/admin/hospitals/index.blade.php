@@ -17,9 +17,9 @@
             <button class="btn btn-outline-secondary d-flex align-items-center gap-2" data-bs-toggle="modal" data-bs-target="#importModal">
                 <i class="fa-solid fa-file-import"></i> Import CSV
             </button>
-            <button class="btn btn-primary d-flex align-items-center gap-2" data-bs-toggle="modal" data-bs-target="#createModal">
+            <a href="{{ route('admin.hospitals.create') }}" class="btn btn-primary d-flex align-items-center gap-2">
                 <i class="fa-solid fa-plus"></i> Add Hospital
-            </button>
+            </a>
         </div>
     </div>
 
@@ -103,9 +103,9 @@
                                         @endif
                                     </td>
                                     <td class="text-end pe-4">
-                                        <button class="btn btn-sm btn-outline-primary me-1" data-bs-toggle="modal" data-bs-target="#editModal{{ $hospital->id }}">
+                                        <a href="{{ route('admin.hospitals.edit', $hospital) }}" class="btn btn-sm btn-outline-primary me-1">
                                             <i class="fa-solid fa-pen-to-square"></i>
-                                        </button>
+                                        </a>
                                         <form action="{{ route('admin.hospitals.destroy', $hospital) }}" method="POST" class="d-inline" onsubmit="return confirm('Are you sure you want to delete this hospital?');">
                                             @csrf
                                             @method('DELETE')
@@ -115,8 +115,6 @@
                                         </form>
                                     </td>
                                 </tr>
-
-                                @include('admin.hospitals.edit', ['hospital' => $hospital])
                             @endforeach
                         </tbody>
                     </table>
@@ -125,7 +123,6 @@
         </div>
     </div>
 
-    @include('admin.hospitals.create')
     @include('admin.hospitals.import')
     @include('admin.hospitals.sync')
 

@@ -1,4 +1,4 @@
-@extends('admin.layouts.app')
+﻿@extends('admin.layouts.app')
 
 @section('content')
 <div class="container-fluid p-0">
@@ -206,7 +206,7 @@
     </div>
 </div>
 
-<div class="modal fade" id="syncAllModal" tabindex="-1" aria-labelledby="syncAllModalLabel" aria-hidden="true">
+<div class="modal" id="syncAllModal" tabindex="-1" aria-labelledby="syncAllModalLabel" aria-hidden="true">
     <div class="modal-dialog modal-lg modal-dialog-centered">
         <div class="modal-content border-0 shadow-lg">
             <div class="modal-header border-0 bg-light">
@@ -349,3 +349,4 @@
     });
 </script>
 @endpush
+

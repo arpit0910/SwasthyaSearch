@@ -1,15 +1,16 @@
-﻿<!-- Edit Modal -->
-<div class="modal" id="editModal{{ $doctor->id }}" tabindex="-1">
-    <div class="modal-dialog modal-xl modal-dialog-centered">
-        <div class="modal-content border-0 shadow">
-            <div class="modal-header bg-light border-0 py-3">
-                <h5 class="modal-title fw-bold">Edit Doctor Details</h5>
-                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
-            </div>
-            <form action="{{ route('admin.doctors.update', $doctor) }}" method="POST">
+﻿@extends('admin.layouts.app')
+
+@section('content')
+<div class="container-fluid p-0">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h1 class="h3 fw-bold mb-0">Edit Doctors</h1>
+        <a href="{{ route('admin.doctors') }}" class="btn btn-outline-secondary">Back</a>
+    </div>
+    <div class="card">
+        <form action="{{ route('admin.doctors.update', $doctor) }}" method="POST">
                 @csrf
                 @method('PUT')
-                <div class="modal-body p-4">
+                <div class="card-body p-4">
                     <h6 class="fw-bold text-primary mb-3"><i class="fa-solid fa-user-doctor me-2"></i>Core & Personal
                         Details</h6>
                     <div class="row g-3 mb-4">
@@ -68,7 +69,7 @@
                         <div class="col-md-6">
                             <label class="form-label fw-semibold">Medical Specialties / Departments (Select Multiple)
                                 <span class="text-danger">*</span></label>
-                            <select class="form-select mb-2" data-department-picker="1" data-hidden-select="departments-edit-modal-hidden-{{ $doctor->id }}" data-pills-container="departments-edit-modal-pills-{{ $doctor->id }}">
+                            <select class="form-select mb-2" data-department-picker="1" data-hidden-select="departments-edit-hidden" data-pills-container="departments-edit-pills">
                                 <option value="">Select Department</option>
                                 @foreach ($departments as $dept)
                                     <option value="{{ $dept->id }}">
@@ -76,8 +77,8 @@
                                     </option>
                                 @endforeach
                             </select>
-                            <div id="departments-edit-modal-pills-{{ $doctor->id }}" class="d-flex flex-wrap gap-2 mb-2"></div>
-                            <select id="departments-edit-modal-hidden-{{ $doctor->id }}" name="departments[]" multiple class="d-none" required>
+                            <div id="departments-edit-pills" class="d-flex flex-wrap gap-2 mb-2"></div>
+                            <select id="departments-edit-hidden" name="departments[]" multiple class="d-none" required>
                                 @foreach ($departments as $dept)
                                     <option value="{{ $dept->id }}" {{ $doctor->departments->contains($dept->id) ? 'selected' : '' }}>
                                         {{ $dept->getTranslation('name', 'en') }}
@@ -210,12 +211,14 @@
                         </div>
                     </div>
                 </div>
-                <div class="modal-footer border-0 bg-light py-3">
-                    <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">Cancel</button>
+                <div class="card-footer bg-light py-3">
+                    <a href="{{ route('admin.doctors') }}" class="btn btn-outline-secondary">Cancel</a>
                     <button type="submit" class="btn btn-primary px-4">Save Changes</button>
                 </div>
             </form>
-        </div>
     </div>
 </div>
+@endsection
+
+
 
