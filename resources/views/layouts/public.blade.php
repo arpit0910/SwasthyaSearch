@@ -397,13 +397,13 @@
         </div>
     </div>
     <!-- Floating Chatbot Widget -->
-    <div class="fixed bottom-5 right-4 sm:bottom-6 sm:right-6 z-[80]" id="chatbot-container">
+    <div class="fixed bottom-5 right-4 sm:bottom-6 sm:right-6 z-[95]" id="chatbot-container">
         <!-- Chat Button -->
-        <button id="chatbot-toggle-btn" aria-label="Open AI assistant" onclick="toggleChatbot()" class="chatbot-fab flex items-center gap-3 bg-gradient-to-tr from-teal-500 to-cyan-600 text-white px-6 py-3.5 rounded-full shadow-2xl hover:shadow-indigo-500/50 hover:scale-105 transition-all duration-300 transform group ring-1 ring-white/20">
+        <button id="chatbot-toggle-btn" aria-label="Open AI assistant" onclick="toggleChatbot()" class="chatbot-fab fab-contracted flex items-center gap-3 bg-cyan-600 dark:bg-cyan-500 text-white px-7 py-4 rounded-full shadow-[0_18px_40px_rgba(8,145,178,0.52)] dark:shadow-[0_18px_40px_rgba(6,182,212,0.4)] hover:bg-cyan-500 dark:hover:bg-cyan-400 hover:scale-105 transition-all duration-300 transform group ring-2 ring-white/35 dark:ring-cyan-100/35 border border-cyan-300/60 dark:border-cyan-200/45">
             <div class="chatbot-fab-icon w-6 h-6 flex items-center justify-center shrink-0">
                 <i data-lucide="message-square" class="w-6 h-6 text-white"></i>
             </div>
-            <span id="chatbot-fab-label" class="chatbot-fab-label font-bold text-base tracking-wide whitespace-nowrap leading-none pt-0.5">
+            <span id="chatbot-fab-label" class="chatbot-fab-label font-extrabold text-[17px] tracking-wide whitespace-nowrap leading-none pt-0.5">
                 {{ $locale === 'hi' ? 'स्वास्थ्य साथी से पूछें' : 'Ask Swasthya Saathi' }}
             </span>
         </button>
@@ -479,7 +479,7 @@
                         <div class="w-7 h-7 rounded-full bg-teal-500 text-white flex items-center justify-center shrink-0 shadow-sm">
                             <i data-lucide="bot" class="w-4 h-4"></i>
                         </div>
-                        <div id="chatbot-initial-message" class="p-3.5 rounded-2xl text-sm shadow-sm leading-relaxed bg-white text-slate-800 border border-slate-200/60 rounded-tl-none">
+                        <div id="chatbot-initial-message" class="p-3.5 rounded-2xl text-sm shadow-sm leading-relaxed bg-white dark:bg-slate-900 text-slate-800 dark:text-slate-100 border border-slate-200/60 dark:border-slate-700 rounded-tl-none">
                             {{ $locale === 'hi' ? 'नमस्ते, मैं Swasthya AI Assistant हूँ। कृपया पहले अपना शहर चुनें, फिर मैं आपके लिए सही विकल्प ढूँढने में मदद करूँगा।' : 'Hi, I’m Swasthya AI Assistant. Please select your city first, then I’ll help you find the right nearby healthcare options.' }}
                         </div>
                     </div>
@@ -496,8 +496,8 @@
                         @endforeach
                     </div>
                 </div>
-                <div id="chatbot-post-city-questions-wrapper" class="hidden ml-9 max-w-[85%] rounded-xl border border-teal-100 bg-teal-50/80 px-3 py-2">
-                    <p class="text-[11px] font-semibold text-teal-900">
+                <div id="chatbot-post-city-questions-wrapper" class="hidden ml-9 max-w-[85%] rounded-xl border border-teal-100 dark:border-teal-900/60 bg-teal-50/80 dark:bg-teal-950/25 px-3 py-2">
+                    <p class="text-[11px] font-semibold text-teal-900 dark:text-teal-100">
                         {{ $locale === 'hi' ? 'उदाहरण: "Nearby में cardiologist", "नजदीकी hospital", "A+ blood bank"' : 'Try: "cardiologist near me", "nearby hospital", "A+ blood bank"' }}
                     </p>
                 </div>
@@ -510,8 +510,8 @@
                             <button type="button" onclick="handleQuickAction('blood_banks')" class="chatbot-chip">{{ $locale === 'hi' ? 'ब्लड बैंक खोजें' : 'Find Blood Banks' }}</button>
                             <button type="button" onclick="useQuickPrompt(this)" class="chatbot-chip chatbot-chip-danger" data-message="{{ $locale === 'hi' ? 'मुझे आपातकालीन मदद चाहिए' : 'I need emergency help' }}">{{ $locale === 'hi' ? 'आपातकालीन मदद' : 'Emergency Help' }}</button>
                         </div>
-                        <div class="rounded-xl border border-cyan-200 bg-cyan-50 px-3 py-2">
-                            <p class="text-[11px] font-bold text-cyan-900 mb-1.5">
+                        <div class="rounded-xl border border-cyan-200 dark:border-cyan-900/60 bg-cyan-50 dark:bg-cyan-950/25 px-3 py-2">
+                            <p class="text-[11px] font-bold text-cyan-900 dark:text-cyan-100 mb-1.5">
                                 {{ $locale === 'hi' ? 'त्वरित लक्षण विकल्प' : 'Quick Symptoms' }}
                             </p>
                             <div class="flex flex-wrap gap-1.5">
@@ -525,19 +525,19 @@
             </div>
 
             <!-- Loading Indicator -->
-            <div id="chatbot-loading" class="hidden px-4 py-2.5 flex space-x-2.5 items-center text-slate-700 text-sm bg-cyan-50/70 border-y border-cyan-100">
+            <div id="chatbot-loading" class="hidden px-4 py-2.5 flex space-x-2.5 items-center text-slate-700 dark:text-slate-200 text-sm bg-cyan-50/70 dark:bg-slate-900/80 border-y border-cyan-100 dark:border-slate-800">
                 <div class="typing-dots" aria-hidden="true">
                     <span></span><span></span><span></span>
                 </div>
                 <span id="chatbot-loading-text">{{ $locale === 'hi' ? 'स्वास्थ्य AI सोच रहा है...' : 'Swasthya AI is thinking...' }}</span>
             </div>
             <!-- Input Footer -->
-            <form id="chatbot-form" onsubmit="handleChatbotSubmit(event)" class="p-3 bg-slate-50 border-t border-slate-200/80 flex items-center space-x-2 shadow-lg">
-                <input type="text" id="chatbot-input" placeholder="{{ $locale === 'hi' ? 'लक्षण लिखें या डॉक्टर, अस्पताल, ब्लड बैंक खोजें...' : 'Describe symptoms or search doctors, hospitals, blood banks...' }}" class="flex-1 bg-white border border-slate-300/80 rounded-2xl px-4 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-500/80 transition-all duration-200">
-                <button type="button" id="chatbot-voice-btn" onclick="toggleVoiceTyping()" class="bg-teal-600 hover:bg-teal-500 text-white p-2.5 rounded-2xl shadow-md transition-all duration-200 transform active:scale-95" title="{{ $locale === 'hi' ? 'वॉइस टाइपिंग चालू/बंद करें' : 'Start/Stop voice typing' }}">
+            <form id="chatbot-form" onsubmit="handleChatbotSubmit(event)" class="p-3 bg-slate-50 dark:bg-slate-900 border-t border-slate-200/80 dark:border-slate-800 flex items-center space-x-2 shadow-lg">
+                <input type="text" id="chatbot-input" placeholder="{{ $locale === 'hi' ? 'लक्षण लिखें या डॉक्टर, अस्पताल, ब्लड बैंक खोजें...' : 'Describe symptoms or search doctors, hospitals, blood banks...' }}" class="flex-1 bg-white dark:bg-slate-950 border border-slate-300/80 dark:border-slate-700 rounded-2xl px-4 py-2.5 text-sm text-slate-900 dark:text-slate-100 placeholder:text-slate-400 dark:placeholder:text-slate-500 focus:outline-none focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-500/80 transition-all duration-200">
+                <button type="button" id="chatbot-voice-btn" onclick="toggleVoiceTyping()" class="bg-teal-600 hover:bg-teal-500 dark:bg-cyan-700 dark:hover:bg-cyan-600 text-white p-2.5 rounded-2xl shadow-md transition-all duration-200 transform active:scale-95" title="{{ $locale === 'hi' ? 'वॉइस टाइपिंग चालू/बंद करें' : 'Start/Stop voice typing' }}">
                     <i data-lucide="mic" class="w-5 h-5"></i>
                 </button>
-                <button type="submit" aria-label="Send message" class="bg-cyan-600 hover:bg-cyan-500 text-white p-2.5 rounded-2xl shadow-md transition-all duration-200 transform active:scale-95">
+                <button type="submit" aria-label="Send message" class="bg-cyan-600 hover:bg-cyan-500 dark:bg-indigo-700 dark:hover:bg-indigo-600 text-white p-2.5 rounded-2xl shadow-md transition-all duration-200 transform active:scale-95">
                     <i data-lucide="send" class="w-5 h-5"></i>
                 </button>
             </form>
@@ -1142,32 +1142,8 @@
             if (!btn) return;
 
             clearFabCycles();
-
-            if (window.innerWidth < 640) {
-                // Mobile: keep static (no repetitive expand/contract animation)
-                btn.classList.remove('fab-contracted');
-                return;
-            } else {
-                // Desktop/Web: slower, calmer expand/contract cycle
-                btn.classList.remove('fab-contracted');
-                let isCollapsed = false;
-                fabSingleTimeout = setTimeout(() => {
-                    if (!chatbotOpen) {
-                        isCollapsed = true;
-                        btn.classList.add('fab-contracted');
-                    }
-                }, 9000);
-
-                fabCycleInterval = setInterval(() => {
-                    if (chatbotOpen) return;
-                    isCollapsed = !isCollapsed;
-                    if (isCollapsed) {
-                        btn.classList.add('fab-contracted');
-                    } else {
-                        btn.classList.remove('fab-contracted');
-                    }
-                }, 12000);
-            }
+            // Keep CTA compact as a circular button.
+            btn.classList.add('fab-contracted');
         }
 
         function toggleMobileMenu() {
@@ -1935,12 +1911,12 @@
                             <i data-lucide="${isUser ? 'user' : 'bot'}" class="w-4 h-4"></i>
                         </div>
                         <div class="space-y-2">
-                            <div class="p-3.5 rounded-2xl text-sm shadow-sm leading-relaxed ${isUser ? 'bg-gradient-to-r from-indigo-600 to-indigo-500 text-white rounded-tr-none border border-indigo-400/50' : isWarning ? 'bg-amber-50 text-amber-900 border border-amber-200 rounded-tl-none' : 'bg-white/95 text-slate-800 border border-slate-200/70 rounded-tl-none backdrop-blur-sm'}">
+                            <div class="p-3.5 rounded-2xl text-sm shadow-sm leading-relaxed ${isUser ? 'bg-gradient-to-r from-indigo-600 to-indigo-500 text-white rounded-tr-none border border-indigo-400/50' : isWarning ? 'bg-amber-50 dark:bg-amber-950/30 text-amber-900 dark:text-amber-100 border border-amber-200 dark:border-amber-900/60 rounded-tl-none' : 'bg-white/95 dark:bg-slate-900 text-slate-800 dark:text-slate-100 border border-slate-200/70 dark:border-slate-700 rounded-tl-none backdrop-blur-sm'}">
                                 ${isUser ? escapeHtml(msg.text) : formatMessageText(msg.text)}
                             </div>
                             <div class="flex flex-wrap gap-2 items-center">
-                                ${!isUser ? `<button type="button" onclick="toggleMessageListen('${spokenEncoded}', this)" class="inline-flex items-center gap-1 text-[11px] text-slate-500 hover:text-teal-600 text-left px-2.5 py-1 rounded-lg hover:bg-teal-50 border border-slate-200/60 bg-white transition-all">🔊 ${chatbotLocale === 'hi' ? 'सुनें' : 'Listen'}</button>` : ''}
-                                ${(!isUser && msg.suggest_details && isLastBotMsg) ? `<button type="button" onclick="submitChatbotMessage('${chatbotLocale === 'hi' ? 'कृपया विस्तार से समझाएं' : 'Please explain in detail'}')" class="inline-flex items-center gap-1 text-[11px] font-semibold text-cyan-700 hover:text-indigo-900 border border-indigo-200 hover:border-indigo-300 bg-white hover:bg-cyan-50 rounded-lg px-2.5 py-1 transition-all">💬 ${chatbotLocale === 'hi' ? 'विस्तार से समझाएं' : 'Explain in Detail'}</button>` : ''}
+                                ${!isUser ? `<button type="button" onclick="toggleMessageListen('${spokenEncoded}', this)" class="inline-flex items-center gap-1 text-[11px] text-slate-600 dark:text-slate-300 hover:text-teal-700 dark:hover:text-cyan-300 text-left px-2.5 py-1 rounded-lg hover:bg-teal-50 dark:hover:bg-slate-800 border border-slate-200/60 dark:border-slate-700 bg-white dark:bg-slate-900 transition-all">🔊 ${chatbotLocale === 'hi' ? 'सुनें' : 'Listen'}</button>` : ''}
+                                ${(!isUser && msg.suggest_details && isLastBotMsg) ? `<button type="button" onclick="submitChatbotMessage('${chatbotLocale === 'hi' ? 'कृपया विस्तार से समझाएं' : 'Please explain in detail'}')" class="inline-flex items-center gap-1 text-[11px] font-semibold text-cyan-700 dark:text-cyan-300 hover:text-indigo-900 dark:hover:text-indigo-200 border border-indigo-200 dark:border-indigo-700 hover:border-indigo-300 dark:hover:border-indigo-600 bg-white dark:bg-slate-900 hover:bg-cyan-50 dark:hover:bg-slate-800 rounded-lg px-2.5 py-1 transition-all">💬 ${chatbotLocale === 'hi' ? 'विस्तार से समझाएं' : 'Explain in Detail'}</button>` : ''}
                             </div>
                             ${(!isUser && msg.show_options && isLastBotMsg && idx >= 0) ? (() => {
                                 const loaded = getLoadedResourcesInCurrentTurn(history, idx);
@@ -1989,7 +1965,7 @@
                 // Render Department Recommendation directly under the response bubble if present
                 if (msg.department_info) {
                     html += `
-                        <div class="bg-teal-50/80 border border-teal-100 p-3.5 rounded-2xl text-teal-950 text-xs shadow-xs mt-2 flex items-start space-x-2.5">
+                        <div class="bg-teal-50/80 dark:bg-teal-950/25 border border-teal-100 dark:border-teal-900/60 p-3.5 rounded-2xl text-teal-950 dark:text-teal-100 text-xs shadow-xs mt-2 flex items-start space-x-2.5">
                             <i data-lucide="info" class="w-4 h-4 text-teal-600 shrink-0 mt-0.5 animate-pulse"></i>
                             <div>
                                 <span class="leading-relaxed font-medium">${msg.department_info}</span>
@@ -2020,12 +1996,12 @@
                                 data-more-label="${moreLabel}"
                                 data-less-label="${lessLabel}"
                                 onclick="toggleChatbotDetails('${buttonId}','${contentId}')"
-                                class="inline-flex items-center gap-1 text-[11px] font-semibold text-cyan-700 hover:text-indigo-900 border border-indigo-200 hover:border-indigo-300 bg-white hover:bg-cyan-50 rounded-full px-3 py-1 transition-all"
+                                class="inline-flex items-center gap-1 text-[11px] font-semibold text-cyan-700 dark:text-cyan-300 hover:text-indigo-900 dark:hover:text-indigo-200 border border-indigo-200 dark:border-indigo-700 hover:border-indigo-300 dark:hover:border-indigo-600 bg-white dark:bg-slate-900 hover:bg-cyan-50 dark:hover:bg-slate-800 rounded-full px-3 py-1 transition-all"
                             >
                                 <i data-lucide="info" class="w-3 h-3"></i>
                                 <span>${moreLabel}</span>
                             </button>
-                            <div id="${contentId}" class="hidden mt-2 rounded-xl border border-cyan-100 bg-cyan-50/70 p-3 text-xs leading-relaxed text-slate-700">
+                            <div id="${contentId}" class="hidden mt-2 rounded-xl border border-cyan-100 dark:border-cyan-900/60 bg-cyan-50/70 dark:bg-slate-900 p-3 text-xs leading-relaxed text-slate-700 dark:text-slate-200">
                                 ${formatDetailedAnswer(detailedAnswer)}
                             </div>
                         </div>
@@ -2035,7 +2011,7 @@
                 // Render Doctors list directly (visible by default) if present
                 if (msg.doctors && msg.doctors.length > 0) {
                     html += `
-                        <div class="space-y-2 pt-3 border-t border-slate-100/50 mt-3">
+                        <div class="space-y-2 pt-3 border-t border-slate-100/50 dark:border-slate-800 mt-3">
                             <h5 class="text-xs font-bold text-slate-400 uppercase tracking-wider flex items-center gap-1">
                                 <i data-lucide="stethoscope" class="w-3.5 h-3.5 text-teal-600"></i>
                                 <span>${currentLocale === 'hi' ? 'विशेषज्ञ डॉक्टर' : 'Specialist Doctors'}</span>
@@ -2048,20 +2024,20 @@
                         const hospName = doc.hospitals?.[0] ? getLocalizedText(doc.hospitals[0].name) : '';
 
                         html += `
-                            <div class="bg-white p-3 rounded-2xl border border-cyan-100 shadow-xs hover:shadow-md transition-all duration-200 text-slate-800">
+                            <div class="bg-white dark:bg-slate-900 p-3 rounded-2xl border border-cyan-100 dark:border-slate-700 shadow-xs hover:shadow-md transition-all duration-200 text-slate-800 dark:text-slate-100">
                                 <div class="flex justify-between items-start">
-                                    <h4 class="font-bold text-sm text-indigo-950 flex items-center space-x-1">
+                                    <h4 class="font-bold text-sm text-indigo-950 dark:text-indigo-100 flex items-center space-x-1">
                                         <span>${fullName}</span>
                                         ${doc.is_verified ? '<i data-lucide="check-circle-2" class="w-3.5 h-3.5 text-teal-600 inline"></i>' : ''}
                                     </h4>
-                                    <span class="text-[10px] bg-cyan-50 text-cyan-700 px-2 py-0.5 rounded-lg font-medium shrink-0">
+                                    <span class="text-[10px] bg-cyan-50 dark:bg-cyan-950/40 text-cyan-700 dark:text-cyan-300 px-2 py-0.5 rounded-lg font-medium shrink-0">
                                         ${doc.experience_years} ${currentLocale === 'hi' ? 'वर्ष अनुभव' : 'yrs exp'}
                                     </span>
                                 </div>
-                                <div class="mt-2 space-y-1 text-xs text-slate-600">
+                                <div class="mt-2 space-y-1 text-xs text-slate-600 dark:text-slate-300">
                                     <div class="flex items-center space-x-1">
                                         <i data-lucide="stethoscope" class="w-3.5 h-3.5 text-teal-600 shrink-0"></i>
-                                        <span class="font-medium text-slate-700">${deptName}</span>
+                                        <span class="font-medium text-slate-700 dark:text-slate-200">${deptName}</span>
                                     </div>
                                     ${hospName ? `
                                         <div class="flex items-start space-x-1 pt-0.5">
@@ -2071,8 +2047,8 @@
                                     ` : ''}
                                 </div>
                                 ${emergencyPhone ? `
-                                    <div class="mt-2 pt-2 border-t border-slate-100 flex justify-end">
-                                        <a href="tel:${emergencyPhone}" class="text-xs bg-teal-50 hover:bg-teal-600 hover:text-white text-teal-700 font-medium px-3 py-1 rounded-xl shadow-xs transition-all duration-200">
+                                    <div class="mt-2 pt-2 border-t border-slate-100 dark:border-slate-700 flex justify-end">
+                                        <a href="tel:${emergencyPhone}" class="text-xs bg-teal-50 dark:bg-teal-950/40 hover:bg-teal-600 dark:hover:bg-teal-700 hover:text-white text-teal-700 dark:text-teal-300 font-medium px-3 py-1 rounded-xl shadow-xs transition-all duration-200">
                                             ${currentLocale === 'hi' ? 'कॉल करें' : 'Call Doctor'}
                                         </a>
                                     </div>
@@ -2084,7 +2060,7 @@
                     if (msg.see_all_doctors_url) {
                         html += `
                             <div class="pt-1 flex justify-end">
-                                <a href="${msg.see_all_doctors_url}" class="inline-flex items-center space-x-1 text-xs bg-teal-50 hover:bg-teal-600 hover:text-white text-teal-700 font-medium px-3 py-1.5 rounded-xl shadow-xs transition-all duration-200">
+                                <a href="${msg.see_all_doctors_url}" class="inline-flex items-center space-x-1 text-xs bg-teal-50 dark:bg-teal-950/40 hover:bg-teal-600 dark:hover:bg-teal-700 hover:text-white text-teal-700 dark:text-teal-300 font-medium px-3 py-1.5 rounded-xl shadow-xs transition-all duration-200">
                                     <span>${currentLocale === 'hi' ? 'सभी डॉक्टर देखें' : 'See all doctors'}</span>
                                     <i data-lucide="arrow-right" class="w-3.5 h-3.5"></i>
                                 </a>
@@ -2097,7 +2073,7 @@
                 // Render Hospitals list directly (visible by default) if present
                 if (msg.hospitals && msg.hospitals.length > 0) {
                     html += `
-                        <div class="space-y-2 pt-3 border-t border-slate-100/50 mt-3">
+                        <div class="space-y-2 pt-3 border-t border-slate-100/50 dark:border-slate-800 mt-3">
                             <h5 class="text-xs font-bold text-slate-400 uppercase tracking-wider flex items-center gap-1">
                                 <i data-lucide="building-2" class="w-3.5 h-3.5 text-teal-600"></i>
                                 <span>${currentLocale === 'hi' ? 'अस्पताल व क्लिनिक' : 'Hospitals & Clinics'}</span>
@@ -2109,23 +2085,23 @@
                         const city = hosp.city || '';
 
                         html += `
-                            <div class="bg-white p-3 rounded-2xl border border-teal-100 shadow-xs hover:shadow-md transition-all duration-200 text-slate-800">
+                            <div class="bg-white dark:bg-slate-900 p-3 rounded-2xl border border-teal-100 dark:border-slate-700 shadow-xs hover:shadow-md transition-all duration-200 text-slate-800 dark:text-slate-100">
                                 <div class="flex justify-between items-start gap-2">
-                                    <h4 class="font-bold text-sm text-teal-950 flex items-center space-x-1">
+                                    <h4 class="font-bold text-sm text-teal-950 dark:text-teal-100 flex items-center space-x-1">
                                         <span>${hospName}</span>
                                         ${hosp.is_verified ? '<i data-lucide="check-circle-2" class="w-3.5 h-3.5 text-teal-600 inline shrink-0"></i>' : ''}
                                     </h4>
-                                    <span class="text-[10px] bg-teal-50 text-teal-700 px-2 py-0.5 rounded-lg font-bold uppercase tracking-wider shrink-0">
+                                    <span class="text-[10px] bg-teal-50 dark:bg-teal-950/40 text-teal-700 dark:text-teal-300 px-2 py-0.5 rounded-lg font-bold uppercase tracking-wider shrink-0">
                                         ${hosp.type || 'Hospital'}
                                     </span>
                                 </div>
-                                <div class="mt-1.5 flex items-start space-x-1 text-xs text-slate-600">
+                                <div class="mt-1.5 flex items-start space-x-1 text-xs text-slate-600 dark:text-slate-300">
                                     <i data-lucide="map-pin" class="w-3.5 h-3.5 text-slate-400 shrink-0 mt-0.5"></i>
                                     <span class="line-clamp-2">${hosp.address || ''} ${city ? ', ' + city : ''}</span>
                                 </div>
                                 ${emergencyPhone ? `
-                                    <div class="mt-2 pt-2 border-t border-slate-100 flex justify-end">
-                                        <a href="tel:${emergencyPhone}" class="text-xs bg-teal-50 hover:bg-teal-600 hover:text-white text-teal-700 font-medium px-3 py-1 rounded-xl shadow-xs transition-all duration-200 flex items-center space-x-1">
+                                    <div class="mt-2 pt-2 border-t border-slate-100 dark:border-slate-700 flex justify-end">
+                                        <a href="tel:${emergencyPhone}" class="text-xs bg-teal-50 dark:bg-teal-950/40 hover:bg-teal-600 dark:hover:bg-teal-700 hover:text-white text-teal-700 dark:text-teal-300 font-medium px-3 py-1 rounded-xl shadow-xs transition-all duration-200 flex items-center space-x-1">
                                             <i data-lucide="phone-call" class="w-3 h-3"></i>
                                             <span>${currentLocale === 'hi' ? 'कॉल करें' : 'Call Emergency'}</span>
                                         </a>
@@ -2138,7 +2114,7 @@
                     if (msg.see_all_hospitals_url) {
                         html += `
                             <div class="pt-1 flex justify-end">
-                                <a href="${msg.see_all_hospitals_url}" class="inline-flex items-center space-x-1 text-xs bg-cyan-50 hover:bg-cyan-600 hover:text-white text-cyan-700 font-medium px-3 py-1.5 rounded-xl shadow-xs transition-all duration-200">
+                                <a href="${msg.see_all_hospitals_url}" class="inline-flex items-center space-x-1 text-xs bg-cyan-50 dark:bg-cyan-950/40 hover:bg-cyan-600 dark:hover:bg-cyan-700 hover:text-white text-cyan-700 dark:text-cyan-300 font-medium px-3 py-1.5 rounded-xl shadow-xs transition-all duration-200">
                                     <span>${currentLocale === 'hi' ? 'सभी अस्पताल देखें' : 'See all hospitals'}</span>
                                     <i data-lucide="arrow-right" class="w-3.5 h-3.5"></i>
                                 </a>
@@ -2151,7 +2127,7 @@
                 // Render Blood Banks list directly (visible by default) if present
                 if (msg.blood_banks && msg.blood_banks.length > 0) {
                     html += `
-                        <div class="space-y-2 pt-3 border-t border-slate-100/50 mt-3">
+                        <div class="space-y-2 pt-3 border-t border-slate-100/50 dark:border-slate-800 mt-3">
                             <h5 class="text-xs font-bold text-slate-400 uppercase tracking-wider flex items-center gap-1">
                                 <i data-lucide="droplet" class="w-3.5 h-3.5 text-rose-600"></i>
                                 <span>${currentLocale === 'hi' ? 'ब्लड बैंक' : 'Blood Banks'}</span>
@@ -2164,23 +2140,23 @@
                         const address = bank.address || '';
 
                         html += `
-                            <div class="bg-white p-3 rounded-2xl border border-rose-100 shadow-xs hover:shadow-md transition-all duration-200 text-slate-800">
+                            <div class="bg-white dark:bg-slate-900 p-3 rounded-2xl border border-rose-100 dark:border-rose-900/40 shadow-xs hover:shadow-md transition-all duration-200 text-slate-800 dark:text-slate-100">
                                 <div class="flex justify-between items-start gap-2">
-                                    <h4 class="font-bold text-sm text-rose-950 flex items-center space-x-1">
+                                    <h4 class="font-bold text-sm text-rose-950 dark:text-rose-100 flex items-center space-x-1">
                                         <span>${bankName}</span>
                                         ${bank.is_verified ? '<i data-lucide="check-circle-2" class="w-3.5 h-3.5 text-rose-600 inline shrink-0"></i>' : ''}
                                     </h4>
-                                    <span class="text-[10px] bg-rose-50 text-rose-700 px-2 py-0.5 rounded-lg font-bold uppercase tracking-wider shrink-0">
+                                    <span class="text-[10px] bg-rose-50 dark:bg-rose-950/40 text-rose-700 dark:text-rose-300 px-2 py-0.5 rounded-lg font-bold uppercase tracking-wider shrink-0">
                                         ${currentLocale === 'hi' ? 'सत्यापित' : 'Verified'}
                                     </span>
                                 </div>
-                                <div class="mt-1.5 flex items-start space-x-1 text-xs text-slate-600">
+                                <div class="mt-1.5 flex items-start space-x-1 text-xs text-slate-600 dark:text-slate-300">
                                     <i data-lucide="map-pin" class="w-3.5 h-3.5 text-slate-400 shrink-0 mt-0.5"></i>
                                     <span class="line-clamp-2">${address} ${city ? ', ' + city : ''}</span>
                                 </div>
                                 ${emergencyPhone ? `
-                                    <div class="mt-2 pt-2 border-t border-slate-100 flex justify-end">
-                                        <a href="tel:${emergencyPhone}" class="text-xs bg-rose-50 hover:bg-rose-600 hover:text-white text-rose-700 font-medium px-3 py-1 rounded-xl shadow-xs transition-all duration-200 flex items-center space-x-1">
+                                    <div class="mt-2 pt-2 border-t border-slate-100 dark:border-slate-700 flex justify-end">
+                                        <a href="tel:${emergencyPhone}" class="text-xs bg-rose-50 dark:bg-rose-950/40 hover:bg-rose-600 dark:hover:bg-rose-700 hover:text-white text-rose-700 dark:text-rose-300 font-medium px-3 py-1 rounded-xl shadow-xs transition-all duration-200 flex items-center space-x-1">
                                             <i data-lucide="phone-call" class="w-3 h-3"></i>
                                             <span>${currentLocale === 'hi' ? 'कॉल करें' : 'Call Now'}</span>
                                         </a>
@@ -2193,7 +2169,7 @@
                     if (msg.see_all_blood_banks_url) {
                         html += `
                             <div class="pt-1 flex justify-end">
-                                <a href="${msg.see_all_blood_banks_url}" class="inline-flex items-center space-x-1 text-xs bg-rose-50 hover:bg-rose-600 hover:text-white text-rose-700 font-medium px-3 py-1.5 rounded-xl shadow-xs transition-all duration-200">
+                                <a href="${msg.see_all_blood_banks_url}" class="inline-flex items-center space-x-1 text-xs bg-rose-50 dark:bg-rose-950/40 hover:bg-rose-600 dark:hover:bg-rose-700 hover:text-white text-rose-700 dark:text-rose-300 font-medium px-3 py-1.5 rounded-xl shadow-xs transition-all duration-200">
                                     <span>${currentLocale === 'hi' ? 'सभी ब्लड बैंक देखें' : 'See all blood banks'}</span>
                                     <i data-lucide="arrow-right" class="w-3.5 h-3.5"></i>
                                 </a>
@@ -2206,7 +2182,7 @@
                 // Render Articles list directly (visible by default) if present
                 if (msg.articles && msg.articles.length > 0) {
                     html += `
-                        <div class="space-y-2 pt-3 border-t border-slate-100/50 mt-3">
+                        <div class="space-y-2 pt-3 border-t border-slate-100/50 dark:border-slate-800 mt-3">
                             <h5 class="text-xs font-bold text-slate-400 uppercase tracking-wider flex items-center gap-1">
                                 <i data-lucide="book-open" class="w-3.5 h-3.5 text-teal-600"></i>
                                 <span>${currentLocale === 'hi' ? 'स्वास्थ्य लेख' : 'Health Articles'}</span>
@@ -2217,11 +2193,11 @@
                         const artExcerpt = getLocalizedText(art.excerpt) || (getLocalizedText(art.content) || '').substring(0, 80) + '...';
 
                         html += `
-                            <div class="bg-white p-3 rounded-2xl border border-cyan-100 shadow-xs hover:shadow-md transition-all duration-200 text-slate-800">
-                                <h4 class="font-bold text-sm text-slate-900 line-clamp-1">${artTitle}</h4>
-                                <p class="text-xs text-slate-600 mt-1 line-clamp-2">${artExcerpt}</p>
-                                <div class="mt-2 pt-2 border-t border-slate-100 flex justify-end">
-                                    <a href="/articles/${art.id}" target="_blank" class="text-xs bg-cyan-50 hover:bg-cyan-600 hover:text-white text-cyan-700 font-medium px-3 py-1 rounded-xl shadow-xs transition-all duration-200 flex items-center space-x-1">
+                            <div class="bg-white dark:bg-slate-900 p-3 rounded-2xl border border-cyan-100 dark:border-slate-700 shadow-xs hover:shadow-md transition-all duration-200 text-slate-800 dark:text-slate-100">
+                                <h4 class="font-bold text-sm text-slate-900 dark:text-slate-100 line-clamp-1">${artTitle}</h4>
+                                <p class="text-xs text-slate-600 dark:text-slate-300 mt-1 line-clamp-2">${artExcerpt}</p>
+                                <div class="mt-2 pt-2 border-t border-slate-100 dark:border-slate-700 flex justify-end">
+                                    <a href="/articles/${art.id}" target="_blank" class="text-xs bg-cyan-50 dark:bg-cyan-950/40 hover:bg-cyan-600 dark:hover:bg-cyan-700 hover:text-white text-cyan-700 dark:text-cyan-300 font-medium px-3 py-1 rounded-xl shadow-xs transition-all duration-200 flex items-center space-x-1">
                                         <span>${currentLocale === 'hi' ? 'पूरा लेख पढ़ें' : 'Read Article'}</span>
                                         <i data-lucide="external-link" class="w-3 h-3"></i>
                                     </a>
@@ -2232,7 +2208,7 @@
                     if (msg.see_all_articles_url) {
                         html += `
                             <div class="pt-1 flex justify-end">
-                                <a href="${msg.see_all_articles_url}" class="inline-flex items-center space-x-1 text-xs bg-cyan-50 hover:bg-cyan-600 hover:text-white text-cyan-700 font-medium px-3 py-1.5 rounded-xl shadow-xs transition-all duration-200">
+                                <a href="${msg.see_all_articles_url}" class="inline-flex items-center space-x-1 text-xs bg-cyan-50 dark:bg-cyan-950/40 hover:bg-cyan-600 dark:hover:bg-cyan-700 hover:text-white text-cyan-700 dark:text-cyan-300 font-medium px-3 py-1.5 rounded-xl shadow-xs transition-all duration-200">
                                     <span>${currentLocale === 'hi' ? 'सभी लेख देखें' : 'See all articles'}</span>
                                     <i data-lucide="arrow-right" class="w-3.5 h-3.5"></i>
                                 </a>
@@ -3200,8 +3176,8 @@
             align-items: center;
             height: 56px;
             min-width: 56px;
-            padding-left: 20px !important;
-            padding-right: 24px !important;
+            padding-left: 24px !important;
+            padding-right: 28px !important;
             border-radius: 9999px;
             overflow: hidden;
             white-space: nowrap;
@@ -3232,7 +3208,7 @@
 
         .chatbot-fab-label {
             display: inline-block;
-            max-width: 240px;
+            max-width: 280px;
             /* Enough to display 'Ask Swasthya Saathi' or 'स्वास्थ्य साथी से पूछें' */
             margin-left: 12px;
             opacity: 1;
@@ -3380,15 +3356,6 @@
 </body>
 
 </html>
-
-
-
-
-
-
-
-
-
 
 
 

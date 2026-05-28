@@ -79,7 +79,7 @@ $locale === 'hi'
                     <a href="{{ route('doctors.index') }}" class="px-4 py-2 rounded-2xl bg-white/10 hover:bg-white/20 border border-white/10 text-xs sm:text-sm font-semibold">{{ $locale === 'hi' ? 'डॉक्टर खोजें' : 'Find Doctor' }}</a>
                     <a href="{{ route('hospitals.index') }}" class="px-4 py-2 rounded-2xl bg-white/10 hover:bg-white/20 border border-white/10 text-xs sm:text-sm font-semibold">{{ $locale === 'hi' ? 'अस्पताल खोजें' : 'Find Hospital' }}</a>
                     <a href="{{ route('blood_banks.index') }}" class="px-4 py-2 rounded-2xl bg-white/10 hover:bg-white/20 border border-white/10 text-xs sm:text-sm font-semibold">{{ $locale === 'hi' ? 'ब्लड बैंक खोजें' : 'Find Blood Bank' }}</a>
-                    <button type="button" onclick="toggleChatbot()" class="px-4 py-2 rounded-2xl bg-teal-500 hover:bg-teal-400 border border-teal-300/40 text-xs sm:text-sm font-semibold text-slate-950">{{ $locale === 'hi' ? 'AI सहायक से पूछें' : 'Ask AI Assistant' }}</button>
+                    <button type="button" onclick="toggleChatbot()" class="px-4 py-2 rounded-2xl bg-cyan-400 hover:bg-cyan-300 dark:bg-cyan-700 dark:hover:bg-cyan-600 border border-cyan-300/50 dark:border-cyan-500/40 text-xs sm:text-sm font-semibold text-slate-950 dark:text-white">{{ $locale === 'hi' ? 'AI सहायक से पूछें' : 'Ask AI Assistant' }}</button>
                 </div>
             </div>
         </div>
@@ -1065,7 +1065,6 @@ $locale === 'hi'
     updateStarsDisplay(0);
 </script>
 @endpush
-
 
 
 
