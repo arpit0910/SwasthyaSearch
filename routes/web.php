@@ -199,6 +199,10 @@ Route::post('/api/chatbot', [ChatbotController::class, 'handleMessage'])
     ->withoutMiddleware([ValidateCsrfToken::class])
     ->name('api.chatbot');
 
+Route::post('/api/chatbot/failure-report', [ChatbotController::class, 'reportClientFailure'])
+    ->withoutMiddleware([ValidateCsrfToken::class])
+    ->name('api.chatbot.failure_report');
+
 Route::post('/api/articles/{article}/comments', [ArticleCommentController::class, 'store'])
     ->withoutMiddleware([ValidateCsrfToken::class])
     ->name('api.articles.comments.store');

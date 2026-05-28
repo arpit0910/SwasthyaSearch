@@ -6,6 +6,7 @@ use App\Models\Article;
 use App\Models\BloodBank;
 use App\Models\CachedMedicalQuestion;
 use App\Models\ChatSession;
+use App\Models\ChatbotFailedQuery;
 use App\Models\Department;
 use App\Models\Disease;
 use App\Models\Doctor;
@@ -17,6 +18,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Str;
+use Throwable;
 
 class ChatbotController extends Controller
 {
@@ -24,6 +26,7 @@ class ChatbotController extends Controller
 
     public function handleMessage(Request $request)
     {
+        try {
         $validated = $request->validate([
             'session_token' => 'nullable|string',
             'message' => 'nullable|string',
@@ -550,6 +553,20 @@ class ChatbotController extends Controller
 
             if (!$qaAnswer) {
                 $qaAnswer = $this->medicalQaService->generateFallbackAnswer($originalMessage, $locale);
+                if (!$qaAnswer) {
+                    $this->storeFailedQuery(
+                        sessionToken: $sessionToken,
+                        city: $selectedCity,
+                        locale: $locale,
+                        failureType: 'no_match_and_no_ai_answer',
+                        userMessage: $originalMessage,
+                        errorMessage: 'No DB match and no AI/fallback answer generated.',
+                        meta: [
+                            'load_type' => $loadType,
+                            'search_tokens' => $searchTokens,
+                        ]
+                    );
+                }
             }
         }
 
@@ -687,7 +704,11 @@ class ChatbotController extends Controller
         $seeAllDoctorsUrl = route('doctors.index', ['city' => $selectedCity, 'department' => $deptForFilter]);
         $seeAllHospitalsUrl = route('hospitals.index', ['city' => $selectedCity]);
         $seeAllArticlesUrl = route('articles.index', ['category' => $grokDepartment ?: 'All']);
-        $symptomMatch = (bool) $qaAnswer && in_array(($qaAnswer['source'] ?? ''), ['cached_medical_questions', 'cached_medical_questions_like', 'medical_qa_config', 'grok_ai', 'grok_ai_cached'], true);
+        $qaSource = (string) ($qaAnswer['source'] ?? '');
+        $symptomMatch = (bool) $qaAnswer && (
+            in_array($qaSource, ['cached_medical_questions', 'medical_qa_config', 'grok_ai', 'grok_ai_cached', 'general_questions', 'faq'], true)
+            || str_ends_with($qaSource, '_like')
+        );
 
         if ($qaAnswer && ($qaAnswer['source'] ?? '') === 'emergency_rule') {
             $botReply = $locale === 'hi'
@@ -761,6 +782,90 @@ class ChatbotController extends Controller
             'suggest_details' => $suggestDetails,
             'history' => $messages,
         ]);
+        } catch (Throwable $e) {
+            report($e);
+            $this->storeFailedQuery(
+                sessionToken: (string) ($request->input('session_token') ?: ''),
+                city: (string) ($request->input('city') ?: ''),
+                locale: (string) ($request->input('locale') ?: app()->getLocale()),
+                failureType: 'server_exception',
+                userMessage: (string) ($request->input('message') ?: ''),
+                errorMessage: $e->getMessage(),
+                meta: [
+                    'exception' => get_class($e),
+                ]
+            );
+
+            $locale = (string) ($request->input('locale') ?: app()->getLocale());
+            $fallbackReply = $locale === 'hi'
+                ? 'कुछ तकनीकी समस्या आई, लेकिन मैं आपकी मदद के लिए तैयार हूँ। कृपया फिर से संदेश भेजें या "Find Doctors" विकल्प चुनें।'
+                : 'A technical issue occurred, but I am ready to help. Please resend your message or choose "Find Doctors".';
+
+            return response()->json([
+                'session_token' => (string) ($request->input('session_token') ?: Str::random(32)),
+                'reply' => $fallbackReply,
+                'city' => (string) ($request->input('city') ?: ''),
+                'locale' => $locale === 'hi' ? 'hi' : 'en',
+                'show_options' => true,
+                'suggest_details' => false,
+                'history' => [[
+                    'sender' => 'bot',
+                    'text' => $fallbackReply,
+                    'show_options' => true,
+                    'suggest_details' => false,
+                    'timestamp' => now()->toIso8601String(),
+                ]],
+            ], 200);
+        }
+    }
+
+    public function reportClientFailure(Request $request)
+    {
+        $data = $request->validate([
+            'session_token' => 'nullable|string|max:64',
+            'city' => 'nullable|string|max:120',
+            'locale' => 'nullable|in:en,hi',
+            'message' => 'nullable|string',
+            'failure_type' => 'nullable|string|max:64',
+            'error_message' => 'nullable|string',
+            'meta' => 'nullable|array',
+        ]);
+
+        $this->storeFailedQuery(
+            sessionToken: (string) ($data['session_token'] ?? ''),
+            city: (string) ($data['city'] ?? ''),
+            locale: (string) ($data['locale'] ?? app()->getLocale()),
+            failureType: (string) ($data['failure_type'] ?? 'client_fetch_failure'),
+            userMessage: (string) ($data['message'] ?? ''),
+            errorMessage: (string) ($data['error_message'] ?? ''),
+            meta: (array) ($data['meta'] ?? [])
+        );
+
+        return response()->json(['ok' => true]);
+    }
+
+    private function storeFailedQuery(
+        string $sessionToken,
+        string $city,
+        string $locale,
+        string $failureType,
+        string $userMessage,
+        string $errorMessage = '',
+        array $meta = []
+    ): void {
+        try {
+            ChatbotFailedQuery::create([
+                'session_token' => $sessionToken !== '' ? $sessionToken : null,
+                'city' => $city !== '' ? $city : null,
+                'locale' => $locale !== '' ? $locale : null,
+                'failure_type' => $failureType !== '' ? $failureType : 'unknown',
+                'user_message' => $userMessage !== '' ? $userMessage : null,
+                'error_message' => $errorMessage !== '' ? $errorMessage : null,
+                'meta' => !empty($meta) ? $meta : null,
+            ]);
+        } catch (Throwable $e) {
+            report($e);
+        }
     }
 
     private function extractSearchTokens(string $message): array

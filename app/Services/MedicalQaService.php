@@ -4,6 +4,8 @@ namespace App\Services;
 
 use App\Models\Disease;
 use App\Models\CachedMedicalQuestion;
+use App\Models\Faq;
+use App\Models\GeneralQuestion;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Str;
 
@@ -97,23 +99,10 @@ class MedicalQaService
             return null;
         }
 
-        $query = CachedMedicalQuestion::query();
-        $query->where(function ($outer) use ($terms) {
-            foreach ($terms as $term) {
-                $outer->orWhere(function ($inner) use ($term) {
-                    $inner->where('question_en', 'like', "%{$term}%")
-                        ->orWhere('question_hi', 'like', "%{$term}%")
-                        ->orWhere('answer_en', 'like', "%{$term}%")
-                        ->orWhere('answer_hi', 'like', "%{$term}%")
-                        ->orWhere('detailed_answer_en', 'like', "%{$term}%")
-                        ->orWhere('detailed_answer_hi', 'like', "%{$term}%")
-                        ->orWhere('category', 'like', "%{$term}%");
-                });
-            }
-        });
-
-        $candidates = $query->limit(50)->get();
-        if ($candidates->isEmpty()) {
+        // Multi-source LIKE-style match:
+        // CachedMedicalQuestion + GeneralQuestion + Faq (+ configured entries)
+        $entries = $this->buildKnowledgeEntries();
+        if ($entries->isEmpty()) {
             return null;
         }
 
@@ -121,21 +110,53 @@ class MedicalQaService
         $best = null;
         $bestScore = -1.0;
 
-        foreach ($candidates as $candidate) {
+        foreach ($entries as $entry) {
+            $entryQuestionEn = (string) ($entry['question_en'] ?? '');
+            $entryQuestionHi = (string) ($entry['question_hi'] ?? '');
+            $entryAnswerEn = (string) ($entry['answer_en'] ?? '');
+            $entryAnswerHi = (string) ($entry['answer_hi'] ?? '');
+            $entryDetailedEn = (string) ($entry['detailed_answer_en'] ?? '');
+            $entryDetailedHi = (string) ($entry['detailed_answer_hi'] ?? '');
+            $entryCategory = (string) ($entry['category'] ?? '');
+
+            $containsAnyTerm = false;
+            foreach ($terms as $term) {
+                $termNorm = $this->normalize($term);
+                if ($termNorm === '') {
+                    continue;
+                }
+
+                $haystack = $this->normalize(
+                    trim($entryQuestionEn . ' ' . $entryQuestionHi . ' ' . $entryAnswerEn . ' ' . $entryAnswerHi . ' ' . $entryDetailedEn . ' ' . $entryDetailedHi . ' ' . $entryCategory)
+                );
+
+                if ($haystack !== '' && str_contains($haystack, $termNorm)) {
+                    $containsAnyTerm = true;
+                    break;
+                }
+            }
+
+            if (! $containsAnyTerm) {
+                continue;
+            }
+
             $score = $this->scoreMatch(
                 $normalizedMessage,
-                $this->normalize((string) $candidate->question_en),
-                $this->normalize((string) $candidate->question_hi),
+                $this->normalize($entryQuestionEn),
+                $this->normalize($entryQuestionHi),
                 []
             );
 
             foreach ($terms as $term) {
                 $termNorm = $this->normalize($term);
                 if ($termNorm !== '' && (
-                    str_contains($this->normalize((string) $candidate->question_en), $termNorm) ||
-                    str_contains($this->normalize((string) $candidate->question_hi), $termNorm) ||
-                    str_contains($this->normalize((string) $candidate->answer_en), $termNorm) ||
-                    str_contains($this->normalize((string) $candidate->answer_hi), $termNorm)
+                    str_contains($this->normalize($entryQuestionEn), $termNorm) ||
+                    str_contains($this->normalize($entryQuestionHi), $termNorm) ||
+                    str_contains($this->normalize($entryAnswerEn), $termNorm) ||
+                    str_contains($this->normalize($entryAnswerHi), $termNorm) ||
+                    str_contains($this->normalize($entryDetailedEn), $termNorm) ||
+                    str_contains($this->normalize($entryDetailedHi), $termNorm) ||
+                    str_contains($this->normalize($entryCategory), $termNorm)
                 )) {
                     $score += 12;
                 }
@@ -143,7 +164,7 @@ class MedicalQaService
 
             if ($score > $bestScore) {
                 $bestScore = $score;
-                $best = $candidate;
+                $best = $entry;
             }
         }
 
@@ -151,16 +172,21 @@ class MedicalQaService
             return null;
         }
 
+        // Guardrail: avoid false positives from broad LIKE matches.
+        if ($bestScore < 50) {
+            return null;
+        }
+
         $answer = $locale === 'hi'
-            ? ($best->answer_hi ?: $best->answer_en)
-            : ($best->answer_en ?: $best->answer_hi);
+            ? (($best['answer_hi'] ?? '') ?: ($best['answer_en'] ?? ''))
+            : (($best['answer_en'] ?? '') ?: ($best['answer_hi'] ?? ''));
 
         $question = $locale === 'hi'
-            ? ($best->question_hi ?: $best->question_en)
-            : ($best->question_en ?: $best->question_hi);
+            ? (($best['question_hi'] ?? '') ?: ($best['question_en'] ?? ''))
+            : (($best['question_en'] ?? '') ?: ($best['question_hi'] ?? ''));
 
-        $detailedAnswerEn = trim((string) ($best->detailed_answer_en ?? ''));
-        $detailedAnswerHi = trim((string) ($best->detailed_answer_hi ?? ''));
+        $detailedAnswerEn = trim((string) ($best['detailed_answer_en'] ?? ''));
+        $detailedAnswerHi = trim((string) ($best['detailed_answer_hi'] ?? ''));
         $detailedAnswer = $locale === 'hi'
             ? ($detailedAnswerHi !== '' ? $detailedAnswerHi : ($detailedAnswerEn !== '' ? $detailedAnswerEn : null))
             : ($detailedAnswerEn !== '' ? $detailedAnswerEn : ($detailedAnswerHi !== '' ? $detailedAnswerHi : null));
@@ -168,8 +194,8 @@ class MedicalQaService
         return [
             'question' => (string) $question,
             'answer' => (string) $answer,
-            'category' => (string) ($best->category ?? 'General Medical'),
-            'source' => 'cached_medical_questions_like',
+            'category' => (string) ($best['category'] ?? 'General Medical'),
+            'source' => (string) (($best['source'] ?? 'db_like') . '_like'),
             'confidence' => round(min(100, max(60, $bestScore)), 2),
             'detailed_answer_en' => $detailedAnswerEn !== '' ? $detailedAnswerEn : null,
             'detailed_answer_hi' => $detailedAnswerHi !== '' ? $detailedAnswerHi : null,
@@ -282,13 +308,48 @@ class MedicalQaService
                 ];
             });
 
+        $generalQuestions = GeneralQuestion::query()
+            ->get()
+            ->map(function (GeneralQuestion $qa) {
+                return [
+                    'question_en' => $qa->question_en,
+                    'question_hi' => $qa->question_hi,
+                    'answer_en' => $qa->answer_en,
+                    'answer_hi' => $qa->answer_hi,
+                    'detailed_answer_en' => $qa->detailed_answer_en,
+                    'detailed_answer_hi' => $qa->detailed_answer_hi,
+                    'category' => 'General Help',
+                    'keywords' => [],
+                    'source' => 'general_questions',
+                ];
+            });
+
+        $faqs = Faq::query()
+            ->get()
+            ->map(function (Faq $qa) {
+                return [
+                    'question_en' => $qa->question_en,
+                    'question_hi' => $qa->question_hi,
+                    'answer_en' => $qa->answer_en,
+                    'answer_hi' => $qa->answer_hi,
+                    'detailed_answer_en' => null,
+                    'detailed_answer_hi' => null,
+                    'category' => $qa->category ?? 'FAQ',
+                    'keywords' => [],
+                    'source' => 'faq',
+                ];
+            });
+
         $configured = collect(config('medical_qa.entries', []))
             ->map(function (array $entry) {
                 $entry['source'] = 'medical_qa_config';
                 return $entry;
             });
 
-        return $dbFaqs->concat($configured);
+        return $dbFaqs
+            ->concat($generalQuestions)
+            ->concat($faqs)
+            ->concat($configured);
     }
 
     /**

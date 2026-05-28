@@ -1729,6 +1729,9 @@
                     }),
                 });
 
+                if (!res.ok) {
+                    throw new Error(`chatbot_http_${res.status}`);
+                }
                 const data = await res.json();
                 if (data.session_token) chatbotSessionToken = data.session_token;
 
@@ -1756,11 +1759,18 @@
                 }
             } catch (error) {
                 if (error?.name === 'AbortError') return;
+                reportChatbotFailure({
+                    message,
+                    failureType: 'submit_message_failed',
+                    errorMessage: error?.message || 'unknown client fetch error',
+                });
                 loadingDiv.classList.add('hidden');
                 if (sendBtn) sendBtn.disabled = false;
                 isSubmittingChat = false;
                 pendingChatAbortController = null;
-                appendMessage('bot', chatbotLocale === 'hi' ? 'कुछ तकनीकी समस्या हुई। कृपया दोबारा प्रयास करें।' : 'Something went wrong. Please try again.');
+                appendMessage('bot', chatbotLocale === 'hi'
+                    ? 'तकनीकी समस्या के कारण जवाब नहीं आ सका। कृपया दोबारा कोशिश करें या "Find Doctors" चुनें।'
+                    : 'We could not process your request due to a technical issue. Please try again or choose "Find Doctors".');
             }
         }
 
@@ -1836,6 +1846,9 @@
                     }),
                 });
 
+                if (!res.ok) {
+                    throw new Error(`chatbot_http_${res.status}`);
+                }
                 const data = await res.json();
                 if (data.session_token) chatbotSessionToken = data.session_token;
 
@@ -1866,6 +1879,12 @@
                 }
             } catch (error) {
                 if (error?.name === 'AbortError') return;
+                reportChatbotFailure({
+                    message: '',
+                    failureType: 'load_resource_failed',
+                    errorMessage: error?.message || 'unknown client fetch error',
+                    meta: { load_type: type }
+                });
                 if (loadingDiv) loadingDiv.classList.add('hidden');
                 if (sendBtn) sendBtn.disabled = false;
                 isSubmittingChat = false;
@@ -1873,7 +1892,33 @@
                 if (loadingText) {
                     loadingText.textContent = chatbotLocale === 'hi' ? 'स्वास्थ्य AI सोच रहा है...' : 'Swasthya AI is thinking...';
                 }
-                appendMessage('bot', chatbotLocale === 'hi' ? 'कुछ तकनीकी समस्या हुई। कृपया दोबारा प्रयास करें।' : 'Something went wrong. Please try again.');
+                appendMessage('bot', chatbotLocale === 'hi'
+                    ? 'तकनीकी समस्या के कारण विकल्प लोड नहीं हो सके। कृपया दोबारा कोशिश करें।'
+                    : 'We could not load options due to a technical issue. Please try again.');
+            }
+        }
+
+        async function reportChatbotFailure({ message = '', failureType = 'client_fetch_failure', errorMessage = '', meta = {} } = {}) {
+            try {
+                await fetch('/api/chatbot/failure-report', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]')?.content || '',
+                    },
+                    keepalive: true,
+                    body: JSON.stringify({
+                        session_token: chatbotSessionToken,
+                        city: chatbotCity,
+                        locale: chatbotLocale,
+                        message,
+                        failure_type: failureType,
+                        error_message: errorMessage,
+                        meta,
+                    }),
+                });
+            } catch (_) {
+                // Intentionally swallow reporting errors to preserve chat UX.
             }
         }
 
@@ -3356,11 +3401,6 @@
 </body>
 
 </html>
-
-
-
-
-
 
 
 
