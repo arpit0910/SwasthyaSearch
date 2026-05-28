@@ -21,11 +21,11 @@ $hasActiveMobileFilters = !empty(array_filter((array) request('type', [])))
 @section('content')
 <!-- Hero Section -->
 <header
-    class="bg-gradient-to-r from-cyan-800 via-teal-700 to-emerald-700 text-white py-16 px-4 sm:px-6 lg:px-8 border-b border-slate-800 shadow-xl relative overflow-hidden">
-    <div class="absolute inset-0 bg-[radial-gradient(circle_at_top_right,rgba(20,184,166,0.15),transparent_50%)]"></div>
+    class="bg-gradient-to-r from-cyan-700 via-teal-700 to-sky-700 dark:from-slate-900 dark:via-cyan-900 dark:to-slate-900 text-white py-16 px-4 sm:px-6 lg:px-8 border-b border-cyan-800 dark:border-slate-700 ring-1 ring-black/10 dark:ring-white/15 shadow-xl dark:shadow-black/50 relative overflow-hidden">
+    <div class="absolute inset-0 bg-[radial-gradient(circle_at_top_right,rgba(20,184,166,0.15),transparent_50%)] dark:opacity-0"></div>
     <!-- Glowing background blobs -->
-    <div class="glow-blob w-[300px] h-[300px] bg-teal-500/10 top-0 left-0 absolute rounded-full blur-3xl"></div>
-    <div class="glow-blob w-[400px] h-[400px] bg-cyan-500/10 bottom-0 right-0 absolute rounded-full blur-3xl"></div>
+    <div class="glow-blob w-[300px] h-[300px] bg-teal-500/10 dark:opacity-0 top-0 left-0 absolute rounded-full blur-3xl"></div>
+    <div class="glow-blob w-[400px] h-[400px] bg-cyan-500/10 dark:opacity-0 bottom-0 right-0 absolute rounded-full blur-3xl"></div>
     <div class="max-w-7xl mx-auto text-center relative z-10">
         <span
             class="bg-teal-500/20 text-teal-300 border border-teal-500/30 px-4 py-1.5 rounded-full text-xs font-semibold tracking-wider uppercase inline-block mb-4 shadow-sm">
@@ -50,7 +50,7 @@ $hasActiveMobileFilters = !empty(array_filter((array) request('type', [])))
 </section>
 
 <section class="lg:hidden max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 mt-4 sm:-mt-8 relative z-20 w-full mb-6">
-    <form action="{{ route('hospitals.index') }}" method="POST" class="bg-white rounded-2xl shadow-xl border border-slate-200/80 p-4 sm:p-5 backdrop-blur-xl">
+    <form action="{{ route('hospitals.index') }}" method="POST" class="bg-white dark:bg-slate-900 rounded-2xl shadow-xl border border-slate-200/80 dark:border-slate-700/70 p-4 sm:p-5 backdrop-blur-xl">
         @csrf
         @foreach ((array) request('type', []) as $typeVal)
         <input type="hidden" name="type[]" value="{{ $typeVal }}">
@@ -73,6 +73,10 @@ $hasActiveMobileFilters = !empty(array_filter((array) request('type', [])))
                 <i data-lucide="filter" class="w-4 h-4"></i>
             </button>
         </div>
+        <button type="button" onclick="setUserLocationAndSubmit(this.form)" class="mt-3 w-full h-11 px-4 rounded-xl border border-teal-200 dark:border-teal-800 bg-teal-50 dark:bg-teal-950/35 hover:bg-teal-100 dark:hover:bg-teal-900/40 text-teal-700 dark:text-teal-300 font-bold text-sm transition-all duration-200 flex items-center justify-center space-x-2 shadow-2xs">
+            <i data-lucide="locate-fixed" class="w-4 h-4"></i>
+            <span>{{ $locale === 'hi' ? 'Show Nearby' : 'Show Nearby' }}</span>
+        </button>
     </form>
 </section>
 
@@ -85,12 +89,12 @@ $hasActiveMobileFilters = !empty(array_filter((array) request('type', [])))
         <!-- Backdrop -->
         <div id="mobile-filter-backdrop" onclick="closeMobileFilters()" class="absolute inset-0 bg-black/50 backdrop-blur-sm opacity-0 transition-opacity duration-300 ease-out"></div>
         <!-- Sidebar -->
-        <div id="mobile-filter-drawer" class="absolute top-0 right-0 h-full w-full max-w-sm bg-white shadow-2xl overflow-y-auto transform translate-x-full transition-transform duration-300 ease-out">
+        <div id="mobile-filter-drawer" class="absolute top-0 right-0 h-full w-full max-w-sm bg-white dark:bg-slate-900 shadow-2xl overflow-y-auto transform translate-x-full transition-transform duration-300 ease-out">
             <!-- Header -->
-            <div class="sticky top-0 p-3 sm:p-4 border-b border-slate-200 bg-white flex items-center justify-between">
-                <h2 class="text-lg font-bold text-slate-900">{{ $locale === 'hi' ? 'फ़िल्टर' : 'Filters' }}</h2>
-                <button type="button" id="mobile-filter-close" onclick="closeMobileFilters()" aria-label="Close filters" class="p-2 hover:bg-slate-100 rounded-lg transition-colors">
-                    <i data-lucide="x" class="w-5 h-5 text-slate-600"></i>
+            <div class="sticky top-0 p-3 sm:p-4 border-b border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-900 flex items-center justify-between">
+                <h2 class="text-lg font-bold text-slate-900 dark:text-slate-100">{{ $locale === 'hi' ? 'फ़िल्टर' : 'Filters' }}</h2>
+                <button type="button" id="mobile-filter-close" onclick="closeMobileFilters()" aria-label="Close filters" class="p-2 hover:bg-slate-100 dark:hover:bg-slate-800 rounded-lg transition-colors">
+                    <i data-lucide="x" class="w-5 h-5 text-slate-600 dark:text-slate-300"></i>
                 </button>
             </div>
 
@@ -169,11 +173,6 @@ $hasActiveMobileFilters = !empty(array_filter((array) request('type', [])))
 
                 <!-- Buttons -->
                 <div class="space-y-2.5 pt-3 border-t border-slate-200">
-                    <button type="button" onclick="setUserLocationAndSubmitMobile()"
-                        class="w-full h-11 px-4 rounded-xl border border-teal-200 bg-teal-50 hover:bg-teal-100 text-teal-700 font-bold text-sm transition-all duration-200 flex items-center justify-center space-x-2 shadow-2xs">
-                        <i data-lucide="locate-fixed" class="w-4 h-4"></i>
-                        <span>{{ $locale === 'hi' ? 'मेरे नजदीक' : 'Show Nearby' }}</span>
-                    </button>
                     <button type="submit" class="w-full h-11 px-4 rounded-xl border border-indigo-300 bg-cyan-600 hover:bg-cyan-700 text-white font-bold text-sm transition-all duration-200 flex items-center justify-center space-x-2 shadow-2xs">
                         <i data-lucide="filter" class="w-4 h-4"></i>
                         <span>{{ $locale === 'hi' ? 'फ़िल्टर लागू करें' : 'Apply Filters' }}</span>
@@ -785,8 +784,6 @@ $hasActiveMobileFilters = !empty(array_filter((array) request('type', [])))
 
 </script>
 @endpush
-
-
 
 
 

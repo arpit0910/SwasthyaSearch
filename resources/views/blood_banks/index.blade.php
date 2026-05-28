@@ -20,11 +20,11 @@ $hasActiveMobileFilters = !empty(array_filter((array) request('blood_group', [])
 @section('meta_description', $pageDescription)
 @section('content')
 <!-- Hero Section -->
-<header class="bg-gradient-to-r from-slate-900 via-red-950 to-slate-900 text-white py-16 px-4 sm:px-6 lg:px-8 border-b border-slate-800 shadow-xl relative overflow-hidden">
-    <div class="absolute inset-0 bg-[radial-gradient(circle_at_top_right,rgba(239,68,68,0.15),transparent_50%)]"></div>
+<header class="bg-gradient-to-r from-red-700 via-rose-700 to-red-700 dark:from-slate-900 dark:via-red-900 dark:to-slate-900 text-white py-16 px-4 sm:px-6 lg:px-8 border-b border-red-800 dark:border-slate-700 ring-1 ring-black/10 dark:ring-white/15 shadow-xl dark:shadow-black/50 relative overflow-hidden">
+    <div class="absolute inset-0 bg-[radial-gradient(circle_at_top_right,rgba(239,68,68,0.15),transparent_50%)] dark:opacity-0"></div>
     <!-- Glowing background blobs -->
-    <div class="glow-blob w-[300px] h-[300px] bg-red-500/10 top-0 left-0 absolute rounded-full blur-3xl"></div>
-    <div class="glow-blob w-[400px] h-[400px] bg-rose-500/10 bottom-0 right-0 absolute rounded-full blur-3xl"></div>
+    <div class="glow-blob w-[300px] h-[300px] bg-red-500/10 dark:opacity-0 top-0 left-0 absolute rounded-full blur-3xl"></div>
+    <div class="glow-blob w-[400px] h-[400px] bg-rose-500/10 dark:opacity-0 bottom-0 right-0 absolute rounded-full blur-3xl"></div>
     <div class="max-w-7xl mx-auto text-center relative z-10">
         <span class="bg-red-500/20 text-red-300 border border-red-500/30 px-4 py-1.5 rounded-full text-xs font-semibold tracking-wider uppercase inline-block mb-4 shadow-sm">
             {{ $locale === 'hi' ? 'सत्यापित रक्त केंद्र' : 'Verified Blood Centers' }}
@@ -47,7 +47,7 @@ $hasActiveMobileFilters = !empty(array_filter((array) request('blood_group', [])
 </section>
 
 <section class="lg:hidden max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 mt-4 sm:-mt-8 relative z-20 w-full mb-6">
-    <form action="{{ route('blood_banks.index') }}" method="POST" class="bg-white rounded-2xl shadow-xl border border-slate-200/80 p-4 sm:p-5 backdrop-blur-xl">
+    <form action="{{ route('blood_banks.index') }}" method="POST" class="bg-white dark:bg-slate-900 rounded-2xl shadow-xl border border-slate-200/80 dark:border-slate-700/70 p-4 sm:p-5 backdrop-blur-xl">
         @csrf
         @foreach ((array) request('blood_group', []) as $bgVal)
         <input type="hidden" name="blood_group[]" value="{{ $bgVal }}">
@@ -70,6 +70,10 @@ $hasActiveMobileFilters = !empty(array_filter((array) request('blood_group', [])
                 <i data-lucide="filter" class="w-4 h-4"></i>
             </button>
         </div>
+        <button type="button" onclick="setUserLocationAndSubmit(this.form)" class="mt-3 w-full h-11 px-4 rounded-xl border border-red-200 dark:border-red-800 bg-red-50 dark:bg-red-950/35 hover:bg-red-100 dark:hover:bg-red-900/40 text-red-700 dark:text-red-300 font-bold text-sm transition-all duration-200 flex items-center justify-center space-x-2 shadow-2xs">
+            <i data-lucide="locate-fixed" class="w-4 h-4"></i>
+            <span>{{ $locale === 'hi' ? 'Show Nearby' : 'Show Nearby' }}</span>
+        </button>
     </form>
 </section>
 
@@ -77,11 +81,11 @@ $hasActiveMobileFilters = !empty(array_filter((array) request('blood_group', [])
 <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-20 w-full mb-2 lg:mb-8">
     <div id="mobile-filter-sidebar" class="fixed inset-0 z-[120] hidden lg:hidden" aria-hidden="true">
         <div id="mobile-filter-backdrop" onclick="closeMobileFilters()" class="absolute inset-0 bg-black/50 backdrop-blur-sm opacity-0 transition-opacity duration-300 ease-out"></div>
-        <div id="mobile-filter-drawer" class="absolute top-0 right-0 h-full w-full max-w-sm bg-white shadow-2xl overflow-y-auto transform translate-x-full transition-transform duration-300 ease-out">
-            <div class="sticky top-0 p-3 sm:p-4 border-b border-slate-200 bg-white flex items-center justify-between">
-                <h2 class="text-lg font-bold text-slate-900">{{ $locale === 'hi' ? 'फ़िल्टर' : 'Filters' }}</h2>
-                <button type="button" id="mobile-filter-close" onclick="closeMobileFilters()" aria-label="Close filters" class="p-2 hover:bg-slate-100 rounded-lg transition-colors">
-                    <i data-lucide="x" class="w-5 h-5 text-slate-600"></i>
+        <div id="mobile-filter-drawer" class="absolute top-0 right-0 h-full w-full max-w-sm bg-white dark:bg-slate-900 shadow-2xl overflow-y-auto transform translate-x-full transition-transform duration-300 ease-out">
+            <div class="sticky top-0 p-3 sm:p-4 border-b border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-900 flex items-center justify-between">
+                <h2 class="text-lg font-bold text-slate-900 dark:text-slate-100">{{ $locale === 'hi' ? 'फ़िल्टर' : 'Filters' }}</h2>
+                <button type="button" id="mobile-filter-close" onclick="closeMobileFilters()" aria-label="Close filters" class="p-2 hover:bg-slate-100 dark:hover:bg-slate-800 rounded-lg transition-colors">
+                    <i data-lucide="x" class="w-5 h-5 text-slate-600 dark:text-slate-300"></i>
                 </button>
             </div>
             <form action="{{ route('blood_banks.index') }}" method="POST" class="p-3 sm:p-4 space-y-4" id="mobile-filter-form">
@@ -119,10 +123,6 @@ $hasActiveMobileFilters = !empty(array_filter((array) request('blood_group', [])
                     </select>
                 </div>
                 <div class="space-y-2.5 pt-3 border-t border-slate-200">
-                    <button type="button" onclick="setUserLocationAndSubmitMobile()" class="w-full h-11 px-4 rounded-xl border border-red-200 bg-red-50 hover:bg-red-100 text-red-700 font-bold text-sm transition-all duration-200 flex items-center justify-center space-x-2 shadow-2xs">
-                        <i data-lucide="locate-fixed" class="w-4 h-4"></i>
-                        <span>{{ $locale === 'hi' ? 'मेरे नजदीक' : 'Show Nearby' }}</span>
-                    </button>
                     <button type="submit" class="w-full h-11 px-4 rounded-xl border border-red-300 bg-red-600 hover:bg-red-700 text-white font-bold text-sm transition-all duration-200 flex items-center justify-center space-x-2 shadow-2xs">
                         <i data-lucide="filter" class="w-4 h-4"></i>
                         <span>{{ $locale === 'hi' ? 'फ़िल्टर लागू करें' : 'Apply Filters' }}</span>
@@ -701,8 +701,6 @@ $hasActiveMobileFilters = !empty(array_filter((array) request('blood_group', [])
 
 </script>
 @endpush
-
-
 
 
 

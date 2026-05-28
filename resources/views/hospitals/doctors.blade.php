@@ -13,8 +13,8 @@
 @section('meta_description', "View doctors associated with {$hospital['name_en']} in {$hospital['city']}. Check specialty, experience, and contact details before visiting.")
 
 @section('content')
-<header class="bg-gradient-to-r from-cyan-800 via-teal-700 to-emerald-700 text-white py-14 px-4 sm:px-6 lg:px-8 border-b border-slate-800 shadow-xl relative overflow-hidden">
-    <div class="absolute inset-0 bg-[radial-gradient(circle_at_top_right,rgba(20,184,166,0.15),transparent_50%)]"></div>
+<header class="bg-gradient-to-r from-cyan-700 via-teal-700 to-sky-700 dark:from-slate-900 dark:via-cyan-900 dark:to-slate-900 text-white py-14 px-4 sm:px-6 lg:px-8 border-b border-cyan-800 dark:border-slate-700 ring-1 ring-black/10 dark:ring-white/15 shadow-xl dark:shadow-black/50 relative overflow-hidden">
+    <div class="absolute inset-0 bg-[radial-gradient(circle_at_top_right,rgba(20,184,166,0.15),transparent_50%)] dark:opacity-0"></div>
     <div class="max-w-7xl mx-auto relative z-10">
         <a href="{{ route('hospitals.index') }}" class="inline-flex items-center gap-2 mb-4 text-teal-300 hover:text-teal-200 text-sm font-semibold">
             <i data-lucide="arrow-left" class="w-4 h-4"></i>
