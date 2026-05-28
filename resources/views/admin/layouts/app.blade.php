@@ -38,6 +38,7 @@
         /* Sidebar Styling */
         .admin-sidebar {
             width: 280px;
+            height: 100vh;
             min-height: 100vh;
             background: linear-gradient(180deg, #0b1220 0%, #101a33 60%, #131d3a 100%);
             color: #cbd5e1;
@@ -47,6 +48,15 @@
             z-index: 1040;
             transition: all 0.3s ease;
             box-shadow: 10px 0 30px rgba(2, 6, 23, 0.3);
+            overflow-y: auto;
+            overflow-x: hidden;
+            -webkit-overflow-scrolling: touch;
+            scrollbar-width: none;
+            -ms-overflow-style: none;
+        }
+        .admin-sidebar::-webkit-scrollbar {
+            width: 0;
+            height: 0;
         }
         .admin-sidebar .sidebar-brand {
             padding: 1.5rem 1.5rem;

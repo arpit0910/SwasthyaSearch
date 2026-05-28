@@ -90,6 +90,53 @@
     </div>
 
     <!-- Analytics Chart -->
+    <div class="row g-4 mb-4">
+        <div class="col-12">
+            <h5 class="mb-0 fw-bold text-dark">AI Knowledge Modules</h5>
+            <div class="text-muted small">Quick access to chatbot response datasets and content modules.</div>
+        </div>
+        <div class="col-12 col-md-4">
+            <a href="{{ route('admin.faqs') }}" class="text-decoration-none">
+                <div class="card h-100 border-0 shadow-sm">
+                    <div class="card-body p-4 d-flex align-items-center justify-content-between">
+                        <div>
+                            <div class="text-muted fw-semibold mb-1 text-uppercase fs-7">FAQs</div>
+                            <div class="h3 mb-0 fw-bold text-dark">{{ number_format($stats['faqs_count']) }}</div>
+                        </div>
+                        <i class="fa-solid fa-circle-question fs-2 text-primary"></i>
+                    </div>
+                </div>
+            </a>
+        </div>
+        <div class="col-12 col-md-4">
+            <a href="{{ route('admin.general_qa') }}" class="text-decoration-none">
+                <div class="card h-100 border-0 shadow-sm">
+                    <div class="card-body p-4 d-flex align-items-center justify-content-between">
+                        <div>
+                            <div class="text-muted fw-semibold mb-1 text-uppercase fs-7">General Medical Q&A</div>
+                            <div class="h3 mb-0 fw-bold text-dark">{{ number_format($stats['general_qa_count']) }}</div>
+                        </div>
+                        <i class="fa-solid fa-notes-medical fs-2 text-success"></i>
+                    </div>
+                </div>
+            </a>
+        </div>
+        <div class="col-12 col-md-4">
+            <a href="{{ route('admin.cached_medical_questions') }}" class="text-decoration-none">
+                <div class="card h-100 border-0 shadow-sm">
+                    <div class="card-body p-4 d-flex align-items-center justify-content-between">
+                        <div>
+                            <div class="text-muted fw-semibold mb-1 text-uppercase fs-7">Cached Medical Questions</div>
+                            <div class="h3 mb-0 fw-bold text-dark">{{ number_format($stats['cached_medical_questions_count']) }}</div>
+                        </div>
+                        <i class="fa-solid fa-database fs-2 text-info"></i>
+                    </div>
+                </div>
+            </a>
+        </div>
+    </div>
+
+    <!-- Analytics Chart -->
     <div class="row">
         <div class="col-12 col-xl-8">
             <div class="card border-0 shadow-sm mb-4">

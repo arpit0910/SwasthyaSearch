@@ -114,6 +114,7 @@ Route::prefix('admin')->middleware('web')->group(function () {
         // Cached Medical Questions
         Route::get('/cached-medical-questions', [AdminDashboardController::class, 'cachedMedicalQuestions'])->name('admin.cached_medical_questions');
         Route::get('/cached-medical-questions/create', [AdminDashboardController::class, 'createCachedMedicalQuestion'])->name('admin.cached_medical_questions.create');
+        Route::get('/cached-medical-questions/{cachedMedicalQuestion}', [AdminDashboardController::class, 'showCachedMedicalQuestion'])->name('admin.cached_medical_questions.show');
         Route::get('/cached-medical-questions/{cachedMedicalQuestion}/edit', [AdminDashboardController::class, 'editCachedMedicalQuestion'])->name('admin.cached_medical_questions.edit');
         Route::post('/cached-medical-questions', [AdminDashboardController::class, 'storeCachedMedicalQuestion'])->name('admin.cached_medical_questions.store');
         Route::put('/cached-medical-questions/{cachedMedicalQuestion}', [AdminDashboardController::class, 'updateCachedMedicalQuestion'])->name('admin.cached_medical_questions.update');

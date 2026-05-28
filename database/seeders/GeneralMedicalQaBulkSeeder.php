@@ -659,8 +659,11 @@ class GeneralMedicalQaBulkSeeder extends Seeder
         ]
         JSON, true);
 
-        $records = [];
         $seen = [];
+        $buffer = [];
+        $insertedCount = 0;
+        $generatedCount = 0;
+        $timestamp = now();
 
         foreach ($symptomPhrases as $symptom) {
             foreach ($audienceContexts as $context) {
@@ -679,27 +682,32 @@ class GeneralMedicalQaBulkSeeder extends Seeder
                     $answerEn = $symptom['care_en'].' '.$context['advice_en'].' '.$symptom['red_en'];
                     $answerHi = $symptom['care_hi'].' '.$context['advice_hi'].' '.$symptom['red_hi'];
 
-                    $records[] = [
+                    $buffer[] = [
                         'question_en' => $questionEn,
                         'question_hi' => $questionHi,
                         'answer_en' => $answerEn,
                         'answer_hi' => $answerHi,
                         'category' => 'General Medical',
-                        'created_at' => now(),
-                        'updated_at' => now(),
+                        'created_at' => $timestamp,
+                        'updated_at' => $timestamp,
                     ];
+                    $generatedCount++;
 
                     $seen[$questionEn] = true;
+
+                    if (count($buffer) >= 1000) {
+                        $insertedCount += CachedMedicalQuestion::insertOrIgnore($buffer);
+                        $buffer = [];
+                    }
                 }
             }
         }
 
-        $insertedCount = 0;
-        foreach (array_chunk($records, 1000) as $chunk) {
-            $insertedCount += CachedMedicalQuestion::insertOrIgnore($chunk);
+        if (! empty($buffer)) {
+            $insertedCount += CachedMedicalQuestion::insertOrIgnore($buffer);
         }
 
-        $this->command?->info('Generated '.count($records).' proper Hindi general cached medical Q&A records.');
+        $this->command?->info('Generated '.$generatedCount.' proper Hindi general cached medical Q&A records.');
         $this->command?->info("Inserted {$insertedCount} new cached medical Q&A records successfully.");
     }
 }

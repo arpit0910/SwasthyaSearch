@@ -7,38 +7,38 @@
         <a href="{{ route('admin.cached_medical_questions') }}" class="btn btn-outline-secondary">Back</a>
     </div>
     <div class="card">
-        <form action="{{ route('admin.cached_medical_questions.update', $question) }}" method="POST">
+        <form action="{{ route('admin.cached_medical_questions.update', $cachedMedicalQuestion) }}" method="POST">
                 @csrf
                 @method('PUT')
                 <div class="card-body p-4">
                     <div class="row g-3">
                         <div class="col-md-6">
                             <label class="form-label fw-semibold">Question (English)</label>
-                            <input type="text" name="question_en" class="form-control" value="{{ $question->question_en }}" required>
+                            <input type="text" name="question_en" class="form-control" value="{{ $cachedMedicalQuestion->question_en }}" required>
                         </div>
                         <div class="col-md-6">
                             <label class="form-label fw-semibold">Question (Hindi)</label>
-                            <input type="text" name="question_hi" class="form-control" value="{{ $question->question_hi }}" required>
+                            <input type="text" name="question_hi" class="form-control" value="{{ $cachedMedicalQuestion->question_hi }}" required>
                         </div>
                         <div class="col-md-6">
                             <label class="form-label fw-semibold">Answer (English)</label>
-                            <textarea name="answer_en" class="form-control" rows="4" required>{{ $question->answer_en }}</textarea>
+                            <textarea name="answer_en" class="form-control" rows="4" required>{{ $cachedMedicalQuestion->answer_en }}</textarea>
                         </div>
                         <div class="col-md-6">
                             <label class="form-label fw-semibold">Answer (Hindi)</label>
-                            <textarea name="answer_hi" class="form-control" rows="4" required>{{ $question->answer_hi }}</textarea>
+                            <textarea name="answer_hi" class="form-control" rows="4" required>{{ $cachedMedicalQuestion->answer_hi }}</textarea>
                         </div>
                         <div class="col-md-6">
                             <label class="form-label fw-semibold">Detailed Answer (English)</label>
-                            <textarea name="detailed_answer_en" class="form-control" rows="4" placeholder="Optional expanded answer for chatbot details toggle">{{ $question->detailed_answer_en }}</textarea>
+                            <textarea name="detailed_answer_en" class="form-control" rows="4" placeholder="Optional expanded answer for chatbot details toggle">{{ $cachedMedicalQuestion->detailed_answer_en }}</textarea>
                         </div>
                         <div class="col-md-6">
                             <label class="form-label fw-semibold">Detailed Answer (Hindi)</label>
-                            <textarea name="detailed_answer_hi" class="form-control" rows="4" placeholder="Optional expanded answer for chatbot details toggle">{{ $question->detailed_answer_hi }}</textarea>
+                            <textarea name="detailed_answer_hi" class="form-control" rows="4" placeholder="Optional expanded answer for chatbot details toggle">{{ $cachedMedicalQuestion->detailed_answer_hi }}</textarea>
                         </div>
                         <div class="col-12">
                             <label class="form-label fw-semibold">Category</label>
-                            <input type="text" name="category" class="form-control" value="{{ $question->category }}" required>
+                            <input type="text" name="category" class="form-control" value="{{ $cachedMedicalQuestion->category }}" required>
                         </div>
                     </div>
                 </div>

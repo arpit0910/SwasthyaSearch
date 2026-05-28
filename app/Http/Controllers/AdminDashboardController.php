@@ -28,6 +28,9 @@ class AdminDashboardController extends Controller
             'verified_blood_banks' => BloodBank::where('is_verified', true)->count(),
             'articles_count' => Article::count(),
             'active_departments' => Department::where('is_active', true)->count(),
+            'faqs_count' => Faq::count(),
+            'general_qa_count' => GeneralQuestion::count(),
+            'cached_medical_questions_count' => CachedMedicalQuestion::count(),
         ];
 
         $departments = Department::withCount('doctors')->get();
@@ -1571,7 +1574,7 @@ class AdminDashboardController extends Controller
             });
         }
 
-        $questions = $query->latest()->get();
+        $questions = $query->latest()->paginate(25)->withQueryString();
         return view('admin.cached_medical_questions.index', compact('questions'));
     }
 
@@ -1583,6 +1586,11 @@ class AdminDashboardController extends Controller
     public function editCachedMedicalQuestion(CachedMedicalQuestion $cachedMedicalQuestion)
     {
         return view('admin.cached_medical_questions.edit_page', compact('cachedMedicalQuestion'));
+    }
+
+    public function showCachedMedicalQuestion(CachedMedicalQuestion $cachedMedicalQuestion)
+    {
+        return view('admin.cached_medical_questions.show_page', compact('cachedMedicalQuestion'));
     }
 
     public function storeCachedMedicalQuestion(Request $request)
