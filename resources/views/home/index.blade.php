@@ -1,4 +1,4 @@
-@extends('layouts.public')
+﻿@extends('layouts.public')
 
 @section('title', ($locale === 'hi' ? 'मुखपृष्ठ' : 'Home') . ' - SwasthyaSearch')
 
@@ -374,21 +374,21 @@ $locale === 'hi'
         <section class="rounded-3xl border border-rose-200/80 dark:border-rose-900/60 bg-gradient-to-r from-rose-50 via-white to-amber-50 dark:from-rose-950/25 dark:via-slate-900 dark:to-amber-950/25 p-5 sm:p-6 shadow-sm modern-card">
             <div class="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
                 <div>
-                    <p class="text-[11px] uppercase tracking-wider text-rose-700 dark:text-rose-300 font-bold">{{ $locale === 'hi' ? '????????? ??????' : 'Emergency Quick Actions' }}</p>
-                    <h3 class="text-lg sm:text-xl font-bold text-slate-900 dark:text-white mt-1">{{ $locale === 'hi' ? '?? ??? ??? ??? ????' : 'Get Help in One Tap' }}</h3>
+                    <p class="text-[11px] uppercase tracking-wider text-rose-700 dark:text-rose-300 font-bold">{{ $locale === 'hi' ? 'आपातकालीन सहायता' : 'Emergency Quick Actions' }}</p>
+                    <h3 class="text-lg sm:text-xl font-bold text-slate-900 dark:text-white mt-1">{{ $locale === 'hi' ? 'एक टैप में मदद पाएं' : 'Get Help in One Tap' }}</h3>
                 </div>
                 <div class="grid grid-cols-1 sm:grid-cols-3 gap-2.5 w-full md:w-auto">
                     <a href="tel:108" class="inline-flex items-center justify-center gap-2 px-4 py-2.5 rounded-xl bg-rose-600 hover:bg-rose-700 text-white text-sm font-bold shadow-md">
                         <i data-lucide="ambulance" class="w-4 h-4"></i>
-                        <span>{{ $locale === 'hi' ? '????????? 108' : 'Call Ambulance 108' }}</span>
+                        <span>{{ $locale === 'hi' ? 'एम्बुलेंस 108 कॉल करें' : 'Call Ambulance 108' }}</span>
                     </a>
                     <a href="{{ route('hospitals.index', ['search' => 'emergency']) }}" class="inline-flex items-center justify-center gap-2 px-4 py-2.5 rounded-xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-700 text-slate-800 dark:text-slate-100 text-sm font-semibold">
                         <i data-lucide="hospital" class="w-4 h-4 text-cyan-600 dark:text-indigo-400"></i>
-                        <span>{{ $locale === 'hi' ? '?????? ER ?????' : 'Nearest ER Search' }}</span>
+                        <span>{{ $locale === 'hi' ? 'नजदीकी ER खोजें' : 'Nearest ER Search' }}</span>
                     </a>
                     <a href="{{ route('blood_banks.index') }}" class="inline-flex items-center justify-center gap-2 px-4 py-2.5 rounded-xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-700 text-slate-800 dark:text-slate-100 text-sm font-semibold">
                         <i data-lucide="droplet" class="w-4 h-4 text-red-600 dark:text-red-400"></i>
-                        <span>{{ $locale === 'hi' ? '???? ???? ??? ???' : 'Blood Bank Nearby' }}</span>
+                        <span>{{ $locale === 'hi' ? 'नजदीकी ब्लड बैंक' : 'Blood Bank Nearby' }}</span>
                     </a>
                 </div>
             </div>

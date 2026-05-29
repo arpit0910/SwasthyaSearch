@@ -15,18 +15,19 @@ $pageDescription = $hasCity
 $hasActiveMobileFilters = !empty(array_filter((array) request('blood_group', [])))
     || !empty(array_filter((array) request('facility', [])))
     || !empty(array_filter((array) request('city', [])));
+$isNearbyActive = filled(request('user_lat')) && filled(request('user_lng'));
 @endphp
 @section('meta_title', $pageTitle)
 @section('meta_description', $pageDescription)
 @section('content')
 <!-- Hero Section -->
-<header class="bg-gradient-to-r from-red-700 via-rose-700 to-red-700 dark:from-slate-900 dark:via-red-900 dark:to-slate-900 text-white py-16 px-4 sm:px-6 lg:px-8 border-b border-red-800 dark:border-slate-700 ring-1 ring-black/10 dark:ring-white/15 shadow-xl dark:shadow-black/50 relative overflow-hidden">
-    <div class="absolute inset-0 bg-[radial-gradient(circle_at_top_right,rgba(239,68,68,0.15),transparent_50%)] dark:opacity-0"></div>
+<header class="bg-gradient-to-r from-rose-600 via-rose-700 to-red-700 dark:from-slate-900 dark:via-red-900 dark:to-slate-900 text-white py-16 px-4 sm:px-6 lg:px-8 border-b border-rose-800 dark:border-slate-700 ring-1 ring-black/10 dark:ring-white/15 shadow-xl dark:shadow-black/50 relative overflow-hidden">
+    <div class="absolute inset-0 bg-[radial-gradient(circle_at_top_right,rgba(251,113,133,0.18),transparent_55%)] dark:opacity-0"></div>
     <!-- Glowing background blobs -->
-    <div class="glow-blob w-[300px] h-[300px] bg-red-500/10 dark:opacity-0 top-0 left-0 absolute rounded-full blur-3xl"></div>
-    <div class="glow-blob w-[400px] h-[400px] bg-rose-500/10 dark:opacity-0 bottom-0 right-0 absolute rounded-full blur-3xl"></div>
+    <div class="glow-blob w-[300px] h-[300px] bg-rose-300/15 dark:opacity-0 top-0 left-0 absolute rounded-full blur-3xl"></div>
+    <div class="glow-blob w-[400px] h-[400px] bg-red-300/15 dark:opacity-0 bottom-0 right-0 absolute rounded-full blur-3xl"></div>
     <div class="max-w-7xl mx-auto text-center relative z-10">
-        <span class="bg-red-500/20 text-red-300 border border-red-500/30 px-4 py-1.5 rounded-full text-xs font-semibold tracking-wider uppercase inline-block mb-4 shadow-sm">
+        <span class="bg-white/10 text-rose-100 border border-white/25 px-4 py-1.5 rounded-full text-xs font-semibold tracking-wider uppercase inline-block mb-4 shadow-sm backdrop-blur-sm">
             {{ $locale === 'hi' ? 'सत्यापित रक्त केंद्र' : 'Verified Blood Centers' }}
         </span>
         <h1 class="text-4xl sm:text-5xl font-extrabold tracking-tight mb-4 bg-gradient-to-r from-white via-slate-100 to-slate-300 bg-clip-text text-transparent py-2 leading-tight">
@@ -63,16 +64,16 @@ $hasActiveMobileFilters = !empty(array_filter((array) request('blood_group', [])
         <div class="relative">
             <i data-lucide="search" class="absolute inset-y-0 left-0 flex items-center pl-4 pointer-events-none w-4 h-4 text-slate-400"></i>
             <input type="text" name="search"
-                placeholder="Search blood bank name or location..."
+                placeholder="{{ $locale === 'hi' ? 'ब्लड बैंक का नाम या स्थान खोजें...' : 'Search blood bank name or location...' }}"
                 value="{{ request('search', $filters['search'] ?? '') }}"
                 class="h-12 w-full pl-10 pr-14 bg-slate-50 border border-slate-200 rounded-xl text-sm focus:outline-none focus:border-red-500 focus:ring-2 focus:ring-red-500/20 transition-all duration-200 font-medium" />
             <button type="button" data-open-mobile-filters onclick="openMobileFilters()" aria-label="Open filters" class="lg:hidden absolute right-2 top-1/2 -translate-y-1/2 w-8 h-8 rounded-lg border flex items-center justify-center transition-all duration-200 {{ $hasActiveMobileFilters ? 'border-red-600 bg-red-600 text-white shadow-md shadow-red-500/30' : 'border-red-200 bg-white text-red-700 hover:bg-red-50' }}" title="Filters">
                 <i data-lucide="filter" class="w-4 h-4"></i>
             </button>
         </div>
-        <button type="button" onclick="setUserLocationAndSubmit(this.form)" class="mt-3 w-full h-11 px-4 rounded-xl border border-red-200 dark:border-red-800 bg-red-50 dark:bg-red-950/35 hover:bg-red-100 dark:hover:bg-red-900/40 text-red-700 dark:text-red-300 font-bold text-sm transition-all duration-200 flex items-center justify-center space-x-2 shadow-2xs">
+        <button type="button" onclick="toggleNearby(this)" data-nearby-toggle data-nearby-theme="red" class="mt-3 w-full h-11 px-4 rounded-xl border font-bold text-sm transition-all duration-200 flex items-center justify-center space-x-2 shadow-2xs {{ $isNearbyActive ? 'border-red-600 dark:border-red-500 bg-red-600 dark:bg-red-600 text-white' : 'border-red-200 dark:border-red-800 bg-red-50 dark:bg-red-950/35 hover:bg-red-100 dark:hover:bg-red-900/40 text-red-700 dark:text-red-300' }}">
             <i data-lucide="locate-fixed" class="w-4 h-4"></i>
-            <span>{{ $locale === 'hi' ? 'Show Nearby' : 'Show Nearby' }}</span>
+            <span>{{ $locale === 'hi' ? 'मेरे नजदीक दिखाएँ' : 'Show Nearby' }}</span>
         </button>
     </form>
 </section>
@@ -207,8 +208,8 @@ $hasActiveMobileFilters = !empty(array_filter((array) request('blood_group', [])
         </div>
 
         <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3 mt-6 pt-6 border-t border-slate-100">
-            <button type="button" onclick="setUserLocationAndSubmit(this.form)"
-                class="h-12 px-5 rounded-xl border border-red-200 bg-red-50 hover:bg-red-100 text-red-700 font-bold text-sm transition-all duration-200 flex items-center justify-center space-x-2 shadow-2xs">
+            <button type="button" onclick="toggleNearby(this)" data-nearby-toggle data-nearby-theme="red"
+                class="h-12 px-5 rounded-xl border font-bold text-sm transition-all duration-200 flex items-center justify-center space-x-2 shadow-2xs {{ $isNearbyActive ? 'border-red-600 bg-red-600 text-white' : 'border-red-200 bg-red-50 hover:bg-red-100 text-red-700' }}">
                 <i data-lucide="locate-fixed" class="w-4 h-4"></i>
                 <span>{{ $locale === 'hi' ? 'मेरे नजदीक दिखाएँ' : 'Show Nearby' }}</span>
             </button>
@@ -258,6 +259,9 @@ $hasActiveMobileFilters = !empty(array_filter((array) request('blood_group', [])
         $addrEn = is_array($bank->address) ? $bank->address['en'] : ($bank->address['en'] ?? $bank->address_en);
         $addrHi = is_array($bank->address) ? $bank->address['hi'] : ($bank->address['hi'] ?? $bank->address_hi);
         $addr = $locale === 'hi' ? ($addrHi ?: $addrEn) : $addrEn;
+        $mapDestination = !empty($bank->latitude) && !empty($bank->longitude)
+            ? $bank->latitude . ',' . $bank->longitude
+            : urlencode(trim(implode(', ', array_filter([$addr, $bank->city ?? null, $bank->state ?? null, $bank->pincode ?? null]))));
         @endphp
         <div class="glass-card rounded-3xl border border-slate-200/80 dark:border-slate-800 shadow-2xs hover:shadow-xl transition-all duration-300 overflow-hidden flex flex-col group hover:-translate-y-1 relative"
             data-twentyfour="{{ !empty($bank->is_24_7) ? 'true' : 'false' }}"
@@ -378,12 +382,23 @@ $hasActiveMobileFilters = !empty(array_filter((array) request('blood_group', [])
                     </div>
 
                     @if (!empty($addr))
-                    <div class="flex items-start space-x-1.5 text-xs text-slate-650 dark:text-slate-350 px-1 pt-1 border-t border-slate-100 dark:border-slate-800">
-                        <i data-lucide="map-pin" class="w-3.5 h-3.5 text-red-500 shrink-0 mt-0.5"></i>
-                        <div>
-                            <span class="font-semibold text-slate-800 dark:text-slate-200 block">{{ $addr }}</span>
-                            @if (!empty($bank->city) || !empty($bank->state))
-                            <span class="text-slate-500 text-[11px]">{{ implode(', ', array_filter([$bank->city, $bank->state, $bank->pincode])) }}</span>
+                    <div class="flex items-start space-x-3 text-slate-600 dark:text-slate-350 text-xs leading-relaxed bg-slate-50/80 dark:bg-slate-800/40 p-4 rounded-2xl border border-slate-100 dark:border-slate-750 shadow-2xs">
+                        <i data-lucide="map-pin" class="w-4 h-4 text-red-500 shrink-0 mt-0.5"></i>
+                        <div class="flex-1 space-y-1">
+                            <div>
+                                {{ $addr }}
+                                @if (!empty($bank->city) || !empty($bank->state))
+                                <span class="text-slate-500 text-[11px] block">{{ implode(', ', array_filter([$bank->city, $bank->state, $bank->pincode])) }}</span>
+                                @endif
+                            </div>
+                            @if (!empty($mapDestination))
+                            <a href="https://www.google.com/maps/dir/?api=1&destination={{ $mapDestination }}"
+                                target="_blank"
+                                rel="noopener noreferrer"
+                                class="inline-flex items-center space-x-1 text-teal-600 dark:text-teal-400 hover:text-teal-700 dark:hover:text-teal-300 font-bold mt-1 bg-teal-50/80 dark:bg-teal-950/40 px-2.5 py-1 rounded-lg border border-teal-100 dark:border-teal-900 transition-colors">
+                                <i data-lucide="navigation" class="w-3 h-3"></i>
+                                <span>{{ $locale === 'hi' ? 'नक्शे पर दिशा व दूरी देखें' : 'View Map & Directions' }}</span>
+                            </a>
                             @endif
                         </div>
                     </div>
@@ -614,18 +629,66 @@ $hasActiveMobileFilters = !empty(array_filter((array) request('blood_group', [])
         });
     }
 
-    function setUserLocationAndSubmit(form) {
+    function setNearbyButtonState(button, isActive) {
+        if (!button) return;
+        const activeClasses = ['border-red-600', 'dark:border-red-500', 'bg-red-600', 'dark:bg-red-600', 'text-white'];
+        const inactiveClasses = ['border-red-200', 'dark:border-red-800', 'bg-red-50', 'dark:bg-red-950/35', 'hover:bg-red-100', 'dark:hover:bg-red-900/40', 'text-red-700', 'dark:text-red-300'];
+        button.classList.remove(...activeClasses, ...inactiveClasses);
+        button.classList.add(...(isActive ? activeClasses : inactiveClasses));
+    }
+
+    function applyUserLocationToForm(form, lat, lng) {
+        const latInput = form?.querySelector('input[name="user_lat"]');
+        const lngInput = form?.querySelector('input[name="user_lng"]');
+        if (!latInput || !lngInput) {
+            alert('Nearby location fields are missing. Please refresh and try again.');
+            return false;
+        }
+        latInput.value = lat;
+        lngInput.value = lng;
+        return true;
+    }
+
+    function clearNearbyAndSubmit(form) {
+        const latInput = form?.querySelector('input[name="user_lat"]');
+        const lngInput = form?.querySelector('input[name="user_lng"]');
+        if (latInput) latInput.value = '';
+        if (lngInput) lngInput.value = '';
+        form.submit();
+    }
+
+    function toggleNearby(button) {
+        const form = button?.form;
+        if (!form) return;
+        const latInput = form.querySelector('input[name="user_lat"]');
+        const lngInput = form.querySelector('input[name="user_lng"]');
+        const isActive = Boolean(latInput?.value && lngInput?.value);
+        if (isActive) {
+            setNearbyButtonState(button, false);
+            clearNearbyAndSubmit(form);
+            return;
+        }
+        setNearbyButtonState(button, true);
+        setUserLocationAndSubmit(form, button);
+    }
+
+    function setUserLocationAndSubmit(form, button = null) {
         if (!navigator.geolocation) {
             alert('Geolocation is not supported on this device/browser.');
+            setNearbyButtonState(button, false);
             return;
         }
 
         navigator.geolocation.getCurrentPosition(function(position) {
-            document.getElementById('user_lat').value = position.coords.latitude.toFixed(6);
-            document.getElementById('user_lng').value = position.coords.longitude.toFixed(6);
+            const locationApplied = applyUserLocationToForm(form, position.coords.latitude.toFixed(6), position.coords.longitude.toFixed(6));
+            if (!locationApplied) {
+                setNearbyButtonState(button, false);
+                return;
+            }
             form.submit();
         }, function() {
             alert('Unable to fetch your location. Please enable location permission.');
+            setNearbyButtonState(button, false);
         }, {
             enableHighAccuracy: true,
             timeout: 10000,

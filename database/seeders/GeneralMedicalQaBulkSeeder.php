@@ -682,11 +682,37 @@ class GeneralMedicalQaBulkSeeder extends Seeder
                     $answerEn = $symptom['care_en'].' '.$context['advice_en'].' '.$symptom['red_en'];
                     $answerHi = $symptom['care_hi'].' '.$context['advice_hi'].' '.$symptom['red_hi'];
 
+                    $detailedAnswerEn = implode("\n\n", [
+                        'Detailed guidance for '.$symptom['en'].' '.$context['en'],
+                        'What it may mean: '.$symptom['en'].' can occur due to simple causes, but it can also be linked with infection, dehydration, injury, inflammation, lifestyle factors, medicines, or an underlying medical condition. The safest approach is to look at severity, duration, associated symptoms, age, pregnancy status, and existing diseases before deciding whether home care is enough.',
+                        'Immediate care: '.$symptom['care_en'],
+                        'Context-specific advice: '.$context['advice_en'],
+                        'What to monitor: Track when the symptom started, whether it is improving or worsening, its intensity, body temperature where relevant, food and fluid intake, sleep, urine output, stool changes, breathing, pain location, and any new medicine or exposure. If a glucometer, thermometer, or blood pressure monitor is relevant and available, record readings with time.',
+                        'What to avoid: Do not take antibiotics, steroids, strong painkillers, sedatives, herbal mixtures, or leftover medicines without medical advice. Avoid ignoring symptoms just because they look mild at first. Avoid dehydration, heavy exertion, alcohol, smoking, and self-treatment that delays proper care.',
+                        'When to seek medical help: '.$symptom['red_en'],
+                        'What to tell the doctor: Share the exact symptom, duration, severity, possible trigger, medicines already taken, allergies, existing conditions such as diabetes, high blood pressure, kidney disease, heart disease, pregnancy, and whether similar episodes happened before.',
+                        'Key takeaway: Use the short answer for quick first aid, but use this detailed guidance to decide what to observe, what to avoid, and when professional care is needed. This information supports awareness and does not replace examination by a qualified doctor.',
+                    ]);
+
+                    $detailedAnswerHi = implode("\n\n", [
+                        'विस्तृत मार्गदर्शन: '.$context['hi'].' '.$symptom['hi'],
+                        'इसका अर्थ क्या हो सकता है: '.$symptom['hi'].' कई सामान्य कारणों से हो सकता है, लेकिन कभी-कभी यह संक्रमण, पानी की कमी, चोट, सूजन, जीवनशैली, दवाओं या किसी अंदरूनी बीमारी से भी जुड़ा हो सकता है। सुरक्षित तरीका यह है कि लक्षण की तीव्रता, अवधि, साथ में दिखने वाले लक्षण, उम्र, गर्भावस्था की स्थिति और पहले से मौजूद बीमारियों को देखकर निर्णय लिया जाए कि घर पर देखभाल पर्याप्त है या चिकित्सकीय सलाह जरूरी है।',
+                        'तुरंत देखभाल: '.$symptom['care_hi'],
+                        'स्थिति के अनुसार सलाह: '.$context['advice_hi'],
+                        'किन बातों पर निगरानी रखें: लक्षण कब शुरू हुआ, बढ़ रहा है या घट रहा है, उसकी तीव्रता, जरूरत हो तो शरीर का तापमान, भोजन और पानी की मात्रा, नींद, पेशाब, मल में बदलाव, सांस, दर्द की जगह और नई दवा या किसी नए संपर्क को नोट करें। यदि ग्लूकोमीटर, थर्मामीटर या रक्तचाप मशीन प्रासंगिक हो और उपलब्ध हो, तो समय के साथ रीडिंग लिखें।',
+                        'किन बातों से बचें: बिना चिकित्सकीय सलाह एंटीबायोटिक, स्टेरॉयड, तेज दर्दनिवारक, नींद की दवा, हर्बल मिश्रण या बची हुई दवाएं न लें। केवल इसलिए लक्षणों को नजरअंदाज न करें कि शुरुआत में वे हल्के लग रहे हैं। पानी की कमी, अधिक मेहनत, शराब, धूम्रपान और ऐसी स्वयं-चिकित्सा से बचें जिससे सही इलाज में देरी हो।',
+                        'चिकित्सक से कब मिलें: '.$symptom['red_hi'],
+                        'चिकित्सक को क्या बताएं: लक्षण क्या है, कितने समय से है, कितना गंभीर है, संभावित कारण, पहले से ली गई दवाएं, एलर्जी, मधुमेह, उच्च रक्तचाप, गुर्दे, हृदय रोग, गर्भावस्था जैसी स्थितियां और पहले ऐसा हुआ है या नहीं, यह सब स्पष्ट बताएं।',
+                        'मुख्य बात: छोटा उत्तर तुरंत प्राथमिक देखभाल के लिए उपयोगी है, लेकिन यह विस्तृत उत्तर यह समझने में मदद करता है कि क्या देखना है, क्या नहीं करना है और कब योग्य चिकित्सक की सहायता लेनी है। यह जानकारी जागरूकता के लिए है और डॉक्टर की जांच का विकल्प नहीं है।',
+                    ]);
+
                     $buffer[] = [
                         'question_en' => $questionEn,
                         'question_hi' => $questionHi,
                         'answer_en' => $answerEn,
                         'answer_hi' => $answerHi,
+                        'detailed_answer_en' => $detailedAnswerEn,
+                        'detailed_answer_hi' => $detailedAnswerHi,
                         'category' => 'General Medical',
                         'created_at' => $timestamp,
                         'updated_at' => $timestamp,

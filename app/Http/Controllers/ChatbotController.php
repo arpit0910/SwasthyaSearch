@@ -11,6 +11,7 @@ use App\Models\Department;
 use App\Models\Disease;
 use App\Models\Doctor;
 use App\Models\GeneralQuestion;
+use App\Models\Faq;
 use App\Models\Hospital;
 use App\Services\MedicalQaService;
 use Exception;
@@ -529,6 +530,8 @@ class ChatbotController extends Controller
                                         'answer' => $locale === 'hi' ? $cachedQuestion->answer_hi : $cachedQuestion->answer_en,
                                         'category' => $cachedQuestion->category ?? 'General Medical',
                                         'source' => 'grok_ai_cached',
+                                        'source_id' => $cachedQuestion->id,
+                                        'source_table' => $cachedQuestion->getTable(),
                                         'confidence' => 100.0,
                                         'detailed_answer_en' => $cachedQuestion->detailed_answer_en,
                                         'detailed_answer_hi' => $cachedQuestion->detailed_answer_hi,
@@ -716,9 +719,7 @@ class ChatbotController extends Controller
                 : 'This may be an emergency. If there is chest pain, call emergency services immediately and go to the nearest emergency room.';
         } elseif ($qaAnswer) {
             if ($isDetailRequest) {
-                $detailedAnswer = $locale === 'hi'
-                    ? ($qaAnswer['detailed_answer_hi'] ?? $qaAnswer['detailed_answer_en'] ?? $qaAnswer['detailed_answer'] ?? null)
-                    : ($qaAnswer['detailed_answer_en'] ?? $qaAnswer['detailed_answer_hi'] ?? $qaAnswer['detailed_answer'] ?? null);
+                $detailedAnswer = $this->resolveDetailedAnswerFromSource($qaAnswer, $locale);
                 $botReply = (string) ($detailedAnswer ?: $qaAnswer['answer']);
             } else {
                 $botReply = (string) $qaAnswer['answer'];
@@ -735,9 +736,7 @@ class ChatbotController extends Controller
 
         $suggestDetails = false;
         if ($qaAnswer && !$isDetailRequest && ($qaAnswer['source'] ?? '') !== 'emergency_rule') {
-            $detailedAnswer = $locale === 'hi'
-                ? ($qaAnswer['detailed_answer_hi'] ?? $qaAnswer['detailed_answer_en'] ?? $qaAnswer['detailed_answer'] ?? null)
-                : ($qaAnswer['detailed_answer_en'] ?? $qaAnswer['detailed_answer_hi'] ?? $qaAnswer['detailed_answer'] ?? null);
+            $detailedAnswer = $this->resolveDetailedAnswerFromSource($qaAnswer, $locale);
             if (!empty($detailedAnswer)) {
                 $suggestDetails = true;
             }
@@ -1118,6 +1117,59 @@ class ChatbotController extends Controller
         ];
     }
 
+    private function resolveDetailedAnswerFromSource(array $qa, string $locale): ?string
+    {
+        $sourceTable = (string) ($qa['source_table'] ?? '');
+        $sourceId = isset($qa['source_id']) ? (int) $qa['source_id'] : 0;
+        $source = (string) ($qa['source'] ?? '');
+
+        if ($sourceTable === '' || $sourceId <= 0) {
+            if ($sourceTable === '' && str_contains($source, 'general_questions')) {
+                $sourceTable = 'general_questions';
+            } elseif ($sourceTable === '' && str_contains($source, 'cached_medical_questions')) {
+                $sourceTable = 'cached_medical_questions';
+            } elseif ($sourceTable === '' && str_contains($source, 'faq')) {
+                $sourceTable = 'faqs';
+            }
+        }
+
+        if ($sourceId > 0 && $sourceTable !== '') {
+            $record = match ($sourceTable) {
+                'general_questions' => GeneralQuestion::query()->find($sourceId),
+                'cached_medical_questions' => CachedMedicalQuestion::query()->find($sourceId),
+                'faqs' => Faq::query()->find($sourceId),
+                default => null,
+            };
+
+            if ($record) {
+                $detailed = $locale === 'hi'
+                    ? ((string) ($record->detailed_answer_hi ?? '') ?: (string) ($record->detailed_answer_en ?? ''))
+                    : ((string) ($record->detailed_answer_en ?? '') ?: (string) ($record->detailed_answer_hi ?? ''));
+
+                if (trim($detailed) !== '') {
+                    return trim($detailed);
+                }
+
+                $fallback = $locale === 'hi'
+                    ? ((string) ($record->answer_hi ?? '') ?: (string) ($record->answer_en ?? ''))
+                    : ((string) ($record->answer_en ?? '') ?: (string) ($record->answer_hi ?? ''));
+
+                return trim($fallback) !== '' ? trim($fallback) : null;
+            }
+        }
+
+        $inlineDetailed = $locale === 'hi'
+            ? ($qa['detailed_answer_hi'] ?? $qa['detailed_answer_en'] ?? $qa['detailed_answer'] ?? null)
+            : ($qa['detailed_answer_en'] ?? $qa['detailed_answer_hi'] ?? $qa['detailed_answer'] ?? null);
+
+        if (is_string($inlineDetailed) && trim($inlineDetailed) !== '') {
+            return trim($inlineDetailed);
+        }
+
+        $inlineAnswer = (string) ($qa['answer'] ?? '');
+        return trim($inlineAnswer) !== '' ? trim($inlineAnswer) : null;
+    }
+
         private function findGeneralHelpResponse(string $message, string $locale, string $selectedCity = '', array $messages = []): ?array
     {
         $normalized = mb_strtolower(trim($message));
@@ -1137,9 +1189,7 @@ class ChatbotController extends Controller
 
             if ($lastGeneralHelp) {
                 $qa = $lastGeneralHelp['qa_answer'];
-                $detailed = $locale === 'hi'
-                    ? ($qa['detailed_answer_hi'] ?? $qa['detailed_answer_en'] ?? null)
-                    : ($qa['detailed_answer_en'] ?? $qa['detailed_answer_hi'] ?? null);
+                $detailed = $this->resolveDetailedAnswerFromSource((array) $qa, $locale);
 
                 if (!empty($detailed)) {
                     return [
@@ -1188,6 +1238,8 @@ class ChatbotController extends Controller
             return [
                 'text' => (string) ($isDetailRequest && !empty($detailed) ? $detailed : $answer),
                 'qa_answer' => [
+                    'source_id' => $best->id,
+                    'source_table' => $best->getTable(),
                     'question' => $locale === 'hi' ? ($best->question_hi ?: $best->question_en) : ($best->question_en ?: $best->question_hi),
                     'answer' => $answer,
                     'detailed_answer_en' => $best->detailed_answer_en,

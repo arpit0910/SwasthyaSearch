@@ -322,3 +322,4 @@ class HospitalController extends Controller
         return $stateMap[$state] ?? $this->toHindiAddress($state);
     }
 }
+

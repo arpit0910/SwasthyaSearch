@@ -335,35 +335,44 @@
     @yield('content')
 
     <div id="chatbot-mobile-overlay" class="hidden fixed inset-0 bg-slate-950/45 backdrop-blur-[1px] z-[70] sm:hidden" onclick="toggleChatbot()"></div>
-    <div id="lead-capture-overlay" class="hidden fixed inset-0 z-[95] bg-slate-950/55 backdrop-blur-[2px]"></div>
+        <div id="lead-capture-overlay" class="hidden fixed inset-0 z-[95] bg-slate-950/60 backdrop-blur-[3px]"></div>
     <div id="lead-capture-modal" class="hidden fixed inset-0 z-[96] flex items-center justify-center p-4">
-        <div class="w-full max-w-md rounded-3xl border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-900 shadow-2xl overflow-hidden">
-            <div class="px-6 pt-6 pb-4 border-b border-slate-100 dark:border-slate-800">
-                <h3 class="text-xl font-extrabold text-slate-900 dark:text-slate-100">{{ $locale === 'hi' ? 'जुड़ें और अपडेट पाएं' : 'Stay Connected' }}</h3>
+        <div class="relative w-full max-w-md overflow-hidden rounded-3xl border border-cyan-100/70 bg-white shadow-2xl ring-1 ring-cyan-100/60 dark:border-slate-700 dark:bg-slate-900 dark:ring-slate-700">
+            <div class="absolute -top-16 -right-16 h-44 w-44 rounded-full bg-cyan-400/20 blur-2xl"></div>
+            <div class="absolute -bottom-20 -left-10 h-52 w-52 rounded-full bg-teal-400/15 blur-2xl"></div>
+
+            <div class="relative px-6 pt-6 pb-4 border-b border-slate-100/90 dark:border-slate-800">
+                <button type="button" id="lead-capture-close" aria-label="Close" class="absolute right-4 top-4 h-8 w-8 rounded-full border border-slate-200 bg-white/90 text-slate-500 hover:text-slate-800 hover:border-slate-300 dark:border-slate-700 dark:bg-slate-800 dark:text-slate-300 dark:hover:text-white">
+                    ×
+                </button>
+                <span class="inline-flex items-center gap-1 rounded-full border border-teal-200 bg-teal-50 px-3 py-1 text-[11px] font-bold uppercase tracking-wider text-teal-700">
+                    {{ $locale === 'hi' ? 'स्वास्थ्य अपडेट' : 'Health Updates' }}
+                </span>
+                <h3 class="mt-3 text-xl font-extrabold text-slate-900 dark:text-slate-100">{{ $locale === 'hi' ? 'जुड़ें और अपडेट पाएं' : 'Stay Connected' }}</h3>
                 <p class="mt-1 text-sm text-slate-600 dark:text-slate-300">{{ $locale === 'hi' ? 'बेहतर हेल्थकेयर सुझाव और अपडेट के लिए अपनी जानकारी साझा करें।' : 'Share your details to receive useful healthcare updates and tips.' }}</p>
             </div>
-            <form id="lead-capture-form" class="px-6 py-5 space-y-4">
+
+            <form id="lead-capture-form" class="relative px-6 py-5 space-y-4 bg-gradient-to-b from-white to-cyan-50/30 dark:from-slate-900 dark:to-slate-900">
                 <div>
-                    <label class="block text-xs font-bold text-slate-600 dark:text-slate-300 uppercase tracking-wider mb-1.5">{{ $locale === 'hi' ? 'नाम' : 'Name' }}</label>
-                    <input type="text" name="name" required class="w-full px-4 py-2.5 rounded-xl border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-800 text-slate-900 dark:text-slate-100 focus:outline-none focus:ring-2 focus:ring-teal-500/30">
+                    <label class="mb-1.5 block text-xs font-bold uppercase tracking-wider text-slate-600 dark:text-slate-300">{{ $locale === 'hi' ? 'नाम' : 'Name' }}</label>
+                    <input type="text" name="name" required placeholder="{{ $locale === 'hi' ? 'अपना नाम लिखें' : 'Enter your full name' }}" class="w-full rounded-xl border border-slate-300 bg-white px-4 py-3 text-sm text-slate-900 shadow-sm outline-none transition focus:border-teal-500 focus:ring-2 focus:ring-teal-500/25 dark:border-slate-700 dark:bg-slate-800 dark:text-slate-100">
                 </div>
                 <div>
-                    <label class="block text-xs font-bold text-slate-600 dark:text-slate-300 uppercase tracking-wider mb-1.5">{{ $locale === 'hi' ? 'ईमेल' : 'Email' }}</label>
-                    <input type="email" name="email" required class="w-full px-4 py-2.5 rounded-xl border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-800 text-slate-900 dark:text-slate-100 focus:outline-none focus:ring-2 focus:ring-teal-500/30">
+                    <label class="mb-1.5 block text-xs font-bold uppercase tracking-wider text-slate-600 dark:text-slate-300">{{ $locale === 'hi' ? 'ईमेल' : 'Email' }}</label>
+                    <input type="email" name="email" required placeholder="you@example.com" class="w-full rounded-xl border border-slate-300 bg-white px-4 py-3 text-sm text-slate-900 shadow-sm outline-none transition focus:border-teal-500 focus:ring-2 focus:ring-teal-500/25 dark:border-slate-700 dark:bg-slate-800 dark:text-slate-100">
                 </div>
                 <div>
-                    <label class="block text-xs font-bold text-slate-600 dark:text-slate-300 uppercase tracking-wider mb-1.5">{{ $locale === 'hi' ? 'मोबाइल नंबर' : 'Mobile Number' }}</label>
-                    <input type="tel" name="mobile" inputmode="numeric" pattern="[0-9]{10,15}" required class="w-full px-4 py-2.5 rounded-xl border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-800 text-slate-900 dark:text-slate-100 focus:outline-none focus:ring-2 focus:ring-teal-500/30">
+                    <label class="mb-1.5 block text-xs font-bold uppercase tracking-wider text-slate-600 dark:text-slate-300">{{ $locale === 'hi' ? 'मोबाइल नंबर' : 'Mobile Number' }}</label>
+                    <input type="tel" name="mobile" inputmode="numeric" pattern="[0-9]{10,15}" required placeholder="{{ $locale === 'hi' ? '10-15 अंकों का नंबर' : '10-15 digit phone number' }}" class="w-full rounded-xl border border-slate-300 bg-white px-4 py-3 text-sm text-slate-900 shadow-sm outline-none transition focus:border-teal-500 focus:ring-2 focus:ring-teal-500/25 dark:border-slate-700 dark:bg-slate-800 dark:text-slate-100">
                 </div>
-                <p id="lead-capture-message" class="hidden text-xs font-semibold"></p>
-                <div class="flex items-center justify-between pt-1">
-                    <button type="button" id="lead-capture-skip" class="text-sm font-semibold text-slate-600 dark:text-slate-300 hover:text-slate-900 dark:hover:text-white">{{ $locale === 'hi' ? 'अभी के लिए स्किप करें' : 'Skip for now' }}</button>
-                    <button type="submit" class="px-5 py-2.5 rounded-xl bg-teal-600 hover:bg-teal-700 text-white font-bold text-sm">{{ $locale === 'hi' ? 'सबमिट करें' : 'Submit' }}</button>
+                <p id="lead-capture-message" class="hidden rounded-lg px-3 py-2 text-xs font-semibold"></p>
+                <div class="flex items-center justify-between gap-3 pt-1">
+                    <button type="button" id="lead-capture-skip" class="text-sm font-semibold text-slate-600 hover:text-slate-900 dark:text-slate-300 dark:hover:text-white">{{ $locale === 'hi' ? 'अभी के लिए स्किप करें' : 'Skip for now' }}</button>
+                    <button type="submit" class="inline-flex items-center justify-center rounded-xl bg-gradient-to-r from-teal-600 to-cyan-600 px-5 py-2.5 text-sm font-bold text-white shadow-md transition hover:from-teal-700 hover:to-cyan-700">{{ $locale === 'hi' ? 'सबमिट करें' : 'Submit' }}</button>
                 </div>
             </form>
         </div>
-    </div>
-    <div id="listing-report-overlay" class="hidden fixed inset-0 z-[96] bg-slate-950/55 backdrop-blur-[2px]"></div>
+    </div><div id="listing-report-overlay" class="hidden fixed inset-0 z-[96] bg-slate-950/55 backdrop-blur-[2px]"></div>
     <div id="listing-report-modal" class="hidden fixed inset-0 z-[97] flex items-center justify-center p-4">
         <div class="w-full max-w-md rounded-3xl border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-900 shadow-2xl overflow-hidden">
             <div class="px-6 pt-6 pb-4 border-b border-slate-100 dark:border-slate-800">
@@ -375,23 +384,23 @@
                 <input type="hidden" name="entity_id" id="listing-report-entity-id">
                 <input type="hidden" name="entity_name" id="listing-report-entity-name">
                 <div>
-                    <label class="block text-xs font-bold text-slate-600 dark:text-slate-300 uppercase tracking-wider mb-1.5">{{ $locale === 'hi' ? 'समस्या का प्रकार' : 'Issue Type' }}</label>
+<label class="block text-xs font-bold text-slate-600 dark:text-slate-300 uppercase tracking-wider mb-1.5">{{ $locale === 'hi' ? 'समस्या का प्रकार' : 'Issue Type' }}</label>
                     <select name="issue" required class="w-full px-4 py-2.5 rounded-xl border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-800 text-slate-900 dark:text-slate-100 focus:outline-none focus:ring-2 focus:ring-teal-500/30">
                         <option value="wrong_phone">{{ $locale === 'hi' ? 'गलत फोन नंबर' : 'Wrong phone number' }}</option>
                         <option value="wrong_address">{{ $locale === 'hi' ? 'गलत पता' : 'Wrong address' }}</option>
-                        <option value="duplicate">{{ $locale === 'hi' ? 'डुप्लीकेट लिस्टिंग' : 'Duplicate listing' }}</option>
-                        <option value="closed">{{ $locale === 'hi' ? 'सेवा बंद हो चुकी है' : 'Service is closed' }}</option>
+                        <option value="duplicate">{{ $locale === 'hi' ? 'डुप्लिकेट लिस्टिंग' : 'Duplicate listing' }}</option>
+                        <option value="closed">{{ $locale === 'hi' ? 'सेवा बंद है' : 'Service is closed' }}</option>
                         <option value="other">{{ $locale === 'hi' ? 'अन्य' : 'Other' }}</option>
                     </select>
                 </div>
                 <div>
-                    <label class="block text-xs font-bold text-slate-600 dark:text-slate-300 uppercase tracking-wider mb-1.5">{{ $locale === 'hi' ? 'अतिरिक्त विवरण (वैकल्पिक)' : 'Remarks (Required)' }}</label>
+                    <label class="block text-xs font-bold text-slate-600 dark:text-slate-300 uppercase tracking-wider mb-1.5">{{ $locale === 'hi' ? 'गलत जानकारी रिपोर्ट करें' : 'Remarks (Required)' }}</label>
                     <textarea name="details" required minlength="3" rows="3" class="w-full px-4 py-2.5 rounded-xl border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-800 text-slate-900 dark:text-slate-100 focus:outline-none focus:ring-2 focus:ring-teal-500/30"></textarea>
                 </div>
                 <p id="listing-report-message" class="hidden text-xs font-semibold"></p>
                 <div class="flex items-center justify-between pt-1">
                     <button type="button" id="listing-report-cancel" class="text-sm font-semibold text-slate-600 dark:text-slate-300 hover:text-slate-900 dark:hover:text-white">{{ $locale === 'hi' ? 'रद्द करें' : 'Cancel' }}</button>
-                    <button type="submit" class="px-5 py-2.5 rounded-xl bg-rose-600 hover:bg-rose-700 text-white font-bold text-sm">{{ $locale === 'hi' ? 'रिपोर्ट भेजें' : 'Submit Report' }}</button>
+                    <button type="submit" class="px-5 py-2.5 rounded-xl bg-rose-600 hover:bg-rose-700 text-white font-bold text-sm">{{ $locale === 'hi' ? 'रिपोर्ट जमा करें' : 'Submit Report' }}</button>
                 </div>
             </form>
         </div>
@@ -480,7 +489,7 @@
                             <i data-lucide="bot" class="w-4 h-4"></i>
                         </div>
                         <div id="chatbot-initial-message" class="p-3.5 rounded-2xl text-sm shadow-sm leading-relaxed bg-white dark:bg-slate-900 text-slate-800 dark:text-slate-100 border border-slate-200/60 dark:border-slate-700 rounded-tl-none">
-                            {{ $locale === 'hi' ? 'नमस्ते, मैं Swasthya AI Assistant हूँ। कृपया पहले अपना शहर चुनें, फिर मैं आपके लिए सही विकल्प ढूँढने में मदद करूँगा।' : 'Hi, I’m Swasthya AI Assistant. Please select your city first, then I’ll help you find the right nearby healthcare options.' }}
+                            {{ $locale === 'hi' ? 'नमस्ते, मैं Swasthya AI Assistant हूँ। कृपया पहले अपना शहर चुनें, फिर मैं आपके लिए सही विकल्प ढूँढने में मदद करूँगा।' : "Hi, I'm Swasthya AI Assistant. Please select your city first, then I'll help you find the right nearby healthcare options." }}
                         </div>
                     </div>
                 </div>
@@ -2332,6 +2341,7 @@
 
         document.getElementById('lead-capture-overlay')?.addEventListener('click', () => skipLeadCapture(3));
         document.getElementById('lead-capture-skip')?.addEventListener('click', () => skipLeadCapture(7));
+        document.getElementById('lead-capture-close')?.addEventListener('click', () => skipLeadCapture(7));
         document.getElementById('lead-capture-form')?.addEventListener('submit', async function(e) {
             e.preventDefault();
             const form = e.currentTarget;
@@ -3401,6 +3411,7 @@
 </body>
 
 </html>
+
 
 
 

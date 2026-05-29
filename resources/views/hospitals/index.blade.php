@@ -15,6 +15,7 @@ $pageDescription = $hasCity
 $hasActiveMobileFilters = !empty(array_filter((array) request('type', [])))
     || !empty(array_filter((array) request('city', [])))
     || !empty(array_filter((array) request('benefit', [])));
+$isNearbyActive = filled(request('user_lat')) && filled(request('user_lng'));
 @endphp
 @section('meta_title', $pageTitle)
 @section('meta_description', $pageDescription)
@@ -66,16 +67,16 @@ $hasActiveMobileFilters = !empty(array_filter((array) request('type', [])))
         <div class="relative">
             <i data-lucide="search" class="absolute inset-y-0 left-0 flex items-center pl-4 pointer-events-none w-4 h-4 text-slate-400"></i>
             <input type="text" name="search"
-                placeholder="Search hospitals, services, location..."
+                placeholder="{{ $locale === 'hi' ? 'अस्पताल, सेवाएँ, स्थान खोजें...' : 'Search hospitals, services, location...' }}"
                 value="{{ request('search', $filters['search'] ?? '') }}"
                 class="h-12 w-full pl-10 pr-14 bg-slate-50 border border-slate-200 rounded-xl text-sm focus:outline-none focus:border-teal-500 focus:ring-2 focus:ring-teal-500/20 transition-all duration-200 font-medium" />
             <button type="button" data-open-mobile-filters onclick="openMobileFilters()" aria-label="Open filters" class="lg:hidden absolute right-2 top-1/2 -translate-y-1/2 w-8 h-8 rounded-lg border flex items-center justify-center transition-all duration-200 {{ $hasActiveMobileFilters ? 'border-teal-600 bg-teal-600 text-white shadow-md shadow-teal-500/30' : 'border-teal-200 bg-white text-teal-700 hover:bg-teal-50' }}" title="Filters">
                 <i data-lucide="filter" class="w-4 h-4"></i>
             </button>
         </div>
-        <button type="button" onclick="setUserLocationAndSubmit(this.form)" class="mt-3 w-full h-11 px-4 rounded-xl border border-teal-200 dark:border-teal-800 bg-teal-50 dark:bg-teal-950/35 hover:bg-teal-100 dark:hover:bg-teal-900/40 text-teal-700 dark:text-teal-300 font-bold text-sm transition-all duration-200 flex items-center justify-center space-x-2 shadow-2xs">
+        <button type="button" onclick="toggleNearby(this)" data-nearby-toggle data-nearby-theme="teal" class="mt-3 w-full h-11 px-4 rounded-xl border font-bold text-sm transition-all duration-200 flex items-center justify-center space-x-2 shadow-2xs {{ $isNearbyActive ? 'border-teal-600 dark:border-teal-500 bg-teal-600 dark:bg-teal-600 text-white' : 'border-teal-200 dark:border-teal-800 bg-teal-50 dark:bg-teal-950/35 hover:bg-teal-100 dark:hover:bg-teal-900/40 text-teal-700 dark:text-teal-300' }}">
             <i data-lucide="locate-fixed" class="w-4 h-4"></i>
-            <span>{{ $locale === 'hi' ? 'Show Nearby' : 'Show Nearby' }}</span>
+            <span>{{ $locale === 'hi' ? 'मेरे नजदीक दिखाएँ' : 'Show Nearby' }}</span>
         </button>
     </form>
 </section>
@@ -255,8 +256,8 @@ $hasActiveMobileFilters = !empty(array_filter((array) request('type', [])))
         </div>
 
         <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3 mt-6 pt-6 border-t border-slate-100">
-            <button type="button" onclick="setUserLocationAndSubmit(this.form)"
-                class="h-12 px-5 rounded-xl border border-teal-200 bg-teal-50 hover:bg-teal-100 text-teal-700 font-bold text-sm transition-all duration-200 flex items-center justify-center space-x-2 shadow-2xs">
+            <button type="button" onclick="toggleNearby(this)" data-nearby-toggle data-nearby-theme="teal"
+                class="h-12 px-5 rounded-xl border font-bold text-sm transition-all duration-200 flex items-center justify-center space-x-2 shadow-2xs {{ $isNearbyActive ? 'border-teal-600 bg-teal-600 text-white' : 'border-teal-200 bg-teal-50 hover:bg-teal-100 text-teal-700' }}">
                 <i data-lucide="locate-fixed" class="w-4 h-4"></i>
                 <span>{{ $locale === 'hi' ? 'मेरे नजदीक दिखाएँ' : 'Show Nearby' }}</span>
             </button>
@@ -697,18 +698,66 @@ $hasActiveMobileFilters = !empty(array_filter((array) request('type', [])))
         });
     }
 
-    function setUserLocationAndSubmit(form) {
+    function setNearbyButtonState(button, isActive) {
+        if (!button) return;
+        const activeClasses = ['border-teal-600', 'dark:border-teal-500', 'bg-teal-600', 'dark:bg-teal-600', 'text-white'];
+        const inactiveClasses = ['border-teal-200', 'dark:border-teal-800', 'bg-teal-50', 'dark:bg-teal-950/35', 'hover:bg-teal-100', 'dark:hover:bg-teal-900/40', 'text-teal-700', 'dark:text-teal-300'];
+        button.classList.remove(...activeClasses, ...inactiveClasses);
+        button.classList.add(...(isActive ? activeClasses : inactiveClasses));
+    }
+
+    function applyUserLocationToForm(form, lat, lng) {
+        const latInput = form?.querySelector('input[name="user_lat"]');
+        const lngInput = form?.querySelector('input[name="user_lng"]');
+        if (!latInput || !lngInput) {
+            alert('Nearby location fields are missing. Please refresh and try again.');
+            return false;
+        }
+        latInput.value = lat;
+        lngInput.value = lng;
+        return true;
+    }
+
+    function clearNearbyAndSubmit(form) {
+        const latInput = form?.querySelector('input[name="user_lat"]');
+        const lngInput = form?.querySelector('input[name="user_lng"]');
+        if (latInput) latInput.value = '';
+        if (lngInput) lngInput.value = '';
+        form.submit();
+    }
+
+    function toggleNearby(button) {
+        const form = button?.form;
+        if (!form) return;
+        const latInput = form.querySelector('input[name="user_lat"]');
+        const lngInput = form.querySelector('input[name="user_lng"]');
+        const isActive = Boolean(latInput?.value && lngInput?.value);
+        if (isActive) {
+            setNearbyButtonState(button, false);
+            clearNearbyAndSubmit(form);
+            return;
+        }
+        setNearbyButtonState(button, true);
+        setUserLocationAndSubmit(form, button);
+    }
+
+    function setUserLocationAndSubmit(form, button = null) {
         if (!navigator.geolocation) {
             alert('Geolocation is not supported on this device/browser.');
+            setNearbyButtonState(button, false);
             return;
         }
 
         navigator.geolocation.getCurrentPosition(function(position) {
-            document.getElementById('user_lat').value = position.coords.latitude.toFixed(6);
-            document.getElementById('user_lng').value = position.coords.longitude.toFixed(6);
+            const locationApplied = applyUserLocationToForm(form, position.coords.latitude.toFixed(6), position.coords.longitude.toFixed(6));
+            if (!locationApplied) {
+                setNearbyButtonState(button, false);
+                return;
+            }
             form.submit();
         }, function() {
             alert('Unable to fetch your location. Please enable location permission.');
+            setNearbyButtonState(button, false);
         }, {
             enableHighAccuracy: true,
             timeout: 10000,

@@ -12,7 +12,7 @@ use Illuminate\Support\Str;
 class MedicalQaService
 {
     /**
-     * @return array{question:string,answer:string,category:string,source:string,confidence:float,detailed_answer_en:?string,detailed_answer_hi:?string,detailed_answer:?string}|null
+     * @return array{question:string,answer:string,category:string,source:string,source_id:int|null,source_table:string|null,confidence:float,detailed_answer_en:?string,detailed_answer_hi:?string,detailed_answer:?string}|null
      */
     public function findBestAnswer(string $message, string $locale = 'en'): ?array
     {
@@ -74,6 +74,8 @@ class MedicalQaService
             'answer' => (string) $answer,
             'category' => (string) ($best['category'] ?? 'General Medical'),
             'source' => (string) ($best['source'] ?? 'faq_dataset'),
+            'source_id' => isset($best['source_id']) ? (int) $best['source_id'] : null,
+            'source_table' => isset($best['source_table']) ? (string) $best['source_table'] : null,
             'confidence' => round($bestScore, 2),
             'detailed_answer_en' => $detailedAnswerEn !== '' ? $detailedAnswerEn : null,
             'detailed_answer_hi' => $detailedAnswerHi !== '' ? $detailedAnswerHi : null,
@@ -85,7 +87,7 @@ class MedicalQaService
      * Direct %LIKE%-style matching to handle short symptom/disease prompts
      * such as "HIV", "AIDS", and slash/variant forms like "HIV/AIDS".
      *
-     * @return array{question:string,answer:string,category:string,source:string,confidence:float,detailed_answer_en:?string,detailed_answer_hi:?string,detailed_answer:?string}|null
+     * @return array{question:string,answer:string,category:string,source:string,source_id:int|null,source_table:string|null,confidence:float,detailed_answer_en:?string,detailed_answer_hi:?string,detailed_answer:?string}|null
      */
     private function findLikeMatch(string $message, string $locale): ?array
     {
@@ -196,6 +198,8 @@ class MedicalQaService
             'answer' => (string) $answer,
             'category' => (string) ($best['category'] ?? 'General Medical'),
             'source' => (string) (($best['source'] ?? 'db_like') . '_like'),
+            'source_id' => isset($best['source_id']) ? (int) $best['source_id'] : null,
+            'source_table' => isset($best['source_table']) ? (string) $best['source_table'] : null,
             'confidence' => round(min(100, max(60, $bestScore)), 2),
             'detailed_answer_en' => $detailedAnswerEn !== '' ? $detailedAnswerEn : null,
             'detailed_answer_hi' => $detailedAnswerHi !== '' ? $detailedAnswerHi : null,
@@ -296,6 +300,8 @@ class MedicalQaService
             ->get()
             ->map(function (CachedMedicalQuestion $qa) {
                 return [
+                    'source_id' => $qa->id,
+                    'source_table' => $qa->getTable(),
                     'question_en' => $qa->question_en,
                     'question_hi' => $qa->question_hi,
                     'answer_en' => $qa->answer_en,
@@ -312,6 +318,8 @@ class MedicalQaService
             ->get()
             ->map(function (GeneralQuestion $qa) {
                 return [
+                    'source_id' => $qa->id,
+                    'source_table' => $qa->getTable(),
                     'question_en' => $qa->question_en,
                     'question_hi' => $qa->question_hi,
                     'answer_en' => $qa->answer_en,
@@ -328,6 +336,8 @@ class MedicalQaService
             ->get()
             ->map(function (Faq $qa) {
                 return [
+                    'source_id' => $qa->id,
+                    'source_table' => $qa->getTable(),
                     'question_en' => $qa->question_en,
                     'question_hi' => $qa->question_hi,
                     'answer_en' => $qa->answer_en,
@@ -343,6 +353,8 @@ class MedicalQaService
         $configured = collect(config('medical_qa.entries', []))
             ->map(function (array $entry) {
                 $entry['source'] = 'medical_qa_config';
+                $entry['source_id'] = null;
+                $entry['source_table'] = null;
                 return $entry;
             });
 
