@@ -397,7 +397,7 @@ $isNearbyActive = filled(request('user_lat')) && filled(request('user_lng'));
                                 rel="noopener noreferrer"
                                 class="inline-flex items-center space-x-1 text-teal-600 dark:text-teal-400 hover:text-teal-700 dark:hover:text-teal-300 font-bold mt-1 bg-teal-50/80 dark:bg-teal-950/40 px-2.5 py-1 rounded-lg border border-teal-100 dark:border-teal-900 transition-colors">
                                 <i data-lucide="navigation" class="w-3 h-3"></i>
-                                <span>{{ $locale === 'hi' ? 'नक्शे पर दिशा व दूरी देखें' : 'View Map & Directions' }}</span>
+                                <span>{{ $locale === 'hi' ? 'नक्शा व दिशा-निर्देश' : 'Get Directions' }}</span>
                             </a>
                             @endif
                         </div>

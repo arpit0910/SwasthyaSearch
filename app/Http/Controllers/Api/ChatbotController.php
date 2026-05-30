@@ -1,7 +1,8 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Http\Controllers\Api;
 
+use App\Http\Controllers\Controller;
 use App\Models\Article;
 use App\Models\BloodBank;
 use App\Models\CachedMedicalQuestion;
@@ -151,9 +152,10 @@ class ChatbotController extends Controller
                 $qaAnswer = $this->medicalQaService->findBestAnswer($originalMessage, $locale);
             }
             $grokDepartment = $qaAnswer ? ($qaAnswer['category'] ?? null) : null;
+            $grokDepartment = is_string($grokDepartment) ? trim($grokDepartment) : $grokDepartment;
 
             $matchedDeptId = null;
-            if ($grokDepartment) {
+            if (is_string($grokDepartment) && $grokDepartment !== '') {
                 $cleanedGrokDept = trim($grokDepartment);
                 $matchedDept = Department::where('is_active', true)
                     ->where(function ($query) use ($cleanedGrokDept) {
@@ -447,6 +449,7 @@ class ChatbotController extends Controller
 
         if ($qaAnswer) {
             $grokDepartment = $qaAnswer['category'] ?? null;
+            $grokDepartment = is_string($grokDepartment) ? trim($grokDepartment) : $grokDepartment;
         } else {
             // Cache miss: query Groq AI
             if ($apiKey) {
@@ -524,6 +527,7 @@ class ChatbotController extends Controller
                                 $qaAnswer = $this->medicalQaService->findBestAnswer($originalMessage, $locale);
                                 if ($qaAnswer) {
                                     $grokDepartment = $qaAnswer['category'] ?? null;
+                                    $grokDepartment = is_string($grokDepartment) ? trim($grokDepartment) : $grokDepartment;
                                 } else {
                                     $qaAnswer = [
                                         'question' => $locale === 'hi' ? $cachedQuestion->question_hi : $cachedQuestion->question_en,
@@ -540,6 +544,7 @@ class ChatbotController extends Controller
                                             : ($cachedQuestion->detailed_answer_en ?: $cachedQuestion->detailed_answer_hi),
                                     ];
                                     $grokDepartment = $qaAnswer['category'] ?? null;
+                                    $grokDepartment = is_string($grokDepartment) ? trim($grokDepartment) : $grokDepartment;
                                 }
                                 break;
                             } else {
@@ -581,7 +586,7 @@ class ChatbotController extends Controller
         $doctors = collect();
 
         // Match department using classification from Grok AI first (or cache hit)
-        if ($grokDepartment) {
+        if (is_string($grokDepartment) && $grokDepartment !== '') {
             $cleanedGrokDept = trim($grokDepartment);
             $matchedDept = Department::where('is_active', true)
                 ->where(function ($query) use ($cleanedGrokDept) {
@@ -1170,11 +1175,16 @@ class ChatbotController extends Controller
         return trim($inlineAnswer) !== '' ? trim($inlineAnswer) : null;
     }
 
-        private function findGeneralHelpResponse(string $message, string $locale, string $selectedCity = '', array $messages = []): ?array
+    private function findGeneralHelpResponse(string $message, string $locale, string $selectedCity = '', array $messages = []): ?array
     {
-        $normalized = mb_strtolower(trim($message));
+        $normalized = $this->normalizeForQaMatch($message);
         if ($normalized === '') {
             return null;
+        }
+
+        $strictDbMatch = $this->findStrictConversationMatch($normalized, $locale);
+        if ($strictDbMatch !== null) {
+            return $strictDbMatch;
         }
 
         $isDetailRequest = collect(['detail', 'detailed', 'explain', 'more', 'deep dive', '???????', '?????'])
@@ -1207,8 +1217,8 @@ class ChatbotController extends Controller
         $tokens = $this->extractSearchTokens($normalized);
 
         foreach ($records as $q) {
-            $qEn = mb_strtolower(trim((string) $q->question_en));
-            $qHi = mb_strtolower(trim((string) $q->question_hi));
+            $qEn = $this->normalizeForQaMatch((string) $q->question_en);
+            $qHi = $this->normalizeForQaMatch((string) $q->question_hi);
             $score = 0;
 
             if ($qEn !== '' && (str_contains($normalized, $qEn) || str_contains($qEn, $normalized))) {
@@ -1251,5 +1261,86 @@ class ChatbotController extends Controller
         }
 
         return null;
+    }
+
+    private function findStrictConversationMatch(string $normalizedMessage, string $locale): ?array
+    {
+        foreach ([
+            ['records' => CachedMedicalQuestion::query()->get(), 'source' => 'cached_medical_questions'],
+            ['records' => GeneralQuestion::query()->get(), 'source' => 'general_questions'],
+        ] as $dataset) {
+            $best = null;
+            $bestScore = 0;
+            $tokens = $this->extractSearchTokens($normalizedMessage);
+
+            foreach ($dataset['records'] as $q) {
+                $qEn = $this->normalizeForQaMatch((string) $q->question_en);
+                $qHi = $this->normalizeForQaMatch((string) $q->question_hi);
+                if ($qEn === '' && $qHi === '') {
+                    continue;
+                }
+
+                $score = 0;
+                if ($qEn !== '' && $normalizedMessage === $qEn) {
+                    $score += 10;
+                }
+                if ($qHi !== '' && $normalizedMessage === $qHi) {
+                    $score += 10;
+                }
+                if ($qEn !== '' && str_contains($qEn, $normalizedMessage) && mb_strlen($normalizedMessage) >= 3) {
+                    $score += 4;
+                }
+                if ($qHi !== '' && str_contains($qHi, $normalizedMessage) && mb_strlen($normalizedMessage) >= 3) {
+                    $score += 4;
+                }
+
+                foreach ($tokens as $token) {
+                    if (mb_strlen($token) < 3) {
+                        continue;
+                    }
+                    if (($qEn !== '' && str_contains($qEn, $token)) || ($qHi !== '' && str_contains($qHi, $token))) {
+                        $score += 1;
+                    }
+                }
+
+                if ($score > $bestScore) {
+                    $bestScore = $score;
+                    $best = $q;
+                }
+            }
+
+            if (! $best || $bestScore < 5) {
+                continue;
+            }
+
+            $answer = $locale === 'hi' ? ($best->answer_hi ?: $best->answer_en) : ($best->answer_en ?: $best->answer_hi);
+            $detailed = $locale === 'hi'
+                ? ($best->detailed_answer_hi ?: $best->detailed_answer_en)
+                : ($best->detailed_answer_en ?: $best->detailed_answer_hi);
+
+            return [
+                'text' => (string) $answer,
+                'qa_answer' => [
+                    'source_id' => $best->id,
+                    'source_table' => $best->getTable(),
+                    'question' => $locale === 'hi' ? ($best->question_hi ?: $best->question_en) : ($best->question_en ?: $best->question_hi),
+                    'answer' => $answer,
+                    'detailed_answer_en' => $best->detailed_answer_en,
+                    'detailed_answer_hi' => $best->detailed_answer_hi,
+                    'source' => $dataset['source'],
+                ],
+                'suggest_details' => !empty($detailed),
+            ];
+        }
+
+        return null;
+    }
+
+    private function normalizeForQaMatch(string $text): string
+    {
+        $text = mb_strtolower(trim($text));
+        $text = preg_replace('/[^\p{L}\p{N}\s]/u', ' ', $text) ?? $text;
+        $text = preg_replace('/\s+/u', ' ', $text) ?? $text;
+        return trim($text);
     }
 }
