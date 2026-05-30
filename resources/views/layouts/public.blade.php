@@ -3310,14 +3310,16 @@
             #chatbot-window {
                 width: calc(100vw - 1rem);
                 max-width: 430px;
-                height: min(86vh, 760px);
-                min-height: 520px;
+                height: calc(100dvh - 1.5rem - env(safe-area-inset-bottom));
+                max-height: calc(100dvh - 1.5rem - env(safe-area-inset-bottom));
+                min-height: 0;
                 border-bottom-right-radius: 0.5rem;
                 border-bottom-left-radius: 0.5rem;
                 position: fixed;
                 left: 50%;
                 right: auto;
                 transform: translateX(-50%);
+                top: 0.75rem;
                 bottom: calc(0.75rem + env(safe-area-inset-bottom));
                 margin: 0;
             }
