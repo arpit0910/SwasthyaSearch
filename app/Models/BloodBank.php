@@ -42,7 +42,7 @@ class BloodBank extends Model
         'last_updated_stock_at',
     ];
 
-    protected $appends = ['name', 'address'];
+    protected $appends = ['name', 'address', 'map_directions_url'];
 
     protected $casts = [
         'is_verified' => 'boolean',
@@ -122,5 +122,42 @@ class BloodBank extends Model
     public function scopeNearest($query, $latitude, $longitude)
     {
         return $this->scopeCloseTo($query, $latitude, $longitude);
+    }
+
+    public function getMapDirectionsUrlAttribute(): ?string
+    {
+        $destination = $this->resolveMapDestination();
+
+        if ($destination === null) {
+            return null;
+        }
+
+        return 'https://www.google.com/maps/dir/?' . http_build_query([
+            'api' => 1,
+            'destination' => $destination,
+        ]);
+    }
+
+    private function resolveMapDestination(): ?string
+    {
+        if (!empty($this->latitude) && !empty($this->longitude)) {
+            return trim($this->latitude . ',' . $this->longitude);
+        }
+
+        $address = trim((string) ($this->address_en ?: $this->address_hi ?: ''));
+        $parts = array_filter([
+            $this->name_en,
+            $address,
+            $this->landmark,
+            $this->city,
+            $this->state,
+            $this->pincode,
+        ], fn ($value) => filled(trim((string) $value)));
+
+        if (empty($parts)) {
+            return null;
+        }
+
+        return implode(', ', array_unique($parts));
     }
 }

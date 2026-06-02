@@ -259,9 +259,7 @@ $isNearbyActive = filled(request('user_lat')) && filled(request('user_lng'));
         $addrEn = is_array($bank->address) ? $bank->address['en'] : ($bank->address['en'] ?? $bank->address_en);
         $addrHi = is_array($bank->address) ? $bank->address['hi'] : ($bank->address['hi'] ?? $bank->address_hi);
         $addr = $locale === 'hi' ? ($addrHi ?: $addrEn) : $addrEn;
-        $mapDestination = !empty($bank->latitude) && !empty($bank->longitude)
-            ? $bank->latitude . ',' . $bank->longitude
-            : urlencode(trim(implode(', ', array_filter([$addr, $bank->city ?? null, $bank->state ?? null, $bank->pincode ?? null]))));
+        $mapDirectionsUrl = $bank->map_directions_url;
         @endphp
         <div class="glass-card rounded-3xl border border-slate-200/80 dark:border-slate-800 shadow-2xs hover:shadow-xl transition-all duration-300 overflow-hidden flex flex-col group hover:-translate-y-1 relative"
             data-twentyfour="{{ !empty($bank->is_24_7) ? 'true' : 'false' }}"
@@ -391,8 +389,8 @@ $isNearbyActive = filled(request('user_lat')) && filled(request('user_lng'));
                                 <span class="text-slate-500 text-[11px] block">{{ implode(', ', array_filter([$bank->city, $bank->state, $bank->pincode])) }}</span>
                                 @endif
                             </div>
-                            @if (!empty($mapDestination))
-                            <a href="https://www.google.com/maps/dir/?api=1&destination={{ $mapDestination }}"
+                            @if (!empty($mapDirectionsUrl))
+                            <a href="{{ $mapDirectionsUrl }}"
                                 target="_blank"
                                 rel="noopener noreferrer"
                                 class="inline-flex items-center space-x-1 text-teal-600 dark:text-teal-400 hover:text-teal-700 dark:hover:text-teal-300 font-bold mt-1 bg-teal-50/80 dark:bg-teal-950/40 px-2.5 py-1 rounded-lg border border-teal-100 dark:border-teal-900 transition-colors">

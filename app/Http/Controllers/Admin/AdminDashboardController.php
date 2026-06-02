@@ -14,10 +14,13 @@ use App\Models\Faq;
 use App\Models\GeneralQuestion;
 use App\Models\Hospital;
 use App\Models\Symptom;
+use App\Models\SymptomTestSubmission;
 use App\Services\DirectorySyncService;
 use App\Services\ScraperService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Cache;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Str;
 
 class AdminDashboardController extends Controller
 {
@@ -47,6 +50,132 @@ class AdminDashboardController extends Controller
             ->get();
 
         return view('admin.dashboard', compact('stats', 'chartData', 'supportedCities', 'syncHistory'));
+    }
+
+    public function symptomTestReports(Request $request)
+    {
+        $days = max(7, min(90, (int) $request->integer('days', 30)));
+        $trendStart = now()->startOfDay()->subDays($days - 1);
+
+        $submissionsQuery = SymptomTestSubmission::query()->with(['topDisease', 'recommendedDepartment']);
+
+        if ($search = trim((string) $request->query('search', ''))) {
+            $submissionsQuery->where(function ($query) use ($search) {
+                $query->where('symptom_text', 'like', "%{$search}%")
+                    ->orWhere('gender', 'like', "%{$search}%")
+                    ->orWhere('locale', 'like', "%{$search}%");
+            });
+        }
+
+        if ($gender = trim((string) $request->query('gender', ''))) {
+            $submissionsQuery->where('gender', $gender);
+        }
+
+        $totalSubmissions = SymptomTestSubmission::count();
+        $recentSubmissions = (clone $submissionsQuery)->latest()->paginate(12)->withQueryString();
+
+        $trendRows = SymptomTestSubmission::query()
+            ->selectRaw('DATE(created_at) as date, COUNT(*) as total')
+            ->where('created_at', '>=', $trendStart)
+            ->groupBy('date')
+            ->orderBy('date')
+            ->pluck('total', 'date');
+
+        $trendLabels = [];
+        $trendValues = [];
+        for ($offset = 0; $offset < $days; $offset++) {
+            $date = $trendStart->copy()->addDays($offset);
+            $key = $date->toDateString();
+            $trendLabels[] = $date->format('d M');
+            $trendValues[] = (int) ($trendRows[$key] ?? 0);
+        }
+
+        $genderBreakdown = SymptomTestSubmission::query()
+            ->selectRaw("COALESCE(NULLIF(TRIM(gender), ''), 'Unspecified') as label, COUNT(*) as total")
+            ->groupBy('label')
+            ->orderByDesc('total')
+            ->pluck('total', 'label')
+            ->toArray();
+
+        $topDiseaseRows = SymptomTestSubmission::query()
+            ->select('top_disease_id', DB::raw('COUNT(*) as total'))
+            ->whereNotNull('top_disease_id')
+            ->groupBy('top_disease_id')
+            ->orderByDesc('total')
+            ->limit(8)
+            ->get();
+
+        $diseasesById = Disease::whereIn('id', $topDiseaseRows->pluck('top_disease_id')->filter()->all())->get()->keyBy('id');
+
+        $topDiseases = $topDiseaseRows->map(function ($row) use ($diseasesById) {
+            $disease = $diseasesById->get($row->top_disease_id);
+            return [
+                'label' => $disease ? ($disease->getTranslation('name', 'en') ?: $disease->getTranslation('name', 'hi') ?: 'Disease #' . $row->top_disease_id) : 'Disease #' . $row->top_disease_id,
+                'total' => (int) $row->total,
+            ];
+        })->values()->all();
+
+        $topSymptoms = $this->buildTopSymptomsReport();
+
+        $stats = [
+            'total_submissions' => $totalSubmissions,
+            'last_7_days' => SymptomTestSubmission::where('created_at', '>=', now()->subDays(6))->count(),
+            'last_30_days' => SymptomTestSubmission::where('created_at', '>=', now()->subDays(29))->count(),
+            'avg_age' => (float) round((float) SymptomTestSubmission::avg('age'), 1),
+            'female_count' => SymptomTestSubmission::where('gender', 'female')->count(),
+            'male_count' => SymptomTestSubmission::where('gender', 'male')->count(),
+            'other_count' => SymptomTestSubmission::whereNotIn('gender', ['male', 'female'])->whereNotNull('gender')->where('gender', '!=', '')->count(),
+        ];
+
+        return view('admin.symptom-tests.index', compact(
+            'days',
+            'stats',
+            'trendLabels',
+            'trendValues',
+            'genderBreakdown',
+            'topDiseases',
+            'topSymptoms',
+            'recentSubmissions'
+        ));
+    }
+
+    private function buildTopSymptomsReport(): array
+    {
+        $counts = [];
+
+        SymptomTestSubmission::query()
+            ->latest()
+            ->limit(500)
+            ->get(['selected_symptoms', 'symptom_text'])
+            ->each(function (SymptomTestSubmission $submission) use (&$counts) {
+                $selectedSymptoms = is_array($submission->selected_symptoms) ? $submission->selected_symptoms : [];
+                foreach ($selectedSymptoms as $symptom) {
+                    $symptom = trim((string) $symptom);
+                    if ($symptom !== '') {
+                        $counts[Str::lower($symptom)] = ($counts[Str::lower($symptom)] ?? 0) + 1;
+                    }
+                }
+
+                $freeTextSymptoms = preg_split('/[,;\n]+/', (string) $submission->symptom_text) ?: [];
+                foreach ($freeTextSymptoms as $symptom) {
+                    $symptom = trim((string) $symptom);
+                    if ($symptom !== '') {
+                        $counts[Str::lower($symptom)] = ($counts[Str::lower($symptom)] ?? 0) + 1;
+                    }
+                }
+            });
+
+        return collect($counts)
+            ->sortDesc()
+            ->take(12)
+            ->map(function ($total, $label) {
+                return [
+                    'label' => Str::of($label)->replaceMatches('/\s+/', ' ')->title()->toString(),
+                    'total' => (int) $total,
+                ];
+            })
+            ->values()
+            ->all();
     }
 
     // --- HOSPITALS CRUD & IMPORT ---

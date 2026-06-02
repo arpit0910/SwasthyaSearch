@@ -12,6 +12,11 @@ return Application::configure(basePath: dirname(__DIR__))
     )
     ->withMiddleware(function (Middleware $middleware): void {
         $middleware->redirectGuestsTo(fn () => route('admin.login'));
+        $middleware->validateCsrfTokens(except: [
+            'api/symptom-test/analyze',
+            'api/chatbot',
+            'api/chatbot/failure-report',
+        ]);
 
         $middleware->web(append: [
             \App\Http\Middleware\BilingualLocale::class,

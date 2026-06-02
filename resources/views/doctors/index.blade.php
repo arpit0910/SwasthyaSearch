@@ -564,8 +564,9 @@ $isNearbyActive = filled(request('user_lat')) && filled(request('user_lng'));
                             <div class="pt-2 mt-1 border-t border-slate-200/60 dark:border-slate-700/60 flex items-center justify-between gap-2">
                                 <span class="text-[10px] text-slate-400 dark:text-slate-500 italic">{{ $locale === 'hi' ? 'दिशा-निर्देश उपलब्ध' : 'Directions available' }}</span>
                                 <a
-                                    href="https://www.google.com/maps/dir/?api=1&destination={{ !empty($h->latitude) ? $h->latitude . ',' . $h->longitude : urlencode(($h->address ?? '') . ', ' . ($h->city ?? 'Nearby')) }}"
+                                    href="{{ $h->map_directions_url }}"
                                     target="_blank"
+                                    rel="noopener noreferrer"
                                     class="inline-flex items-center space-x-1.5 text-xs text-cyan-600 dark:text-indigo-400 hover:text-cyan-700 dark:hover:text-indigo-300 font-bold bg-cyan-50 dark:bg-indigo-950/40 hover:bg-indigo-100/80 dark:hover:bg-indigo-900/60 px-3 py-1.5 rounded-xl border border-cyan-100 dark:border-indigo-900 transition-all shadow-2xs">
                                     <i data-lucide="navigation" class="w-3.5 h-3.5 text-indigo-500"></i>
                                     <span>{{ $locale === 'hi' ? 'नक्शा व दिशा-निर्देश' : 'Get Directions' }}</span>

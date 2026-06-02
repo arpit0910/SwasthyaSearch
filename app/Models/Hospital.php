@@ -39,7 +39,7 @@ class Hospital extends Model
         'rgahs_approved',
     ];
 
-    protected $appends = ['name', 'display_address'];
+    protected $appends = ['name', 'display_address', 'map_directions_url'];
 
     protected $casts = [
         'is_verified' => 'boolean',
@@ -108,6 +108,20 @@ class Hospital extends Model
         return $address;
     }
 
+    public function getMapDirectionsUrlAttribute(): ?string
+    {
+        $destination = $this->resolveMapDestination();
+
+        if ($destination === null) {
+            return null;
+        }
+
+        return 'https://www.google.com/maps/dir/?' . http_build_query([
+            'api' => 1,
+            'destination' => $destination,
+        ]);
+    }
+
     public function getEmergencyPhoneAttribute(): ?string
     {
         return $this->phone_1;
@@ -158,5 +172,28 @@ class Hospital extends Model
             'en' => $this->{$field . '_en'} ?? null,
             'hi' => $this->{$field . '_hi'} ?? null,
         ];
+    }
+
+    private function resolveMapDestination(): ?string
+    {
+        if (!empty($this->latitude) && !empty($this->longitude)) {
+            return trim($this->latitude . ',' . $this->longitude);
+        }
+
+        $parts = array_filter([
+            $this->name_en,
+            $this->address_line1,
+            $this->address_line2,
+            $this->landmark,
+            $this->city,
+            $this->state,
+            $this->pincode,
+        ], fn ($value) => filled(trim((string) $value)));
+
+        if (empty($parts)) {
+            return null;
+        }
+
+        return implode(', ', array_unique($parts));
     }
 }

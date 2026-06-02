@@ -293,6 +293,9 @@
         <a href="{{ route('admin.diseases') }}" class="nav-link {{ request()->routeIs('admin.diseases') ? 'active' : '' }}">
             <i class="fa-solid fa-tag"></i> Diseases / Symptoms
         </a>
+        <a href="{{ route('admin.symptom_tests') }}" class="nav-link {{ request()->routeIs('admin.symptom_tests') ? 'active' : '' }}">
+            <i class="fa-solid fa-chart-line"></i> Symptom Test Reports
+        </a>
 
         <div class="nav-group-title">Content Management</div>
         <a href="{{ route('admin.articles') }}" class="nav-link {{ request()->routeIs('admin.articles') ? 'active' : '' }}">

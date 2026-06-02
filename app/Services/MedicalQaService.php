@@ -52,6 +52,22 @@ class MedicalQaService
         }
 
         if (!$best || $bestScore < 45) {
+            $fallback = $this->generateFallbackAnswer($message, $locale);
+            if ($fallback) {
+                return [
+                    'question' => $fallback['question'],
+                    'answer' => $fallback['answer'],
+                    'category' => $fallback['category'],
+                    'source' => $fallback['source'],
+                    'source_id' => null,
+                    'source_table' => null,
+                    'confidence' => $fallback['confidence'],
+                    'detailed_answer_en' => null,
+                    'detailed_answer_hi' => null,
+                    'detailed_answer' => null,
+                ];
+            }
+
             return null;
         }
 
@@ -223,6 +239,7 @@ class MedicalQaService
             ->first(function (Disease $item) use ($normalizedMessage) {
                 $nameEn = $this->normalize((string) $item->name_en);
                 $nameHi = $this->normalize((string) ($item->name_hi ?? ''));
+
                 return ($nameEn !== '' && str_contains($normalizedMessage, $nameEn))
                     || ($nameHi !== '' && str_contains($normalizedMessage, $nameHi));
             });
@@ -238,7 +255,7 @@ class MedicalQaService
         $departmentName = $isHindi ? $departmentHi : $departmentEn;
 
         $symptomSignals = ['symptom', 'symptoms', 'sign', 'signs', 'लक्षण', 'संकेत'];
-        $treatmentSignals = ['treat', 'treatment', 'cure', 'manage', 'इलाज', 'उपचार', 'दवा', 'नियंत्रित'];
+        $treatmentSignals = ['treat', 'treatment', 'cure', 'manage', 'इलाज', 'उपचार', 'दवा', 'नियंत्रण'];
 
         $intent = 'definition';
         foreach ($treatmentSignals as $signal) {
@@ -247,6 +264,7 @@ class MedicalQaService
                 break;
             }
         }
+
         if ($intent === 'definition') {
             foreach ($symptomSignals as $signal) {
                 if (str_contains($normalizedMessage, $this->normalize($signal))) {
@@ -266,7 +284,7 @@ class MedicalQaService
             $answer = match ($intent) {
                 'symptoms' => "{$diseaseName} के लक्षण व्यक्ति और बीमारी की गंभीरता के अनुसार अलग हो सकते हैं। सही मूल्यांकन के लिए {$departmentName} विभाग में विशेषज्ञ से जांच कराना उचित है।",
                 'treatment' => "{$diseaseName} का उपचार आमतौर पर {$departmentName} विभाग के विशेषज्ञ द्वारा रोग की अवस्था के आधार पर तय किया जाता है। इसमें दवाएं, जीवनशैली में बदलाव और आवश्यकता अनुसार प्रक्रियाएं शामिल हो सकती हैं।",
-                default => "{$diseaseName} एक चिकित्सीय स्थिति है जिसका प्रबंधन {$departmentName} विभाग के अंतर्गत किया जाता है। सही निदान और व्यक्तिगत उपचार योजना के लिए विशेषज्ञ परामर्श लें।",
+                default => "{$diseaseName} एक चिकित्सीय स्थिति है जिसका प्रबंधन {$departmentName} विभाग के अंतर्गत किया जाता है। सही निदान और व्यक्तिगत उपचार योजना के लिए विशेषज्ञ सलाह लें।",
             };
         } else {
             $question = match ($intent) {
@@ -289,9 +307,7 @@ class MedicalQaService
             'source' => 'disease_ai_fallback',
             'confidence' => 78.0,
         ];
-    }
-
-    /**
+    }    /**
      * @return Collection<int, array<string, mixed>>
      */
     private function buildKnowledgeEntries(): Collection
@@ -413,7 +429,7 @@ class MedicalQaService
                     : (string) config('medical_qa.emergency_reply_en');
 
                 return [
-                    'question' => $locale === 'hi' ? 'आपात स्थिति में क्या करें?' : 'What should I do in an emergency?',
+                    'question' => $locale === 'hi' ? 'What should I do in an emergency?' : 'What should I do in an emergency?',
                     'answer' => $answer,
                     'category' => 'Emergency',
                     'source' => 'emergency_rule',
@@ -476,3 +492,4 @@ class MedicalQaService
         return array_values(array_filter(explode(' ', $text), fn ($token) => mb_strlen($token) > 2));
     }
 }
+

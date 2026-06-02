@@ -10,6 +10,7 @@ use App\Http\Controllers\DoctorController;
 use App\Http\Controllers\HospitalController;
 use App\Http\Controllers\LegalController;
 use App\Http\Controllers\PageController;
+use App\Http\Controllers\SymptomTestController;
 use App\Http\Controllers\SampleDownloadController;
 use App\Http\Controllers\SearchController;
 use App\Http\Controllers\Api\HealthcareQueryController;
@@ -119,6 +120,9 @@ Route::prefix('admin')->middleware('web')->group(function () {
         Route::post('/cached-medical-questions', [AdminDashboardController::class, 'storeCachedMedicalQuestion'])->name('admin.cached_medical_questions.store');
         Route::put('/cached-medical-questions/{cachedMedicalQuestion}', [AdminDashboardController::class, 'updateCachedMedicalQuestion'])->name('admin.cached_medical_questions.update');
         Route::delete('/cached-medical-questions/{cachedMedicalQuestion}', [AdminDashboardController::class, 'destroyCachedMedicalQuestion'])->name('admin.cached_medical_questions.destroy');
+
+        // Symptom Test Analytics
+        Route::get('/symptom-test-reports', [AdminDashboardController::class, 'symptomTestReports'])->name('admin.symptom_tests');
     });
 });
 
@@ -130,6 +134,8 @@ Route::get('/api/directory', [HealthcareQueryController::class, 'cityDirectory']
 Route::get('/api/doctors', [ReliableDirectoryController::class, 'doctors'])->name('api.doctors.city');
 Route::get('/api/hospitals', [ReliableDirectoryController::class, 'hospitals'])->name('api.hospitals.city');
 Route::get('/api/blood-banks', [ReliableDirectoryController::class, 'bloodBanks'])->name('api.blood_banks.city');
+Route::get('/symptom-test', [SymptomTestController::class, 'index'])->name('symptom-test');
+Route::post('/api/symptom-test/analyze', [SymptomTestController::class, 'analyze'])->name('symptom-test.analyze');
 Route::post('/switch-locale', [SearchController::class, 'switchLocale'])->name('switch.locale');
 
 Route::get('/sitemap.xml', function () {
@@ -145,6 +151,7 @@ Route::get('/sitemap.xml', function () {
         ['loc' => route('hospitals.index'), 'changefreq' => 'daily', 'priority' => '0.9', 'lastmod' => $lastHospitals],
         ['loc' => route('blood_banks.index'), 'changefreq' => 'daily', 'priority' => '0.9', 'lastmod' => $lastBloodBanks],
         ['loc' => route('articles.index'), 'changefreq' => 'daily', 'priority' => '0.8', 'lastmod' => $lastArticles],
+        ['loc' => route('symptom-test'), 'changefreq' => 'weekly', 'priority' => '0.8', 'lastmod' => now()->toDateString()],
         ['loc' => route('departments.index'), 'changefreq' => 'weekly', 'priority' => '0.6', 'lastmod' => now()->toDateString()],
         ['loc' => route('diseases.index'), 'changefreq' => 'weekly', 'priority' => '0.6', 'lastmod' => now()->toDateString()],
         ['loc' => route('about'), 'changefreq' => 'monthly', 'priority' => '0.6', 'lastmod' => now()->toDateString()],

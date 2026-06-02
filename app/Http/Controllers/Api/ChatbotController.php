@@ -112,7 +112,7 @@ class ChatbotController extends Controller
             }
         }
 
-        if ($selectedCity === '' || !in_array($selectedCity, $cityOptions, true)) {
+        if (!empty($cityOptions) && ($selectedCity === '' || !in_array($selectedCity, $cityOptions, true))) {
             $cityPrompt = $locale === 'hi'
                 ? 'कृपया सूची में से अपना शहर चुनें ताकि मैं सही डॉक्टर और अस्पताल दिखा सकूं।'
                 : 'Please choose your city from the list so I can show accurate doctors and hospitals.';
@@ -129,7 +129,6 @@ class ChatbotController extends Controller
                 'history' => $messages,
             ]);
         }
-
         $loadType = $validated['load_type'] ?? null;
         if ($userMessage === '' && !$loadType) {
             return response()->json([
@@ -280,7 +279,7 @@ class ChatbotController extends Controller
                 $seeAllDoctorsUrl = route('doctors.index', ['city' => $selectedCity, 'department' => $deptForFilter ?: 'All']);
 
                 $botReply = $locale === 'hi'
-                    ? "मैंने {$selectedCity} में विशेषज्ञ डॉक्टरों की खोज की है:"
+                    ? "I found some recommended specialist doctors in {$selectedCity}:"
                     : "I have found some recommended specialist doctors in {$selectedCity}:";
 
                 $newMsg['text'] = $botReply;
@@ -315,7 +314,7 @@ class ChatbotController extends Controller
                 $seeAllHospitalsUrl = route('hospitals.index', ['city' => $selectedCity]);
 
                 $botReply = $locale === 'hi'
-                    ? "मुझे {$selectedCity} में निम्नलिखित अस्पताल और क्लीनिक मिले हैं:"
+                    ? "I found the following hospitals and clinics in {$selectedCity}:"
                     : "I have found the following hospitals and clinics in {$selectedCity}:";
 
                 $newMsg['text'] = $botReply;
@@ -340,7 +339,7 @@ class ChatbotController extends Controller
                 $seeAllArticlesUrl = route('articles.index', ['category' => $grokDepartment ?: 'All']);
 
                 $botReply = $locale === 'hi'
-                    ? "यहाँ कुछ स्वास्थ्य लेख दिए गए हैं जो आपकी सहायता कर सकते हैं:"
+                    ? "Here are some health articles that might be helpful for you:"
                     : "Here are some health articles that might be helpful for you:";
 
                 $newMsg['text'] = $botReply;
@@ -413,7 +412,7 @@ class ChatbotController extends Controller
         $isDetailRequest = false;
         $detailKeywords = [
             'detail', 'explain', 'more', 'elaborate', 'describe', 'deep dive',
-            'विस्तार', 'विवरण', 'अधिक', 'समझाएं', 'और बताएं'
+            'à¤µà¤¿à¤¸à¥à¤¤à¤¾à¤°', 'à¤µà¤¿à¤µà¤°à¤£', 'à¤…à¤§à¤¿à¤•', 'à¤¸à¤®à¤à¤¾à¤à¤‚', 'à¤”à¤° à¤¬à¤¤à¤¾à¤à¤‚'
         ];
         foreach ($detailKeywords as $keyword) {
             if (mb_stripos($lowerMsg, $keyword) !== false) {
@@ -694,11 +693,11 @@ class ChatbotController extends Controller
             if ($matchedDiseaseNameEn) {
                 $disName = $locale === 'hi' ? ($matchedDiseaseNameHi ?: $matchedDiseaseNameEn) : $matchedDiseaseNameEn;
                 $departmentInfo = $locale === 'hi'
-                    ? "'{$disName}' के लिए '{$deptName}' विभाग उपयुक्त है।"
+                    ? "For '{$disName}', '{$deptName}' department is recommended."
                     : "For '{$disName}', '{$deptName}' department is recommended.";
             } else {
                 $departmentInfo = $locale === 'hi'
-                    ? "आपकी समस्या के आधार पर '{$deptName}' विभाग उपयुक्त है।"
+                    ? "Based on your query, '{$deptName}' department is recommended."
                     : "Based on your query, '{$deptName}' department is recommended.";
             }
         }
@@ -720,8 +719,8 @@ class ChatbotController extends Controller
 
         if ($qaAnswer && ($qaAnswer['source'] ?? '') === 'emergency_rule') {
             $botReply = $locale === 'hi'
-                ? 'यह संभवतः आपातकाल हो सकता है। यदि सीने में दर्द है तो तुरंत इमरजेंसी सेवा पर कॉल करें और नजदीकी इमरजेंसी में जाएं।'
-                : 'This may be an emergency. If there is chest pain, call emergency services immediately and go to the nearest emergency room.';
+                ? 'This may be an emergency. If you have chest pain, shortness of breath, fainting, or rapidly worsening symptoms, call emergency services immediately and go to the nearest emergency room.'
+                : 'This may be an emergency. If you have chest pain, shortness of breath, fainting, or severe worsening symptoms, call emergency services immediately and go to the nearest emergency room.';
         } elseif ($qaAnswer) {
             if ($isDetailRequest) {
                 $detailedAnswer = $this->resolveDetailedAnswerFromSource($qaAnswer, $locale);
@@ -731,14 +730,13 @@ class ChatbotController extends Controller
             }
         } elseif ($departmentInfo) {
             $botReply = $locale === 'hi'
-                ? 'मैंने आपके प्रश्न का विश्लेषण किया है। नीचे आपके शहर के संबंधित डॉक्टर और अस्पताल दिए गए हैं:'
+                ? 'I analyzed your query. Here are relevant doctors and hospitals in your city:'
                 : 'I analyzed your query. Here are relevant doctors and hospitals in your city:';
         } else {
             $botReply = $locale === 'hi'
-                ? 'मुझे सटीक मिलान नहीं मिला, लेकिन नीचे आपके शहर के उपयोगी विकल्प दिए गए हैं।'
+                ? 'I could not find an exact match, but here are useful options in your city.'
                 : 'I could not find an exact match, but here are useful options in your city.';
         }
-
         $suggestDetails = false;
         if ($qaAnswer && !$isDetailRequest && ($qaAnswer['source'] ?? '') !== 'emergency_rule') {
             $detailedAnswer = $this->resolveDetailedAnswerFromSource($qaAnswer, $locale);
@@ -802,7 +800,7 @@ class ChatbotController extends Controller
 
             $locale = (string) ($request->input('locale') ?: app()->getLocale());
             $fallbackReply = $locale === 'hi'
-                ? 'कुछ तकनीकी समस्या आई, लेकिन मैं आपकी मदद के लिए तैयार हूँ। कृपया फिर से संदेश भेजें या "Find Doctors" विकल्प चुनें।'
+                ? 'à¤•à¥à¤› à¤¤à¤•à¤¨à¥€à¤•à¥€ à¤¸à¤®à¤¸à¥à¤¯à¤¾ à¤†à¤ˆ, à¤²à¥‡à¤•à¤¿à¤¨ à¤®à¥ˆà¤‚ à¤†à¤ªà¤•à¥€ à¤®à¤¦à¤¦ à¤•à¥‡ à¤²à¤¿à¤ à¤¤à¥ˆà¤¯à¤¾à¤° à¤¹à¥‚à¤à¥¤ à¤•à¥ƒà¤ªà¤¯à¤¾ à¤«à¤¿à¤° à¤¸à¥‡ à¤¸à¤‚à¤¦à¥‡à¤¶ à¤­à¥‡à¤œà¥‡à¤‚ à¤¯à¤¾ "Find Doctors" à¤µà¤¿à¤•à¤²à¥à¤ª à¤šà¥à¤¨à¥‡à¤‚à¥¤'
                 : 'A technical issue occurred, but I am ready to help. Please resend your message or choose "Find Doctors".';
 
             return response()->json([
@@ -904,16 +902,16 @@ class ChatbotController extends Controller
             'need',
             'please',
             'search',
-            'डॉक्टर',
-            'डॉ',
-            'अस्पताल',
-            'क्लिनिक',
-            'खोजें',
-            'में',
-            'पास',
-            'मुझे',
-            'चाहिए',
-            'कृपया',
+            'à¤¡à¥‰à¤•à¥à¤Ÿà¤°',
+            'à¤¡à¥‰',
+            'à¤…à¤¸à¥à¤ªà¤¤à¤¾à¤²',
+            'à¤•à¥à¤²à¤¿à¤¨à¤¿à¤•',
+            'à¤–à¥‹à¤œà¥‡à¤‚',
+            'à¤®à¥‡à¤‚',
+            'à¤ªà¤¾à¤¸',
+            'à¤®à¥à¤à¥‡',
+            'à¤šà¤¾à¤¹à¤¿à¤',
+            'à¤•à¥ƒà¤ªà¤¯à¤¾',
         ];
 
         $tokens = array_values(array_unique(array_filter($parts, function ($part) use ($stopwords) {
@@ -933,13 +931,13 @@ class ChatbotController extends Controller
         $directoryKeywords = [
             'find', 'search', 'near', 'nearby', 'doctor', 'hospital', 'clinic', 'blood bank', 'specialist', 'department',
             'show doctors', 'show hospitals', 'cardiologist', 'orthopedic', 'dermatologist',
-            'खोज', 'डॉक्टर', 'अस्पताल', 'क्लिनिक', 'ब्लड बैंक', 'विशेषज्ञ', 'विभाग', 'पास', 'नजदीक',
+            'à¤–à¥‹à¤œ', 'à¤¡à¥‰à¤•à¥à¤Ÿà¤°', 'à¤…à¤¸à¥à¤ªà¤¤à¤¾à¤²', 'à¤•à¥à¤²à¤¿à¤¨à¤¿à¤•', 'à¤¬à¥à¤²à¤¡ à¤¬à¥ˆà¤‚à¤•', 'à¤µà¤¿à¤¶à¥‡à¤·à¤œà¥à¤ž', 'à¤µà¤¿à¤­à¤¾à¤—', 'à¤ªà¤¾à¤¸', 'à¤¨à¤œà¤¦à¥€à¤•',
         ];
 
         $aiMedicalIntentKeywords = [
             'why', 'cause', 'treatment', 'medicine', 'dosage', 'dose', 'diet', 'prevention', 'symptom meaning',
             'explain', 'detail', 'detailed', 'serious', 'is this dangerous',
-            'क्यों', 'कारण', 'इलाज', 'दवा', 'खुराक', 'उपचार', 'समझाएं', 'विस्तार', 'गंभीर',
+            'à¤•à¥à¤¯à¥‹à¤‚', 'à¤•à¤¾à¤°à¤£', 'à¤‡à¤²à¤¾à¤œ', 'à¤¦à¤µà¤¾', 'à¤–à¥à¤°à¤¾à¤•', 'à¤‰à¤ªà¤šà¤¾à¤°', 'à¤¸à¤®à¤à¤¾à¤à¤‚', 'à¤µà¤¿à¤¸à¥à¤¤à¤¾à¤°', 'à¤—à¤‚à¤­à¥€à¤°',
         ];
 
         foreach ($directoryKeywords as $keyword) {
@@ -1095,12 +1093,12 @@ class ChatbotController extends Controller
             : null;
 
         $reply = $locale === 'hi'
-            ? "आपके शहर {$city} में मैंने संबंधित परिणाम ढूंढे हैं। नीचे डॉक्टर, अस्पताल और ब्लड बैंक विकल्प देखें।"
+            ? "à¤†à¤ªà¤•à¥‡ à¤¶à¤¹à¤° {$city} à¤®à¥‡à¤‚ à¤®à¥ˆà¤‚à¤¨à¥‡ à¤¸à¤‚à¤¬à¤‚à¤§à¤¿à¤¤ à¤ªà¤°à¤¿à¤£à¤¾à¤® à¤¢à¥‚à¤‚à¤¢à¥‡ à¤¹à¥ˆà¤‚à¥¤ à¤¨à¥€à¤šà¥‡ à¤¡à¥‰à¤•à¥à¤Ÿà¤°, à¤…à¤¸à¥à¤ªà¤¤à¤¾à¤² à¤”à¤° à¤¬à¥à¤²à¤¡ à¤¬à¥ˆà¤‚à¤• à¤µà¤¿à¤•à¤²à¥à¤ª à¤¦à¥‡à¤–à¥‡à¤‚à¥¤"
             : "I found relevant results in {$city}. Please check the doctors, hospitals, and blood bank options below.";
 
         $departmentInfo = $deptName
             ? ($locale === 'hi'
-                ? "आपकी खोज के लिए '{$deptName}' विभाग सबसे उपयुक्त दिख रहा है।"
+                ? "à¤†à¤ªà¤•à¥€ à¤–à¥‹à¤œ à¤•à¥‡ à¤²à¤¿à¤ '{$deptName}' à¤µà¤¿à¤­à¤¾à¤— à¤¸à¤¬à¤¸à¥‡ à¤‰à¤ªà¤¯à¥à¤•à¥à¤¤ à¤¦à¤¿à¤– à¤°à¤¹à¤¾ à¤¹à¥ˆà¥¤"
                 : "For your query, '{$deptName}' seems to be the most relevant department.")
             : null;
 
@@ -1344,3 +1342,4 @@ class ChatbotController extends Controller
         return trim($text);
     }
 }
+

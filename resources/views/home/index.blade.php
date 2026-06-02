@@ -79,6 +79,7 @@ $locale === 'hi'
                     <a href="{{ route('doctors.index') }}" class="px-4 py-2 rounded-2xl bg-white/10 hover:bg-white/20 border border-white/10 text-xs sm:text-sm font-semibold">{{ $locale === 'hi' ? 'डॉक्टर खोजें' : 'Find Doctor' }}</a>
                     <a href="{{ route('hospitals.index') }}" class="px-4 py-2 rounded-2xl bg-white/10 hover:bg-white/20 border border-white/10 text-xs sm:text-sm font-semibold">{{ $locale === 'hi' ? 'अस्पताल खोजें' : 'Find Hospital' }}</a>
                     <a href="{{ route('blood_banks.index') }}" class="px-4 py-2 rounded-2xl bg-white/10 hover:bg-white/20 border border-white/10 text-xs sm:text-sm font-semibold">{{ $locale === 'hi' ? 'ब्लड बैंक खोजें' : 'Find Blood Bank' }}</a>
+                    <a href="{{ route('symptom-test') }}" class="px-4 py-2 rounded-2xl bg-teal-400 hover:bg-teal-300 border border-teal-300/50 text-xs sm:text-sm font-semibold text-slate-950">{{ $locale === 'hi' ? 'लक्षण परीक्षण' : 'Symptom Test' }}</a>
                     <button type="button" onclick="toggleChatbot()" class="px-4 py-2 rounded-2xl bg-cyan-400 hover:bg-cyan-300 dark:bg-cyan-700 dark:hover:bg-cyan-600 border border-cyan-300/50 dark:border-cyan-500/40 text-xs sm:text-sm font-semibold text-slate-950 dark:text-white">{{ $locale === 'hi' ? 'AI सहायक से पूछें' : 'Ask AI Assistant' }}</button>
                 </div>
             </div>
@@ -943,7 +944,7 @@ $locale === 'hi'
                                 <span class="text-[10px] text-slate-400 dark:text-slate-500 italic">
                                     ${(hosp.phone_1 || hosp.phone_2 || hosp.phone) ? `${currentLocale === 'hi' ? 'संपर्क:' : 'Tel:'} ${[hosp.phone_1, hosp.phone_2, hosp.phone].filter(Boolean).join(', ')}` : ''}
                                 </span>
-                                <a href="https://www.google.com/maps/dir/?api=1&destination=${encodeURIComponent((hosp.address || '') + ', ' + (hosp.city || 'India'))}" target="_blank" class="inline-flex items-center space-x-1.5 text-xs text-cyan-600 dark:text-indigo-400 hover:text-cyan-700 dark:hover:text-indigo-300 font-bold bg-cyan-50 dark:bg-indigo-950/40 hover:bg-indigo-100/80 dark:hover:bg-indigo-900/60 px-3 py-1.5 rounded-xl border border-cyan-100 dark:border-indigo-900 transition-all shadow-2xs">
+                                <a href="${hosp.map_directions_url || '#'}" target="_blank" rel="noopener noreferrer" class="inline-flex items-center space-x-1.5 text-xs text-cyan-600 dark:text-indigo-400 hover:text-cyan-700 dark:hover:text-indigo-300 font-bold bg-cyan-50 dark:bg-indigo-950/40 hover:bg-indigo-100/80 dark:hover:bg-indigo-900/60 px-3 py-1.5 rounded-xl border border-cyan-100 dark:border-indigo-900 transition-all shadow-2xs ${hosp.map_directions_url ? '' : 'pointer-events-none opacity-50'}">
                                     <i data-lucide="navigation" class="w-3.5 h-3.5 text-indigo-500"></i>
                                     <span>${currentLocale === 'hi' ? 'नक्शा व दिशा-निर्देश' : 'Get Directions'}</span>
                                 </a>
@@ -1056,8 +1057,8 @@ $locale === 'hi'
             const ratingValue = Number(document.getElementById('feedback-rating-input')?.value || 0);
             if (!ratingValue) {
                 e.preventDefault();
-                alert(currentLocale === 'hi' ? 'कृपया पहले स्टार रेटिंग चुनें।' :
-                    'Please select a star rating before submitting.');
+                showSiteToast(currentLocale === 'hi' ? 'कृपया पहले स्टार रेटिंग चुनें।' :
+                    'Please select a star rating before submitting.', 'warning');
             }
         });
     }

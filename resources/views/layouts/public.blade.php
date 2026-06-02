@@ -34,18 +34,18 @@
     $routeSeo = [
     'home' => [
     'title' => $isHindi ? 'SwasthyaSearch - अपने पास विश्वसनीय स्वास्थ्य सेवा खोजें' : 'SwasthyaSearch - Trusted Healthcare Discovery Near You',
-    'description' => $isHindi ? 'लक्षण, विभाग, शहर या नाम से डॉक्टर, अस्पताल और ब्लड बैंक खोजें।' : 'Search doctors, hospitals, blood banks, and departments by symptom, city, or keyword.',
+    'description' => $isHindi ? 'लक्षण, विभाग, शहर या नाम से डॉक्टर, अस्पताल, क्लिनिक और ब्लड बैंक खोजें।' : 'Search doctors, hospitals, blood banks, and departments by symptom, city, or keyword.',
     ],
     'doctors.index' => [
-    'title' => $isHindi ? 'डॉक्टर्स डायरेक्टरी | SwasthyaSearch' : 'Doctors Directory | SwasthyaSearch',
+    'title' => $isHindi ? 'डॉक्टर निर्देशिका | SwasthyaSearch' : 'Doctors Directory | SwasthyaSearch',
     'description' => $isHindi ? 'अपने शहर में सत्यापित विशेषज्ञ डॉक्टर खोजें।' : 'Browse verified specialist doctors by city, department, and experience.',
     ],
     'hospitals.index' => [
-    'title' => $isHindi ? 'अस्पताल और क्लिनिक डायरेक्टरी | SwasthyaSearch' : 'Hospitals & Clinics Directory | SwasthyaSearch',
+    'title' => $isHindi ? 'अस्पताल और क्लिनिक निर्देशिका | SwasthyaSearch' : 'Hospitals & Clinics Directory | SwasthyaSearch',
     'description' => $isHindi ? 'अपने शहर के अस्पताल और क्लिनिक खोजें।' : 'Find verified hospitals and clinics with location and contact details.',
     ],
     'blood_banks.index' => [
-    'title' => $isHindi ? 'ब्लड बैंक डायरेक्टरी | SwasthyaSearch' : 'Blood Banks Directory | SwasthyaSearch',
+    'title' => $isHindi ? 'ब्लड बैंक निर्देशिका | SwasthyaSearch' : 'Blood Banks Directory | SwasthyaSearch',
     'description' => $isHindi ? 'अपने शहर में ब्लड बैंक खोजें और उपलब्धता फोन पर पुष्टि करें।' : 'Find blood banks by city and blood group. Call to confirm current availability.',
     ],
     'articles.index' => [
@@ -54,11 +54,11 @@
     ],
     'about' => [
     'title' => $isHindi ? 'हमारे बारे में | SwasthyaSearch' : 'About Us | SwasthyaSearch',
-    'description' => $isHindi ? 'SwasthyaSearch का मिशन: भरोसेमंद हेल्थकेयर खोज को सरल बनाना।' : 'Learn about SwasthyaSearch and our mission for transparent healthcare discovery.',
+    'description' => $isHindi ? 'SwasthyaSearch का मिशन भरोसेमंद हेल्थकेयर खोज को सरल बनाना है।' : 'Learn about SwasthyaSearch and our mission for transparent healthcare discovery.',
     ],
     'contact' => [
     'title' => $isHindi ? 'संपर्क करें | SwasthyaSearch' : 'Contact Us | SwasthyaSearch',
-    'description' => $isHindi ? 'SwasthyaSearch सहायता और प्रतिक्रिया के लिए संपर्क करें।' : 'Contact SwasthyaSearch for support, corrections, and feedback.',
+    'description' => $isHindi ? 'सहायता और प्रतिक्रिया के लिए SwasthyaSearch से संपर्क करें।' : 'Contact SwasthyaSearch for support, corrections, and feedback.',
     ],
     ];
     $computedTitle = $routeSeo[$routeName]['title'] ?? $defaultTitle;
@@ -156,7 +156,7 @@
     ['name' => $isHindi ? 'होम' : 'Home', 'url' => route('home')],
     ];
     $routeCrumbs = [
-    'doctors.index' => $isHindi ? 'डॉक्टर्स' : 'Doctors',
+    'doctors.index' => $isHindi ? 'डॉक्टर' : 'Doctors',
     'hospitals.index' => $isHindi ? 'अस्पताल' : 'Hospitals',
     'blood_banks.index' => $isHindi ? 'ब्लड बैंक' : 'Blood Banks',
     'articles.index' => $isHindi ? 'लेख' : 'Articles',
@@ -164,7 +164,7 @@
     'about' => $isHindi ? 'हमारे बारे में' : 'About',
     'contact' => $isHindi ? 'संपर्क' : 'Contact',
     'privacy.policy' => $isHindi ? 'गोपनीयता नीति' : 'Privacy Policy',
-    'terms.service' => $isHindi ? 'सेवा शर्तें' : 'Terms of Service',
+    'terms.service' => $isHindi ? 'सेवा की शर्तें' : 'Terms of Service',
     ];
     if (isset($routeCrumbs[$routeName])) {
     $breadcrumbItems[] = ['name' => $routeCrumbs[$routeName], 'url' => $canonicalUrl];
@@ -222,6 +222,7 @@
         <div class="absolute top-1/4 -right-40 w-[600px] h-[600px] rounded-full bg-gradient-to-tr from-indigo-400/20 to-purple-400/20 dark:from-indigo-500/10 dark:to-purple-500/10 blur-[120px] opacity-75"></div>
         <div class="absolute -bottom-40 left-1/4 w-[600px] h-[600px] rounded-full bg-gradient-to-tr from-cyan-400/15 to-teal-400/15 dark:from-cyan-500/5 dark:to-teal-500/5 blur-[100px] opacity-75"></div>
     </div>
+    <div id="site-toast-stack" class="site-toast-stack" aria-live="polite" aria-atomic="true"></div>
     @php
     $locale = session('locale', app()->getLocale());
     $chatbotCities = \App\Models\Hospital::where('is_verified', true)
@@ -268,22 +269,22 @@
                     </div>
                 </div>
 
-                <div class="flex items-center gap-1.5 sm:gap-2 shrink-0">
-                    <div class="flex items-center bg-slate-100 dark:bg-slate-800 p-1 rounded-xl border border-slate-200/60 dark:border-slate-700/60 shadow-inner">
+                <div class="flex items-center gap-1 sm:gap-2 shrink-0">
+                    <div class="flex items-center bg-slate-100 dark:bg-slate-800 p-0.5 rounded-xl border border-slate-200/60 dark:border-slate-700/60 shadow-inner">
                         <form action="{{ route('switch.locale') }}" method="POST" class="inline">
                             @csrf
                             <input type="hidden" name="locale" value="en">
-                            <button type="submit" class="flex items-center space-x-1 sm:space-x-1.5 px-2 sm:px-3 py-1.5 rounded-lg text-xs sm:text-sm font-medium transition-all duration-200 {{ $locale === 'en' ? 'bg-white dark:bg-slate-700 text-indigo-900 dark:text-indigo-200 shadow-sm font-semibold' : 'text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white' }}">
-                                <i data-lucide="globe" class="w-3.5 h-3.5 sm:w-4 sm:h-4 text-teal-600"></i>
-                                <span><span class="hidden sm:inline">English</span><span class="sm:hidden font-bold">EN</span></span>
+                            <button type="submit" class="flex items-center justify-center gap-1 px-2 sm:px-3 py-1 rounded-lg text-[11px] sm:text-sm font-medium leading-none whitespace-nowrap transition-all duration-200 min-w-[58px] sm:min-w-[88px] {{ $locale === 'en' ? 'bg-white dark:bg-slate-700 text-indigo-900 dark:text-indigo-200 shadow-sm font-semibold' : 'text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white' }}">
+                                <i data-lucide="globe" class="w-3 h-3 sm:w-3.5 sm:h-3.5 text-teal-600 shrink-0"></i>
+                                <span class="hidden sm:inline">English</span><span class="sm:hidden font-bold">EN</span>
                             </button>
                         </form>
                         <form action="{{ route('switch.locale') }}" method="POST" class="inline">
                             @csrf
                             <input type="hidden" name="locale" value="hi">
-                            <button type="submit" class="flex items-center space-x-1 sm:space-x-1.5 px-2 sm:px-3 py-1.5 rounded-lg text-xs sm:text-sm font-medium transition-all duration-200 {{ $locale === 'hi' ? 'bg-white dark:bg-slate-700 text-indigo-900 dark:text-indigo-200 shadow-sm font-semibold' : 'text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white' }}">
-                                <i data-lucide="globe" class="w-3.5 h-3.5 sm:w-4 sm:h-4 text-teal-600"></i>
-                                <span><span class="hidden sm:inline">हिंदी</span><span class="sm:hidden font-bold">HI</span></span>
+                            <button type="submit" class="flex items-center justify-center gap-1 px-2 sm:px-3 py-1 rounded-lg text-[11px] sm:text-sm font-medium leading-none whitespace-nowrap transition-all duration-200 min-w-[58px] sm:min-w-[88px] {{ $locale === 'hi' ? 'bg-white dark:bg-slate-700 text-indigo-900 dark:text-indigo-200 shadow-sm font-semibold' : 'text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white' }}">
+                                <i data-lucide="globe" class="w-3 h-3 sm:w-3.5 sm:h-3.5 text-teal-600 shrink-0"></i>
+                                <span class="hidden sm:inline">हिन्दी</span><span class="sm:hidden font-bold">HI</span>
                             </button>
                         </form>
                     </div>
@@ -324,7 +325,7 @@
                     </a>
                     <a href="{{ route('contact') }}" class="mobile-nav-item {{ request()->routeIs('contact') ? 'active' : '' }}">
                         <i data-lucide="phone" class="w-4 h-4"></i>
-                        <span>{{ $locale === 'hi' ? 'संपर्क करें' : 'Contact' }}</span>
+                        <span>{{ $locale === 'hi' ? 'संपर्क' : 'Contact' }}</span>
                     </a>
                 </div>
             </div>
@@ -367,7 +368,7 @@
                 </div>
                 <p id="lead-capture-message" class="hidden rounded-lg px-3 py-2 text-xs font-semibold"></p>
                 <div class="flex items-center justify-between gap-3 pt-1">
-                    <button type="button" id="lead-capture-skip" class="text-sm font-semibold text-slate-600 hover:text-slate-900 dark:text-slate-300 dark:hover:text-white">{{ $locale === 'hi' ? 'अभी के लिए स्किप करें' : 'Skip for now' }}</button>
+                    <button type="button" id="lead-capture-skip" class="text-sm font-semibold text-slate-600 hover:text-slate-900 dark:text-slate-300 dark:hover:text-white">{{ $locale === 'hi' ? 'अभी के लिए छोड़ें' : 'Skip for now' }}</button>
                     <button type="submit" class="inline-flex items-center justify-center rounded-xl bg-gradient-to-r from-teal-600 to-cyan-600 px-5 py-2.5 text-sm font-bold text-white shadow-md transition hover:from-teal-700 hover:to-cyan-700">{{ $locale === 'hi' ? 'सबमिट करें' : 'Submit' }}</button>
                 </div>
             </form>
@@ -394,7 +395,7 @@
                     </select>
                 </div>
                 <div>
-                    <label class="block text-xs font-bold text-slate-600 dark:text-slate-300 uppercase tracking-wider mb-1.5">{{ $locale === 'hi' ? 'गलत जानकारी रिपोर्ट करें' : 'Remarks (Required)' }}</label>
+                    <label class="block text-xs font-bold text-slate-600 dark:text-slate-300 uppercase tracking-wider mb-1.5">{{ $locale === 'hi' ? 'टिप्पणी (आवश्यक)' : 'Remarks (Required)' }}</label>
                     <textarea name="details" required minlength="3" rows="3" class="w-full px-4 py-2.5 rounded-xl border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-800 text-slate-900 dark:text-slate-100 focus:outline-none focus:ring-2 focus:ring-teal-500/30"></textarea>
                 </div>
                 <p id="listing-report-message" class="hidden text-xs font-semibold"></p>
@@ -489,7 +490,7 @@
                             <i data-lucide="bot" class="w-4 h-4"></i>
                         </div>
                         <div id="chatbot-initial-message" class="p-3.5 rounded-2xl text-sm shadow-sm leading-relaxed bg-white dark:bg-slate-900 text-slate-800 dark:text-slate-100 border border-slate-200/60 dark:border-slate-700 rounded-tl-none">
-                            {{ $locale === 'hi' ? 'नमस्ते, मैं Swasthya AI Assistant हूँ। कृपया पहले अपना शहर चुनें, फिर मैं आपके लिए सही विकल्प ढूँढने में मदद करूँगा।' : "Hi, I'm Swasthya AI Assistant. Please select your city first, then I'll help you find the right nearby healthcare options." }}
+                            {{ $locale === 'hi' ? 'नमस्ते, मैं Swasthya AI Assistant हूँ। कृपया पहले अपना शहर चुनें, फिर मैं आपके लिए सही नज़दीकी विकल्प ढूँढने में मदद करूँगा।' : "Hi, I'm Swasthya AI Assistant. Please select your city first, then I'll help you find the right nearby healthcare options." }}
                         </div>
                     </div>
                 </div>
@@ -507,7 +508,7 @@
                 </div>
                 <div id="chatbot-post-city-questions-wrapper" class="hidden ml-9 max-w-[85%] rounded-xl border border-teal-100 dark:border-teal-900/60 bg-teal-50/80 dark:bg-teal-950/25 px-3 py-2">
                     <p class="text-[11px] font-semibold text-teal-900 dark:text-teal-100">
-                        {{ $locale === 'hi' ? 'उदाहरण: "Nearby में cardiologist", "नजदीकी hospital", "A+ blood bank"' : 'Try: "cardiologist near me", "nearby hospital", "A+ blood bank"' }}
+                        {{ $locale === 'hi' ? 'उदाहरण: "Nearby में cardiologist", "नज़दीकी hospital", "A+ blood bank"' : 'Try: "cardiologist near me", "nearby hospital", "A+ blood bank"' }}
                     </p>
                 </div>
 
@@ -538,7 +539,7 @@
                 <div class="typing-dots" aria-hidden="true">
                     <span></span><span></span><span></span>
                 </div>
-                <span id="chatbot-loading-text">{{ $locale === 'hi' ? 'स्वास्थ्य AI सोच रहा है...' : 'Swasthya AI is thinking...' }}</span>
+                <span id="chatbot-loading-text">{{ $locale === 'hi' ? 'Swasthya AI सोच रहा है...' : 'Swasthya AI is thinking...' }}</span>
             </div>
             <!-- Input Footer -->
             <form id="chatbot-form" onsubmit="handleChatbotSubmit(event)" class="p-3 bg-slate-50 dark:bg-slate-900 border-t border-slate-200/80 dark:border-slate-800 flex items-center space-x-2 shadow-lg">
@@ -565,7 +566,7 @@
                         <span class="text-xl font-bold tracking-tight">Swasthya<span class="text-teal-400">Search</span></span>
                     </div>
                     <p class="text-sm text-slate-300">
-                        {{ $locale === 'hi' ? 'SwasthyaSearch उपयोगकर्ताओं को स्वास्थ्य सेवा प्रदाता खोजने में मदद करता है। विवरण बदल सकते हैं, कृपया जाने से पहले कॉल करें।' : 'SwasthyaSearch helps users find healthcare providers. Please call before visiting as details may change.' }}
+                        {{ $locale === 'hi' ? 'SwasthyaSearch उपयोगकर्ताओं को स्वास्थ्य सेवा प्रदाता खोजने में मदद करता है। जाने से पहले कृपया कॉल करें क्योंकि विवरण बदल सकते हैं।' : 'SwasthyaSearch helps users find healthcare providers. Please call before visiting as details may change.' }}
                     </p>
                 </div>
                 <div>
@@ -577,7 +578,7 @@
                     </div>
                 </div>
                 <div>
-                    <h4 class="text-sm font-semibold mb-3 text-slate-100">{{ $locale === 'hi' ? 'हेल्थकेयर डायरेक्टरी' : 'Healthcare Directory' }}</h4>
+                    <h4 class="text-sm font-semibold mb-3 text-slate-100">{{ $locale === 'hi' ? 'हेल्थकेयर निर्देशिका' : 'Healthcare Directory' }}</h4>
                     <div class="space-y-2 text-sm text-slate-400">
                         <a href="{{ route('doctors.index') }}" class="block hover:text-white">Doctors</a>
                         <a href="{{ route('hospitals.index') }}" class="block hover:text-white">Hospitals</a>
@@ -636,7 +637,7 @@
                     </div>
                     <div>
                         <h3 class="font-extrabold text-lg text-slate-900 dark:text-white">{{ $locale === 'hi' ? 'विस्तृत तुलना मैट्रिक्स' : 'Detailed Comparison Matrix' }}</h3>
-                        <p class="text-xs text-slate-500 dark:text-slate-400">{{ $locale === 'hi' ? 'सर्वोत्तम विकल्प चुनने के लिए सुविधाओं की तुलना करें' : 'Compare metrics side-by-side to make the best choice' }}</p>
+                        <p class="text-xs text-slate-500 dark:text-slate-400">{{ $locale === 'hi' ? 'सर्वोत्तम विकल्प चुनने के लिए सुविधाओं की तुलना करें।' : 'Compare metrics side-by-side to make the best choice' }}</p>
                     </div>
                 </div>
                 <button onclick="closeCompareModal()" class="p-2 text-slate-500 hover:text-slate-850 dark:text-slate-400 dark:hover:text-white rounded-xl hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors">
@@ -686,7 +687,7 @@
                 comparedHospitals.splice(index, 1);
             } else {
                 if (comparedHospitals.length >= 3) {
-                    alert(currentLocale === 'hi' ? 'आप एक बार में केवल 3 अस्पतालों की तुलना कर सकते हैं।' : 'You can only compare up to 3 hospitals at a time.');
+                    showSiteToast('You can only compare up to 3 hospitals at a time.', 'warning');
                     return;
                 }
                 comparedHospitals.push({
@@ -737,7 +738,7 @@
                     btn.classList.add('active');
                     const textSpan = btn.querySelector('span');
                     if (textSpan) {
-                        textSpan.innerText = currentLocale === 'hi' ? 'हटाएं' : 'Added';
+                        textSpan.innerText = currentLocale === 'hi' ? 'हटाएँ' : 'Added';
                     }
                 } else {
                     btn.classList.remove('active');
@@ -779,7 +780,7 @@
             modal.classList.remove('hidden');
 
             // Build header
-            let headHtml = `<th class="p-4 text-left text-xs font-bold text-slate-450 uppercase tracking-wider bg-slate-50 dark:bg-slate-900/50">${currentLocale === 'hi' ? 'विशेषताएं' : 'Features'}</th>`;
+            let headHtml = `<th class="p-4 text-left text-xs font-bold text-slate-450 uppercase tracking-wider bg-slate-50 dark:bg-slate-900/50">${currentLocale === 'hi' ? 'विशेषताएँ' : 'Features'}</th>`;
             comparedHospitals.forEach(h => {
                 headHtml += `
                     <th class="p-4 text-left bg-slate-50 dark:bg-slate-900/50 min-w-[200px]">
@@ -845,7 +846,7 @@
                 bodyHtml += `<td class="p-4 text-xs font-bold text-slate-500 dark:text-slate-400 bg-slate-50/50 dark:bg-slate-900/10">${label}</td>`;
 
                 comparedHospitals.forEach(h => {
-                    let cellVal = h[f.key] || '—';
+                    let cellVal = h[f.key] || 'â€”';
                     let cellHtml = `<td class="p-4 text-xs text-slate-700 dark:text-slate-300">`;
 
                     if (f.isBadge) {
@@ -854,7 +855,7 @@
                         const badgeLabel = isYes ? (currentLocale === 'hi' ? 'उपलब्ध' : 'Available') : (currentLocale === 'hi' ? 'उपलब्ध नहीं' : 'Not Available');
                         cellHtml += `<span class="inline-flex items-center px-2.5 py-1 rounded-lg text-[10px] font-bold ${badgeColor}">${badgeLabel}</span>`;
                     } else if (f.isCall) {
-                        cellHtml += (cellVal && cellVal !== '—') ?
+                        cellHtml += (cellVal && cellVal !== 'â€”') ?
                             `<a href="tel:${cellVal}" class="inline-flex items-center space-x-1 font-extrabold text-teal-600 dark:text-teal-400 hover:underline">
                                 <i data-lucide="phone-call" class="w-3.5 h-3.5"></i>
                                 <span>${cellVal}</span>
@@ -864,9 +865,9 @@
                         cellHtml += `
                             <div class="flex gap-2">
                                 <button onclick="removeFromCompare('${h.id}')" class="px-3 py-1.5 border border-rose-200 dark:border-rose-950/60 hover:bg-rose-50 dark:hover:bg-rose-950/20 text-rose-600 dark:text-rose-450 font-bold text-[10px] rounded-lg transition-colors uppercase tracking-wider">
-                                    ${currentLocale === 'hi' ? 'हटाएं' : 'Remove'}
+                                    ${currentLocale === 'hi' ? 'हटाएँ' : 'Remove'}
                                 </button>
-                                ${h.phone && h.phone !== '—' 
+                                ${h.phone && h.phone !== 'â€”' 
                                     ? `<a href="tel:${h.phone}" class="px-3 py-1.5 bg-teal-600 hover:bg-teal-700 text-white font-bold text-[10px] rounded-lg shadow-sm transition-colors uppercase tracking-wider text-center flex items-center justify-center">
                                         ${currentLocale === 'hi' ? 'कॉल' : 'Call'}
                                        </a>` 
@@ -955,6 +956,48 @@
 
         function normalizeCityValue(city) {
             return String(city || '').trim().replace(/\s+/g, ' ');
+        }
+
+        function chatbotHasCityChoices() {
+            return document.querySelectorAll('.chatbot-city-pill').length > 0;
+        }
+
+        function showSiteToast(message, type = 'info', timeoutMs = 3200) {
+            const stack = document.getElementById('site-toast-stack');
+            if (!stack || !message) return;
+
+            const toast = document.createElement('div');
+            toast.className = `site-toast site-toast-${type}`;
+            toast.innerHTML = `
+                <div class="flex items-start gap-3">
+                    <div class="mt-0.5 h-8 w-8 rounded-xl bg-white/70 dark:bg-white/10 flex items-center justify-center">
+                        <i data-lucide="${type === 'success' ? 'check-circle-2' : type === 'error' ? 'x-circle' : type === 'warning' ? 'alert-triangle' : 'info'}" class="w-4 h-4"></i>
+                    </div>
+                    <div class="min-w-0 flex-1">
+                        <p class="text-sm font-semibold leading-relaxed">${escapeHtml(message)}</p>
+                    </div>
+                    <button type="button" class="shrink-0 rounded-lg px-2 py-1 text-xs font-bold opacity-70 hover:opacity-100" aria-label="Close notification">âœ•</button>
+                </div>
+            `;
+
+            const closeButton = toast.querySelector('button');
+            const removeToast = () => {
+                toast.style.opacity = '0';
+                toast.style.transform = 'translateY(8px) scale(0.98)';
+                setTimeout(() => toast.remove(), 180);
+            };
+
+            closeButton.addEventListener('click', removeToast);
+            stack.appendChild(toast);
+            if (window.lucide) lucide.createIcons();
+
+            if (timeoutMs > 0) {
+                window.setTimeout(removeToast, timeoutMs);
+            }
+        }
+
+        function confirmSiteAction(message) {
+            return window.confirm(message);
         }
 
         function getCityFromUrl() {
@@ -1107,8 +1150,8 @@
 
             const isOpen = button.getAttribute('aria-expanded') === 'true';
             button.setAttribute('aria-expanded', isOpen ? 'false' : 'true');
-            button.dataset.moreLabel = button.dataset.moreLabel || (chatbotLocale === 'hi' ? 'इसके बारे में और जानें' : 'Know more about this');
-            button.dataset.lessLabel = button.dataset.lessLabel || (chatbotLocale === 'hi' ? 'कम दिखाएं' : 'Show less');
+            button.dataset.moreLabel = button.dataset.moreLabel || 'Know more about this';
+            button.dataset.lessLabel = button.dataset.lessLabel || 'Show less';
             button.innerText = isOpen ? button.dataset.moreLabel : button.dataset.lessLabel;
             content.classList.toggle('hidden', isOpen);
         }
@@ -1287,7 +1330,7 @@
                 appendMessage(
                     'bot',
                     chatbotLocale === 'hi' ?
-                    `बहुत बढ़िया, आपने ${chatbotCity} चुना है। अब लक्षण लिखें या नीचे दिए गए विकल्प चुनें।` :
+                    `à¤¬à¤¹à¥à¤¤ à¤¬à¤¢à¤¼à¤¿à¤¯à¤¾, à¤†à¤ªà¤¨à¥‡ ${chatbotCity} à¤šà¥à¤¨à¤¾ à¤¹à¥ˆà¥¤ à¤…à¤¬ à¤²à¤•à¥à¤·à¤£ à¤²à¤¿à¤–à¥‡à¤‚ à¤¯à¤¾ à¤¨à¥€à¤šà¥‡ à¤¦à¤¿à¤ à¤—à¤ à¤µà¤¿à¤•à¤²à¥à¤ª à¤šà¥à¤¨à¥‡à¤‚à¥¤` :
                     `Great, you've selected ${chatbotCity}. Now type your symptoms or use the quick options below.`
                 );
             }
@@ -1317,6 +1360,7 @@
             const sendBtn = document.querySelector('#chatbot-form button[type="submit"]');
             const voiceBtn = document.getElementById('chatbot-voice-btn');
             if (!selectWrapper || !lockedWrapper || !selectedLabel || !quickPromptsWrap) return;
+            const hasCityChoices = cityPills.length > 0;
             cityPills.forEach(pill => {
                 const isActive = normalizeCityValue(pill.dataset.city || '') === chatbotCity;
                 pill.classList.toggle('active', isActive);
@@ -1333,12 +1377,12 @@
                 moveQuickPromptsToBottom();
                 if (input) {
                     input.disabled = false;
-                    input.placeholder = chatbotLocale === 'hi' ? 'लक्षण बताएं या डॉक्टर, अस्पताल, ब्लड बैंक खोजें...' : 'Describe symptoms or search doctors, hospitals, blood banks...';
+                    input.placeholder = chatbotLocale === 'hi' ? 'à¤²à¤•à¥à¤·à¤£ à¤¬à¤¤à¤¾à¤à¤‚ à¤¯à¤¾ à¤¡à¥‰à¤•à¥à¤Ÿà¤°, à¤…à¤¸à¥à¤ªà¤¤à¤¾à¤², à¤¬à¥à¤²à¤¡ à¤¬à¥ˆà¤‚à¤• à¤–à¥‹à¤œà¥‡à¤‚...' : 'Describe symptoms or search doctors, hospitals, blood banks...';
                 }
                 if (sendBtn) sendBtn.disabled = false;
                 if (voiceBtn) voiceBtn.disabled = false;
                 scrollToChatBottom();
-            } else {
+            } else if (hasCityChoices) {
                 selectedLabel.textContent = '';
                 selectWrapper.classList.add('hidden');
                 lockedWrapper.classList.add('hidden');
@@ -1347,20 +1391,38 @@
                 if (citySelectMessage) citySelectMessage.classList.remove('hidden');
                 if (input) {
                     input.disabled = true;
-                    input.placeholder = chatbotLocale === 'hi' ? 'पहले शहर चुनें...' : 'Choose a city from the pills above';
+                    input.placeholder = chatbotLocale === 'hi' ? 'à¤ªà¤¹à¤²à¥‡ à¤¶à¤¹à¤° à¤šà¥à¤¨à¥‡à¤‚...' : 'Choose a city from the pills above';
                 }
                 if (sendBtn) sendBtn.disabled = true;
                 if (voiceBtn) voiceBtn.disabled = true;
+            } else {
+                selectedLabel.textContent = '';
+                selectWrapper.classList.add('hidden');
+                lockedWrapper.classList.add('hidden');
+                quickPromptsWrap.classList.add('hidden');
+                if (postCityQuestionsWrapper) postCityQuestionsWrapper.classList.add('hidden');
+                if (citySelectMessage) citySelectMessage.classList.add('hidden');
+                if (input) {
+                    input.disabled = false;
+                    input.placeholder = chatbotLocale === 'hi' ? 'à¤²à¤•à¥à¤·à¤£ à¤²à¤¿à¤–à¥‡à¤‚ à¤¯à¤¾ à¤¹à¥‡à¤²à¥à¤¥ à¤¸à¤µà¤¾à¤² à¤ªà¥‚à¤›à¥‡à¤‚...' : 'Describe symptoms or ask a health question...';
+                }
+                if (sendBtn) sendBtn.disabled = false;
+                if (voiceBtn) voiceBtn.disabled = false;
             }
         }
         function getInitialChatbotMessage() {
+            if (!chatbotHasCityChoices()) {
+                return chatbotLocale === 'hi'
+                    ? 'à¤¨à¤®à¤¸à¥à¤¤à¥‡, à¤®à¥ˆà¤‚ Swasthya AI Assistant à¤¹à¥‚à¤à¥¤ à¤†à¤ª à¤…à¤¬à¤¹à¥€ à¤¸à¤¾à¤®à¤¾à¤¨à¥à¤¯ à¤¹à¥‡à¤²à¥à¤¥ à¤¸à¤µà¤¾à¤² à¤ªà¥‚à¤› à¤¸à¤•à¤¤à¥‡ à¤¹à¥ˆà¤‚à¥¤ à¤¶à¤¹à¤° à¤¡à¤¾à¤Ÿà¤¾ à¤‰à¤ªà¤²à¤¬à¥à¤§ à¤¹à¥‹à¤¨à¥‡ à¤ªà¤° à¤¨à¤œà¤¼à¤¦à¥€à¤•à¥€ à¤¡à¥‰à¤•à¥à¤Ÿà¤° à¤”à¤° à¤…à¤¸à¥à¤ªà¤¤à¤¾à¤² à¤¸à¥à¤à¤¾à¤µ à¤­à¥€ à¤¦à¤¿à¤–à¥‡à¤‚à¤—à¥‡à¥¤'
+                    : 'Hi, I’m Swasthya AI Assistant. You can ask general health questions right now. Nearby doctor and hospital suggestions will appear when city data is available.';
+            }
             if (chatbotCity) {
                 return chatbotLocale === 'hi' ?
-                    `वापस स्वागत है। आपका चुना हुआ शहर ${chatbotCity} है। आप क्या खोजना चाहते हैं?` :
+                    `Welcome back. Your selected city is ${chatbotCity}. What would you like to find?` :
                     `Welcome back. Your selected city is ${chatbotCity}. What would you like to find?`;
             }
             return chatbotLocale === 'hi'
-                ? 'नमस्ते, मैं Swasthya AI Assistant हूँ। मैं आपकी जरूरत के आधार पर विभाग, डॉक्टर, अस्पताल और ब्लड बैंक ढूंढने में मदद करता हूँ। कृपया पहले अपना शहर चुनें।'
+                ? 'Hi, I am Swasthya AI Assistant. Please select your city first, then I will help you find nearby doctors, hospitals, and blood banks.'
                 : 'Hi, I\u2019m Swasthya AI Assistant. Please select your city first, then I\u2019ll ask a few quick questions and help you find the best nearby options.';
         }
         function initializeChatbotCity() {
@@ -1502,10 +1564,10 @@
             appendMessage('bot',
                 chatbotCity ?
                 (chatbotLocale === 'hi' ?
-                    `चैट साफ की गई। आपका चुना हुआ शहर ${chatbotCity} है। बताइए क्या खोजना है?` :
+                    `Chat cleared. Your selected city is ${chatbotCity}. What would you like to find?` :
                     `Chat cleared. Your selected city is ${chatbotCity}. What would you like to find?`) :
                 (chatbotLocale === 'hi' ?
-                    'चैट साफ की गई। कृपया शहर चुनें और आगे बढ़ें।' :
+                    'Chat cleared. Please choose a city to continue.' :
                     'Chat cleared. Please choose a city to continue.')
             );
             refreshChatbotCityUI();
@@ -1575,7 +1637,7 @@
         function resetListenButtonState(btn) {
             if (!btn) return;
             btn.classList.remove('listening');
-            btn.innerHTML = `🔊 ${chatbotLocale === 'hi' ? 'सुनें' : 'Listen'}`;
+            btn.innerHTML = `🔊 Listen`;
         }
 
         function stopMessageListening() {
@@ -1599,7 +1661,7 @@
             stopMessageListening();
             activeListenButton = btn;
             btn.classList.add('listening');
-            btn.innerHTML = `⏹ ${chatbotLocale === 'hi' ? 'रोकें' : 'Stop'}`;
+            btn.innerHTML = `⏹ Stop`;
 
             const utterance = new SpeechSynthesisUtterance(text);
             utterance.lang = chatbotLocale === 'hi' ? 'hi-IN' : 'en-US';
@@ -1636,11 +1698,11 @@
             if (isVoiceTyping) {
                 btn.classList.remove('bg-teal-600', 'hover:bg-teal-500');
                 btn.classList.add('bg-rose-600', 'hover:bg-rose-500');
-                btn.title = chatbotLocale === 'hi' ? 'वॉइस टाइपिंग रोकें' : 'Stop voice typing';
+                btn.title = 'Stop voice typing';
             } else {
                 btn.classList.remove('bg-rose-600', 'hover:bg-rose-500');
                 btn.classList.add('bg-teal-600', 'hover:bg-teal-500');
-                btn.title = chatbotLocale === 'hi' ? 'वॉइस टाइपिंग चालू करें' : 'Start voice typing';
+                btn.title = 'Start voice typing';
             }
         }
 
@@ -1649,7 +1711,7 @@
 
             if (!SpeechRecognition) {
                 appendMessage('bot', chatbotLocale === 'hi' ?
-                    'आपके ब्राउज़र में वॉइस टाइपिंग समर्थित नहीं है। कृपया Chrome/Edge का उपयोग करें।' :
+                    'Voice typing is not supported in your browser. Please use Chrome or Edge.' :
                     'Voice typing is not supported in your browser. Please use Chrome or Edge.');
                 return;
             }
@@ -1699,9 +1761,9 @@
             if (isSubmittingChat) return;
             chatbotCity = resolveSelectedCity();
 
-            if (!chatbotCity) {
+            if (!chatbotCity && chatbotHasCityChoices()) {
                 if (!hasCityPromptVisible) {
-                    appendMessage('bot', chatbotLocale === 'hi' ? 'कृपया पहले शहर चुनें ताकि मैं नजदीकी सही परिणाम दिखा सकूं।' : 'Please select your city so I can show relevant nearby results.');
+                    appendMessage('bot', 'Please select your city so I can show relevant nearby results.');
                     hasCityPromptVisible = true;
                 }
                 return;
@@ -1777,9 +1839,7 @@
                 if (sendBtn) sendBtn.disabled = false;
                 isSubmittingChat = false;
                 pendingChatAbortController = null;
-                appendMessage('bot', chatbotLocale === 'hi'
-                    ? 'तकनीकी समस्या के कारण जवाब नहीं आ सका। कृपया दोबारा कोशिश करें या "Find Doctors" चुनें।'
-                    : 'We could not process your request due to a technical issue. Please try again or choose "Find Doctors".');
+                appendMessage('bot', 'We could not process your request due to a technical issue. Please try again or choose "Find Doctors".');
             }
         }
 
@@ -1812,17 +1872,11 @@
 
             let loaderMsg = '';
             if (type === 'doctors') {
-                loaderMsg = chatbotLocale === 'hi'
-                    ? "आपके पास के सर्वश्रेष्ठ विशेषज्ञों की खोज की जा रही है..."
-                    : "Searching for best specialist near you...";
+                loaderMsg = "Searching for best specialist near you...";
             } else if (type === 'hospitals') {
-                loaderMsg = chatbotLocale === 'hi'
-                    ? "आपके पास के अस्पतालों की खोज की जा रही है..."
-                    : "Finding hospitals which is near to you...";
+                loaderMsg = "Finding hospitals near you...";
             } else if (type === 'articles') {
-                loaderMsg = chatbotLocale === 'hi'
-                    ? "आपकी सहायता कर सकने वाले लेखों की खोज की जा रही है..."
-                    : "Finding articles which may help you...";
+                loaderMsg = "Finding helpful articles...";
             }
 
             if (loadingText) {
@@ -1867,7 +1921,7 @@
                 pendingChatAbortController = null;
 
                 if (loadingText) {
-                    loadingText.textContent = chatbotLocale === 'hi' ? 'स्वास्थ्य AI सोच रहा है...' : 'Swasthya AI is thinking...';
+                    loadingText.textContent = 'Swasthya AI is thinking...';
                 }
 
                 if (data.history) {
@@ -1899,11 +1953,9 @@
                 isSubmittingChat = false;
                 pendingChatAbortController = null;
                 if (loadingText) {
-                    loadingText.textContent = chatbotLocale === 'hi' ? 'स्वास्थ्य AI सोच रहा है...' : 'Swasthya AI is thinking...';
+                    loadingText.textContent = 'Swasthya AI is thinking...';
                 }
-                appendMessage('bot', chatbotLocale === 'hi'
-                    ? 'तकनीकी समस्या के कारण विकल्प लोड नहीं हो सके। कृपया दोबारा कोशिश करें।'
-                    : 'We could not load options due to a technical issue. Please try again.');
+                appendMessage('bot', 'We could not load options due to a technical issue. Please try again.');
             }
         }
 
@@ -1936,7 +1988,7 @@
             const input = document.getElementById('chatbot-input');
             const message = input.value.trim();
             if (!message) {
-                appendMessage('bot', chatbotLocale === 'hi' ? 'कृपया संदेश लिखें।' : 'Please enter a message.');
+                appendMessage('bot', chatbotLocale === 'hi' ? 'à¤•à¥ƒà¤ªà¤¯à¤¾ à¤¸à¤‚à¤¦à¥‡à¤¶ à¤²à¤¿à¤–à¥‡à¤‚à¥¤' : 'Please enter a message.');
                 return;
             }
             await submitChatbotMessage(message);
@@ -1957,7 +2009,7 @@
 
             const spoken = String(msg.text || '').replace(/\*\*/g, '').replace(/[*_\-`]/g, '');
             const spokenEncoded = encodeURIComponent(spoken);
-            const isWarning = !isUser && /(emergency|urgent|call|आपात|तुरंत|helpline)/i.test(String(msg.text || ''));
+            const isWarning = !isUser && /(emergency|urgent|call|à¤†à¤ªà¤¾à¤¤|à¤¤à¥à¤°à¤‚à¤¤|helpline)/i.test(String(msg.text || ''));
             let html = `
                 <div class="flex ${isUser ? 'justify-end' : 'justify-start'} animate-in fade-in duration-200">
                     <div class="flex space-x-2 max-w-[85%] ${isUser ? 'flex-row-reverse space-x-reverse' : 'flex-row'}">
@@ -1969,8 +2021,8 @@
                                 ${isUser ? escapeHtml(msg.text) : formatMessageText(msg.text)}
                             </div>
                             <div class="flex flex-wrap gap-2 items-center">
-                                ${!isUser ? `<button type="button" onclick="toggleMessageListen('${spokenEncoded}', this)" class="inline-flex items-center gap-1 text-[11px] text-slate-600 dark:text-slate-300 hover:text-teal-700 dark:hover:text-cyan-300 text-left px-2.5 py-1 rounded-lg hover:bg-teal-50 dark:hover:bg-slate-800 border border-slate-200/60 dark:border-slate-700 bg-white dark:bg-slate-900 transition-all">🔊 ${chatbotLocale === 'hi' ? 'सुनें' : 'Listen'}</button>` : ''}
-                                ${(!isUser && msg.suggest_details && isLastBotMsg) ? `<button type="button" onclick="submitChatbotMessage('${chatbotLocale === 'hi' ? 'कृपया विस्तार से समझाएं' : 'Please explain in detail'}')" class="inline-flex items-center gap-1 text-[11px] font-semibold text-cyan-700 dark:text-cyan-300 hover:text-indigo-900 dark:hover:text-indigo-200 border border-indigo-200 dark:border-indigo-700 hover:border-indigo-300 dark:hover:border-indigo-600 bg-white dark:bg-slate-900 hover:bg-cyan-50 dark:hover:bg-slate-800 rounded-lg px-2.5 py-1 transition-all">💬 ${chatbotLocale === 'hi' ? 'विस्तार से समझाएं' : 'Explain in Detail'}</button>` : ''}
+                                ${!isUser ? `<button type="button" onclick="toggleMessageListen('${spokenEncoded}', this)" class="inline-flex items-center gap-1 text-[11px] text-slate-600 dark:text-slate-300 hover:text-teal-700 dark:hover:text-cyan-300 text-left px-2.5 py-1 rounded-lg hover:bg-teal-50 dark:hover:bg-slate-800 border border-slate-200/60 dark:border-slate-700 bg-white dark:bg-slate-900 transition-all">ðŸ”Š ${chatbotLocale === 'hi' ? 'à¤¸à¥à¤¨à¥‡à¤‚' : 'Listen'}</button>` : ''}
+                                ${(!isUser && msg.suggest_details && isLastBotMsg) ? `<button type="button" onclick="submitChatbotMessage('${chatbotLocale === 'hi' ? 'à¤•à¥ƒà¤ªà¤¯à¤¾ à¤µà¤¿à¤¸à¥à¤¤à¤¾à¤° à¤¸à¥‡ à¤¸à¤®à¤à¤¾à¤à¤‚' : 'Please explain in detail'}')" class="inline-flex items-center gap-1 text-[11px] font-semibold text-cyan-700 dark:text-cyan-300 hover:text-indigo-900 dark:hover:text-indigo-200 border border-indigo-200 dark:border-indigo-700 hover:border-indigo-300 dark:hover:border-indigo-600 bg-white dark:bg-slate-900 hover:bg-cyan-50 dark:hover:bg-slate-800 rounded-lg px-2.5 py-1 transition-all">ðŸ’¬ ${chatbotLocale === 'hi' ? 'à¤µà¤¿à¤¸à¥à¤¤à¤¾à¤° à¤¸à¥‡ à¤¸à¤®à¤à¤¾à¤à¤‚' : 'Explain in Detail'}</button>` : ''}
                             </div>
                             ${(!isUser && msg.show_options && isLastBotMsg && idx >= 0) ? (() => {
                                 const loaded = getLoadedResourcesInCurrentTurn(history, idx);
@@ -1980,7 +2032,7 @@
                                     optionsHtml += `
                                         <button type="button" onclick="loadChatbotResource('doctors')" class="inline-flex items-center gap-1.5 text-[11px] font-bold text-teal-700 hover:text-teal-900 border border-teal-200 hover:border-teal-300 bg-white dark:bg-slate-900 dark:border-slate-800 dark:text-teal-400 dark:hover:bg-slate-800/80 hover:bg-teal-50 rounded-lg px-2.5 py-1.5 transition-all">
                                             <i data-lucide="stethoscope" class="w-3.5 h-3.5 text-teal-500 shrink-0"></i>
-                                            <span>${chatbotLocale === 'hi' ? 'विशेषज्ञ डॉक्टर' : 'Specialist Doctors'}</span>
+                                            <span>${chatbotLocale === 'hi' ? 'à¤µà¤¿à¤¶à¥‡à¤·à¤œà¥à¤ž à¤¡à¥‰à¤•à¥à¤Ÿà¤°' : 'Specialist Doctors'}</span>
                                         </button>
                                     `;
                                 }
@@ -1988,7 +2040,7 @@
                                     optionsHtml += `
                                         <button type="button" onclick="loadChatbotResource('hospitals')" class="inline-flex items-center gap-1.5 text-[11px] font-bold text-cyan-700 hover:text-indigo-900 border border-indigo-200 hover:border-indigo-300 bg-white dark:bg-slate-900 dark:border-slate-800 dark:text-indigo-400 dark:hover:bg-slate-800/80 hover:bg-cyan-50 rounded-lg px-2.5 py-1.5 transition-all">
                                             <i data-lucide="building-2" class="w-3.5 h-3.5 text-indigo-500 shrink-0"></i>
-                                            <span>${chatbotLocale === 'hi' ? 'अस्पताल व क्लीनिक' : 'Hospitals & Clinics'}</span>
+                                            <span>${chatbotLocale === 'hi' ? 'à¤…à¤¸à¥à¤ªà¤¤à¤¾à¤² à¤µ à¤•à¥à¤²à¥€à¤¨à¤¿à¤•' : 'Hospitals & Clinics'}</span>
                                         </button>
                                     `;
                                 }
@@ -1996,7 +2048,7 @@
                                     optionsHtml += `
                                         <button type="button" onclick="loadChatbotResource('articles')" class="inline-flex items-center gap-1.5 text-[11px] font-bold text-amber-700 hover:text-amber-900 border border-amber-200 hover:border-amber-300 bg-white dark:bg-slate-900 dark:border-slate-800 dark:text-amber-400 dark:hover:bg-slate-800/80 hover:bg-amber-50 rounded-lg px-2.5 py-1.5 transition-all">
                                             <i data-lucide="book-open" class="w-3.5 h-3.5 text-amber-500 shrink-0"></i>
-                                            <span>${chatbotLocale === 'hi' ? 'स्वास्थ्य लेख' : 'Health Articles'}</span>
+                                            <span>${chatbotLocale === 'hi' ? 'à¤¸à¥à¤µà¤¾à¤¸à¥à¤¥à¥à¤¯ à¤²à¥‡à¤–' : 'Health Articles'}</span>
                                         </button>
                                     `;
                                 }
@@ -2005,7 +2057,7 @@
                                     return `
                                         <div class="pt-2 flex flex-wrap gap-2 items-center">
                                             <span class="text-[10px] font-bold text-slate-400 dark:text-slate-500 uppercase tracking-wider block w-full mb-1">
-                                                ${chatbotLocale === 'hi' ? 'संबंधित विकल्प लोड करें:' : 'Load related options:'}
+                                                ${chatbotLocale === 'hi' ? 'à¤¸à¤‚à¤¬à¤‚à¤§à¤¿à¤¤ à¤µà¤¿à¤•à¤²à¥à¤ª à¤²à¥‹à¤¡ à¤•à¤°à¥‡à¤‚:' : 'Load related options:'}
                                             </span>
                                             ${optionsHtml}
                                         </div>
@@ -2038,8 +2090,8 @@
                     chatbotDetailBlockCounter += 1;
                     const buttonId = `chatbot-detail-toggle-${chatbotDetailBlockCounter}`;
                     const contentId = `chatbot-detail-content-${chatbotDetailBlockCounter}`;
-                    const moreLabel = chatbotLocale === 'hi' ? 'इसके बारे में और जानें' : 'Know more about this';
-                    const lessLabel = chatbotLocale === 'hi' ? 'कम दिखाएं' : 'Show less';
+                    const moreLabel = chatbotLocale === 'hi' ? 'à¤‡à¤¸à¤•à¥‡ à¤¬à¤¾à¤°à¥‡ à¤®à¥‡à¤‚ à¤”à¤° à¤œà¤¾à¤¨à¥‡à¤‚' : 'Know more about this';
+                    const lessLabel = chatbotLocale === 'hi' ? 'à¤•à¤® à¤¦à¤¿à¤–à¤¾à¤à¤‚' : 'Show less';
                     html += `
                         <div class="pt-1">
                             <button
@@ -2068,7 +2120,7 @@
                         <div class="space-y-2 pt-3 border-t border-slate-100/50 dark:border-slate-800 mt-3">
                             <h5 class="text-xs font-bold text-slate-400 uppercase tracking-wider flex items-center gap-1">
                                 <i data-lucide="stethoscope" class="w-3.5 h-3.5 text-teal-600"></i>
-                                <span>${currentLocale === 'hi' ? 'विशेषज्ञ डॉक्टर' : 'Specialist Doctors'}</span>
+                                <span>${currentLocale === 'hi' ? 'à¤µà¤¿à¤¶à¥‡à¤·à¤œà¥à¤ž à¤¡à¥‰à¤•à¥à¤Ÿà¤°' : 'Specialist Doctors'}</span>
                             </h5>
                     `;
                     msg.doctors.forEach(doc => {
@@ -2085,7 +2137,7 @@
                                         ${doc.is_verified ? '<i data-lucide="check-circle-2" class="w-3.5 h-3.5 text-teal-600 inline"></i>' : ''}
                                     </h4>
                                     <span class="text-[10px] bg-cyan-50 dark:bg-cyan-950/40 text-cyan-700 dark:text-cyan-300 px-2 py-0.5 rounded-lg font-medium shrink-0">
-                                        ${doc.experience_years} ${currentLocale === 'hi' ? 'वर्ष अनुभव' : 'yrs exp'}
+                                        ${doc.experience_years} ${currentLocale === 'hi' ? 'à¤µà¤°à¥à¤· à¤…à¤¨à¥à¤­à¤µ' : 'yrs exp'}
                                     </span>
                                 </div>
                                 <div class="mt-2 space-y-1 text-xs text-slate-600 dark:text-slate-300">
@@ -2103,7 +2155,7 @@
                                 ${emergencyPhone ? `
                                     <div class="mt-2 pt-2 border-t border-slate-100 dark:border-slate-700 flex justify-end">
                                         <a href="tel:${emergencyPhone}" class="text-xs bg-teal-50 dark:bg-teal-950/40 hover:bg-teal-600 dark:hover:bg-teal-700 hover:text-white text-teal-700 dark:text-teal-300 font-medium px-3 py-1 rounded-xl shadow-xs transition-all duration-200">
-                                            ${currentLocale === 'hi' ? 'कॉल करें' : 'Call Doctor'}
+                                            ${currentLocale === 'hi' ? 'à¤•à¥‰à¤² à¤•à¤°à¥‡à¤‚' : 'Call Doctor'}
                                         </a>
                                     </div>
                                 ` : ''}
@@ -2115,7 +2167,7 @@
                         html += `
                             <div class="pt-1 flex justify-end">
                                 <a href="${msg.see_all_doctors_url}" class="inline-flex items-center space-x-1 text-xs bg-teal-50 dark:bg-teal-950/40 hover:bg-teal-600 dark:hover:bg-teal-700 hover:text-white text-teal-700 dark:text-teal-300 font-medium px-3 py-1.5 rounded-xl shadow-xs transition-all duration-200">
-                                    <span>${currentLocale === 'hi' ? 'सभी डॉक्टर देखें' : 'See all doctors'}</span>
+                                    <span>${currentLocale === 'hi' ? 'à¤¸à¤­à¥€ à¤¡à¥‰à¤•à¥à¤Ÿà¤° à¤¦à¥‡à¤–à¥‡à¤‚' : 'See all doctors'}</span>
                                     <i data-lucide="arrow-right" class="w-3.5 h-3.5"></i>
                                 </a>
                             </div>
@@ -2130,7 +2182,7 @@
                         <div class="space-y-2 pt-3 border-t border-slate-100/50 dark:border-slate-800 mt-3">
                             <h5 class="text-xs font-bold text-slate-400 uppercase tracking-wider flex items-center gap-1">
                                 <i data-lucide="building-2" class="w-3.5 h-3.5 text-teal-600"></i>
-                                <span>${currentLocale === 'hi' ? 'अस्पताल व क्लिनिक' : 'Hospitals & Clinics'}</span>
+                                <span>${currentLocale === 'hi' ? 'à¤…à¤¸à¥à¤ªà¤¤à¤¾à¤² à¤µ à¤•à¥à¤²à¤¿à¤¨à¤¿à¤•' : 'Hospitals & Clinics'}</span>
                             </h5>
                     `;
                     msg.hospitals.forEach(hosp => {
@@ -2157,7 +2209,7 @@
                                     <div class="mt-2 pt-2 border-t border-slate-100 dark:border-slate-700 flex justify-end">
                                         <a href="tel:${emergencyPhone}" class="text-xs bg-teal-50 dark:bg-teal-950/40 hover:bg-teal-600 dark:hover:bg-teal-700 hover:text-white text-teal-700 dark:text-teal-300 font-medium px-3 py-1 rounded-xl shadow-xs transition-all duration-200 flex items-center space-x-1">
                                             <i data-lucide="phone-call" class="w-3 h-3"></i>
-                                            <span>${currentLocale === 'hi' ? 'कॉल करें' : 'Call Emergency'}</span>
+                                            <span>${currentLocale === 'hi' ? 'à¤•à¥‰à¤² à¤•à¤°à¥‡à¤‚' : 'Call Emergency'}</span>
                                         </a>
                                     </div>
                                 ` : ''}
@@ -2169,7 +2221,7 @@
                         html += `
                             <div class="pt-1 flex justify-end">
                                 <a href="${msg.see_all_hospitals_url}" class="inline-flex items-center space-x-1 text-xs bg-cyan-50 dark:bg-cyan-950/40 hover:bg-cyan-600 dark:hover:bg-cyan-700 hover:text-white text-cyan-700 dark:text-cyan-300 font-medium px-3 py-1.5 rounded-xl shadow-xs transition-all duration-200">
-                                    <span>${currentLocale === 'hi' ? 'सभी अस्पताल देखें' : 'See all hospitals'}</span>
+                                    <span>${currentLocale === 'hi' ? 'à¤¸à¤­à¥€ à¤…à¤¸à¥à¤ªà¤¤à¤¾à¤² à¤¦à¥‡à¤–à¥‡à¤‚' : 'See all hospitals'}</span>
                                     <i data-lucide="arrow-right" class="w-3.5 h-3.5"></i>
                                 </a>
                             </div>
@@ -2184,7 +2236,7 @@
                         <div class="space-y-2 pt-3 border-t border-slate-100/50 dark:border-slate-800 mt-3">
                             <h5 class="text-xs font-bold text-slate-400 uppercase tracking-wider flex items-center gap-1">
                                 <i data-lucide="droplet" class="w-3.5 h-3.5 text-rose-600"></i>
-                                <span>${currentLocale === 'hi' ? 'ब्लड बैंक' : 'Blood Banks'}</span>
+                                <span>${currentLocale === 'hi' ? 'à¤¬à¥à¤²à¤¡ à¤¬à¥ˆà¤‚à¤•' : 'Blood Banks'}</span>
                             </h5>
                     `;
                     msg.blood_banks.forEach(bank => {
@@ -2201,7 +2253,7 @@
                                         ${bank.is_verified ? '<i data-lucide="check-circle-2" class="w-3.5 h-3.5 text-rose-600 inline shrink-0"></i>' : ''}
                                     </h4>
                                     <span class="text-[10px] bg-rose-50 dark:bg-rose-950/40 text-rose-700 dark:text-rose-300 px-2 py-0.5 rounded-lg font-bold uppercase tracking-wider shrink-0">
-                                        ${currentLocale === 'hi' ? 'सत्यापित' : 'Verified'}
+                                        ${currentLocale === 'hi' ? 'à¤¸à¤¤à¥à¤¯à¤¾à¤ªà¤¿à¤¤' : 'Verified'}
                                     </span>
                                 </div>
                                 <div class="mt-1.5 flex items-start space-x-1 text-xs text-slate-600 dark:text-slate-300">
@@ -2212,7 +2264,7 @@
                                     <div class="mt-2 pt-2 border-t border-slate-100 dark:border-slate-700 flex justify-end">
                                         <a href="tel:${emergencyPhone}" class="text-xs bg-rose-50 dark:bg-rose-950/40 hover:bg-rose-600 dark:hover:bg-rose-700 hover:text-white text-rose-700 dark:text-rose-300 font-medium px-3 py-1 rounded-xl shadow-xs transition-all duration-200 flex items-center space-x-1">
                                             <i data-lucide="phone-call" class="w-3 h-3"></i>
-                                            <span>${currentLocale === 'hi' ? 'कॉल करें' : 'Call Now'}</span>
+                                            <span>${currentLocale === 'hi' ? 'à¤•à¥‰à¤² à¤•à¤°à¥‡à¤‚' : 'Call Now'}</span>
                                         </a>
                                     </div>
                                 ` : ''}
@@ -2224,7 +2276,7 @@
                         html += `
                             <div class="pt-1 flex justify-end">
                                 <a href="${msg.see_all_blood_banks_url}" class="inline-flex items-center space-x-1 text-xs bg-rose-50 dark:bg-rose-950/40 hover:bg-rose-600 dark:hover:bg-rose-700 hover:text-white text-rose-700 dark:text-rose-300 font-medium px-3 py-1.5 rounded-xl shadow-xs transition-all duration-200">
-                                    <span>${currentLocale === 'hi' ? 'सभी ब्लड बैंक देखें' : 'See all blood banks'}</span>
+                                    <span>${currentLocale === 'hi' ? 'à¤¸à¤­à¥€ à¤¬à¥à¤²à¤¡ à¤¬à¥ˆà¤‚à¤• à¤¦à¥‡à¤–à¥‡à¤‚' : 'See all blood banks'}</span>
                                     <i data-lucide="arrow-right" class="w-3.5 h-3.5"></i>
                                 </a>
                             </div>
@@ -2239,7 +2291,7 @@
                         <div class="space-y-2 pt-3 border-t border-slate-100/50 dark:border-slate-800 mt-3">
                             <h5 class="text-xs font-bold text-slate-400 uppercase tracking-wider flex items-center gap-1">
                                 <i data-lucide="book-open" class="w-3.5 h-3.5 text-teal-600"></i>
-                                <span>${currentLocale === 'hi' ? 'स्वास्थ्य लेख' : 'Health Articles'}</span>
+                                <span>${currentLocale === 'hi' ? 'à¤¸à¥à¤µà¤¾à¤¸à¥à¤¥à¥à¤¯ à¤²à¥‡à¤–' : 'Health Articles'}</span>
                             </h5>
                     `;
                     msg.articles.forEach(art => {
@@ -2252,7 +2304,7 @@
                                 <p class="text-xs text-slate-600 dark:text-slate-300 mt-1 line-clamp-2">${artExcerpt}</p>
                                 <div class="mt-2 pt-2 border-t border-slate-100 dark:border-slate-700 flex justify-end">
                                     <a href="/articles/${art.id}" target="_blank" class="text-xs bg-cyan-50 dark:bg-cyan-950/40 hover:bg-cyan-600 dark:hover:bg-cyan-700 hover:text-white text-cyan-700 dark:text-cyan-300 font-medium px-3 py-1 rounded-xl shadow-xs transition-all duration-200 flex items-center space-x-1">
-                                        <span>${currentLocale === 'hi' ? 'पूरा लेख पढ़ें' : 'Read Article'}</span>
+                                        <span>${currentLocale === 'hi' ? 'à¤ªà¥‚à¤°à¤¾ à¤²à¥‡à¤– à¤ªà¤¢à¤¼à¥‡à¤‚' : 'Read Article'}</span>
                                         <i data-lucide="external-link" class="w-3 h-3"></i>
                                     </a>
                                 </div>
@@ -2263,7 +2315,7 @@
                         html += `
                             <div class="pt-1 flex justify-end">
                                 <a href="${msg.see_all_articles_url}" class="inline-flex items-center space-x-1 text-xs bg-cyan-50 dark:bg-cyan-950/40 hover:bg-cyan-600 dark:hover:bg-cyan-700 hover:text-white text-cyan-700 dark:text-cyan-300 font-medium px-3 py-1.5 rounded-xl shadow-xs transition-all duration-200">
-                                    <span>${currentLocale === 'hi' ? 'सभी लेख देखें' : 'See all articles'}</span>
+                                    <span>${currentLocale === 'hi' ? 'à¤¸à¤­à¥€ à¤²à¥‡à¤– à¤¦à¥‡à¤–à¥‡à¤‚' : 'See all articles'}</span>
                                     <i data-lucide="arrow-right" class="w-3.5 h-3.5"></i>
                                 </a>
                             </div>
@@ -2370,7 +2422,7 @@
                     msgEl.classList.remove('hidden');
                     msgEl.classList.remove('text-rose-600');
                     msgEl.classList.add('text-emerald-600');
-                    msgEl.textContent = '{{ $locale === "hi" ? "धन्यवाद! आपकी जानकारी सफलतापूर्वक सेव हो गई।" : "Thanks! Your details were saved successfully." }}';
+                    msgEl.textContent = '{{ $locale === "hi" ? "à¤§à¤¨à¥à¤¯à¤µà¤¾à¤¦! à¤†à¤ªà¤•à¥€ à¤œà¤¾à¤¨à¤•à¤¾à¤°à¥€ à¤¸à¤«à¤²à¤¤à¤¾à¤ªà¥‚à¤°à¥à¤µà¤• à¤¸à¥‡à¤µ à¤¹à¥‹ à¤—à¤ˆà¥¤" : "Thanks! Your details were saved successfully." }}';
                 }
                 setTimeout(closeLeadCaptureModal, 800);
             } catch (err) {
@@ -2378,7 +2430,7 @@
                     msgEl.classList.remove('hidden');
                     msgEl.classList.remove('text-emerald-600');
                     msgEl.classList.add('text-rose-600');
-                    msgEl.textContent = '{{ $locale === "hi" ? "कृपया सही विवरण भरें और दोबारा प्रयास करें।" : "Please check your details and try again." }}';
+                    msgEl.textContent = '{{ $locale === "hi" ? "à¤•à¥ƒà¤ªà¤¯à¤¾ à¤¸à¤¹à¥€ à¤µà¤¿à¤µà¤°à¤£ à¤­à¤°à¥‡à¤‚ à¤”à¤° à¤¦à¥‹à¤¬à¤¾à¤°à¤¾ à¤ªà¥à¤°à¤¯à¤¾à¤¸ à¤•à¤°à¥‡à¤‚à¥¤" : "Please check your details and try again." }}';
                 }
             }
         });
@@ -2414,14 +2466,14 @@
                 if (msgEl) {
                     msgEl.classList.remove('hidden', 'text-rose-600');
                     msgEl.classList.add('text-emerald-600');
-                    msgEl.textContent = '{{ $locale === "hi" ? "धन्यवाद! आपकी रिपोर्ट दर्ज कर ली गई है।" : "Thank you! Your report has been submitted." }}';
+                    msgEl.textContent = '{{ $locale === "hi" ? "à¤§à¤¨à¥à¤¯à¤µà¤¾à¤¦! à¤†à¤ªà¤•à¥€ à¤°à¤¿à¤ªà¥‹à¤°à¥à¤Ÿ à¤¦à¤°à¥à¤œ à¤•à¤° à¤²à¥€ à¤—à¤ˆ à¤¹à¥ˆà¥¤" : "Thank you! Your report has been submitted." }}';
                 }
                 setTimeout(closeListingReportModal, 900);
             } catch (err) {
                 if (msgEl) {
                     msgEl.classList.remove('hidden', 'text-emerald-600');
                     msgEl.classList.add('text-rose-600');
-                    msgEl.textContent = '{{ $locale === "hi" ? "रिपोर्ट सबमिट नहीं हो सकी। कृपया दोबारा प्रयास करें।" : "Please add remarks and try again." }}';
+                    msgEl.textContent = '{{ $locale === "hi" ? "à¤°à¤¿à¤ªà¥‹à¤°à¥à¤Ÿ à¤¸à¤¬à¤®à¤¿à¤Ÿ à¤¨à¤¹à¥€à¤‚ à¤¹à¥‹ à¤¸à¤•à¥€à¥¤ à¤•à¥ƒà¤ªà¤¯à¤¾ à¤¦à¥‹à¤¬à¤¾à¤°à¤¾ à¤ªà¥à¤°à¤¯à¤¾à¤¸ à¤•à¤°à¥‡à¤‚à¥¤" : "Please add remarks and try again." }}';
                 }
             }
         });
@@ -3264,7 +3316,7 @@
         .chatbot-fab-label {
             display: inline-block;
             max-width: 280px;
-            /* Enough to display 'Ask Swasthya Saathi' or 'स्वास्थ्य साथी से पूछें' */
+            /* Enough to display 'Ask Swasthya Saathi' or 'à¤¸à¥à¤µà¤¾à¤¸à¥à¤¥à¥à¤¯ à¤¸à¤¾à¤¥à¥€ à¤¸à¥‡ à¤ªà¥‚à¤›à¥‡à¤‚' */
             margin-left: 12px;
             opacity: 1;
             overflow: hidden;
@@ -3413,6 +3465,7 @@
 </body>
 
 </html>
+
 
 
 
