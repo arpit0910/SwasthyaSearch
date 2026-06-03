@@ -5,6 +5,7 @@ namespace App\Services;
 use App\Models\Department;
 use App\Models\Doctor;
 use App\Models\Hospital;
+use App\Services\DirectoryDeduplicationService;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Log;
@@ -119,6 +120,8 @@ class HealthcareSyncService
             if (!empty($doctorsBatch) && !empty($syncedDoctorIds)) {
                 Doctor::where('city', 'LIKE', "%{$defaultCity}%")->whereNotIn('id', $syncedDoctorIds)->delete();
             }
+
+            app(DirectoryDeduplicationService::class)->dedupe($defaultCity);
         }
 
         if ($cacheKey) {
@@ -298,12 +301,28 @@ class HealthcareSyncService
         // Normalize Cashless Schemes & Flags for independent clinic empanelment
         $schemes = self::normalizeSchemes($sourceData);
 
-        $regNumber = $sourceData['registration_number'] ?? null;
-        if (empty($regNumber)) {
-            $regNumber = 'REG-' . strtoupper(substr(md5($firstName . $lastName . $addressData['city'] . $existingDept->id . ($sourceData['hospital_name_en'] ?? $addressData['full_address'])), 0, 10));
+        $regNumber = trim((string) ($sourceData['registration_number'] ?? ''));
+        $phoneParts = self::splitPhone($sourceData['phone'] ?? null);
+        $existingDoctor = null;
+
+        if ($regNumber !== '') {
+            $existingDoctor = Doctor::where('registration_number', $regNumber)->first();
         }
 
-        $existingDoctor = Doctor::where('registration_number', $regNumber)->first();
+        if (!$existingDoctor) {
+            $existingDoctor = self::findExistingDoctorMatch(
+                $firstName,
+                $lastName,
+                $addressData['city'],
+                $existingDept->id,
+                $phoneParts['phone']
+            );
+        }
+
+        if ($regNumber === '') {
+            $regNumber = $existingDoctor?->registration_number
+                ?: 'REG-' . strtoupper(substr(md5($firstName . $lastName . $addressData['city'] . $existingDept->id), 0, 10));
+        }
 
         $incomingExperience = isset($sourceData['experience_years']) ? (int) $sourceData['experience_years'] : null;
         $existingExperience = $existingDoctor?->experience_years;
@@ -402,6 +421,22 @@ class HealthcareSyncService
             'doctor' => $doctor,
             'new_department' => $newDepartmentCreated,
         ];
+    }
+
+    private static function findExistingDoctorMatch(string $firstName, string $lastName, string $cityName, int $departmentId, ?string $phone): ?Doctor
+    {
+        $query = Doctor::query()
+            ->whereRaw('LOWER(TRIM(first_name)) = ?', [strtolower(trim($firstName))])
+            ->whereRaw('LOWER(TRIM(last_name)) = ?', [strtolower(trim($lastName))])
+            ->whereRaw('LOWER(TRIM(city)) = ?', [strtolower(trim($cityName))]);
+
+        if (!empty($phone)) {
+            $query->where('phone_1', $phone);
+        } else {
+            $query->where('department_id', $departmentId);
+        }
+
+        return $query->first();
     }
 
     /**

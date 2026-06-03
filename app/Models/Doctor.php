@@ -119,9 +119,19 @@ class Doctor extends Model implements HasMedia
         return $this->country_code_1;
     }
 
+    public function getPhoneAttribute(): ?string
+    {
+        return $this->phone_1;
+    }
+
     public function setCountryCodeAttribute($value): void
     {
         $this->attributes['country_code_1'] = $value;
+    }
+
+    public function setPhoneAttribute($value): void
+    {
+        $this->attributes['phone_1'] = $value;
     }
 
     public function setAboutAttribute($value)

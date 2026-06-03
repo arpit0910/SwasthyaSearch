@@ -140,6 +140,8 @@ class BaseScraperService
             );
         }
 
+        app(DirectoryDeduplicationService::class)->dedupeBloodBanks($cityName);
+
         if ($cacheKey) {
             Cache::put($cacheKey, ['status' => 'completed', 'city' => $cityName, 'progress' => 100, 'message' => empty($scrapedBloodBanks) ? "No reliable verified blood bank records found for {$cityName}." : "Successfully synchronized " . count($scrapedBloodBanks) . " verified blood banks for {$cityName}!"], 300);
         }
