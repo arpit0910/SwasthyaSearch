@@ -2,9 +2,9 @@
 
 namespace Database\Seeders;
 
-use App\Models\BloodBank;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Carbon;
+use Illuminate\Support\Facades\DB;
 
 class BloodBankSeeder extends Seeder
 {
@@ -192,10 +192,41 @@ class BloodBankSeeder extends Seeder
             ]
         ];
 
+        $now = now();
+
         foreach ($bloodBanks as $bank) {
-            BloodBank::updateOrCreate(
+            if (isset($bank['available_blood_groups']) && is_array($bank['available_blood_groups'])) {
+                $bank['available_blood_groups'] = json_encode($bank['available_blood_groups'], JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES);
+            }
+
+            $bank['created_at'] = $now;
+            $bank['updated_at'] = $now;
+
+            DB::table('blood_banks')->updateOrInsert(
                 ['name_en' => $bank['name_en']],
-                $bank
+                [
+                    'name_hi' => $bank['name_hi'],
+                    'address_en' => $bank['address_en'],
+                    'address_hi' => $bank['address_hi'],
+                    'pincode' => $bank['pincode'],
+                    'latitude' => $bank['latitude'],
+                    'longitude' => $bank['longitude'],
+                    'country_code' => $bank['country_code'],
+                    'phone' => $bank['phone'],
+                    'emergency_country_code' => $bank['emergency_country_code'],
+                    'emergency_phone' => $bank['emergency_phone'],
+                    'email' => $bank['email'],
+                    'website' => $bank['website'],
+                    'is_verified' => $bank['is_verified'],
+                    'is_24_7' => $bank['is_24_7'],
+                    'is_government' => $bank['is_government'],
+                    'component_facility' => $bank['component_facility'],
+                    'apheresis_facility' => $bank['apheresis_facility'],
+                    'available_blood_groups' => $bank['available_blood_groups'],
+                    'last_updated_stock_at' => $bank['last_updated_stock_at'],
+                    'created_at' => $now,
+                    'updated_at' => $now,
+                ]
             );
         }
     }

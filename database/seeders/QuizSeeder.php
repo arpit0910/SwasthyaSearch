@@ -2,15 +2,48 @@
 
 namespace Database\Seeders;
 
-use App\Models\Quiz;
 use Illuminate\Database\Seeder;
+use Illuminate\Support\Facades\DB;
 
 class QuizSeeder extends Seeder
 {
     public function run(): void
     {
+        $now = now();
+
         foreach ($this->quizzes() as $quiz) {
-            Quiz::updateOrCreate(['slug' => $quiz['slug']], $quiz);
+            foreach (['questions_json', 'result_ranges_json'] as $jsonColumn) {
+                if (isset($quiz[$jsonColumn]) && is_array($quiz[$jsonColumn])) {
+                    $quiz[$jsonColumn] = json_encode($quiz[$jsonColumn], JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES);
+                }
+            }
+
+            $quiz['created_at'] = $now;
+            $quiz['updated_at'] = $now;
+
+            DB::table('quizzes')->upsert(
+                [$quiz],
+                ['slug'],
+                [
+                    'title_en',
+                    'title_hi',
+                    'category',
+                    'description_en',
+                    'description_hi',
+                    'intro_en',
+                    'intro_hi',
+                    'questions_json',
+                    'result_ranges_json',
+                    'disclaimer_en',
+                    'disclaimer_hi',
+                    'meta_title_en',
+                    'meta_title_hi',
+                    'meta_description_en',
+                    'meta_description_hi',
+                    'is_published',
+                    'updated_at',
+                ]
+            );
         }
     }
 

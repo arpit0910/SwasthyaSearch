@@ -2,24 +2,120 @@
 
 namespace Database\Seeders;
 
-use App\Models\Medicine;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Database\Seeder;
 
 class MedicineSeeder extends Seeder
 {
     public function run(): void
     {
+        $now = now();
+
         foreach ($this->medicines() as $medicine) {
-            Medicine::updateOrCreate(
-                ['slug' => $medicine['slug']],
-                $medicine
+            DB::table('medicines')->upsert(
+                [$this->prepareMedicineRow($medicine, $now)],
+                ['slug'],
+                $this->updatableColumns()
             );
         }
     }
 
-    private function medicines(): array
+    private function prepareMedicineRow(array $medicine, $now): array
+    {
+        foreach (['brand_names_json', 'faqs_json', 'source_references_json'] as $jsonColumn) {
+            if (array_key_exists($jsonColumn, $medicine) && is_array($medicine[$jsonColumn])) {
+                $medicine[$jsonColumn] = json_encode($medicine[$jsonColumn], JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES);
+            }
+        }
+
+        $medicine['created_at'] = $now;
+        $medicine['updated_at'] = $now;
+
+        return $medicine;
+    }
+
+    private function updatableColumns(): array
     {
         return [
+            'name',
+            'generic_name',
+            'brand_names_json',
+            'composition',
+            'strength',
+            'medicine_type',
+            'category',
+            'prescription_required',
+            'purpose_en',
+            'purpose_hi',
+            'overview_en',
+            'overview_hi',
+            'uses_en',
+            'uses_hi',
+            'benefits_en',
+            'benefits_hi',
+            'dosage_information_en',
+            'dosage_information_hi',
+            'mechanism_en',
+            'mechanism_hi',
+            'common_side_effects_en',
+            'common_side_effects_hi',
+            'serious_side_effects_en',
+            'serious_side_effects_hi',
+            'drug_interactions_en',
+            'drug_interactions_hi',
+            'food_interactions_en',
+            'food_interactions_hi',
+            'alcohol_warning_en',
+            'alcohol_warning_hi',
+            'pregnancy_warning_en',
+            'pregnancy_warning_hi',
+            'breastfeeding_warning_en',
+            'breastfeeding_warning_hi',
+            'kidney_warning_en',
+            'kidney_warning_hi',
+            'liver_warning_en',
+            'liver_warning_hi',
+            'driving_warning_en',
+            'driving_warning_hi',
+            'allergy_warning_en',
+            'allergy_warning_hi',
+            'precautions_en',
+            'precautions_hi',
+            'contraindications_en',
+            'contraindications_hi',
+            'avoid_if_en',
+            'avoid_if_hi',
+            'missed_dose_en',
+            'missed_dose_hi',
+            'overdose_en',
+            'overdose_hi',
+            'storage_en',
+            'storage_hi',
+            'expert_advice_en',
+            'expert_advice_hi',
+            'when_to_contact_doctor_en',
+            'when_to_contact_doctor_hi',
+            'faqs_json',
+            'source_references_json',
+            'meta_title_en',
+            'meta_title_hi',
+            'meta_description_en',
+            'meta_description_hi',
+            'reviewed_by',
+            'last_reviewed_at',
+            'ai_generated',
+            'medically_reviewed',
+            'review_status',
+            'is_published',
+            'created_by',
+            'updated_by',
+            'updated_at',
+        ];
+    }
+
+    private function medicines(): iterable
+    {
+        yield from [
             [
                 'name' => 'Paracetamol',
                 'slug' => 'paracetamol',

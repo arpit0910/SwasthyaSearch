@@ -2,13 +2,14 @@
 
 namespace Database\Seeders;
 
-use App\Models\GeneralQuestion;
 use Illuminate\Database\Seeder;
+use Illuminate\Support\Facades\DB;
 
 class GeneralQuestionSeeder extends Seeder
 {
     public function run(): void
     {
+        $now = now();
         $items = [
             [
                 'question_en' => 'I have fever, what should I do?',
@@ -149,11 +150,21 @@ class GeneralQuestionSeeder extends Seeder
         ];
 
         foreach ($items as $item) {
-            GeneralQuestion::updateOrCreate(
+            $item['created_at'] = $now;
+            $item['updated_at'] = $now;
+
+            DB::table('general_questions')->updateOrInsert(
                 ['question_en' => $item['question_en']],
-                $item
+                [
+                    'question_hi' => $item['question_hi'],
+                    'answer_en' => $item['answer_en'],
+                    'answer_hi' => $item['answer_hi'],
+                    'detailed_answer_en' => $item['detailed_answer_en'],
+                    'detailed_answer_hi' => $item['detailed_answer_hi'],
+                    'created_at' => $now,
+                    'updated_at' => $now,
+                ]
             );
         }
     }
 }
-

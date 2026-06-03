@@ -26,12 +26,15 @@ class DepartmentSeeder extends Seeder
         }
 
         // Ensure any existing doctors have their primary department_id populated from the pivot table
-        foreach (\App\Models\Doctor::whereNull('department_id')->get() as $doctor) {
-            $firstDept = $doctor->departments()->first();
-            if ($firstDept) {
-                $doctor->update(['department_id' => $firstDept->id]);
-            }
-        }
+        \App\Models\Doctor::whereNull('department_id')
+            ->chunkById(100, function ($doctors) {
+                foreach ($doctors as $doctor) {
+                    $firstDept = $doctor->departments()->first();
+                    if ($firstDept) {
+                        $doctor->update(['department_id' => $firstDept->id]);
+                    }
+                }
+            });
     }
 
     public static function departments(): array

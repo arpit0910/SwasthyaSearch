@@ -12,7 +12,7 @@ class FaqSeeder extends Seeder
      */
     public function run(): void
     {
-        Faq::firstOrCreate(
+        Faq::updateOrCreate(
             ['question_en' => 'Is Arogio completely free for patients?'],
             [
                 'question_hi' => 'क्या Arogio मरीजों के लिए पूरी तरह से मुफ़्त है?',
@@ -22,7 +22,7 @@ class FaqSeeder extends Seeder
             ]
         );
 
-        Faq::firstOrCreate(
+        Faq::updateOrCreate(
             ['question_en' => 'How does the AI Chatbot find the right doctor?'],
             [
                 'question_hi' => 'एआई चैटबॉट सही डॉक्टर कैसे खोजता है?',
@@ -34,7 +34,7 @@ class FaqSeeder extends Seeder
 
         $medicalEntries = config('medical_qa.entries', []);
         foreach ($medicalEntries as $entry) {
-            Faq::firstOrCreate(
+            Faq::updateOrCreate(
                 ['question_en' => $entry['question_en']],
                 [
                     'question_hi' => $entry['question_hi'] ?? $entry['question_en'],

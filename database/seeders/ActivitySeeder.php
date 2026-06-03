@@ -2,17 +2,36 @@
 
 namespace Database\Seeders;
 
-use App\Models\Activity;
 use Illuminate\Database\Seeder;
+use Illuminate\Support\Facades\DB;
 
 class ActivitySeeder extends Seeder
 {
     public function run(): void
     {
+        $now = now();
+
         foreach ($this->activities() as $activity) {
-            Activity::updateOrCreate(
-                ['slug' => $activity['slug']],
-                $activity
+            $activity['created_at'] = $now;
+            $activity['updated_at'] = $now;
+
+            DB::table('activities')->upsert(
+                [$activity],
+                ['slug'],
+                [
+                    'title_en',
+                    'title_hi',
+                    'category',
+                    'description_en',
+                    'description_hi',
+                    'route_name',
+                    'tone',
+                    'cta_en',
+                    'cta_hi',
+                    'sort_order',
+                    'is_published',
+                    'updated_at',
+                ]
             );
         }
     }
