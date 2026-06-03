@@ -1,17 +1,15 @@
 @extends('layouts.public')
 
-@section('title', ($locale === 'hi' ? 'डॉक्टर निर्देशिका' : 'Doctors Directory') . ' - SwasthyaSearch')
+@section('title', ($locale === 'hi' ? 'डॉक्टर निर्देशिका' : 'Doctors Directory') . ' - Arogio')
 
 @php
 $seoCityInput = request('city');
-$seoCity = is_array($seoCityInput) ? ($seoCityInput[0] ?? null) : $seoCityInput;
-$hasCity = !empty($seoCity) && $seoCity !== 'All';
-$pageTitle = $hasCity
-? "Doctors in {$seoCity} | Find Specialists & Clinics | SwasthyaSearch"
-: 'Find Doctors Near You | SwasthyaSearch';
+$seoCity = $activeCity ?? config('healthcare.active_city', 'Jaipur');
+$hasCity = true;
+$pageTitle = "Doctors in {$seoCity} | Find Specialists & Clinics | Arogio";
 $pageDescription = $hasCity
 ? "Find doctors in {$seoCity} by specialty, department, clinic, or symptoms. Call providers directly and confirm timings before visiting."
-: 'Search doctors by city, specialty, department, or symptoms. Find contact details, clinic information, and healthcare providers near you.';
+: 'Search doctors by specialty, department, or symptoms in Jaipur. Find contact details, clinic information, and healthcare providers near you.';
 $hasActiveMobileFilters = !empty(array_filter((array) request('department', [])))
     || !empty(array_filter((array) request('experience', [])))
     || !empty(array_filter((array) request('city', [])));
@@ -31,7 +29,7 @@ $isNearbyActive = filled(request('user_lat')) && filled(request('user_lng'));
             {{ $locale === 'hi' ? 'सत्यापित विशेषज्ञ' : 'Verified Medical Experts' }}
         </span>
         <h1 class="text-3xl sm:text-5xl font-extrabold tracking-tight mb-4 bg-gradient-to-r from-white via-slate-100 to-slate-300 bg-clip-text text-transparent py-2 leading-normal">
-            {{ $hasCity ? "Find Doctors in {$seoCity}" : 'Find Doctors Near You' }}
+            {{ $hasCity ? "Find Doctors in {$seoCity}" : 'Find Doctors in Jaipur' }}
         </h1>
         <p class="max-w-2xl mx-auto text-slate-300 text-base sm:text-lg leading-relaxed">
             {{ $locale === 'hi' ? 'आपके स्वास्थ्य के लिए 100% सत्यापित, अनुभवी और शीर्ष चिकित्सा विशेषज्ञ। सीधे संपर्क करें, कोई छिपा शुल्क नहीं।' : 'Explore our comprehensive directory of 100% verified, world-class healthcare professionals. Connect directly with zero commission.' }}
@@ -42,7 +40,7 @@ $isNearbyActive = filled(request('user_lat')) && filled(request('user_lng'));
 <section class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 mt-6">
     <div class="text-center">
         <p class="text-sm text-slate-600 max-w-4xl mx-auto">
-            Search by doctor name, specialty, department, symptoms, and city. Please call before visiting as timings and availability may change.
+            Search by doctor name, specialty, department, symptoms, and locality in Jaipur. Please call before visiting as timings and availability may change.
         </p>
     </div>
 </section>
@@ -56,9 +54,7 @@ $isNearbyActive = filled(request('user_lat')) && filled(request('user_lng'));
         @foreach ((array) request('experience', []) as $expVal)
         <input type="hidden" name="experience[]" value="{{ $expVal }}">
         @endforeach
-        @foreach ((array) request('city', []) as $cityVal)
-        <input type="hidden" name="city[]" value="{{ $cityVal }}">
-        @endforeach
+        <input type="hidden" name="city[]" value="{{ $activeCity ?? config('healthcare.active_city', 'Jaipur') }}">
         <input type="hidden" name="user_lat" value="{{ request('user_lat', $filters['user_lat'] ?? '') }}">
         <input type="hidden" name="user_lng" value="{{ request('user_lng', $filters['user_lng'] ?? '') }}">
         <div class="relative">
@@ -157,7 +153,7 @@ $isNearbyActive = filled(request('user_lat')) && filled(request('user_lng'));
                 </div>
 
                 <!-- City Filter -->
-                <div>
+                <div class="hidden">
                     <label class="block text-xs font-bold text-slate-600 mb-2 uppercase tracking-wider">{{ $locale === 'hi' ? 'शहर' : 'City' }}</label>
                     @php 
                         $selectedCities = is_array(request('city')) ? request('city') : (request('city') && request('city') !== 'All' ? [request('city')] : []);
@@ -246,7 +242,7 @@ $isNearbyActive = filled(request('user_lat')) && filled(request('user_lng'));
             </div>
 
             <!-- City Filter - Multiselect -->
-            <div>
+            <div class="hidden">
                 @php 
                     $selectedCities = is_array(request('city')) ? request('city') : (request('city') && request('city') !== 'All' ? [request('city')] : []);
                 @endphp
@@ -294,7 +290,7 @@ $isNearbyActive = filled(request('user_lat')) && filled(request('user_lng'));
             {{ $locale === 'hi' ? 'कोई डॉक्टर नहीं मिला' : 'No Doctors Found' }}
         </h3>
         <p class="text-slate-500 text-base mb-8 leading-relaxed">
-            {{ $locale === 'hi' ? 'कोई परिणाम नहीं मिला। कृपया शहर, विभाग या खोज शब्द बदलकर देखें।' : 'No results found. Try another city, department, or keyword.' }}
+            {{ $locale === 'hi' ? 'जयपुर में कोई परिणाम नहीं मिला। कृपया विभाग, क्षेत्र या खोज शब्द बदलकर देखें।' : 'No results found in Jaipur. Try another department, locality, or keyword.' }}
         </p>
         <a
             href="{{ route('doctors.index') }}"
@@ -351,7 +347,7 @@ $isNearbyActive = filled(request('user_lat')) && filled(request('user_lng'));
         } elseif (strlen($cleanPhone) === 11 && str_starts_with($cleanPhone, '0')) {
         $cleanPhone = '91' . substr($cleanPhone, 1);
         }
-        $whatsappMessage = rawurlencode("Hello Dr. {$doc->first_name} {$doc->last_name}, I found your profile on SwasthyaSearch and would like to inquire about consultation timings and availability.");
+        $whatsappMessage = rawurlencode("Hello Dr. {$doc->first_name} {$doc->last_name}, I found your profile on Arogio and would like to inquire about consultation timings and availability.");
         $whatsappLink = "https://wa.me/{$cleanPhone}?text={$whatsappMessage}";
         }
 
@@ -526,25 +522,25 @@ $isNearbyActive = filled(request('user_lat')) && filled(request('user_lng'));
 
                             <div class="pt-1 flex flex-wrap gap-1">
                                 @if(!empty($h->accepts_ayushman))
-                                <span class="bg-emerald-50 dark:bg-emerald-950/40 text-emerald-700 dark:text-emerald-300 border border-emerald-250 dark:border-emerald-800/80 px-2 py-0.5 rounded text-[10px] font-bold flex items-center space-x-1 shadow-2xs">
+                                <span class="min-w-0 max-w-full bg-emerald-50 dark:bg-emerald-900/30 text-emerald-800 dark:text-emerald-200 border border-emerald-200 dark:border-emerald-700/70 px-2 py-0.5 rounded text-[10px] font-bold inline-flex items-center gap-1 shadow-2xs">
                                     <i data-lucide="shield-check" class="w-3 h-3 text-emerald-600"></i>
                                     <span>{{ $locale === 'hi' ? 'आयुष्मान' : 'Ayushman' }}</span>
                                 </span>
                                 @endif
                                 @if(!empty($h->accepts_janaadhaar))
-                                <span class="bg-blue-50 dark:bg-blue-950/40 text-blue-700 dark:text-blue-300 border border-blue-250 dark:border-blue-800/80 px-2 py-0.5 rounded text-[10px] font-bold flex items-center space-x-1 shadow-2xs">
+                                <span class="min-w-0 max-w-full bg-sky-50 dark:bg-sky-900/30 text-sky-800 dark:text-sky-200 border border-sky-200 dark:border-sky-700/70 px-2 py-0.5 rounded text-[10px] font-bold inline-flex items-center gap-1 shadow-2xs">
                                     <i data-lucide="award" class="w-3 h-3 text-blue-600"></i>
                                     <span>{{ $locale === 'hi' ? 'जन आधार' : 'Jan Aadhaar' }}</span>
                                 </span>
                                 @endif
                                 @if(!empty($h->accepts_cghs))
-                                <span class="bg-purple-50 dark:bg-purple-950/40 text-purple-700 dark:text-purple-300 border border-purple-250 dark:border-purple-800/80 px-2 py-0.5 rounded text-[10px] font-bold flex items-center space-x-1 shadow-2xs">
+                                <span class="min-w-0 max-w-full bg-violet-50 dark:bg-violet-900/30 text-violet-800 dark:text-violet-200 border border-violet-200 dark:border-violet-700/70 px-2 py-0.5 rounded text-[10px] font-bold inline-flex items-center gap-1 shadow-2xs">
                                     <i data-lucide="check-badge" class="w-3 h-3 text-purple-600"></i>
                                     <span>{{ $locale === 'hi' ? 'सीजीएचएस' : 'CGHS' }}</span>
                                 </span>
                                 @endif
                                 @if(!empty($h->is_cashless))
-                                <span class="bg-teal-50 dark:bg-teal-950/40 text-teal-700 dark:text-teal-300 border border-teal-250 dark:border-teal-800/80 px-2 py-0.5 rounded text-[10px] font-bold flex items-center space-x-1 shadow-2xs">
+                                <span class="min-w-0 max-w-full bg-teal-50 dark:bg-teal-900/30 text-teal-800 dark:text-teal-200 border border-teal-200 dark:border-teal-700/70 px-2 py-0.5 rounded text-[10px] font-bold inline-flex items-center gap-1 shadow-2xs">
                                     <i data-lucide="credit-card" class="w-3 h-3 text-teal-600"></i>
                                     <span>{{ $locale === 'hi' ? 'कैशलेस' : 'Cashless' }}</span>
                                 </span>
@@ -691,7 +687,7 @@ $isNearbyActive = filled(request('user_lat')) && filled(request('user_lng'));
 
         trigger.addEventListener('click', () => {
             panel.classList.toggle('hidden');
-            if (window.lucide) lucide.createIcons();
+            if (window.lucide) window.refreshLucideIcons();
         });
 
         panel.querySelectorAll('button[data-index]').forEach((rowBtn) => {
@@ -722,7 +718,7 @@ $isNearbyActive = filled(request('user_lat')) && filled(request('user_lng'));
 
         updateLabel();
         selectEl.dataset.enhanced = '1';
-        if (window.lucide) lucide.createIcons();
+        if (window.lucide) window.refreshLucideIcons();
     }
 
     function renderMultiSelectBadges(selectEl) {
@@ -741,7 +737,7 @@ $isNearbyActive = filled(request('user_lat')) && filled(request('user_lng'));
         }
 
         badgeWrap.innerHTML = Array.from(selectEl.selectedOptions).map(opt =>
-            `<button type="button" data-remove-value="${opt.value}" class="inline-flex items-center gap-1 rounded-full border border-teal-200 bg-teal-50 px-2.5 py-1 text-[11px] font-semibold text-teal-700 hover:bg-teal-100">${opt.textContent.trim()} <span class="text-teal-900">x</span></button>`
+            `<button type="button" data-remove-value="${opt.value}" class="inline-flex items-center gap-1 rounded-full border border-teal-200 bg-teal-50 px-2.5 py-1 text-[11px] font-semibold text-teal-700 hover:bg-teal-100 dark:border-teal-700/70 dark:bg-teal-900/30 dark:text-teal-200 dark:hover:bg-teal-900/45">${opt.textContent.trim()} <span class="text-teal-900 dark:text-teal-100">x</span></button>`
         ).join('');
 
         if (!badgeWrap.dataset.removeBound) {

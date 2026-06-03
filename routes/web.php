@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\Admin\AdminAuthController;
 use App\Http\Controllers\Admin\AdminDashboardController;
+use App\Http\Controllers\ActivityController;
 use App\Http\Controllers\ArticleCommentController;
 use App\Http\Controllers\ArticleController;
 use App\Http\Controllers\BloodBankController;
@@ -9,7 +10,9 @@ use App\Http\Controllers\Api\ChatbotController;
 use App\Http\Controllers\DoctorController;
 use App\Http\Controllers\HospitalController;
 use App\Http\Controllers\LegalController;
+use App\Http\Controllers\MedicineController;
 use App\Http\Controllers\PageController;
+use App\Http\Controllers\QuizController;
 use App\Http\Controllers\SymptomTestController;
 use App\Http\Controllers\SampleDownloadController;
 use App\Http\Controllers\SearchController;
@@ -96,6 +99,24 @@ Route::prefix('admin')->middleware('web')->group(function () {
         Route::put('/articles/{article}', [AdminDashboardController::class, 'updateArticle'])->name('admin.articles.update');
         Route::delete('/articles/{article}', [AdminDashboardController::class, 'destroyArticle'])->name('admin.articles.destroy');
 
+        // Medicines
+        Route::get('/medicines', [AdminDashboardController::class, 'medicines'])->name('admin.medicines');
+        Route::get('/medicines/create', [AdminDashboardController::class, 'createMedicine'])->name('admin.medicines.create');
+        Route::get('/medicines/{medicine}/edit', [AdminDashboardController::class, 'editMedicine'])->name('admin.medicines.edit');
+        Route::post('/medicines', [AdminDashboardController::class, 'storeMedicine'])->name('admin.medicines.store');
+        Route::put('/medicines/{medicine}', [AdminDashboardController::class, 'updateMedicine'])->name('admin.medicines.update');
+        Route::delete('/medicines/{medicine}', [AdminDashboardController::class, 'destroyMedicine'])->name('admin.medicines.destroy');
+        Route::get('/medicine-reports', [AdminDashboardController::class, 'medicineReports'])->name('admin.medicine_reports');
+        Route::put('/medicine-reports/{medicineReport}', [AdminDashboardController::class, 'updateMedicineReport'])->name('admin.medicine_reports.update');
+
+        // Quizzes
+        Route::get('/quizzes', [AdminDashboardController::class, 'quizzes'])->name('admin.quizzes');
+        Route::get('/quizzes/create', [AdminDashboardController::class, 'createQuiz'])->name('admin.quizzes.create');
+        Route::get('/quizzes/{quiz}/edit', [AdminDashboardController::class, 'editQuiz'])->name('admin.quizzes.edit');
+        Route::post('/quizzes', [AdminDashboardController::class, 'storeQuiz'])->name('admin.quizzes.store');
+        Route::put('/quizzes/{quiz}', [AdminDashboardController::class, 'updateQuiz'])->name('admin.quizzes.update');
+        Route::delete('/quizzes/{quiz}', [AdminDashboardController::class, 'destroyQuiz'])->name('admin.quizzes.destroy');
+
         // FAQs
         Route::get('/faqs', [AdminDashboardController::class, 'faqs'])->name('admin.faqs');
         Route::get('/faqs/create', [AdminDashboardController::class, 'createFaq'])->name('admin.faqs.create');
@@ -136,6 +157,19 @@ Route::get('/api/hospitals', [ReliableDirectoryController::class, 'hospitals'])-
 Route::get('/api/blood-banks', [ReliableDirectoryController::class, 'bloodBanks'])->name('api.blood_banks.city');
 Route::get('/symptom-test', [SymptomTestController::class, 'index'])->name('symptom-test');
 Route::post('/api/symptom-test/analyze', [SymptomTestController::class, 'analyze'])->name('symptom-test.analyze');
+Route::get('/medicines', [MedicineController::class, 'index'])->name('medicines.index');
+Route::get('/medicines/{medicine:slug}', [MedicineController::class, 'show'])->name('medicines.show');
+Route::post('/medicines/{medicine:slug}/report', [MedicineController::class, 'report'])->name('medicines.report');
+Route::get('/activities', [ActivityController::class, 'index'])->name('activities.index');
+Route::get('/activities/breathing', [ActivityController::class, 'breathing'])->name('activities.breathing');
+Route::get('/activities/grounding', [ActivityController::class, 'grounding'])->name('activities.grounding');
+Route::get('/activities/mood-check', [ActivityController::class, 'moodCheck'])->name('activities.mood-check');
+Route::get('/activities/games/memory', [ActivityController::class, 'memoryGame'])->name('activities.games.memory');
+Route::get('/activities/games/calm-tap', [ActivityController::class, 'calmTap'])->name('activities.games.calm-tap');
+Route::get('/support/crisis', [ActivityController::class, 'crisis'])->name('support.crisis');
+Route::get('/quizzes', [QuizController::class, 'index'])->name('quizzes.index');
+Route::get('/quizzes/{quiz:slug}', [QuizController::class, 'show'])->name('quizzes.show');
+Route::post('/quizzes/{quiz:slug}/result', [QuizController::class, 'result'])->name('quizzes.result');
 Route::post('/switch-locale', [SearchController::class, 'switchLocale'])->name('switch.locale');
 
 Route::get('/sitemap.xml', function () {
@@ -151,6 +185,15 @@ Route::get('/sitemap.xml', function () {
         ['loc' => route('hospitals.index'), 'changefreq' => 'daily', 'priority' => '0.9', 'lastmod' => $lastHospitals],
         ['loc' => route('blood_banks.index'), 'changefreq' => 'daily', 'priority' => '0.9', 'lastmod' => $lastBloodBanks],
         ['loc' => route('articles.index'), 'changefreq' => 'daily', 'priority' => '0.8', 'lastmod' => $lastArticles],
+        ['loc' => route('medicines.index'), 'changefreq' => 'weekly', 'priority' => '0.8', 'lastmod' => now()->toDateString()],
+        ['loc' => route('activities.index'), 'changefreq' => 'weekly', 'priority' => '0.7', 'lastmod' => now()->toDateString()],
+        ['loc' => route('activities.breathing'), 'changefreq' => 'monthly', 'priority' => '0.6', 'lastmod' => now()->toDateString()],
+        ['loc' => route('activities.grounding'), 'changefreq' => 'monthly', 'priority' => '0.6', 'lastmod' => now()->toDateString()],
+        ['loc' => route('activities.mood-check'), 'changefreq' => 'monthly', 'priority' => '0.6', 'lastmod' => now()->toDateString()],
+        ['loc' => route('activities.games.memory'), 'changefreq' => 'monthly', 'priority' => '0.5', 'lastmod' => now()->toDateString()],
+        ['loc' => route('activities.games.calm-tap'), 'changefreq' => 'monthly', 'priority' => '0.5', 'lastmod' => now()->toDateString()],
+        ['loc' => route('quizzes.index'), 'changefreq' => 'weekly', 'priority' => '0.7', 'lastmod' => now()->toDateString()],
+        ['loc' => route('support.crisis'), 'changefreq' => 'monthly', 'priority' => '0.7', 'lastmod' => now()->toDateString()],
         ['loc' => route('symptom-test'), 'changefreq' => 'weekly', 'priority' => '0.8', 'lastmod' => now()->toDateString()],
         ['loc' => route('departments.index'), 'changefreq' => 'weekly', 'priority' => '0.6', 'lastmod' => now()->toDateString()],
         ['loc' => route('diseases.index'), 'changefreq' => 'weekly', 'priority' => '0.6', 'lastmod' => now()->toDateString()],
@@ -173,7 +216,20 @@ Route::get('/sitemap.xml', function () {
             ];
         })->values()->all();
 
-    $urls = array_merge($staticUrls, $articleUrls);
+    $medicineUrls = \App\Models\Medicine::query()
+        ->published()
+        ->latest('updated_at')
+        ->get(['slug', 'updated_at'])
+        ->map(function ($medicine) {
+            return [
+                'loc' => route('medicines.show', $medicine->slug),
+                'changefreq' => 'monthly',
+                'priority' => '0.7',
+                'lastmod' => optional($medicine->updated_at)->toDateString() ?? now()->toDateString(),
+            ];
+        })->values()->all();
+
+    $urls = array_merge($staticUrls, $articleUrls, $medicineUrls);
 
     $xml = view('sitemap.xml', compact('urls', 'base'))->render();
     return response($xml, 200)->header('Content-Type', 'application/xml');

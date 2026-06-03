@@ -39,7 +39,7 @@ class AdminPanelProvider extends PanelProvider
                 'secondary' => Color::Indigo,
                 'gray' => Color::Slate,
             ])
-            ->brandName('SwasthyaSearch Admin')
+            ->brandName('Arogio Admin')
             ->brandLogo(fn() => new HtmlString('<div style="font-weight:bold;font-size:1.5rem;letter-spacing:-0.025em;"><span class="text-white">Swasthya<span style="color:#14b8a6;">Search</span></span></div>'))
             ->sidebarCollapsibleOnDesktop()
             ->navigationGroups([

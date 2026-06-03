@@ -11,15 +11,18 @@ class HospitalController extends Controller
 {
     public function index(Request $request)
     {
+        $activeCity = config('healthcare.active_city', 'Jaipur');
         $userLat = $request->filled('user_lat') ? (float)$request->input('user_lat') : null;
         $userLng = $request->filled('user_lng') ? (float)$request->input('user_lng') : null;
         $hasUserLocation = is_numeric($userLat) && is_numeric($userLng);
 
-        $query = Hospital::where('is_verified', true);
+        $query = Hospital::where('is_verified', true)
+            ->where('city', 'LIKE', "%{$activeCity}%");
 
         // Nearby-first behavior: limit to nearby hospitals first, then apply all other filters.
         if ($hasUserLocation) {
             $nearbyHospitalIds = Hospital::where('is_verified', true)
+                ->where('city', 'LIKE', "%{$activeCity}%")
                 ->get()
                 ->map(function (Hospital $hospital) use ($userLat, $userLng) {
                     return [
@@ -34,15 +37,15 @@ class HospitalController extends Controller
 
             if ($nearbyHospitalIds->isEmpty()) {
                 $hospitals = $this->paginateCollection(collect(), $request, 30);
-                $cities = Hospital::where('is_verified', true)->whereNotNull('city')->distinct()->pluck('city');
-                $types = Hospital::where('is_verified', true)->whereNotNull('type')->distinct()->pluck('type');
+                $types = Hospital::where('is_verified', true)->where('city', 'LIKE', "%{$activeCity}%")->whereNotNull('type')->distinct()->pluck('type');
 
                 return view('hospitals.index', [
                     'hospitals' => $hospitals,
-                    'cities' => $cities,
+                    'cities' => collect([$activeCity]),
                     'types' => $types,
-                    'filters' => $request->only(['type', 'city', 'search', 'benefit', 'user_lat', 'user_lng']),
+                    'filters' => array_merge($request->only(['type', 'search', 'benefit', 'user_lat', 'user_lng']), ['city' => [$activeCity]]),
                     'hasUserLocation' => $hasUserLocation,
+                    'activeCity' => $activeCity,
                 ]);
             }
 
@@ -61,16 +64,6 @@ class HospitalController extends Controller
         }
 
         // Filter by City - support multiple selections
-        $cities = $request->input('city', []);
-        if (!is_array($cities)) {
-            $cities = ($cities && $cities !== 'All') ? [$cities] : [];
-        }
-        $cities = array_filter($cities); // Remove empty values
-        
-        if (!empty($cities)) {
-            $query->whereIn('city', $cities);
-        }
-
         // Filter by Search Keyword
         if ($request->filled('search')) {
             $search = $request->search;
@@ -108,8 +101,7 @@ class HospitalController extends Controller
             });
         }
 
-        $cities = Hospital::where('is_verified', true)->whereNotNull('city')->distinct()->pluck('city');
-        $types = Hospital::where('is_verified', true)->whereNotNull('type')->distinct()->pluck('type');
+        $types = Hospital::where('is_verified', true)->where('city', 'LIKE', "%{$activeCity}%")->whereNotNull('type')->distinct()->pluck('type');
 
         // If user location provided, keep distance sorting after applying all other filters.
         if ($hasUserLocation) {
@@ -131,10 +123,11 @@ class HospitalController extends Controller
 
         return view('hospitals.index', [
             'hospitals' => $hospitals,
-            'cities' => $cities,
+            'cities' => collect([$activeCity]),
             'types' => $types,
-            'filters' => $request->only(['type', 'city', 'search', 'benefit', 'user_lat', 'user_lng']),
+            'filters' => array_merge($request->only(['type', 'search', 'benefit', 'user_lat', 'user_lng']), ['city' => [$activeCity]]),
             'hasUserLocation' => $hasUserLocation,
+            'activeCity' => $activeCity,
         ]);
     }
 

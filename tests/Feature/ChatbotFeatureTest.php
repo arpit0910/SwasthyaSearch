@@ -10,7 +10,7 @@ class ChatbotFeatureTest extends TestCase
 {
     use RefreshDatabase;
 
-    public function test_chatbot_prompts_for_city_when_missing(): void
+    public function test_chatbot_defaults_to_jaipur_when_city_is_missing(): void
     {
         Hospital::create([
             'name_en' => 'City Care Hospital',
@@ -28,18 +28,19 @@ class ChatbotFeatureTest extends TestCase
         ]);
 
         $response->assertOk()
-            ->assertJsonPath('needs_city', true)
+            ->assertJsonMissingPath('needs_city')
+            ->assertJsonPath('city', 'Jaipur')
             ->assertJsonPath('city_options.0', 'Jaipur')
             ->assertJsonStructure([
                 'session_token',
                 'reply',
-                'needs_city',
+                'city',
                 'city_options',
                 'history',
             ]);
     }
 
-    public function test_chatbot_allows_boot_when_no_city_options_exist(): void
+    public function test_chatbot_boots_in_jaipur_even_without_city_options_in_database(): void
     {
         $response = $this->postJson('/api/chatbot', [
             'message' => '',
@@ -48,8 +49,8 @@ class ChatbotFeatureTest extends TestCase
 
         $response->assertOk()
             ->assertJsonMissingPath('needs_city')
-            ->assertJsonPath('city', '')
-            ->assertJsonPath('city_options', [])
+            ->assertJsonPath('city', 'Jaipur')
+            ->assertJsonPath('city_options.0', 'Jaipur')
             ->assertJsonPath('reply', '');
     }
 }

@@ -1,8 +1,8 @@
 @extends('layouts.public')
 
-@section('title', ($locale === 'hi' ? 'Privacy Policy' : 'Privacy Policy') . ' - SwasthyaSearch')
-@section('meta_title', 'Privacy Policy | SwasthyaSearch')
-@section('meta_description', 'Learn what data SwasthyaSearch collects, why it is collected, and how your privacy is protected.')
+@section('title', ($locale === 'hi' ? 'Privacy Policy' : 'Privacy Policy') . ' - Arogio')
+@section('meta_title', 'Privacy Policy | Arogio')
+@section('meta_description', 'Learn what data Arogio collects, why it is collected, and how your privacy is protected.')
 
 @section('content')
 <main class="flex-1 max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 py-12 sm:py-16 w-full">
@@ -64,7 +64,7 @@
 
             <section>
                 <h2 class="text-xl font-bold text-slate-900 mb-2">6. Contact</h2>
-                <p>For privacy-related questions: <a href="mailto:privacy@swasthyasearch.com" class="text-cyan-700 font-semibold hover:underline">privacy@swasthyasearch.com</a></p>
+                <p>For privacy-related questions: <a href="mailto:privacy@arogio.com" class="text-cyan-700 font-semibold hover:underline">privacy@arogio.com</a></p>
             </section>
         </div>
     </div>

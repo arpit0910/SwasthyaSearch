@@ -1,6 +1,6 @@
 @extends('layouts.public')
 
-@section('title', 'Page Not Found - SwasthyaSearch')
+@section('title', 'Page Not Found - Arogio')
 @section('meta_description', 'The page you are looking for could not be found. Continue your healthcare search with doctors, hospitals, blood banks, or support links.')
 @section('meta_robots', 'noindex,follow')
 

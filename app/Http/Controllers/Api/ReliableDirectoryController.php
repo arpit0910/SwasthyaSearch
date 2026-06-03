@@ -10,12 +10,13 @@ class ReliableDirectoryController extends Controller
 {
     public function doctors(Request $request)
     {
+        $activeCity = config('healthcare.active_city', 'Jaipur');
         $validated = $request->validate([
-            'city' => 'required|string|max:120',
+            'city' => 'nullable|string|max:120',
             'department' => 'nullable|string|max:120',
         ]);
 
-        $doctors = ReliableHealthcareDirectoryService::doctorsByCity($validated['city'], $validated['department'] ?? null);
+        $doctors = ReliableHealthcareDirectoryService::doctorsByCity($validated['city'] ?? $activeCity, $validated['department'] ?? null);
 
         return response()->json([
             'status' => 'success',
@@ -46,11 +47,12 @@ class ReliableDirectoryController extends Controller
 
     public function hospitals(Request $request)
     {
+        $activeCity = config('healthcare.active_city', 'Jaipur');
         $validated = $request->validate([
-            'city' => 'required|string|max:120',
+            'city' => 'nullable|string|max:120',
         ]);
 
-        $hospitals = ReliableHealthcareDirectoryService::hospitalsByCity($validated['city']);
+        $hospitals = ReliableHealthcareDirectoryService::hospitalsByCity($validated['city'] ?? $activeCity);
 
         return response()->json([
             'status' => 'success',
@@ -80,11 +82,12 @@ class ReliableDirectoryController extends Controller
 
     public function bloodBanks(Request $request)
     {
+        $activeCity = config('healthcare.active_city', 'Jaipur');
         $validated = $request->validate([
-            'city' => 'required|string|max:120',
+            'city' => 'nullable|string|max:120',
         ]);
 
-        $banks = ReliableHealthcareDirectoryService::bloodBanksByCity($validated['city']);
+        $banks = ReliableHealthcareDirectoryService::bloodBanksByCity($validated['city'] ?? $activeCity);
 
         return response()->json([
             'status' => 'success',

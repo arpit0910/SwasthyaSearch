@@ -1,8 +1,8 @@
 @extends('layouts.public')
 
-@section('title', ($locale === 'hi' ? 'रोग और लक्षण' : 'Diseases & Symptoms') . ' - SwasthyaSearch')
+@section('title', ($locale === 'hi' ? 'रोग और लक्षण' : 'Diseases & Symptoms') . ' - Arogio')
 
-@section('meta_title', $locale === 'hi' ? 'रोग और लक्षण निर्देशिका | SwasthyaSearch' : 'Diseases & Symptoms Directory | SwasthyaSearch')
+@section('meta_title', $locale === 'hi' ? 'रोग और लक्षण निर्देशिका | Arogio' : 'Diseases & Symptoms Directory | Arogio')
 @section('meta_description', $locale === 'hi'
     ? 'रोग या लक्षण खोजें और संबंधित चिकित्सा विभाग देखें। सही विशेषज्ञ डॉक्टर तक पहुंचने के लिए उपयोगी स्वास्थ्य निर्देशिका।'
     : 'Search diseases and symptoms, then discover the relevant medical departments to reach the right specialist doctors.')

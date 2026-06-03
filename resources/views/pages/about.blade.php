@@ -1,11 +1,11 @@
 @extends('layouts.public')
 
-@section('title', ($locale === 'hi' ? 'हमारे बारे में' : 'About Us') . ' - SwasthyaSearch')
+@section('title', ($locale === 'hi' ? 'हमारे बारे में' : 'About Us') . ' - Arogio')
 
-@section('meta_title', $locale === 'hi' ? 'हमारे बारे में | SwasthyaSearch' : 'About SwasthyaSearch | Mission, Trust & Transparency')
+@section('meta_title', $locale === 'hi' ? 'हमारे बारे में | Arogio' : 'About Arogio | Mission, Trust & Transparency')
 @section('meta_description', $locale === 'hi'
-    ? 'SwasthyaSearch के मिशन, 100% विज्ञापन-मुक्त मॉडल, पारदर्शी सूचीकरण और मरीज-केंद्रित स्वास्थ्य खोज दृष्टि के बारे में जानें।'
-    : 'Learn about SwasthyaSearch mission, 100% ad-free model, transparent listings, and patient-first healthcare discovery approach.')
+    ? 'Arogio के मिशन, 100% विज्ञापन-मुक्त मॉडल, पारदर्शी सूचीकरण और मरीज-केंद्रित स्वास्थ्य खोज दृष्टि के बारे में जानें।'
+    : 'Learn about Arogio mission, 100% ad-free model, transparent listings, and patient-first healthcare discovery approach.')
 @section('content')
 <!-- Hero Section -->
 <header class="bg-gradient-to-r from-cyan-800 via-teal-700 to-emerald-700 text-white py-20 px-4 sm:px-6 lg:px-8 border-b border-slate-800 shadow-xl relative overflow-hidden">
@@ -18,7 +18,7 @@
             {{ $locale === 'hi' ? 'स्वास्थ्य सेवा को सुलभ, पारदर्शी और मुफ़्त बनाना' : 'Empowering Patients with Free, Transparent Healthcare' }}
         </h1>
         <p class="max-w-3xl mx-auto text-slate-300 text-lg sm:text-xl leading-relaxed">
-            {{ $locale === 'hi' ? 'स्वास्थ्या सर्च भारत की पहली पूर्णतः निःशुल्क, विज्ञापन-मुक्त और शून्य-कमीशन स्वास्थ्य निर्देशिका है। हम मरीजों को सीधे सत्यापित डॉक्टरों और अस्पतालों से जोड़ते हैं।' : 'SwasthyaSearch is India’s premier 100% free, ad-free, and zero-commission healthcare directory. We bridge the gap between patients and verified medical experts without commercial intermediaries.' }}
+            {{ $locale === 'hi' ? 'Arogio भारत की पहली पूर्णतः निःशुल्क, विज्ञापन-मुक्त और शून्य-कमीशन स्वास्थ्य निर्देशिका है। हम मरीजों को सीधे सत्यापित डॉक्टरों और अस्पतालों से जोड़ते हैं।' : 'Arogio is India\'s premier 100% free, ad-free, and zero-commission healthcare directory. We bridge the gap between patients and verified medical experts without commercial intermediaries.' }}
         </p>
     </div>
 </header>
@@ -80,10 +80,10 @@
                 <span>{{ $locale === 'hi' ? 'हमारी कहानी' : 'Our Story' }}</span>
             </div>
             <h2 class="text-3xl sm:text-4xl font-extrabold text-slate-900 dark:text-slate-100 tracking-tight leading-normal py-0.5">
-                {{ $locale === 'hi' ? 'स्वास्थ्या सर्च की शुरुआत क्यों हुई?' : 'Why We Started SwasthyaSearch' }}
+                {{ $locale === 'hi' ? 'Arogio की शुरुआत क्यों हुई?' : 'Why We Started Arogio' }}
             </h2>
             <p class="text-slate-600 dark:text-slate-300 text-base sm:text-lg leading-relaxed">
-                {{ $locale === 'hi' ? 'वर्तमान डिजिटल स्वास्थ्य सेवा में विज्ञापनों और सशुल्क लिस्टिंग की भरमार है, जहां सबसे अधिक भुगतान करने वाले डॉक्टरों को ही सबसे ऊपर दिखाया जाता है, न कि सबसे योग्य डॉक्टरों को। हमने मरीजों को एक ऐसा मंच देने के लिए स्वास्थ्या सर्च बनाया जो 100% मुफ़्त, निष्पक्ष और पारदर्शी हो।' : 'Modern digital healthcare is crowded with sponsored listings and aggregator commissions, where providers who pay the most receive top visibility rather than those who are most qualified. We established SwasthyaSearch to give patients a platform that is 100% free, unbiased, and fully transparent.' }}
+                {{ $locale === 'hi' ? 'वर्तमान डिजिटल स्वास्थ्य सेवा में विज्ञापनों और सशुल्क लिस्टिंग की भरमार है, जहां सबसे अधिक भुगतान करने वाले डॉक्टरों को ही सबसे ऊपर दिखाया जाता है, न कि सबसे योग्य डॉक्टरों को। हमने मरीजों को एक ऐसा मंच देने के लिए Arogio बनाया जो 100% मुफ़्त, निष्पक्ष और पारदर्शी हो।' : 'Modern digital healthcare is crowded with sponsored listings and aggregator commissions, where providers who pay the most receive top visibility rather than those who are most qualified. We established Arogio to give patients a platform that is 100% free, unbiased, and fully transparent.' }}
             </p>
             <p class="text-slate-600 dark:text-slate-300 text-base sm:text-lg leading-relaxed">
                 {{ $locale === 'hi' ? 'हमारा लक्ष्य भारत के हर नागरिक को बिना किसी आर्थिक बाधा या भ्रम के बेहतरीन चिकित्सा विशेषज्ञों तक पहुँच प्रदान करना है।' : 'Our ultimate goal is to provide every citizen with direct, barrier-free access to elite medical professionals without financial friction or confusion.' }}
@@ -98,7 +98,7 @@
                     {{ $locale === 'hi' ? 'मरीजों के लिए पूर्णतः मुफ़्त' : '100% Free For Patients' }}
                 </h4>
                 <p class="text-slate-200 text-sm leading-relaxed">
-                    {{ $locale === 'hi' ? 'हमारा वादा है कि स्वास्थ्या सर्च मरीजों और डॉक्टरों के लिए हमेशा मुफ़्त रहेगा।' : 'We pledge that SwasthyaSearch will remain permanently free for patients and healthcare providers.' }}
+                    {{ $locale === 'hi' ? 'हमारा वादा है कि Arogio मरीजों और डॉक्टरों के लिए हमेशा मुफ़्त रहेगा।' : 'We pledge that Arogio will remain permanently free for patients and healthcare providers.' }}
                 </p>
             </div>
         </div>

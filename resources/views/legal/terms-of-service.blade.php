@@ -1,8 +1,8 @@
 @extends('layouts.public')
 
-@section('title', ($locale === 'hi' ? 'Terms of Service' : 'Terms of Service') . ' - SwasthyaSearch')
-@section('meta_title', 'Terms of Service | SwasthyaSearch')
-@section('meta_description', 'Read the rules, responsibilities, limits, and disclaimers for using SwasthyaSearch.')
+@section('title', ($locale === 'hi' ? 'Terms of Service' : 'Terms of Service') . ' - Arogio')
+@section('meta_title', 'Terms of Service | Arogio')
+@section('meta_description', 'Read the rules, responsibilities, limits, and disclaimers for using Arogio.')
 
 @section('content')
 <main class="flex-1 max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 py-12 sm:py-16 w-full">
@@ -26,7 +26,7 @@
         <div class="px-6 sm:px-10 py-8 sm:py-10 space-y-8 text-slate-700 leading-relaxed">
             <section class="rounded-2xl border border-amber-200 bg-amber-50 p-5">
                 <h2 class="text-base font-bold text-amber-900 mb-2">Important Disclaimer</h2>
-                <p class="text-sm text-amber-900">SwasthyaSearch is a discovery/directory platform. It does not replace professional medical advice, diagnosis, or treatment. In emergencies, contact your nearest hospital immediately.</p>
+                <p class="text-sm text-amber-900">Arogio is a discovery/directory platform. It does not replace professional medical advice, diagnosis, or treatment. In emergencies, contact your nearest hospital immediately.</p>
             </section>
 
             <section>

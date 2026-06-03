@@ -1,17 +1,15 @@
 @extends('layouts.public')
 
-@section('title', ($locale === 'hi' ? 'ब्लड बैंक निर्देशिका' : 'Blood Banks Directory') . ' - SwasthyaSearch')
+@section('title', ($locale === 'hi' ? 'ब्लड बैंक निर्देशिका' : 'Blood Banks Directory') . ' - Arogio')
 
 @php
 $seoCityInput = request('city');
-$seoCity = is_array($seoCityInput) ? ($seoCityInput[0] ?? null) : $seoCityInput;
-$hasCity = !empty($seoCity) && $seoCity !== 'All';
-$pageTitle = $hasCity
-? "Blood Banks in {$seoCity} | Emergency Contacts | SwasthyaSearch"
-: 'Find Blood Banks Near You | SwasthyaSearch';
+$seoCity = $activeCity ?? config('healthcare.active_city', 'Jaipur');
+$hasCity = true;
+$pageTitle = "Blood Banks in {$seoCity} | Emergency Contacts | Arogio";
 $pageDescription = $hasCity
 ? "Find blood banks in {$seoCity} and contact them directly to confirm current blood availability before visiting."
-: 'Find blood banks by city and contact them directly to confirm current blood availability before visiting.';
+: 'Find blood banks in Jaipur and contact them directly to confirm current blood availability before visiting.';
 $hasActiveMobileFilters = !empty(array_filter((array) request('blood_group', [])))
     || !empty(array_filter((array) request('facility', [])))
     || !empty(array_filter((array) request('city', [])));
@@ -31,7 +29,7 @@ $isNearbyActive = filled(request('user_lat')) && filled(request('user_lng'));
             {{ $locale === 'hi' ? 'सत्यापित रक्त केंद्र' : 'Verified Blood Centers' }}
         </span>
         <h1 class="text-4xl sm:text-5xl font-extrabold tracking-tight mb-4 bg-gradient-to-r from-white via-slate-100 to-slate-300 bg-clip-text text-transparent py-2 leading-tight">
-            {{ $hasCity ? "Find Blood Banks in {$seoCity}" : 'Find Blood Banks Near You' }}
+            {{ $hasCity ? "Find Blood Banks in {$seoCity}" : 'Find Blood Banks in Jaipur' }}
         </h1>
         <p class="max-w-4xl mx-auto text-slate-300 text-base sm:text-lg leading-relaxed">
             {{ $locale === 'hi' ? 'सत्यापित और लाइसेंस प्राप्त ब्लड बैंक खोजें। रक्त उपलब्धता तेजी से बदल सकती है, इसलिए जाने से पहले कॉल करके पुष्टि करें।' : 'Find verified, licensed blood banks. Blood availability can change quickly, so please call to confirm before visiting.' }}
@@ -56,9 +54,7 @@ $isNearbyActive = filled(request('user_lat')) && filled(request('user_lng'));
         @foreach ((array) request('facility', []) as $facVal)
         <input type="hidden" name="facility[]" value="{{ $facVal }}">
         @endforeach
-        @foreach ((array) request('city', []) as $cityVal)
-        <input type="hidden" name="city[]" value="{{ $cityVal }}">
-        @endforeach
+        <input type="hidden" name="city[]" value="{{ $activeCity ?? config('healthcare.active_city', 'Jaipur') }}">
         <input type="hidden" name="user_lat" value="{{ request('user_lat', $filters['user_lat'] ?? '') }}">
         <input type="hidden" name="user_lng" value="{{ request('user_lng', $filters['user_lng'] ?? '') }}">
         <div class="relative">
@@ -103,7 +99,7 @@ $isNearbyActive = filled(request('user_lat')) && filled(request('user_lng'));
                         @endforeach
                     </select>
                 </div>
-                <div>
+                <div class="hidden">
                     <label class="block text-xs font-bold text-slate-600 mb-2 uppercase tracking-wider">{{ $locale === 'hi' ? 'सुविधाएं' : 'Facilities' }}</label>
                     @php $selectedFac = is_array(request('facility')) ? request('facility') : (request('facility') && request('facility') !== 'All' ? [request('facility')] : []); @endphp
                     <select name="facility[]" multiple data-placeholder="{{ $locale === 'hi' ? 'सुविधा चुनें' : 'Select facilities' }}" class="h-12 w-full px-4 bg-slate-50 border border-slate-200 rounded-xl text-sm focus:outline-none focus:border-red-500 focus:ring-2 focus:ring-red-500/20 transition-all duration-200 font-medium text-slate-700">
@@ -482,7 +478,7 @@ $isNearbyActive = filled(request('user_lat')) && filled(request('user_lng'));
 
         trigger.addEventListener('click', () => {
             panel.classList.toggle('hidden');
-            if (window.lucide) lucide.createIcons();
+            if (window.lucide) window.refreshLucideIcons();
         });
 
         panel.querySelectorAll('button[data-index]').forEach((rowBtn) => {
@@ -513,7 +509,7 @@ $isNearbyActive = filled(request('user_lat')) && filled(request('user_lng'));
 
         updateLabel();
         selectEl.dataset.enhanced = '1';
-        if (window.lucide) lucide.createIcons();
+        if (window.lucide) window.refreshLucideIcons();
     }
 
     function renderMultiSelectBadges(selectEl) {

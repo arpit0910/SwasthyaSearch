@@ -122,7 +122,7 @@ class PageController extends Controller
             'comments' => 'required|string|max:2000',
         ]);
 
-        return back()->with('success', 'Thank you for your valuable feedback! Your input helps us improve SwasthyaSearch for everyone.');
+        return back()->with('success', 'Thank you for your valuable feedback! Your input helps us improve Arogio for everyone.');
     }
 
     public function submitLeadCapture(Request $request)

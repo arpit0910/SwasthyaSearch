@@ -194,7 +194,7 @@ class FreeCommunityEnrichmentService
             usleep(1100000);
 
             $client = Http::timeout(15)->withHeaders([
-                'User-Agent' => 'SwasthyaSearch/1.0 (community health directory)',
+                'User-Agent' => 'arogio/1.0 (community health directory)',
                 'Accept-Language' => 'en',
             ]);
 

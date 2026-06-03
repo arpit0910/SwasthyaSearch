@@ -1601,8 +1601,8 @@ class BangaloreScraperService extends BaseScraperService
                 'cashless_schemes_list' => [],
             ],
             [
-                'name_en' => 'Apollo Cradle & Children’s Hospital',
-                'name_hi' => 'अपॊल्लॊ च्रद्लॆ & छिल्द्रॆन्’स अस्पताल (बैंगलोर)',
+                'name_en' => 'Apollo Cradle & Children's Hospital',
+                'name_hi' => 'अपॊल्लॊ च्रद्लॆ & छिल्द्रॆन्'स अस्पताल (बैंगलोर)',
                 'type' => 'Private Hospital',
                 'address' => 'Bangalore, Karnataka',
                 'address_line1' => 'Main Medical Avenue',

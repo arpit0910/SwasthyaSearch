@@ -1087,7 +1087,7 @@ Doctor से कब मिलें
                     'hi' => 'पीठ दर्द के लिए योग: रीढ़ के स्वास्थ्य को एर्गोनॉमिक रूप से बहाल करना',
                 ],
                 'excerpt' => [
-                    'en' => 'Desk jobs ruin posture. Use Cat-Cow and Child’s Pose to decompress discs and relieve back ache.',
+                    'en' => 'Desk jobs ruin posture. Use Cat-Cow and Child's Pose to decompress discs and relieve back ache.',
                     'hi' => 'कैट-काउ और चाइल्ड पोज़ का उपयोग करके डिस्क को डिकम्प्रेस करें और पीठ दर्द से राहत पाएं।',
                 ],
                 'content' => [
@@ -1105,7 +1105,7 @@ How it works in the body
 Gentle spinal movement improves circulation, reduces guarding and restores confidence. Core and hip strength reduce repeated load on the lower back. The most important point is that lifestyle changes work through repeated signals. A single session, one supplement, or one perfect meal rarely changes health on its own; the body responds to what is practiced consistently.
 
 Practical routine
-Use Cat-Cow, Child’s Pose, pelvic tilts, supported bridge and short walks. Adjust desk height, take movement breaks and avoid long static sitting. Start smaller than your motivation level. A routine that can be followed on busy days is more valuable than an aggressive plan that fails after three days. Keep the first target simple: one daily action, one weekly review, and one clear reason for continuing.
+Use Cat-Cow, Child's Pose, pelvic tilts, supported bridge and short walks. Adjust desk height, take movement breaks and avoid long static sitting. Start smaller than your motivation level. A routine that can be followed on busy days is more valuable than an aggressive plan that fails after three days. Keep the first target simple: one daily action, one weekly review, and one clear reason for continuing.
 
 Food, sleep, and recovery support
 For most health goals, the foundation remains steady sleep, balanced meals, hydration, sunlight when appropriate, regular movement, and reduced exposure to avoidable stress. A meal pattern with enough protein, fiber, vegetables and minimally processed foods usually supports better energy and appetite control. Sleep should be treated as part of treatment because poor sleep increases cravings, pain sensitivity, anxiety, blood pressure and inflammation.
@@ -1138,7 +1138,7 @@ pain location, stiffness, leg symptoms, sitting time, lifting habits, sleep post
 gentle spinal movement circulation बढ़ाता है, guarding कम करता है और movement confidence लौटाता है। core और hip strength lower back load घटाते हैं। सबसे जरूरी बात यह है कि lifestyle changes repeated signals से काम करते हैं। एक session, एक supplement या एक perfect meal अकेले health नहीं बदलता; body consistency पर response देती है।
 
 Practical routine
-Cat-Cow, Child’s Pose, pelvic tilts, supported bridge और short walks करें। desk height adjust करें और लंबे static sitting से बचें। शुरुआत motivation से छोटी रखें। busy days में follow होने वाला routine aggressive plan से बेहतर है जो तीन दिन बाद छूट जाए। पहला target simple रखें: एक daily action, एक weekly review और continue करने का एक clear reason।
+Cat-Cow, Child's Pose, pelvic tilts, supported bridge और short walks करें। desk height adjust करें और लंबे static sitting से बचें। शुरुआत motivation से छोटी रखें। busy days में follow होने वाला routine aggressive plan से बेहतर है जो तीन दिन बाद छूट जाए। पहला target simple रखें: एक daily action, एक weekly review और continue करने का एक clear reason।
 
 भोजन, नींद और recovery support
 अधिकतर health goals में foundation वही रहता है—अच्छी नींद, balanced meals, hydration, जरूरत के अनुसार sunlight, regular movement और avoidable stress कम करना। पर्याप्त protein, fiber, vegetables और minimally processed foods energy और appetite control में help करते हैं। sleep को treatment का हिस्सा मानें क्योंकि poor sleep cravings, pain sensitivity, anxiety, BP और inflammation को बढ़ा सकती है।
@@ -1852,7 +1852,7 @@ Common mistakes
 The biggest mistake is copying advice without checking whether it suits your body, diagnosis, medicines and age. Another mistake is expecting instant results and then abandoning the plan. Avoid extreme routines, high-dose supplements, painful exercise, long fasting, or stopping prescribed medicines without professional advice. Health improvement should make daily life safer and steadier, not more stressful.
 
 Safety and precautions
-Avoid ice baths with heart disease, uncontrolled BP, fainting history, pregnancy, Raynaud’s or without supervision. Also be careful if you are pregnant, breastfeeding, elderly, recovering from surgery, or living with diabetes, kidney disease, liver disease, heart disease, autoimmune disease, epilepsy, severe anxiety or depression. In these cases, even natural methods can have risks.
+Avoid ice baths with heart disease, uncontrolled BP, fainting history, pregnancy, Raynaud's or without supervision. Also be careful if you are pregnant, breastfeeding, elderly, recovering from surgery, or living with diabetes, kidney disease, liver disease, heart disease, autoimmune disease, epilepsy, severe anxiety or depression. In these cases, even natural methods can have risks.
 
 How to measure progress
 Use simple markers: sleep quality, energy, pain level, mood, digestion, appetite, cravings, menstrual regularity where relevant, exercise tolerance, and ability to work through the day. For conditions involving blood pressure, sugar, thyroid, anemia, cholesterol, vitamin deficiency or chronic inflammation, symptoms alone are not enough; lab values and medical review matter.
@@ -1885,7 +1885,7 @@ Common mistakes
 सबसे बड़ी गलती है advice को बिना यह देखे copy करना कि वह आपकी body, diagnosis, medicines और age के लिए suitable है या नहीं। दूसरी गलती है instant result expect करना और plan छोड़ देना। extreme routines, high-dose supplements, painful exercise, long fasting या prescribed medicines रोकने से बचें।
 
 Safety और precautions
-heart disease, uncontrolled BP, fainting history, pregnancy, Raynaud’s या supervision के बिना ice baths avoid करें। pregnancy, breastfeeding, elderly age, surgery recovery, diabetes, kidney disease, liver disease, heart disease, autoimmune disease, epilepsy, severe anxiety या depression में natural methods भी risk दे सकते हैं, इसलिए professional advice बेहतर है।
+heart disease, uncontrolled BP, fainting history, pregnancy, Raynaud's या supervision के बिना ice baths avoid करें। pregnancy, breastfeeding, elderly age, surgery recovery, diabetes, kidney disease, liver disease, heart disease, autoimmune disease, epilepsy, severe anxiety या depression में natural methods भी risk दे सकते हैं, इसलिए professional advice बेहतर है।
 
 Progress कैसे measure करें
 sleep quality, energy, pain level, mood, digestion, appetite, cravings, menstrual regularity जहां relevant हो, exercise tolerance और दिनभर काम करने की ability track करें। BP, sugar, thyroid, anemia, cholesterol, vitamin deficiency या chronic inflammation में केवल symptoms काफी नहीं; lab values और medical review भी जरूरी हैं।
@@ -2399,7 +2399,7 @@ Doctor से कब मिलें
                     'hi' => 'एप्पल साइडर सिरका: ग्लाइसेमिक नियंत्रण का विज्ञान',
                 ],
                 'excerpt' => [
-                    'en' => 'It’s not just a trend. Learn how acetic acid physically blocks carbohydrate absorption and prevents massive blood sugar spikes.',
+                    'en' => 'It's not just a trend. Learn how acetic acid physically blocks carbohydrate absorption and prevents massive blood sugar spikes.',
                     'hi' => 'जानें कि एसिटिक एसिड कैसे कार्बोहाइड्रेट अवशोषण को रोकता है और रक्त शर्करा के स्पाइक्स को रोकता है।',
                 ],
                 'content' => [
@@ -3146,13 +3146,13 @@ Doctor से कब मिलें
 Detailed Reader Guide
 
 Why this matters
-Lion’s Mane is discussed for cognition and nerve support, but supplement claims should be balanced and realistic. Brain health still depends on sleep, exercise and medical care.
+Lion's Mane is discussed for cognition and nerve support, but supplement claims should be balanced and realistic. Brain health still depends on sleep, exercise and medical care.
 
 What readers should observe
 Track memory, focus, sleep, mood, digestion, allergies and other supplements. Keep notes for at least two weeks so you can separate a real pattern from a random bad day. If the article is being read by a patient or caregiver, this tracking also makes doctor consultations more useful because it converts vague complaints into clear information.
 
 How it works in the body
-Some compounds in Lion’s Mane are studied for nerve growth pathways, but human outcomes vary and products differ widely. The most important point is that lifestyle changes work through repeated signals. A single session, one supplement, or one perfect meal rarely changes health on its own; the body responds to what is practiced consistently.
+Some compounds in Lion's Mane are studied for nerve growth pathways, but human outcomes vary and products differ widely. The most important point is that lifestyle changes work through repeated signals. A single session, one supplement, or one perfect meal rarely changes health on its own; the body responds to what is practiced consistently.
 
 Practical routine
 Support cognition first with sleep, aerobic exercise, learning, protein and social connection. If using a supplement, choose quality and watch tolerance. Start smaller than your motivation level. A routine that can be followed on busy days is more valuable than an aggressive plan that fails after three days. Keep the first target simple: one daily action, one weekly review, and one clear reason for continuing.
@@ -3179,13 +3179,13 @@ Use this article as a practical education guide. Apply the advice gradually, tra
 विस्तृत पाठक मार्गदर्शिका
 
 यह क्यों महत्वपूर्ण है
-Lion’s Mane cognition और nerve support के लिए discuss होता है, लेकिन supplement claims balanced रखें। brain health अभी भी sleep, exercise और medical care पर depend करती है।
+Lion's Mane cognition और nerve support के लिए discuss होता है, लेकिन supplement claims balanced रखें। brain health अभी भी sleep, exercise और medical care पर depend करती है।
 
 किन बातों को observe करें
 memory, focus, sleep, mood, digestion, allergies और other supplements track करें। कम से कम दो सप्ताह notes बनाएं ताकि एक bad day और real pattern में फर्क समझ आए। patient या caregiver के लिए यह tracking doctor consultation को भी useful बनाती है, क्योंकि vague complaints clear information में बदल जाती हैं।
 
 शरीर में यह कैसे काम करता है
-Lion’s Mane के कुछ compounds nerve growth pathways के लिए study होते हैं, लेकिन human outcomes vary करते हैं और products अलग होते हैं। सबसे जरूरी बात यह है कि lifestyle changes repeated signals से काम करते हैं। एक session, एक supplement या एक perfect meal अकेले health नहीं बदलता; body consistency पर response देती है।
+Lion's Mane के कुछ compounds nerve growth pathways के लिए study होते हैं, लेकिन human outcomes vary करते हैं और products अलग होते हैं। सबसे जरूरी बात यह है कि lifestyle changes repeated signals से काम करते हैं। एक session, एक supplement या एक perfect meal अकेले health नहीं बदलता; body consistency पर response देती है।
 
 Practical routine
 cognition support के लिए पहले sleep, aerobic exercise, learning, protein और social connection रखें। supplement use करें तो quality और tolerance देखें। शुरुआत motivation से छोटी रखें। busy days में follow होने वाला routine aggressive plan से बेहतर है जो तीन दिन बाद छूट जाए। पहला target simple रखें: एक daily action, एक weekly review और continue करने का एक clear reason।

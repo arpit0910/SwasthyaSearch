@@ -17,32 +17,35 @@ class SearchController extends Controller
 {
     public function index()
     {
+        $activeCity = config('healthcare.active_city', 'Jaipur');
         $nameColumn = app()->getLocale() === 'hi' ? 'name_hi' : 'name_en';
 
         return view('home.index', [
             'departments' => Department::where('is_active', true)->orderBy($nameColumn)->get()->map(fn(Department $department) => $this->formatDepartment($department)),
-            'doctors' => Doctor::with(['department', 'hospitals'])->where('is_verified', true)->latest()->take(6)->get()->map(fn(Doctor $doctor) => $this->formatDoctor($doctor)),
+            'doctors' => Doctor::with(['department', 'hospitals'])->where('is_verified', true)->whereHas('hospitals', fn($query) => $query->where('city', 'LIKE', "%{$activeCity}%"))->latest()->take(6)->get()->map(fn(Doctor $doctor) => $this->formatDoctor($doctor)),
             'articles' => Article::with('comments')->where('is_published', true)->latest()->take(6)->get(),
             // Homepage FAQ section must always come from FAQ module entries.
             'faqs' => Faq::query()->latest('id')->get(),
             'stats' => [
-                'cities' => Hospital::distinct('city')->count('city') ?: 1,
-                'doctors' => Doctor::count(),
+                'cities' => 1,
+                'doctors' => Doctor::whereHas('hospitals', fn($query) => $query->where('city', 'LIKE', "%{$activeCity}%"))->count(),
                 'departments' => Department::where('is_active', true)->count(),
-                'hospitals' => Hospital::count(),
-                'blood_banks' => \App\Models\BloodBank::count(),
+                'hospitals' => Hospital::where('city', 'LIKE', "%{$activeCity}%")->count(),
+                'blood_banks' => \App\Models\BloodBank::where('city', 'LIKE', "%{$activeCity}%")->count(),
             ],
+            'activeCity' => $activeCity,
         ]);
     }
 
     public function search(Request $request)
     {
+        $activeCity = config('healthcare.active_city', 'Jaipur');
         $query = $this->normalizeSymptomQuery((string) $request->input('q', ''));
         $locale = app()->getLocale();
 
         if (empty($query)) {
             return response()->json([
-                'doctors' => Doctor::with(['department', 'hospitals'])->where('is_verified', true)->latest()->take(10)->get()->map(fn(Doctor $doctor) => $this->formatDoctor($doctor)),
+                'doctors' => Doctor::with(['department', 'hospitals'])->where('is_verified', true)->whereHas('hospitals', fn($hospitalQuery) => $hospitalQuery->where('city', 'LIKE', "%{$activeCity}%"))->latest()->take(10)->get()->map(fn(Doctor $doctor) => $this->formatDoctor($doctor)),
                 'matched_department' => null,
                 'matched_disease' => null,
             ]);
@@ -114,6 +117,7 @@ class SearchController extends Controller
             $doctors = Doctor::where('department_id', $matchedDeptId)
                 ->with(['department', 'hospitals'])
                 ->where('is_verified', true)
+                ->whereHas('hospitals', fn($hospitalQuery) => $hospitalQuery->where('city', 'LIKE', "%{$activeCity}%"))
                 ->get();
         } else {
             $doctors = collect();
@@ -121,7 +125,8 @@ class SearchController extends Controller
 
         // 2. If no symptom/department mapping produced doctors, attempt doctor-name search.
         if ($doctors->isEmpty() && $isLikelyDoctorNameQuery && !empty($terms)) {
-            $nameQuery = Doctor::with(['department', 'hospitals'])->where('is_verified', true);
+            $nameQuery = Doctor::with(['department', 'hospitals'])->where('is_verified', true)
+                ->whereHas('hospitals', fn($hospitalQuery) => $hospitalQuery->where('city', 'LIKE', "%{$activeCity}%"));
             $nameQuery->where(function ($q) use ($terms) {
                 foreach ($terms as $term) {
                     $q->where(function ($subQ) use ($term) {

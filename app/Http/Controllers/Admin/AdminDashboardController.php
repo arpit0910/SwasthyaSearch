@@ -13,6 +13,9 @@ use App\Models\Doctor;
 use App\Models\Faq;
 use App\Models\GeneralQuestion;
 use App\Models\Hospital;
+use App\Models\Medicine;
+use App\Models\MedicineReport;
+use App\Models\Quiz;
 use App\Models\Symptom;
 use App\Models\SymptomTestSubmission;
 use App\Services\DirectorySyncService;
@@ -21,6 +24,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Str;
+use Illuminate\Validation\Rule;
 
 class AdminDashboardController extends Controller
 {
@@ -1539,6 +1543,280 @@ class AdminDashboardController extends Controller
     {
         $article->delete();
         return back()->with('success', 'Article deleted successfully.');
+    }
+
+    // --- MEDICINES CRUD ---
+    public function medicines(Request $request)
+    {
+        $query = Medicine::query();
+
+        if ($search = trim((string) $request->query('search', ''))) {
+            $query->search($search);
+        }
+
+        if ($status = trim((string) $request->query('status', ''))) {
+            $query->where('review_status', $status);
+        }
+
+        $medicines = $query->latest()->paginate(20)->withQueryString();
+
+        return view('admin.medicines.index', compact('medicines'));
+    }
+
+    public function createMedicine()
+    {
+        return view('admin.medicines.create_page');
+    }
+
+    public function editMedicine(Medicine $medicine)
+    {
+        return view('admin.medicines.edit_page', compact('medicine'));
+    }
+
+    public function storeMedicine(Request $request)
+    {
+        Medicine::create($this->validatedMedicineData($request));
+
+        return redirect()->route('admin.medicines')->with('success', 'Medicine created successfully.');
+    }
+
+    public function updateMedicine(Request $request, Medicine $medicine)
+    {
+        $medicine->update($this->validatedMedicineData($request));
+
+        return redirect()->route('admin.medicines.edit', $medicine)->with('success', 'Medicine updated successfully.');
+    }
+
+    public function destroyMedicine(Medicine $medicine)
+    {
+        $medicine->delete();
+
+        return back()->with('success', 'Medicine deleted successfully.');
+    }
+
+    public function medicineReports(Request $request)
+    {
+        $query = MedicineReport::query()->with('medicine')->latest();
+
+        if ($status = trim((string) $request->query('status', ''))) {
+            $query->where('status', $status);
+        }
+
+        $reports = $query->paginate(20)->withQueryString();
+
+        return view('admin.medicine_reports.index', compact('reports'));
+    }
+
+    public function updateMedicineReport(Request $request, MedicineReport $medicineReport)
+    {
+        $data = $request->validate([
+            'status' => 'required|in:new,reviewing,resolved,rejected',
+            'admin_notes' => 'nullable|string|max:4000',
+        ]);
+
+        $medicineReport->update($data);
+
+        return back()->with('success', 'Medicine report updated successfully.');
+    }
+
+    // --- QUIZZES CRUD ---
+    public function quizzes(Request $request)
+    {
+        $query = Quiz::query();
+
+        if ($search = trim((string) $request->query('search', ''))) {
+            $query->where(function ($searchQuery) use ($search) {
+                $searchQuery->where('title_en', 'like', "%{$search}%")
+                    ->orWhere('title_hi', 'like', "%{$search}%")
+                    ->orWhere('category', 'like', "%{$search}%");
+            });
+        }
+
+        $quizzes = $query->latest()->paginate(20)->withQueryString();
+
+        return view('admin.quizzes.index', compact('quizzes'));
+    }
+
+    public function createQuiz()
+    {
+        return view('admin.quizzes.create_page');
+    }
+
+    public function editQuiz(Quiz $quiz)
+    {
+        return view('admin.quizzes.edit_page', compact('quiz'));
+    }
+
+    public function storeQuiz(Request $request)
+    {
+        Quiz::create($this->validatedQuizData($request));
+
+        return redirect()->route('admin.quizzes')->with('success', 'Quiz created successfully.');
+    }
+
+    public function updateQuiz(Request $request, Quiz $quiz)
+    {
+        $quiz->update($this->validatedQuizData($request));
+
+        return redirect()->route('admin.quizzes.edit', $quiz)->with('success', 'Quiz updated successfully.');
+    }
+
+    public function destroyQuiz(Quiz $quiz)
+    {
+        $quiz->delete();
+
+        return back()->with('success', 'Quiz deleted successfully.');
+    }
+
+    private function validatedMedicineData(Request $request): array
+    {
+        $medicine = $request->route('medicine');
+
+        $data = $request->validate([
+            'name' => 'required|string|max:255',
+            'slug' => [
+                'nullable',
+                'string',
+                'max:255',
+                Rule::unique('medicines', 'slug')->ignore($medicine?->id),
+            ],
+            'generic_name' => 'nullable|string|max:255',
+            'brand_names' => 'nullable|string',
+            'composition' => 'nullable|string|max:255',
+            'strength' => 'nullable|string|max:255',
+            'medicine_type' => 'nullable|string|max:255',
+            'category' => 'nullable|string|max:255',
+            'prescription_required' => 'nullable|boolean',
+            'purpose_en' => 'nullable|string',
+            'purpose_hi' => 'nullable|string',
+            'overview_en' => 'nullable|string',
+            'overview_hi' => 'nullable|string',
+            'uses_en' => 'nullable|string',
+            'uses_hi' => 'nullable|string',
+            'benefits_en' => 'nullable|string',
+            'benefits_hi' => 'nullable|string',
+            'dosage_information_en' => 'nullable|string',
+            'dosage_information_hi' => 'nullable|string',
+            'mechanism_en' => 'nullable|string',
+            'mechanism_hi' => 'nullable|string',
+            'common_side_effects_en' => 'nullable|string',
+            'common_side_effects_hi' => 'nullable|string',
+            'serious_side_effects_en' => 'nullable|string',
+            'serious_side_effects_hi' => 'nullable|string',
+            'drug_interactions_en' => 'nullable|string',
+            'drug_interactions_hi' => 'nullable|string',
+            'food_interactions_en' => 'nullable|string',
+            'food_interactions_hi' => 'nullable|string',
+            'alcohol_warning_en' => 'nullable|string',
+            'alcohol_warning_hi' => 'nullable|string',
+            'pregnancy_warning_en' => 'nullable|string',
+            'pregnancy_warning_hi' => 'nullable|string',
+            'breastfeeding_warning_en' => 'nullable|string',
+            'breastfeeding_warning_hi' => 'nullable|string',
+            'kidney_warning_en' => 'nullable|string',
+            'kidney_warning_hi' => 'nullable|string',
+            'liver_warning_en' => 'nullable|string',
+            'liver_warning_hi' => 'nullable|string',
+            'driving_warning_en' => 'nullable|string',
+            'driving_warning_hi' => 'nullable|string',
+            'allergy_warning_en' => 'nullable|string',
+            'allergy_warning_hi' => 'nullable|string',
+            'precautions_en' => 'nullable|string',
+            'precautions_hi' => 'nullable|string',
+            'contraindications_en' => 'nullable|string',
+            'contraindications_hi' => 'nullable|string',
+            'avoid_if_en' => 'nullable|string',
+            'avoid_if_hi' => 'nullable|string',
+            'missed_dose_en' => 'nullable|string',
+            'missed_dose_hi' => 'nullable|string',
+            'overdose_en' => 'nullable|string',
+            'overdose_hi' => 'nullable|string',
+            'storage_en' => 'nullable|string',
+            'storage_hi' => 'nullable|string',
+            'expert_advice_en' => 'nullable|string',
+            'expert_advice_hi' => 'nullable|string',
+            'when_to_contact_doctor_en' => 'nullable|string',
+            'when_to_contact_doctor_hi' => 'nullable|string',
+            'faqs' => 'nullable|string',
+            'source_references' => 'nullable|string',
+            'meta_title_en' => 'nullable|string|max:255',
+            'meta_title_hi' => 'nullable|string|max:255',
+            'meta_description_en' => 'nullable|string',
+            'meta_description_hi' => 'nullable|string',
+            'reviewed_by' => 'nullable|string|max:255',
+            'last_reviewed_at' => 'nullable|date',
+            'ai_generated' => 'nullable|boolean',
+            'medically_reviewed' => 'nullable|boolean',
+            'review_status' => 'required|in:' . implode(',', Medicine::REVIEW_STATUSES),
+            'is_published' => 'nullable|boolean',
+        ]);
+
+        $data['brand_names_json'] = collect(preg_split('/[\r\n,]+/', (string) ($data['brand_names'] ?? '')))
+            ->map(fn ($value) => trim((string) $value))
+            ->filter()
+            ->values()
+            ->all();
+
+        $data['faqs_json'] = collect(preg_split('/\r\n|\r|\n/', (string) ($data['faqs'] ?? '')))
+            ->map(function ($line) {
+                [$question, $answer] = array_pad(array_map('trim', explode('|', (string) $line, 2)), 2, null);
+                if (blank($question) || blank($answer)) {
+                    return null;
+                }
+
+                return compact('question', 'answer');
+            })
+            ->filter()
+            ->values()
+            ->all();
+
+        $data['source_references_json'] = collect(preg_split('/\r\n|\r|\n/', (string) ($data['source_references'] ?? '')))
+            ->map(fn ($line) => trim((string) $line))
+            ->filter()
+            ->values()
+            ->all();
+
+        $data['prescription_required'] = $request->boolean('prescription_required');
+        $data['ai_generated'] = $request->boolean('ai_generated');
+        $data['medically_reviewed'] = $request->boolean('medically_reviewed');
+        $data['is_published'] = $request->boolean('is_published');
+        $data['updated_by'] = auth()->guard('admin')->id();
+        $data['created_by'] = $medicine?->created_by ?? auth()->guard('admin')->id();
+
+        unset($data['brand_names'], $data['faqs'], $data['source_references']);
+
+        return $data;
+    }
+
+    private function validatedQuizData(Request $request): array
+    {
+        $quiz = $request->route('quiz');
+        $data = $request->validate([
+            'title_en' => 'required|string|max:255',
+            'title_hi' => 'required|string|max:255',
+            'slug' => ['nullable', 'string', 'max:255', Rule::unique('quizzes', 'slug')->ignore($quiz?->id)],
+            'category' => 'nullable|string|max:255',
+            'description_en' => 'nullable|string',
+            'description_hi' => 'nullable|string',
+            'intro_en' => 'nullable|string',
+            'intro_hi' => 'nullable|string',
+            'questions_payload' => 'nullable|string',
+            'results_payload' => 'nullable|string',
+            'disclaimer_en' => 'nullable|string',
+            'disclaimer_hi' => 'nullable|string',
+            'meta_title_en' => 'nullable|string|max:255',
+            'meta_title_hi' => 'nullable|string|max:255',
+            'meta_description_en' => 'nullable|string',
+            'meta_description_hi' => 'nullable|string',
+            'is_published' => 'nullable|boolean',
+        ]);
+
+        $data['questions_json'] = json_decode((string) ($data['questions_payload'] ?? '[]'), true) ?: [];
+        $data['result_ranges_json'] = json_decode((string) ($data['results_payload'] ?? '[]'), true) ?: [];
+        $data['is_published'] = $request->boolean('is_published');
+        unset($data['questions_payload'], $data['results_payload']);
+
+        return $data;
     }
 
     // --- FAQS CRUD ---

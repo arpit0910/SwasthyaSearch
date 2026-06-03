@@ -127,12 +127,13 @@ class HealthcareQueryController extends Controller
      */
     public function cityDirectory(Request $request)
     {
+        $activeCity = config('healthcare.active_city', 'Jaipur');
         $validated = $request->validate([
-            'city' => 'required|string|max:120',
+            'city' => 'nullable|string|max:120',
             'department' => 'nullable|string|max:120',
         ]);
 
-        $city = trim($validated['city']);
+        $city = trim($validated['city'] ?? $activeCity);
         $department = isset($validated['department']) ? trim($validated['department']) : null;
 
         $doctors = ReliableHealthcareDirectoryService::doctorsByCity($city, $department);

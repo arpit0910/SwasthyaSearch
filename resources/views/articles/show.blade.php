@@ -12,8 +12,8 @@
     $content = $locale === 'hi' ? ($contentHi ?: $contentEn) : $contentEn;
 @endphp
 
-@section('title', $title . ' - SwasthyaSearch')
-@section('meta_title', $title . ' | SwasthyaSearch')
+@section('title', $title . ' - Arogio')
+@section('meta_title', $title . ' | Arogio')
 @section('meta_description', \Illuminate\Support\Str::limit(strip_tags($excerpt ?: $content), 160, '...'))
 @section('og_type', 'article')
 @section('canonical_url', route('articles.show', $article->id))
@@ -33,7 +33,7 @@
     'mainEntityOfPage' => route('articles.show', $article->id),
     'publisher' => [
         '@type' => 'Organization',
-        'name' => 'SwasthyaSearch',
+        'name' => 'Arogio',
     ],
 ], JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE) !!}
 </script>
@@ -240,7 +240,7 @@
                 `;
 
                 commentsList.insertAdjacentHTML('beforeend', html);
-                lucide.createIcons();
+                window.refreshLucideIcons();
 
                 currentCommentsCount++;
                 document.getElementById('comments-count-badge').innerText = `${currentCommentsCount} {{ $locale === 'hi' ? 'टिप्पणियां' : 'Comments' }}`;

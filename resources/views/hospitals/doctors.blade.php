@@ -8,8 +8,8 @@
     $hospitalAddressLine2 = $locale === 'hi' ? ($hospital['address_line2_hi'] ?? $hospital['address_line2']) : $hospital['address_line2'];
 @endphp
 
-@section('title', ($locale === 'hi' ? 'अस्पताल के डॉक्टर' : 'Hospital Doctors') . ' - SwasthyaSearch')
-@section('meta_title', "{$hospitalName} Doctors | SwasthyaSearch")
+@section('title', ($locale === 'hi' ? 'अस्पताल के डॉक्टर' : 'Hospital Doctors') . ' - Arogio')
+@section('meta_title', "{$hospitalName} Doctors | Arogio")
 @section('meta_description', "View doctors associated with {$hospital['name_en']} in {$hospital['city']}. Check specialty, experience, and contact details before visiting.")
 
 @section('content')

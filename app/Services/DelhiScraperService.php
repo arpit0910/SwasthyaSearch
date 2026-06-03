@@ -2367,7 +2367,7 @@ class DelhiScraperService extends BaseScraperService
                 'cashless_schemes_list' => [],
             ],
             [
-                'name_en' => 'Apollo Cradle & Children’s Hospital',
+                'name_en' => 'Apollo Cradle & Children's Hospital',
                 'name_hi' => '',
                 'type' => 'Private Hospital',
                 'address' => 'Main Medical Avenue, Delhi, New Delhi, Delhi',

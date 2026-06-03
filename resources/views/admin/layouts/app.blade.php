@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="robots" content="noindex,nofollow,noarchive">
-    <title>SwasthyaSearch Admin Dashboard</title>
+    <title>Arogio Admin Dashboard</title>
     <!-- Bootstrap 5 CSS -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
     <!-- FontAwesome 6 Icons -->
@@ -301,6 +301,15 @@
         <a href="{{ route('admin.articles') }}" class="nav-link {{ request()->routeIs('admin.articles') ? 'active' : '' }}">
             <i class="fa-solid fa-file-lines"></i> Articles
         </a>
+        <a href="{{ route('admin.medicines') }}" class="nav-link {{ request()->routeIs('admin.medicines*') ? 'active' : '' }}">
+            <i class="fa-solid fa-capsules"></i> Medicines
+        </a>
+        <a href="{{ route('admin.medicine_reports') }}" class="nav-link {{ request()->routeIs('admin.medicine_reports*') ? 'active' : '' }}">
+            <i class="fa-solid fa-triangle-exclamation"></i> Medicine Reports
+        </a>
+        <a href="{{ route('admin.quizzes') }}" class="nav-link {{ request()->routeIs('admin.quizzes*') ? 'active' : '' }}">
+            <i class="fa-solid fa-list-check"></i> Quizzes
+        </a>
         <a href="{{ route('admin.faqs') }}" class="nav-link {{ request()->routeIs('admin.faqs') ? 'active' : '' }}">
             <i class="fa-solid fa-circle-question"></i> FAQs
         </a>
@@ -320,7 +329,7 @@
                 <i class="fa-solid fa-bars"></i>
             </button>
             <div class="d-none d-lg-block fw-bold text-secondary">
-                SwasthyaSearch Administration Portal
+                Arogio Administration Portal
             </div>
             <div class="d-flex align-items-center gap-3">
                 <div class="dropdown">

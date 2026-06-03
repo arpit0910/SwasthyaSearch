@@ -1,7 +1,7 @@
 @extends('layouts.public')
 
-@section('title', ($locale === 'hi' ? 'लक्षण परीक्षण' : 'Symptom Test') . ' - SwasthyaSearch')
-@section('meta_title', $locale === 'hi' ? 'लक्षण परीक्षण | SwasthyaSearch' : 'Symptom Test | SwasthyaSearch')
+@section('title', ($locale === 'hi' ? 'लक्षण परीक्षण' : 'Symptom Test') . ' - Arogio')
+@section('meta_title', $locale === 'hi' ? 'लक्षण परीक्षण | Arogio' : 'Symptom Test | Arogio')
 @section('meta_description', $locale === 'hi'
     ? 'उम्र, लिंग और लक्षणों को चरणों में चुनें। संभावित रोग, संबंधित विभाग और अगले पूछने वाले लक्षण देखें।'
     : 'Choose age, gender, and symptoms step by step. See likely conditions, the relevant department, and the next symptoms to ask about.')
@@ -358,7 +358,7 @@
             `;
         }).join('');
 
-        lucide.createIcons();
+        window.refreshLucideIcons();
     }
 
     function updateReview() {
@@ -537,7 +537,7 @@
                 </div>
             </div>
         `;
-        lucide.createIcons();
+        window.refreshLucideIcons();
         scrollResultsIntoView();
     }
 
@@ -547,7 +547,7 @@
                 <h3 class="text-base font-bold">${message}</h3>
             </div>
         `;
-        lucide.createIcons();
+        window.refreshLucideIcons();
         scrollResultsIntoView();
     }
 
@@ -727,7 +727,7 @@
                 </div>
             ` : ''}
         `;
-        lucide.createIcons();
+        window.refreshLucideIcons();
         scrollResultsIntoView();
 
         document.getElementById('refine-results-button')?.addEventListener('click', () => {
@@ -821,6 +821,6 @@
     filterSymptoms();
     updateSelectionSummaryVisibility();
     updateMobileActionBar();
-    lucide.createIcons();
+    window.refreshLucideIcons();
 </script>
 @endsection

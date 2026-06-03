@@ -13,11 +13,11 @@ class FaqSeeder extends Seeder
     public function run(): void
     {
         Faq::firstOrCreate(
-            ['question_en' => 'Is SwasthyaSearch completely free for patients?'],
+            ['question_en' => 'Is Arogio completely free for patients?'],
             [
-                'question_hi' => 'क्या स्वास्थ्या सर्च मरीजों के लिए पूरी तरह से मुफ़्त है?',
-                'answer_en' => 'Yes! SwasthyaSearch is 100% free and contains zero advertisements or hidden commissions. You can contact doctors directly.',
-                'answer_hi' => 'हाँ! स्वास्थ्या सर्च 100% मुफ़्त है और इसमें कोई विज्ञापन या छिपे हुए कमीशन नहीं हैं। आप सीधे डॉक्टरों से संपर्क कर सकते हैं।',
+                'question_hi' => 'क्या Arogio मरीजों के लिए पूरी तरह से मुफ़्त है?',
+                'answer_en' => 'Yes! Arogio is 100% free and contains zero advertisements or hidden commissions. You can contact doctors directly.',
+                'answer_hi' => 'हाँ! Arogio 100% मुफ़्त है और इसमें कोई विज्ञापन या छिपे हुए कमीशन नहीं हैं। आप सीधे डॉक्टरों से संपर्क कर सकते हैं।',
                 'category' => 'General',
             ]
         );

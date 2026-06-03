@@ -14,6 +14,7 @@ use App\Models\Doctor;
 use App\Models\GeneralQuestion;
 use App\Models\Faq;
 use App\Models\Hospital;
+use App\Models\Medicine;
 use App\Services\MedicalQaService;
 use Exception;
 use Illuminate\Http\Request;
@@ -29,6 +30,7 @@ class ChatbotController extends Controller
     public function handleMessage(Request $request)
     {
         try {
+        $activeCity = config('healthcare.active_city', 'Jaipur');
         $validated = $request->validate([
             'session_token' => 'nullable|string',
             'message' => 'nullable|string',
@@ -49,20 +51,8 @@ class ChatbotController extends Controller
 
         $messages = $chatSession->messages ?? [];
 
-        $cityOptions = Hospital::where('is_verified', true)
-            ->whereNotNull('city')
-            ->distinct()
-            ->orderBy('city')
-            ->pluck('city')
-            ->filter()
-            ->values()
-            ->all();
-
-        $selectedCity = trim((string) ($validated['city'] ?? ''));
-        if ($selectedCity === '') {
-            $lastCityMessage = collect($messages)->reverse()->first(fn($msg) => !empty($msg['city']));
-            $selectedCity = (string) ($lastCityMessage['city'] ?? '');
-        }
+        $cityOptions = [$activeCity];
+        $selectedCity = $activeCity;
 
         // Always try GeneralQuestion module first for conversational/help queries
         // before any directory-loading or AI-powered medical flow.
@@ -103,16 +93,58 @@ class ChatbotController extends Controller
                     'doctors' => [],
                     'hospitals' => [],
                     'articles' => [],
-                    'see_all_doctors_url' => route('doctors.index', ['city' => $selectedCity ?: 'All']),
-                    'see_all_hospitals_url' => route('hospitals.index', ['city' => $selectedCity ?: 'All']),
+                    'see_all_doctors_url' => route('doctors.index'),
+                    'see_all_hospitals_url' => route('hospitals.index'),
                     'see_all_articles_url' => route('articles.index'),
                     'suggest_details' => (bool) $generalHelpPayload['suggest_details'],
                     'history' => $messages,
                 ]);
             }
+
+            $medicinePayload = $this->findMedicineResponse($userMessage, $locale);
+            if ($medicinePayload !== null) {
+                $messages[] = [
+                    'sender' => 'user',
+                    'text' => $userMessage,
+                    'city' => $selectedCity !== '' ? $selectedCity : null,
+                    'locale' => $locale,
+                    'timestamp' => now()->toIso8601String(),
+                ];
+
+                $messages[] = [
+                    'sender' => 'bot',
+                    'text' => $medicinePayload['text'],
+                    'city' => $selectedCity !== '' ? $selectedCity : null,
+                    'locale' => $locale,
+                    'show_options' => true,
+                    'response_mode' => 'medicine_help',
+                    'timestamp' => now()->toIso8601String(),
+                ];
+
+                $chatSession->update(['messages' => $messages]);
+
+                return response()->json([
+                    'session_token' => $sessionToken,
+                    'reply' => $medicinePayload['text'],
+                    'city' => $selectedCity,
+                    'city_options' => $cityOptions,
+                    'locale' => $locale,
+                    'qa_answer' => null,
+                    'symptom_match' => false,
+                    'department_info' => null,
+                    'doctors' => [],
+                    'hospitals' => [],
+                    'articles' => [],
+                    'see_all_doctors_url' => route('doctors.index'),
+                    'see_all_hospitals_url' => route('hospitals.index'),
+                    'see_all_articles_url' => route('articles.index'),
+                    'suggest_details' => false,
+                    'history' => $messages,
+                ]);
+            }
         }
 
-        if (!empty($cityOptions) && ($selectedCity === '' || !in_array($selectedCity, $cityOptions, true))) {
+        if (false && !empty($cityOptions) && ($selectedCity === '' || !in_array($selectedCity, $cityOptions, true))) {
             $cityPrompt = $locale === 'hi'
                 ? 'कृपया सूची में से अपना शहर चुनें ताकि मैं सही डॉक्टर और अस्पताल दिखा सकूं।'
                 : 'Please choose your city from the list so I can show accurate doctors and hospitals.';
@@ -276,7 +308,7 @@ class ChatbotController extends Controller
                 }
 
                 $deptForFilter = $matchedDeptId ?: (optional($doctors->first())->department_id ?? 'All');
-                $seeAllDoctorsUrl = route('doctors.index', ['city' => $selectedCity, 'department' => $deptForFilter ?: 'All']);
+                $seeAllDoctorsUrl = route('doctors.index');
 
                 $botReply = $locale === 'hi'
                     ? "I found some recommended specialist doctors in {$selectedCity}:"
@@ -311,7 +343,7 @@ class ChatbotController extends Controller
                     $hospitals = Hospital::where('is_verified', true)->where('city', $selectedCity)->latest()->take(3)->get();
                 }
 
-                $seeAllHospitalsUrl = route('hospitals.index', ['city' => $selectedCity]);
+                $seeAllHospitalsUrl = route('hospitals.index');
 
                 $botReply = $locale === 'hi'
                     ? "I found the following hospitals and clinics in {$selectedCity}:"
@@ -395,9 +427,9 @@ class ChatbotController extends Controller
                     'hospitals' => $directoryPayload['hospitals'] ?? [],
                     'blood_banks' => $directoryPayload['blood_banks'] ?? [],
                     'articles' => [],
-                    'see_all_doctors_url' => $directoryPayload['see_all_doctors_url'] ?? route('doctors.index', ['city' => $selectedCity, 'department' => 'All']),
-                    'see_all_hospitals_url' => $directoryPayload['see_all_hospitals_url'] ?? route('hospitals.index', ['city' => $selectedCity]),
-                    'see_all_blood_banks_url' => $directoryPayload['see_all_blood_banks_url'] ?? route('blood_banks.index', ['city' => $selectedCity]),
+                    'see_all_doctors_url' => $directoryPayload['see_all_doctors_url'] ?? route('doctors.index'),
+                    'see_all_hospitals_url' => $directoryPayload['see_all_hospitals_url'] ?? route('hospitals.index'),
+                    'see_all_blood_banks_url' => $directoryPayload['see_all_blood_banks_url'] ?? route('blood_banks.index'),
                     'see_all_articles_url' => route('articles.index'),
                     'suggest_details' => false,
                     'history' => $messages,
@@ -412,7 +444,7 @@ class ChatbotController extends Controller
         $isDetailRequest = false;
         $detailKeywords = [
             'detail', 'explain', 'more', 'elaborate', 'describe', 'deep dive',
-            'à¤µà¤¿à¤¸à¥à¤¤à¤¾à¤°', 'à¤µà¤¿à¤µà¤°à¤£', 'à¤…à¤§à¤¿à¤•', 'à¤¸à¤®à¤à¤¾à¤à¤‚', 'à¤”à¤° à¤¬à¤¤à¤¾à¤à¤‚'
+            'विस्तार', 'विवरण', 'अधिक', 'समझाएं', 'और बताएं'
         ];
         foreach ($detailKeywords as $keyword) {
             if (mb_stripos($lowerMsg, $keyword) !== false) {
@@ -708,8 +740,8 @@ class ChatbotController extends Controller
         $articles = collect();
 
         $deptForFilter = $matchedDeptId ?: 'All';
-        $seeAllDoctorsUrl = route('doctors.index', ['city' => $selectedCity, 'department' => $deptForFilter]);
-        $seeAllHospitalsUrl = route('hospitals.index', ['city' => $selectedCity]);
+        $seeAllDoctorsUrl = route('doctors.index');
+        $seeAllHospitalsUrl = route('hospitals.index');
         $seeAllArticlesUrl = route('articles.index', ['category' => $grokDepartment ?: 'All']);
         $qaSource = (string) ($qaAnswer['source'] ?? '');
         $symptomMatch = (bool) $qaAnswer && (
@@ -800,7 +832,7 @@ class ChatbotController extends Controller
 
             $locale = (string) ($request->input('locale') ?: app()->getLocale());
             $fallbackReply = $locale === 'hi'
-                ? 'à¤•à¥à¤› à¤¤à¤•à¤¨à¥€à¤•à¥€ à¤¸à¤®à¤¸à¥à¤¯à¤¾ à¤†à¤ˆ, à¤²à¥‡à¤•à¤¿à¤¨ à¤®à¥ˆà¤‚ à¤†à¤ªà¤•à¥€ à¤®à¤¦à¤¦ à¤•à¥‡ à¤²à¤¿à¤ à¤¤à¥ˆà¤¯à¤¾à¤° à¤¹à¥‚à¤à¥¤ à¤•à¥ƒà¤ªà¤¯à¤¾ à¤«à¤¿à¤° à¤¸à¥‡ à¤¸à¤‚à¤¦à¥‡à¤¶ à¤­à¥‡à¤œà¥‡à¤‚ à¤¯à¤¾ "Find Doctors" à¤µà¤¿à¤•à¤²à¥à¤ª à¤šà¥à¤¨à¥‡à¤‚à¥¤'
+                ? 'कुछ तकनीकी समस्या आई, लेकिन मैं आपकी मदद के लिए तैयार हूँ। कृपया फिर से संदेश भेजें या "Find Doctors" विकल्प चुनें।'
                 : 'A technical issue occurred, but I am ready to help. Please resend your message or choose "Find Doctors".';
 
             return response()->json([
@@ -902,16 +934,16 @@ class ChatbotController extends Controller
             'need',
             'please',
             'search',
-            'à¤¡à¥‰à¤•à¥à¤Ÿà¤°',
-            'à¤¡à¥‰',
-            'à¤…à¤¸à¥à¤ªà¤¤à¤¾à¤²',
-            'à¤•à¥à¤²à¤¿à¤¨à¤¿à¤•',
-            'à¤–à¥‹à¤œà¥‡à¤‚',
-            'à¤®à¥‡à¤‚',
-            'à¤ªà¤¾à¤¸',
-            'à¤®à¥à¤à¥‡',
-            'à¤šà¤¾à¤¹à¤¿à¤',
-            'à¤•à¥ƒà¤ªà¤¯à¤¾',
+            'डॉक्टर',
+            'डॉ',
+            'अस्पताल',
+            'क्लिनिक',
+            'खोजें',
+            'में',
+            'पास',
+            'मुझे',
+            'चाहिए',
+            'कृपया',
         ];
 
         $tokens = array_values(array_unique(array_filter($parts, function ($part) use ($stopwords) {
@@ -931,13 +963,13 @@ class ChatbotController extends Controller
         $directoryKeywords = [
             'find', 'search', 'near', 'nearby', 'doctor', 'hospital', 'clinic', 'blood bank', 'specialist', 'department',
             'show doctors', 'show hospitals', 'cardiologist', 'orthopedic', 'dermatologist',
-            'à¤–à¥‹à¤œ', 'à¤¡à¥‰à¤•à¥à¤Ÿà¤°', 'à¤…à¤¸à¥à¤ªà¤¤à¤¾à¤²', 'à¤•à¥à¤²à¤¿à¤¨à¤¿à¤•', 'à¤¬à¥à¤²à¤¡ à¤¬à¥ˆà¤‚à¤•', 'à¤µà¤¿à¤¶à¥‡à¤·à¤œà¥à¤ž', 'à¤µà¤¿à¤­à¤¾à¤—', 'à¤ªà¤¾à¤¸', 'à¤¨à¤œà¤¦à¥€à¤•',
+            'खोज', 'डॉक्टर', 'अस्पताल', 'क्लिनिक', 'ब्लड बैंक', 'विशेषज्ञ', 'विभाग', 'पास', 'नजदीक',
         ];
 
         $aiMedicalIntentKeywords = [
             'why', 'cause', 'treatment', 'medicine', 'dosage', 'dose', 'diet', 'prevention', 'symptom meaning',
             'explain', 'detail', 'detailed', 'serious', 'is this dangerous',
-            'à¤•à¥à¤¯à¥‹à¤‚', 'à¤•à¤¾à¤°à¤£', 'à¤‡à¤²à¤¾à¤œ', 'à¤¦à¤µà¤¾', 'à¤–à¥à¤°à¤¾à¤•', 'à¤‰à¤ªà¤šà¤¾à¤°', 'à¤¸à¤®à¤à¤¾à¤à¤‚', 'à¤µà¤¿à¤¸à¥à¤¤à¤¾à¤°', 'à¤—à¤‚à¤­à¥€à¤°',
+            'क्यों', 'कारण', 'इलाज', 'दवा', 'खुराक', 'उपचार', 'समझाएं', 'विस्तार', 'गंभीर',
         ];
 
         foreach ($directoryKeywords as $keyword) {
@@ -1093,12 +1125,12 @@ class ChatbotController extends Controller
             : null;
 
         $reply = $locale === 'hi'
-            ? "à¤†à¤ªà¤•à¥‡ à¤¶à¤¹à¤° {$city} à¤®à¥‡à¤‚ à¤®à¥ˆà¤‚à¤¨à¥‡ à¤¸à¤‚à¤¬à¤‚à¤§à¤¿à¤¤ à¤ªà¤°à¤¿à¤£à¤¾à¤® à¤¢à¥‚à¤‚à¤¢à¥‡ à¤¹à¥ˆà¤‚à¥¤ à¤¨à¥€à¤šà¥‡ à¤¡à¥‰à¤•à¥à¤Ÿà¤°, à¤…à¤¸à¥à¤ªà¤¤à¤¾à¤² à¤”à¤° à¤¬à¥à¤²à¤¡ à¤¬à¥ˆà¤‚à¤• à¤µà¤¿à¤•à¤²à¥à¤ª à¤¦à¥‡à¤–à¥‡à¤‚à¥¤"
+            ? "आपके शहर {$city} में मैंने संबंधित परिणाम ढूंढे हैं। नीचे डॉक्टर, अस्पताल और ब्लड बैंक विकल्प देखें।"
             : "I found relevant results in {$city}. Please check the doctors, hospitals, and blood bank options below.";
 
         $departmentInfo = $deptName
             ? ($locale === 'hi'
-                ? "à¤†à¤ªà¤•à¥€ à¤–à¥‹à¤œ à¤•à¥‡ à¤²à¤¿à¤ '{$deptName}' à¤µà¤¿à¤­à¤¾à¤— à¤¸à¤¬à¤¸à¥‡ à¤‰à¤ªà¤¯à¥à¤•à¥à¤¤ à¤¦à¤¿à¤– à¤°à¤¹à¤¾ à¤¹à¥ˆà¥¤"
+                ? "आपकी खोज के लिए '{$deptName}' विभाग सबसे उपयुक्त दिख रहा है।"
                 : "For your query, '{$deptName}' seems to be the most relevant department.")
             : null;
 
@@ -1112,9 +1144,9 @@ class ChatbotController extends Controller
             'symptom_match' => false,
             'qa_answer' => null,
             'show_options' => true,
-            'see_all_doctors_url' => route('doctors.index', ['city' => $city, 'department' => $department?->id ?: 'All']),
-            'see_all_hospitals_url' => route('hospitals.index', ['city' => $city]),
-            'see_all_blood_banks_url' => route('blood_banks.index', ['city' => $city]),
+            'see_all_doctors_url' => route('doctors.index'),
+            'see_all_hospitals_url' => route('hospitals.index'),
+            'see_all_blood_banks_url' => route('blood_banks.index'),
             'see_all_articles_url' => route('articles.index'),
             'suggest_details' => false,
         ];
@@ -1340,6 +1372,35 @@ class ChatbotController extends Controller
         $text = preg_replace('/[^\p{L}\p{N}\s]/u', ' ', $text) ?? $text;
         $text = preg_replace('/\s+/u', ' ', $text) ?? $text;
         return trim($text);
+    }
+
+    private function findMedicineResponse(string $message, string $locale): ?array
+    {
+        $normalized = trim($message);
+        if ($normalized === '') {
+            return null;
+        }
+
+        $explicitKeywords = ['medicine', 'tablet', 'capsule', 'dose', 'dosage', 'dolo', 'paracetamol', 'cetirizine', 'azithromycin', 'metformin', 'pantoprazole', 'दवा', 'टैबलेट'];
+        $hasMedicineIntent = collect($explicitKeywords)->contains(fn ($keyword) => mb_stripos($normalized, $keyword) !== false);
+
+        $medicine = Medicine::query()
+            ->published()
+            ->search($normalized)
+            ->first();
+
+        if (! $medicine || ! $hasMedicineIntent) {
+            return null;
+        }
+
+        $url = route('medicines.show', $medicine->slug);
+        $purpose = $medicine->getTranslation('purpose', $locale) ?: ($medicine->category ?: $medicine->generic_name ?: $medicine->name);
+
+        return [
+            'text' => $locale === 'hi'
+                ? "मुझे {$medicine->name} के लिए सामान्य जानकारी मिली है। {$purpose}। मैं यह पुष्टि नहीं कर सकता कि यह आपके लिए व्यक्तिगत रूप से सुरक्षित है। कृपया डॉक्टर या फार्मासिस्ट से सलाह लें। विवरण देखें: {$url}"
+                : "I found general information for {$medicine->name}. {$purpose}. I cannot confirm whether it is personally safe for you, so please consult a doctor or pharmacist. View details: {$url}",
+        ];
     }
 }
 

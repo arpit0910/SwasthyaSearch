@@ -1,8 +1,8 @@
 @extends('layouts.public')
 
-@section('title', ($locale === 'hi' ? 'चिकित्सा विभाग' : 'Medical Departments') . ' - SwasthyaSearch')
+@section('title', ($locale === 'hi' ? 'चिकित्सा विभाग' : 'Medical Departments') . ' - Arogio')
 
-@section('meta_title', $locale === 'hi' ? 'चिकित्सा विभाग निर्देशिका | SwasthyaSearch' : 'Medical Departments Directory | SwasthyaSearch')
+@section('meta_title', $locale === 'hi' ? 'चिकित्सा विभाग निर्देशिका | Arogio' : 'Medical Departments Directory | Arogio')
 @section('meta_description', $locale === 'hi'
     ? 'सभी प्रमुख चिकित्सा विभाग देखें और समझें कि कौन सा विभाग किन रोगों और लक्षणों के लिए उपयुक्त है।'
     : 'Browse major medical departments and understand which specialties are relevant for different diseases and symptoms.')

@@ -69,7 +69,7 @@ class DiseaseSeeder extends Seeder
         }
     }
 
-    private static function symptomsForDisease(string $diseaseName): array
+    public static function symptomsForDisease(string $diseaseName): array
     {
         $map = [
             // Addiction Medicine

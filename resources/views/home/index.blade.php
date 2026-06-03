@@ -1,8 +1,8 @@
-﻿@extends('layouts.public')
+@extends('layouts.public')
 
-@section('title', ($locale === 'hi' ? 'मुखपृष्ठ' : 'Home') . ' - SwasthyaSearch')
+@section('title', ($locale === 'hi' ? 'मुखपृष्ठ' : 'Home') . ' - Arogio')
 
-@section('meta_title', 'SwasthyaSearch - Find Doctors, Hospitals & Blood Banks Near You')
+@section('meta_title', 'Arogio - Find Doctors, Hospitals & Blood Banks Near You')
 @section('meta_description', 'Search trusted doctors, hospitals, blood banks, and departments by city or symptoms. Connect directly with healthcare providers without ads or intermediaries.')
 @section('content')
 @php
@@ -154,6 +154,232 @@ $locale === 'hi'
 
     <!-- Default Homepage View: Health News, Articles & FAQs -->
     <div id="default-view" class="space-y-16">
+        <section class="rounded-[2rem] border border-rose-200/70 dark:border-rose-900/40 bg-gradient-to-br from-rose-50 via-white to-cyan-50/70 dark:from-slate-900 dark:via-slate-900 dark:to-slate-950 p-6 sm:p-8 shadow-sm">
+            <div class="flex flex-col gap-6 lg:flex-row lg:items-center lg:justify-between">
+                <div class="max-w-3xl">
+                    <p class="text-xs font-bold uppercase tracking-[0.22em] text-rose-700 dark:text-rose-300">{{ $locale === 'hi' ? 'आपातकालीन सहायता' : 'Emergency Help' }}</p>
+                    <h2 class="mt-2 text-2xl sm:text-3xl font-extrabold text-slate-950 dark:text-white">{{ $locale === 'hi' ? 'तुरंत मदद चाहिए?' : 'Need urgent help?' }}</h2>
+                    <p class="mt-3 text-sm sm:text-base leading-7 text-slate-600 dark:text-slate-300">{{ $locale === 'hi' ? 'नज़दीकी अस्पताल और ब्लड बैंक जल्दी खोजें। जाने से पहले कॉल करें क्योंकि इमरजेंसी उपलब्धता, डॉक्टर, बेड और ब्लड स्टॉक बदल सकते हैं।' : 'Find nearby hospitals and blood banks quickly. Please call before visiting because emergency availability, doctors, beds, and blood stock can change quickly.' }}</p>
+                    <p class="mt-3 text-xs sm:text-sm font-semibold text-rose-700 dark:text-rose-300">{{ $locale === 'hi' ? 'यदि यह जीवन-घातक आपातस्थिति है, तो तुरंत इमरजेंसी सेवाओं से संपर्क करें या नज़दीकी अस्पताल जाएँ।' : 'If this is a life-threatening emergency, contact emergency services or go to the nearest hospital immediately.' }}</p>
+                </div>
+                <div class="grid gap-3 sm:grid-cols-3 lg:w-[440px]">
+                    <a href="{{ route('hospitals.index') }}" class="inline-flex items-center justify-center rounded-2xl border border-rose-200 dark:border-rose-900/50 bg-white/90 dark:bg-slate-950 px-4 py-3 text-sm font-bold text-rose-700 dark:text-rose-200 shadow-sm transition hover:-translate-y-0.5 hover:border-rose-300 hover:bg-rose-50 dark:hover:bg-rose-950/20">{{ $locale === 'hi' ? '??????? ?????' : 'View Hospitals' }}</a>
+                    <a href="{{ route('blood_banks.index') }}" class="inline-flex items-center justify-center rounded-2xl border border-red-200 dark:border-red-900/50 bg-white/90 dark:bg-slate-950 px-4 py-3 text-sm font-bold text-red-700 dark:text-red-200 shadow-sm transition hover:-translate-y-0.5 hover:border-red-300 hover:bg-red-50 dark:hover:bg-red-950/20">{{ $locale === 'hi' ? '???? ???? ?????' : 'View Blood Banks' }}</a>
+                    <button type="button" onclick="toggleChatbot()" class="inline-flex items-center justify-center rounded-2xl bg-slate-900 dark:bg-cyan-600 px-4 py-3 text-sm font-bold text-white shadow-lg shadow-slate-900/10 transition hover:-translate-y-0.5 hover:bg-slate-800 dark:hover:bg-cyan-500">{{ $locale === 'hi' ? 'AI ?????' : 'Ask Health Assistant' }}</button>
+                </div>
+            </div>
+        </section>
+
+        <section class="relative overflow-hidden rounded-[2rem] border border-emerald-200/80 dark:border-emerald-900/40 bg-gradient-to-br from-emerald-50 via-white to-cyan-50/80 dark:from-slate-900 dark:via-slate-900 dark:to-slate-950 p-6 sm:p-8 shadow-sm">
+            <div class="absolute -top-16 right-0 h-48 w-48 rounded-full bg-emerald-300/20 blur-3xl"></div>
+            <div class="absolute bottom-0 left-0 h-40 w-40 rounded-full bg-cyan-300/20 blur-3xl"></div>
+            <div class="relative z-10 grid gap-6">
+                <div class="grid gap-8 xl:grid-cols-[1.15fr,0.85fr] xl:items-center">
+                    <div class="max-w-3xl">
+                        <p class="text-xs font-bold uppercase tracking-[0.22em] text-emerald-700 dark:text-emerald-300">{{ $locale === 'hi' ? '??????? ???????' : 'Medicine Information' }}</p>
+                        <h2 class="mt-2 text-2xl sm:text-3xl font-extrabold text-slate-950 dark:text-white">{{ $locale === 'hi' ? '??? ????? ?? ??? ?? ???? ?? ???????? ???' : 'A cleaner way to understand medicines' }}</h2>
+                        <p class="mt-3 text-sm sm:text-base leading-7 text-slate-600 dark:text-slate-300">{{ $locale === 'hi' ? '????? ?? ?????, ??????????, ??????? ?????????? ?? ?????????? ??????? ?? ???, ????? ??? ???? ???????? ??? ??????' : 'Explore uses, precautions, common side effects, and key guidance in a simple, easy-to-scan format.' }}</p>
+                        <div class="mt-5 flex flex-wrap gap-2.5">
+                            <span class="inline-flex items-center gap-2 rounded-full bg-white/90 dark:bg-slate-900/80 px-3 py-2 text-xs font-bold text-slate-700 dark:text-slate-200 border border-emerald-100 dark:border-emerald-900/50">
+                                <i data-lucide="pill" class="w-3.5 h-3.5 text-emerald-600 dark:text-emerald-300"></i>
+                                {{ $locale === 'hi' ? '????? ?? ???? ???????' : 'Uses and dosage notes' }}
+                            </span>
+                            <span class="inline-flex items-center gap-2 rounded-full bg-white/90 dark:bg-slate-900/80 px-3 py-2 text-xs font-bold text-slate-700 dark:text-slate-200 border border-cyan-100 dark:border-cyan-900/50">
+                                <i data-lucide="alert-triangle" class="w-3.5 h-3.5 text-cyan-600 dark:text-cyan-300"></i>
+                                {{ $locale === 'hi' ? '?????????? ?? ???????' : 'Precautions and warnings' }}
+                            </span>
+                            <span class="inline-flex items-center gap-2 rounded-full bg-white/90 dark:bg-slate-900/80 px-3 py-2 text-xs font-bold text-slate-700 dark:text-slate-200 border border-amber-100 dark:border-amber-900/50">
+                                <i data-lucide="clipboard-list" class="w-3.5 h-3.5 text-amber-600 dark:text-amber-300"></i>
+                                {{ $locale === 'hi' ? '??????? ?? ????? ??????' : 'Report and update options' }}
+                            </span>
+                        </div>
+                        <div class="mt-6 flex flex-wrap gap-3">
+                            <a href="{{ route('medicines.index') }}" class="inline-flex items-center justify-center rounded-2xl bg-emerald-600 px-5 py-3 text-sm font-bold text-white shadow-lg shadow-emerald-600/20 transition hover:bg-emerald-700">
+                                {{ $locale === 'hi' ? '????? ?????' : 'Browse Medicines' }}
+                            </a>
+                            <button type="button" onclick="toggleChatbot()" class="inline-flex items-center justify-center rounded-2xl border border-slate-200 dark:border-slate-700 bg-white/90 dark:bg-slate-950 px-5 py-3 text-sm font-bold text-slate-800 dark:text-slate-100 transition hover:border-emerald-200 hover:bg-emerald-50 dark:hover:bg-emerald-950/20">
+                                {{ $locale === 'hi' ? '??? ?? ???? ??? ?????' : 'Ask About a Medicine' }}
+                            </button>
+                        </div>
+                    </div>
+
+                    <div class="relative mx-auto w-full max-w-md xl:mx-0 xl:justify-self-end">
+                        <div class="absolute -left-5 top-10 h-20 w-20 rounded-full bg-emerald-300/30 blur-2xl"></div>
+                        <div class="absolute -right-4 bottom-8 h-24 w-24 rounded-full bg-cyan-300/30 blur-2xl"></div>
+                        <div class="relative rounded-[2rem] border border-white/70 dark:border-slate-800 bg-white/90 dark:bg-slate-900/90 p-5 shadow-2xl">
+                            <div class="flex items-center justify-between">
+                                <div>
+                                    <p class="text-[11px] font-bold uppercase tracking-[0.22em] text-emerald-700 dark:text-emerald-300">{{ $locale === 'hi' ? '??? ????' : 'Simple View' }}</p>
+                                    <h3 class="mt-1 text-lg font-bold text-slate-900 dark:text-white">Paracetamol 650</h3>
+                                </div>
+                                <div class="flex h-14 w-14 items-center justify-center rounded-2xl bg-gradient-to-br from-emerald-500 to-cyan-500 text-white shadow-lg">
+                                    <i data-lucide="pill" class="w-7 h-7"></i>
+                                </div>
+                            </div>
+                            <div class="mt-5 space-y-3">
+                                <div class="rounded-2xl border border-emerald-100 dark:border-emerald-900/50 bg-emerald-50/70 dark:bg-emerald-950/20 p-4">
+                                    <p class="text-xs font-bold uppercase tracking-wider text-emerald-700 dark:text-emerald-300">{{ $locale === 'hi' ? '????? ?? ?????' : 'Commonly used for' }}</p>
+                                    <p class="mt-1 text-sm font-medium text-slate-700 dark:text-slate-200">{{ $locale === 'hi' ? '?????, ???? ????, ???????' : 'Fever, body ache, headache' }}</p>
+                                </div>
+                                <div class="grid grid-cols-2 gap-3">
+                                    <div class="rounded-2xl border border-slate-200 dark:border-slate-800 bg-slate-50/80 dark:bg-slate-950/70 p-4">
+                                        <p class="text-[11px] font-bold uppercase tracking-wider text-slate-500 dark:text-slate-400">{{ $locale === 'hi' ? '???????' : 'Caution' }}</p>
+                                        <p class="mt-1 text-sm font-medium text-slate-700 dark:text-slate-200">{{ $locale === 'hi' ? '???? ??? ??? ?????? ?? ?????' : 'Check with a doctor in liver disease' }}</p>
+                                    </div>
+                                    <div class="rounded-2xl border border-slate-200 dark:border-slate-800 bg-slate-50/80 dark:bg-slate-950/70 p-4">
+                                        <p class="text-[11px] font-bold uppercase tracking-wider text-slate-500 dark:text-slate-400">{{ $locale === 'hi' ? '????? ???' : 'Watch for' }}</p>
+                                        <p class="mt-1 text-sm font-medium text-slate-700 dark:text-slate-200">{{ $locale === 'hi' ? '???????? ?????? ?? ???? ????' : 'Unusual allergy or accidental overuse' }}</p>
+                                    </div>
+                                </div>
+                                <div class="rounded-2xl border border-cyan-100 dark:border-cyan-900/50 bg-cyan-50/80 dark:bg-cyan-950/20 p-4">
+                                    <div class="flex items-start gap-3">
+                                        <div class="mt-0.5 flex h-9 w-9 shrink-0 items-center justify-center rounded-xl bg-cyan-500 text-white">
+                                            <i data-lucide="sparkles" class="w-4 h-4"></i>
+                                        </div>
+                                        <div>
+                                            <p class="text-sm font-semibold text-slate-900 dark:text-white">{{ $locale === 'hi' ? '??????, ????? ???? ????? ???????' : 'Clear, scan-friendly information' }}</p>
+                                            <p class="mt-1 text-xs leading-6 text-slate-600 dark:text-slate-300">{{ $locale === 'hi' ? '???? ???? ??????? ??????? ??, ?????? ??????? ????? ?????' : 'Find useful guidance quickly without heavy text walls.' }}</p>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="grid gap-4 xl:grid-cols-3">
+                    <div class="xl:col-span-3 rounded-[1.5rem] border border-white/80 dark:border-slate-800 bg-white/75 dark:bg-slate-900/70 px-5 py-4">
+                        <p class="text-xs font-bold uppercase tracking-[0.22em] text-slate-500 dark:text-slate-400">{{ $locale === 'hi' ? '?????? ??????' : 'Quick Access' }}</p>
+                        <h3 class="mt-2 text-xl font-bold text-slate-950 dark:text-white">{{ $locale === 'hi' ? '??? ??????? ?? ??? ????? ?????? ?????' : 'Tools that pair well with medicine info' }}</h3>
+                    </div>
+
+                    <a href="{{ route('symptom-test') }}" class="flex items-start gap-4 rounded-2xl border border-teal-100 dark:border-teal-900/40 bg-white/90 dark:bg-teal-950/20 p-4 transition hover:-translate-y-0.5">
+                        <div class="flex h-11 w-11 shrink-0 items-center justify-center rounded-2xl bg-teal-600 text-white shadow-md">
+                            <i data-lucide="stethoscope" class="w-5 h-5"></i>
+                        </div>
+                        <div>
+                            <p class="text-sm font-bold text-slate-900 dark:text-white">{{ $locale === 'hi' ? '????? ???????' : 'Symptom Test' }}</p>
+                            <p class="mt-1 text-xs leading-6 text-slate-600 dark:text-slate-300">{{ $locale === 'hi' ? '??????? ?????? ????? ?? ??? ????? ?? ?????' : 'Understand a likely condition and reach the right department.' }}</p>
+                        </div>
+                    </a>
+
+                    <button type="button" onclick="toggleChatbot()" class="flex w-full items-start gap-4 rounded-2xl border border-cyan-100 dark:border-cyan-900/40 bg-white/90 dark:bg-cyan-950/20 p-4 text-left transition hover:-translate-y-0.5">
+                        <div class="flex h-11 w-11 shrink-0 items-center justify-center rounded-2xl bg-cyan-600 text-white shadow-md">
+                            <i data-lucide="bot" class="w-5 h-5"></i>
+                        </div>
+                        <div>
+                            <p class="text-sm font-bold text-slate-900 dark:text-white">{{ $locale === 'hi' ? 'AI ?????' : 'AI Health Assistant' }}</p>
+                            <p class="mt-1 text-xs leading-6 text-slate-600 dark:text-slate-300">{{ $locale === 'hi' ? '???, ?????? ?? ???? ????? ?? ?????? ?????????? ????' : 'Get quick guidance about medicines, doctors, and next steps.' }}</p>
+                        </div>
+                    </button>
+
+                    <a href="{{ route('articles.index') }}" class="flex items-start gap-4 rounded-2xl border border-amber-100 dark:border-amber-900/40 bg-white/90 dark:bg-amber-950/20 p-4 transition hover:-translate-y-0.5">
+                        <div class="flex h-11 w-11 shrink-0 items-center justify-center rounded-2xl bg-amber-500 text-white shadow-md">
+                            <i data-lucide="book-open" class="w-5 h-5"></i>
+                        </div>
+                        <div>
+                            <p class="text-sm font-bold text-slate-900 dark:text-white">{{ $locale === 'hi' ? '????????? ???' : 'Health Articles' }}</p>
+                            <p class="mt-1 text-xs leading-6 text-slate-600 dark:text-slate-300">{{ $locale === 'hi' ? '?????, ????? ?? ?????? ?? ???? ??????' : 'Easy reading on treatments, medicines, and prevention.' }}</p>
+                        </div>
+                    </a>
+                </div>
+            </div>
+        </section>
+
+        <section class="relative overflow-hidden rounded-[2rem] border border-cyan-200/70 dark:border-cyan-900/40 bg-gradient-to-br from-cyan-50 via-white to-indigo-50/70 dark:from-slate-900 dark:via-slate-900 dark:to-slate-950 p-6 sm:p-8 shadow-sm">
+            <div class="absolute right-0 top-0 h-44 w-44 rounded-full bg-cyan-300/15 blur-3xl"></div>
+            <div class="absolute bottom-0 left-0 h-36 w-36 rounded-full bg-indigo-300/15 blur-3xl"></div>
+            <div class="flex flex-col gap-3 sm:flex-row sm:items-end sm:justify-between mb-6">
+                <div class="max-w-3xl">
+                    <p class="text-xs font-bold uppercase tracking-[0.22em] text-cyan-700 dark:text-cyan-300">{{ $locale === 'hi' ? 'वेलनेस टूल्स' : 'Wellness Tools' }}</p>
+                    <h2 class="mt-2 text-2xl sm:text-3xl font-extrabold text-slate-950 dark:text-white">{{ $locale === 'hi' ? 'गतिविधियां, क्विज़ और शांत अभ्यास' : 'Activities, Quizzes, and Calming Tools' }}</h2>
+                    <p class="mt-3 text-sm sm:text-base leading-7 text-slate-600 dark:text-slate-300">{{ $locale === 'hi' ? 'तनाव राहत, आत्म-जागरूकता और छोटे शांत विराम के लिए सहायक टूल्स खोजें।' : 'Explore supportive tools for stress relief, self-awareness, and calmer daily pauses.' }}</p>
+                </div>
+                <a href="{{ route('activities.index') }}" class="inline-flex items-center justify-center rounded-2xl border border-cyan-200 dark:border-cyan-800/60 bg-white dark:bg-slate-950 px-4 py-3 text-sm font-bold text-cyan-800 dark:text-cyan-200 hover:border-cyan-300 hover:bg-cyan-50 dark:hover:bg-cyan-950/30">
+                    {{ $locale === 'hi' ? 'सभी वेलनेस टूल्स देखें' : 'View All Wellness Tools' }}
+                </a>
+            </div>
+
+            <div class="grid grid-cols-1 xl:grid-cols-[0.9fr,1.1fr] gap-5 items-start">
+                <div class="rounded-[1.75rem] border border-white/80 dark:border-slate-800 bg-white/90 dark:bg-slate-900/90 p-6 shadow-sm">
+                    <div class="flex items-center justify-between gap-4">
+                        <div>
+                            <p class="text-[11px] font-bold uppercase tracking-[0.22em] text-indigo-700 dark:text-indigo-300">{{ $locale === 'hi' ? 'माइक्रो ब्रेक्स' : 'Micro Breaks' }}</p>
+                            <h3 class="mt-2 text-xl font-bold text-slate-950 dark:text-white">{{ $locale === 'hi' ? 'मानसिक स्पेस बनाने के छोटे टूल्स' : 'Small tools that create mental breathing room' }}</h3>
+                        </div>
+                        <div class="flex h-14 w-14 shrink-0 items-center justify-center rounded-2xl bg-gradient-to-br from-cyan-500 to-indigo-500 text-white shadow-lg">
+                            <i data-lucide="sparkles" class="w-6 h-6"></i>
+                        </div>
+                    </div>
+                    <div class="mt-6 rounded-[1.5rem] border border-indigo-100 dark:border-indigo-900/40 bg-gradient-to-br from-indigo-50 to-cyan-50 dark:from-indigo-950/20 dark:to-cyan-950/20 p-5">
+                        <div class="flex items-end justify-between gap-4">
+                            <div class="space-y-2">
+                                <div class="flex items-center gap-2 text-sm font-semibold text-slate-800 dark:text-slate-100">
+                                    <span class="inline-flex h-8 w-8 items-center justify-center rounded-xl bg-white dark:bg-slate-900 text-cyan-700 dark:text-cyan-300 shadow-sm">1</span>
+                                    <span>{{ $locale === 'hi' ? 'सांस लें' : 'Breathe' }}</span>
+                                </div>
+                                <div class="flex items-center gap-2 text-sm font-semibold text-slate-800 dark:text-slate-100">
+                                    <span class="inline-flex h-8 w-8 items-center justify-center rounded-xl bg-white dark:bg-slate-900 text-cyan-700 dark:text-cyan-300 shadow-sm">2</span>
+                                    <span>{{ $locale === 'hi' ? 'रुकें' : 'Pause' }}</span>
+                                </div>
+                                <div class="flex items-center gap-2 text-sm font-semibold text-slate-800 dark:text-slate-100">
+                                    <span class="inline-flex h-8 w-8 items-center justify-center rounded-xl bg-white dark:bg-slate-900 text-cyan-700 dark:text-cyan-300 shadow-sm">3</span>
+                                    <span>{{ $locale === 'hi' ? 'रिलीज़ करें' : 'Reset' }}</span>
+                                </div>
+                            </div>
+                            <div class="grid h-28 w-28 place-items-center rounded-full border-8 border-cyan-100 dark:border-cyan-900/40 bg-white/80 dark:bg-slate-900/80 shadow-inner">
+                                <div class="grid h-16 w-16 place-items-center rounded-full bg-cyan-500/10 text-cyan-700 dark:text-cyan-300">
+                                    <i data-lucide="sparkles" class="w-8 h-8"></i>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <p class="mt-4 text-sm leading-7 text-slate-600 dark:text-slate-300">{{ $locale === 'hi' ? 'गतिविधियां और क्विज़ हेल्थ डायरेक्टरी से अलग महसूस हों, इसलिए इन्हें हल्के, शांत और ज्यादा मानवीय तरीके से प्रस्तुत किया गया है।' : 'Activities and quizzes now sit apart from the core directory flow, with a calmer and more human feel.' }}</p>
+                </div>
+
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-5">
+                    @foreach([
+                        [
+                            'title' => $locale === 'hi' ? 'श्वास और ग्राउंडिंग' : 'Breathing and Grounding',
+                            'description' => $locale === 'hi' ? 'धीमी श्वास, ग्राउंडिंग और छोटे शांत अभ्यास आज़माएं।' : 'Try guided breathing, grounding, and short calming exercises.',
+                            'url' => route('activities.index'),
+                            'tone' => 'teal',
+                            'icon' => 'wind',
+                        ],
+                        [
+                            'title' => $locale === 'hi' ? 'मूड चेक-इन' : 'Mood Check-in',
+                            'description' => $locale === 'hi' ? 'अपनी भावना पहचानें और जरूरत पड़ने पर सहायता मार्ग देखें।' : 'Reflect on how you feel and see support pathways when needed.',
+                            'url' => route('activities.mood-check'),
+                            'tone' => 'indigo',
+                            'icon' => 'heart',
+                        ],
+                        [
+                            'title' => $locale === 'hi' ? 'हेल्थ क्विज़' : 'Health Quizzes',
+                            'description' => $locale === 'hi' ? 'सामान्य जागरूकता और आत्म-चिंतन के लिए छोटे क्विज़ लें।' : 'Take short quizzes for general awareness and self-reflection.',
+                            'url' => route('quizzes.index'),
+                            'tone' => 'cyan',
+                            'icon' => 'brain',
+                        ],
+                        [
+                            'title' => $locale === 'hi' ? 'कैल्म गेम्स' : 'Calming Games',
+                            'description' => $locale === 'hi' ? 'मेमोरी गेम और टैप काउंटर जैसे हल्के शांत टूल्स उपयोग करें।' : 'Use light calming tools like the memory game and tap counter.',
+                            'url' => route('activities.games.memory'),
+                            'tone' => 'amber',
+                            'icon' => 'zap',
+                        ],
+                    ] as $item)
+                        <a href="{{ $item['url'] }}" class="rounded-[1.75rem] border border-slate-200/80 dark:border-slate-800 bg-white/90 dark:bg-slate-900/90 shadow-sm p-5 hover:-translate-y-1 transition">
+                            <div class="w-11 h-11 rounded-2xl bg-{{ $item['tone'] }}-100 dark:bg-{{ $item['tone'] }}-950/40 text-{{ $item['tone'] }}-700 dark:text-{{ $item['tone'] }}-200 flex items-center justify-center mb-4">
+                                <i data-lucide="{{ $item['icon'] }}" class="w-5 h-5"></i>
+                            </div>
+                            <h3 class="text-lg font-bold text-slate-900 dark:text-white mb-2">{{ $item['title'] }}</h3>
+                            <p class="text-sm text-slate-600 dark:text-slate-300 leading-7">{{ $item['description'] }}</p>
+                            <span class="mt-4 inline-flex text-sm font-bold text-cyan-700 dark:text-cyan-300">{{ $locale === 'hi' ? 'खोलें' : 'Open' }}</span>
+                        </a>
+                    @endforeach
+                </div>
+            </div>
+        </section>
         <!-- Directory Statistics / Informative Overview -->
         <div>
             <div class="flex justify-between items-end mb-8">
@@ -161,7 +387,7 @@ $locale === 'hi'
                     <div
                         class="inline-flex items-center space-x-2 text-teal-600 font-bold text-sm uppercase tracking-wider mb-2">
                         <i data-lucide="bar-chart-2" class="w-4 h-4"></i>
-                        <span>{{ $locale === 'hi' ? 'स्वास्थ्या सर्च एक नज़र में' : 'SwasthyaSearch at a Glance' }}</span>
+                        <span>{{ $locale === 'hi' ? 'Arogio एक नज़र में' : 'Arogio at a Glance' }}</span>
                     </div>
                     <h2 class="text-2xl sm:text-3xl font-bold tracking-tight text-slate-900 dark:text-white">
                         {{ $locale === 'hi' ? 'हमारा विस्तृत और प्रमाणित स्वास्थ्य नेटवर्क' : 'Our Extensive & Verified Healthcare Network' }}
@@ -502,7 +728,7 @@ $locale === 'hi'
                     {{ $locale === 'hi' ? 'अक्सर पूछे जाने वाले प्रश्न' : 'Frequently Asked Questions' }}
                 </h2>
                 <p class="text-sm text-slate-500 dark:text-slate-400 mt-2">
-                    {{ $locale === 'hi' ? 'स्वास्थ्या सर्च के बारे में आपके सभी सवालों के जवाब' : 'Everything you need to know about SwasthyaSearch' }}
+                    {{ $locale === 'hi' ? 'Arogio के बारे में आपके सभी सवालों के जवाब' : 'Everything you need to know about Arogio' }}
                 </p>
             </div>
 
@@ -548,7 +774,7 @@ $locale === 'hi'
                             {{ $locale === 'hi' ? 'हमें अपना फीडबैक दें' : 'Share Your Feedback With Us' }}
                         </h2>
                         <p class="text-sm text-slate-600 dark:text-slate-300 mt-2 max-w-xl mx-auto leading-relaxed">
-                            {{ $locale === 'hi' ? 'आपके सुझावों से हम स्वास्थ्या सर्च को और बेहतर बनाने के लिए निरंतर प्रयासरत हैं।' : 'Help us improve our healthcare directory. Tell us about your experience searching for doctors and hospitals.' }}
+                            {{ $locale === 'hi' ? 'आपके सुझावों से हम Arogio को और बेहतर बनाने के लिए निरंतर प्रयासरत हैं।' : 'Help us improve Arogio. Tell us about your experience searching for doctors and hospitals.' }}
                         </p>
                     </div>
 
@@ -757,7 +983,7 @@ $locale === 'hi'
         if (cleanPhone.length === 11 && cleanPhone.startsWith('0')) {
             cleanPhone = '91' + cleanPhone.substring(1);
         }
-        const message = encodeURIComponent(`Hello ${docName}, I found your profile on SwasthyaSearch and would like to inquire about consultation timings and availability.`);
+        const message = encodeURIComponent(`Hello ${docName}, I found your profile on Arogio and would like to inquire about consultation timings and availability.`);
         return `https://wa.me/${cleanPhone}?text=${message}`;
     }
 
@@ -1066,7 +1292,6 @@ $locale === 'hi'
     updateStarsDisplay(0);
 </script>
 @endpush
-
 
 
 

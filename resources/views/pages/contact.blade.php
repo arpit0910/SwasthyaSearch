@@ -1,16 +1,16 @@
 @extends('layouts.public')
 
-@section('title', ($locale === 'hi' ? 'Contact Us' : 'Contact Us') . ' - SwasthyaSearch')
-@section('meta_title', 'Contact SwasthyaSearch | Support & Corrections')
-@section('meta_description', 'Contact SwasthyaSearch for support, listing corrections, and general questions.')
+@section('title', ($locale === 'hi' ? 'जयपुर हेल्थकेयर सहायता से संपर्क करें' : 'Contact Jaipur Healthcare Support') . ' - Arogio')
+@section('meta_title', 'Contact Jaipur Healthcare Support | Arogio')
+@section('meta_description', 'Contact Arogio for Jaipur healthcare support, listing corrections, and update requests.')
 
 @section('content')
 <header class="bg-gradient-to-r from-cyan-800 via-teal-700 to-emerald-700 text-white py-14 px-4 sm:px-6 lg:px-8 border-b border-slate-800 shadow-xl relative overflow-hidden">
     <div class="absolute inset-0 bg-[radial-gradient(circle_at_top_right,rgba(20,184,166,0.15),transparent_50%)]"></div>
     <div class="max-w-5xl mx-auto text-center relative z-10">
-        <span class="bg-teal-500/20 text-teal-300 border border-teal-500/30 px-4 py-1.5 rounded-full text-xs font-semibold tracking-wider uppercase inline-block mb-4">Support Center</span>
-        <h1 class="text-3xl sm:text-5xl font-extrabold tracking-tight mb-4 bg-gradient-to-r from-white via-slate-100 to-slate-300 bg-clip-text text-transparent py-2 leading-normal">How Can We Help You?</h1>
-        <p class="max-w-3xl mx-auto text-slate-300 text-base sm:text-lg leading-relaxed">If any doctor/hospital details are incorrect, or you need help using the platform, write to us.</p>
+        <span class="bg-teal-500/20 text-teal-300 border border-teal-500/30 px-4 py-1.5 rounded-full text-xs font-semibold tracking-wider uppercase inline-block mb-4">{{ $locale === 'hi' ? 'सहायता केंद्र' : 'Support Center' }}</span>
+        <h1 class="text-3xl sm:text-5xl font-extrabold tracking-tight mb-4 bg-gradient-to-r from-white via-slate-100 to-slate-300 bg-clip-text text-transparent py-2 leading-normal">{{ $locale === 'hi' ? 'जयपुर हेल्थकेयर सहायता से संपर्क करें' : 'Contact Jaipur Healthcare Support' }}</h1>
+        <p class="max-w-3xl mx-auto text-slate-300 text-base sm:text-lg leading-relaxed">{{ $locale === 'hi' ? 'डॉक्टर, अस्पताल या ब्लड बैंक की जानकारी गलत हो, या प्लेटफ़ॉर्म सहायता चाहिए, तो हमें लिखें।' : 'If doctor, hospital, or blood bank information is incorrect, or you need help using the platform, write to us.' }}</p>
     </div>
 </header>
 
@@ -18,10 +18,13 @@
     <div class="grid grid-cols-1 lg:grid-cols-3 gap-8 items-start">
         <div class="space-y-5 lg:col-span-1">
             <div class="bg-white rounded-2xl border border-slate-200 p-6 shadow-sm">
+                <div class="mb-4 rounded-xl border border-rose-200 bg-rose-50 p-4 text-sm text-rose-800">
+                    {{ $locale === 'hi' ? 'यह फॉर्म चिकित्सा आपातस्थिति के लिए नहीं है। तुरंत मदद चाहिए तो नज़दीकी अस्पताल जाएँ या आपातकालीन सेवाओं से संपर्क करें।' : 'This contact form is not for medical emergencies. If you need urgent medical help, go to the nearest hospital or contact emergency services immediately.' }}
+                </div>
                 <h3 class="text-lg font-extrabold text-slate-900 mb-3">Contact Options</h3>
                 <div class="space-y-3 text-sm text-slate-700">
-                    <p><strong>General Support:</strong> <a class="text-teal-700 font-semibold hover:underline" href="mailto:support@swasthyasearch.com">support@swasthyasearch.com</a></p>
-                    <p><strong>Privacy:</strong> <a class="text-teal-700 font-semibold hover:underline" href="mailto:privacy@swasthyasearch.com">privacy@swasthyasearch.com</a></p>
+                    <p><strong>General Support:</strong> <a class="text-teal-700 font-semibold hover:underline" href="mailto:support@arogio.com">support@arogio.com</a></p>
+                    <p><strong>Privacy:</strong> <a class="text-teal-700 font-semibold hover:underline" href="mailto:privacy@arogio.com">privacy@arogio.com</a></p>
                 </div>
             </div>
 

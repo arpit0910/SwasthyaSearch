@@ -10,22 +10,14 @@ class BloodBankController extends Controller
 {
     public function index(Request $request)
     {
+        $activeCity = config('healthcare.active_city', 'Jaipur');
         $userLat = $request->filled('user_lat') ? (float)$request->input('user_lat') : null;
         $userLng = $request->filled('user_lng') ? (float)$request->input('user_lng') : null;
         $hasUserLocation = is_numeric($userLat) && is_numeric($userLng);
 
-        $query = BloodBank::where('is_verified', true)->latest();
-
-        // Filter by City - support multiple selections
-        $cities = $request->input('city', []);
-        if (!is_array($cities)) {
-            $cities = ($cities && $cities !== 'All') ? [$cities] : [];
-        }
-        $cities = array_filter($cities); // Remove empty values
-
-        if (!empty($cities)) {
-            $query->whereIn('city', $cities);
-        }
+        $query = BloodBank::where('is_verified', true)
+            ->where('city', 'LIKE', "%{$activeCity}%")
+            ->latest();
 
         // Filter by Blood Group - support multiple selections
         $bloodGroupFilters = $request->input('blood_group', []);
@@ -79,7 +71,6 @@ class BloodBankController extends Controller
             });
         }
 
-        $cities = BloodBank::where('is_verified', true)->whereNotNull('city')->where('city', '!=', '')->distinct()->pluck('city');
         $bloodGroups = ['A+', 'A-', 'B+', 'B-', 'O+', 'O-', 'AB+', 'AB-'];
 
         // Get all blood banks first
@@ -100,10 +91,11 @@ class BloodBankController extends Controller
 
         return view('blood_banks.index', [
             'bloodBanks' => $bloodBanks,
-            'cities' => $cities,
+            'cities' => collect([$activeCity]),
             'bloodGroups' => $bloodGroups,
-            'filters' => $request->only(['city', 'blood_group', 'facility', 'search', 'user_lat', 'user_lng']),
+            'filters' => array_merge($request->only(['blood_group', 'facility', 'search', 'user_lat', 'user_lng']), ['city' => [$activeCity]]),
             'hasUserLocation' => $hasUserLocation,
+            'activeCity' => $activeCity,
         ]);
     }
 

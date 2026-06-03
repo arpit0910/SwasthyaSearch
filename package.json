@@ -1,5 +1,5 @@
 {
-  "name": "swasthyasearch",
+  "name": "arogio",
   "version": "1.0.0",
   "description": "<p align=\"center\"><a href=\"https://laravel.com\" target=\"_blank\"><img src=\"https://raw.githubusercontent.com/laravel/art/master/logo-lockup/5%20SVG/2%20CMYK/1%20Full%20Color/laravel-logolockup-cmyk-red.svg\" width=\"400\" alt=\"Laravel Logo\"></a></p>",
   "main": "index.js",
@@ -12,15 +12,15 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/arpit0910/SwasthyaSearch.git"
+    "url": "git+https://github.com/arpit0910/Arogio.git"
   },
   "keywords": [],
   "author": "",
   "license": "ISC",
   "bugs": {
-    "url": "https://github.com/arpit0910/SwasthyaSearch/issues"
+    "url": "https://github.com/arpit0910/Arogio/issues"
   },
-  "homepage": "https://github.com/arpit0910/SwasthyaSearch#readme",
+  "homepage": "https://github.com/arpit0910/Arogio#readme",
   "devDependencies": {
     "playwright": "^1.60.0"
   }

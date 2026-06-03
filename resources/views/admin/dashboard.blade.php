@@ -6,7 +6,7 @@
         <div class="col-12">
             <div class="p-4 p-lg-5 rounded-4 border shadow-sm" style="background: linear-gradient(135deg, #0f172a 0%, #1e1b4b 60%, #0f766e 100%);">
                 <h1 class="h3 mb-2 fw-bold text-white">Dashboard Overview</h1>
-                <p class="text-white-50 mb-0">Welcome back, Administrator. Here is the current status of the SwasthyaSearch platform.</p>
+                <p class="text-white-50 mb-0">Welcome back, Administrator. Here is the current status of the Arogio platform.</p>
             </div>
         </div>
     </div>

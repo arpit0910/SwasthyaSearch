@@ -12,16 +12,20 @@ class DoctorController extends Controller
 {
     public function index(Request $request)
     {
+        $activeCity = config('healthcare.active_city', 'Jaipur');
         $userLat = $request->filled('user_lat') ? (float)$request->input('user_lat') : null;
         $userLng = $request->filled('user_lng') ? (float)$request->input('user_lng') : null;
         $hasUserLocation = is_numeric($userLat) && is_numeric($userLng);
 
-        $query = Doctor::with(['department', 'hospitals'])->where('is_verified', true);
+        $query = Doctor::with(['department', 'hospitals'])
+            ->where('is_verified', true)
+            ->whereHas('hospitals', fn($hospitalQuery) => $hospitalQuery->where('city', 'LIKE', "%{$activeCity}%"));
 
         // Treat nearby as the base filter: first limit to nearby doctors, then apply other filters.
         if ($hasUserLocation) {
             $nearbyDoctorIds = Doctor::with('hospitals')
                 ->where('is_verified', true)
+                ->whereHas('hospitals', fn($hospitalQuery) => $hospitalQuery->where('city', 'LIKE', "%{$activeCity}%"))
                 ->get()
                 ->map(function (Doctor $doctor) use ($userLat, $userLng) {
                     $primaryHospital = $doctor->hospitals->first();
@@ -52,14 +56,13 @@ class DoctorController extends Controller
                     ->whereHas('doctors')
                     ->orderBy($nameColumn)
                     ->get();
-                $cities = Hospital::where('is_verified', true)->whereNotNull('city')->distinct()->pluck('city');
-
                 return view('doctors.index', [
                     'doctors' => $doctors,
                     'departments' => $departments->map(fn(Department $department) => $this->formatDepartment($department)),
-                    'cities' => $cities,
-                    'filters' => $request->only(['department', 'experience', 'city', 'search', 'user_lat', 'user_lng']),
+                    'cities' => collect([$activeCity]),
+                    'filters' => array_merge($request->only(['department', 'experience', 'search', 'user_lat', 'user_lng']), ['city' => [$activeCity]]),
                     'hasUserLocation' => $hasUserLocation,
+                    'activeCity' => $activeCity,
                 ]);
             }
 
@@ -106,18 +109,6 @@ class DoctorController extends Controller
         }
 
         // Filter by City - support multiple selections
-        $cities = $request->input('city', []);
-        if (!is_array($cities)) {
-            $cities = ($cities && $cities !== 'All') ? [$cities] : [];
-        }
-        $cities = array_filter($cities); // Remove empty values
-
-        if (!empty($cities)) {
-            $query->whereHas('hospitals', function ($q) use ($cities) {
-                $q->whereIn('city', $cities);
-            });
-        }
-
         // Filter by Search Keyword
         if ($request->filled('search')) {
             $search = $request->search;
@@ -136,8 +127,6 @@ class DoctorController extends Controller
             ->whereHas('doctors')
             ->orderBy($nameColumn)
             ->get();
-        $cities = Hospital::where('is_verified', true)->whereNotNull('city')->distinct()->pluck('city');
-
         if ($hasUserLocation) {
             $doctors = $query
                 ->latest()
@@ -157,9 +146,10 @@ class DoctorController extends Controller
         return view('doctors.index', [
             'doctors' => $doctors,
             'departments' => $departments->map(fn(Department $department) => $this->formatDepartment($department)),
-            'cities' => $cities,
-            'filters' => $request->only(['department', 'experience', 'city', 'search', 'user_lat', 'user_lng']),
+            'cities' => collect([$activeCity]),
+            'filters' => array_merge($request->only(['department', 'experience', 'search', 'user_lat', 'user_lng']), ['city' => [$activeCity]]),
             'hasUserLocation' => $hasUserLocation,
+            'activeCity' => $activeCity,
         ]);
     }
 
