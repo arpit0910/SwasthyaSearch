@@ -1087,7 +1087,7 @@ Doctor से कब मिलें
                     'hi' => 'पीठ दर्द के लिए योग: रीढ़ के स्वास्थ्य को एर्गोनॉमिक रूप से बहाल करना',
                 ],
                 'excerpt' => [
-                    'en' => 'Desk jobs ruin posture. Use Cat-Cow and Child's Pose to decompress discs and relieve back ache.',
+                    'en' => 'Desk jobs ruin posture. Use Cat-Cow and Child\'s Pose to decompress discs and relieve back ache.',
                     'hi' => 'कैट-काउ और चाइल्ड पोज़ का उपयोग करके डिस्क को डिकम्प्रेस करें और पीठ दर्द से राहत पाएं।',
                 ],
                 'content' => [
@@ -2399,7 +2399,7 @@ Doctor से कब मिलें
                     'hi' => 'एप्पल साइडर सिरका: ग्लाइसेमिक नियंत्रण का विज्ञान',
                 ],
                 'excerpt' => [
-                    'en' => 'It's not just a trend. Learn how acetic acid physically blocks carbohydrate absorption and prevents massive blood sugar spikes.',
+                    'en' => 'It\'s not just a trend. Learn how acetic acid physically blocks carbohydrate absorption and prevents massive blood sugar spikes.',
                     'hi' => 'जानें कि एसिटिक एसिड कैसे कार्बोहाइड्रेट अवशोषण को रोकता है और रक्त शर्करा के स्पाइक्स को रोकता है।',
                 ],
                 'content' => [
@@ -3314,7 +3314,7 @@ Doctor से कब मिलें
                 'updated_at' => $createdAt,
             ];
 
-            $article = Article::firstOrCreate(
+            $article = Article::updateOrCreate(
                 ['title_en' => $articleAttributes['title_en']],
                 $articleAttributes
             );

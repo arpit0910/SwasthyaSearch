@@ -5,6 +5,8 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="robots" content="noindex,nofollow,noarchive">
     <title>Arogio Admin Dashboard</title>
+    <link rel="icon" type="image/png" sizes="32x32" href="{{ asset('img/fav-icon.png') }}">
+    <link rel="apple-touch-icon" href="{{ asset('img/fav-icon.png') }}">
     <!-- Bootstrap 5 CSS -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
     <!-- FontAwesome 6 Icons -->
@@ -60,15 +62,24 @@
         }
         .admin-sidebar .sidebar-brand {
             padding: 1.5rem 1.5rem;
-            font-size: 1.5rem;
-            font-weight: 800;
             color: #ffffff;
             text-decoration: none;
-            display: block;
+            display: flex;
+            align-items: center;
+            gap: 0.85rem;
             border-bottom: 1px solid rgba(255, 255, 255, 0.08);
         }
-        .admin-sidebar .sidebar-brand span {
-            color: #2dd4bf;
+        .admin-sidebar .sidebar-brand img {
+            width: 46px;
+            height: 46px;
+            object-fit: contain;
+            flex-shrink: 0;
+        }
+        .admin-sidebar .sidebar-brand strong {
+            font-size: 1.5rem;
+            font-weight: 800;
+            line-height: 1.1;
+            color: #ffffff;
         }
         .admin-sidebar .nav-group-title {
             padding: 1.5rem 1.5rem 0.5rem;
@@ -267,7 +278,8 @@
     <!-- Sidebar -->
     <aside class="admin-sidebar" id="sidebar">
         <a href="{{ route('admin.dashboard') }}" class="sidebar-brand">
-            Swasthya<span>Search</span>
+            <img src="{{ asset('img/arogio-logo.png') }}" alt="Arogio">
+            <strong>Arogio</strong>
         </a>
 
         <div class="nav-group-title">Overview</div>

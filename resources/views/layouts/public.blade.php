@@ -141,7 +141,10 @@
     : 'index,follow,max-image-preview:large,max-snippet:-1,max-video-preview:-1';
     $metaRobots = trim($__env->yieldContent('meta_robots', $defaultRobots));
     $metaKeywords = trim($__env->yieldContent('meta_keywords', 'Jaipur doctors, Jaipur hospitals, Jaipur blood banks, Jaipur healthcare, medical specialists'));
-    $ogImage = trim($__env->yieldContent('og_image', $siteUrl . '/favicon.ico'));
+    $brandLogoUrl = asset('img/arogio-logo.png');
+    $brandLogoDarkUrl = asset('img/arogio-logo-dark.png');
+    $brandFaviconUrl = asset('img/fav-icon.png');
+    $ogImage = trim($__env->yieldContent('og_image', $brandLogoUrl));
     $ogType = trim($__env->yieldContent('og_type', request()->routeIs('articles.show') ? 'article' : 'website'));
     @endphp
 
@@ -163,6 +166,9 @@
     <meta name="twitter:title" content="{{ $metaTitle }}">
     <meta name="twitter:description" content="{{ $metaDescription }}">
     <meta name="twitter:image" content="{{ $ogImage }}">
+    <link rel="icon" type="image/png" sizes="32x32" href="{{ $brandFaviconUrl }}">
+    <link rel="icon" type="image/png" sizes="192x192" href="{{ $brandFaviconUrl }}">
+    <link rel="apple-touch-icon" href="{{ $brandFaviconUrl }}">
 
     <link rel="alternate" hreflang="en" href="{{ $canonicalUrl }}">
     <link rel="alternate" hreflang="hi" href="{{ $canonicalUrl }}">
@@ -176,8 +182,7 @@
                 '@type' => 'Organization',
                 'name' => $appName,
                 'url' => $siteUrl,
-                'logo' => $siteUrl.
-                '/favicon.ico',
+                'logo' => $brandLogoUrl,
                 'sameAs' => [],
             ], JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE) !!
         }
@@ -321,11 +326,9 @@
             <div class="flex justify-between min-h-16 py-2 items-center gap-2 sm:gap-4">
                 <div class="flex items-center min-w-0">
                     <a href="{{ route('home') }}" class="flex items-center space-x-1.5 sm:space-x-3 group mr-1 sm:mr-6 shrink min-w-0">
-                        <div class="p-2 sm:p-2.5 bg-gradient-to-tr from-teal-500 to-cyan-600 rounded-2xl shadow-md group-hover:shadow-lg transition-all duration-300 transform group-hover:-translate-y-0.5 shrink-0">
-                            <i data-lucide="heart-pulse" class="w-6 h-6 text-white animate-pulse"></i>
-                        </div>
-                        <span class="brand-wordmark text-lg sm:text-2xl font-bold bg-gradient-to-r from-slate-800 to-indigo-900 dark:from-slate-100 dark:to-indigo-300 bg-clip-text text-transparent tracking-tight py-1 leading-normal truncate">
-                            Swasthya<span class="text-teal-600 dark:text-teal-400">Search</span>
+                        <span class="relative block h-11 w-[148px] sm:h-12 sm:w-[162px] shrink-0" aria-label="Arogio">
+                            <img src="{{ $brandLogoUrl }}" alt="Arogio" class="absolute inset-0 h-full w-full object-contain object-left drop-shadow-sm dark:opacity-0">
+                            <img src="{{ $brandLogoDarkUrl }}" alt="Arogio" class="absolute inset-0 h-full w-full object-contain object-left drop-shadow-sm opacity-0 dark:opacity-100">
                         </span>
                     </a>
 
