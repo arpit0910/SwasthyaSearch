@@ -1,11 +1,108 @@
 @extends('layouts.public')
 
-@section('title', ($locale === 'hi' ? 'कैल्म ऑडियो स्पेस' : 'Calm Audio Space') . ' - Arogio')
-
 @section('content')
 @php
     $isHindi = $locale === 'hi';
+    $decodeUnicode = static fn (string $value): string => json_decode('"' . $value . '"') ?? $value;
+    $voiceLines = [
+        'affirmations' => [
+            'You are safe in this moment.',
+            'Going slowly still counts as progress.',
+            'You do not have to solve everything right now.',
+            'One breath, then the next small step.',
+            'Feeling tired does not mean you are failing.',
+        ],
+        'grounding' => [
+            'Feel your feet making contact with the ground.',
+            'Let your jaw soften and your shoulders drop.',
+            'Look around and notice three steady things.',
+            'You do not need to force the breath, only notice it.',
+            'You are returning to this moment.',
+        ],
+        'wisdom' => [
+            'The mind often needs support, not more pressure.',
+            'Calm usually arrives through softness, not force.',
+            'A small rest today still matters.',
+            'A hard day does not describe your whole story.',
+            'Pausing is not breaking down. Pausing can be repair.',
+        ],
+    ];
+    $hi = [
+        'page_title' => $decodeUnicode('\u0915\u0948\u0932\u094d\u092e \u0911\u0921\u093f\u092f\u094b \u0938\u094d\u092a\u0947\u0938'),
+        'audio_comfort' => $decodeUnicode('\u0911\u0921\u093f\u092f\u094b \u0915\u092e\u094d\u092b\u0930\u094d\u091f'),
+        'hero_title' => $decodeUnicode('\u092b\u094d\u0930\u0940 \u0936\u093e\u0902\u0924 \u0938\u0902\u0917\u0940\u0924, \u0938\u0941\u0915\u0942\u0928 \u092d\u0930\u0940 \u0906\u0935\u093e\u095b\u0947\u0902 \u0914\u0930 \u091b\u094b\u091f\u0947 \u0938\u0939\u093e\u092f\u0915 \u0935\u093f\u091a\u093e\u0930'),
+        'hero_copy' => $decodeUnicode('\u091c\u092c \u092e\u0928 \u092d\u093e\u0930\u0940 \u0932\u0917\u0947, \u092f\u0939\u093e\u0901 \u090f\u0915 \u0936\u093e\u0902\u0924 \u091c\u0917\u0939 \u092e\u093f\u0932\u0947\u0964 \u0939\u0932\u094d\u0915\u0940 ambient sound, guided voice cues, grounding reminders \u0914\u0930 \u091b\u094b\u091f\u0947 wisdom playlists \u0915\u0947 \u0938\u093e\u0925 \u0925\u094b\u095c\u0940 \u0930\u093e\u0939\u0924 \u0932\u0947\u0902\u0964'),
+        'start_session' => $decodeUnicode('\u0936\u093e\u0902\u0924 \u0938\u0924\u094d\u0930 \u0936\u0941\u0930\u0942 \u0915\u0930\u0947\u0902'),
+        'stop' => $decodeUnicode('\u0930\u094b\u0915\u0947\u0902'),
+        'free_browser_sound' => $decodeUnicode('\u092b\u094d\u0930\u0940 \u092c\u094d\u0930\u093e\u0909\u095b\u0930-\u092c\u0947\u0938\u094d\u0921 \u0938\u093e\u0909\u0902\u0921'),
+        'guided_voice_cues' => $decodeUnicode('\u0917\u093e\u0907\u0921\u0947\u0921 \u0906\u0935\u093e\u095b\u0947\u0902'),
+        'minute_timer' => '5, 10, 20 ' . $decodeUnicode('\u092e\u093f\u0928\u091f') . ' timer',
+        'now_playing' => $decodeUnicode('\u0905\u092d\u0940 \u091a\u0932 \u0930\u0939\u093e \u0939\u0948'),
+        'calm_start' => $decodeUnicode('\u0936\u093e\u0902\u0924 \u0936\u0941\u0930\u0941\u0906\u0924'),
+        'listen' => $decodeUnicode('\u0938\u0941\u0928\u0947\u0902'),
+        'take_pause' => $decodeUnicode('\u090f\u0915 \u0915\u094b\u092e\u0932 \u0935\u093f\u0930\u093e\u092e \u0932\u0947\u0902'),
+        'sound' => $decodeUnicode('\u0938\u093e\u0909\u0902\u0921'),
+        'rain_drone' => $decodeUnicode('\u0930\u0947\u0928 + \u0921\u094d\u0930\u094b\u0928'),
+        'voice' => $decodeUnicode('\u0935\u0949\u0907\u0938'),
+        'gentle_thoughts' => $decodeUnicode('\u0938\u0941\u0915\u0942\u0928 \u092d\u0930\u0947 \u0935\u093f\u091a\u093e\u0930'),
+        'mode' => $decodeUnicode('\u092e\u094b\u0921'),
+        'low_stimulation' => $decodeUnicode('\u0915\u092e \u0909\u0924\u094d\u0924\u0947\u091c\u0928\u093e'),
+        'build_mix' => $decodeUnicode('\u0905\u092a\u0928\u093e \u092e\u093f\u0936\u094d\u0930\u0923 \u092c\u0928\u093e\u090f\u0901'),
+        'choose_mix' => $decodeUnicode('\u0935\u093e\u0924\u093e\u0935\u0930\u0923, \u0906\u0935\u093e\u095b \u0914\u0930 \u091f\u093e\u0907\u092e\u0930 \u091a\u0941\u0928\u0947\u0902'),
+        'voice_on' => $decodeUnicode('\u0906\u0935\u093e\u095b \u091a\u093e\u0932\u0942'),
+        'rain_hush' => $decodeUnicode('\u0930\u0947\u0928 \u0939\u0936'),
+        'rain_hush_desc' => $decodeUnicode('\u0932\u0917\u093e\u0924\u093e\u0930 \u092c\u093e\u0930\u093f\u0936 \u091c\u0948\u0938\u0940 \u092e\u0941\u0932\u093e\u092f\u092e \u0927\u094d\u0935\u0928\u093f \u092a\u0930\u0924\u0964'),
+        'deep_drone' => $decodeUnicode('\u0921\u0940\u092a \u0921\u094d\u0930\u094b\u0928'),
+        'deep_drone_desc' => $decodeUnicode('\u0927\u0940\u092e\u093e warm tone \u091c\u094b \u0936\u0930\u0940\u0930 \u0915\u094b settle \u0915\u0930\u0928\u0947 \u092e\u0947\u0902 \u092e\u0926\u0926 \u0915\u0930\u0947\u0964'),
+        'soft_chimes' => $decodeUnicode('\u0938\u0949\u092b\u094d\u091f \u091a\u093e\u0907\u092e\u094d\u0938'),
+        'soft_chimes_desc' => $decodeUnicode('\u0939\u0932\u094d\u0915\u0940 \u0905\u0902\u0924\u0930\u093e\u0932 \u0935\u093e\u0932\u0940 \u091a\u092e\u0915\u0924\u0940 \u091f\u094b\u0928\u0964'),
+        'brown_noise' => $decodeUnicode('\u092c\u094d\u0930\u093e\u0909\u0928 \u0928\u0949\u0907\u095b'),
+        'brown_noise_desc' => $decodeUnicode('\u0932\u094b-\u092b\u094d\u0930\u093f\u0915\u094d\u0935\u0947\u0902\u0938\u0940 mask \u091c\u094b \u092c\u093e\u0939\u0930\u0940 \u0905\u0935\u094d\u092f\u0935\u0938\u094d\u0925\u093e \u0915\u092e \u0915\u0930\u0947\u0964'),
+        'volume' => $decodeUnicode('\u0935\u0949\u0932\u094d\u092f\u0942\u092e'),
+        'minute' => $decodeUnicode('\u092e\u093f\u0928\u091f'),
+        'quick_help' => $decodeUnicode('\u091c\u0932\u094d\u0926\u0940 \u092e\u0926\u0926'),
+        'anxiety_spikes' => $decodeUnicode('\u092c\u0939\u0941\u0924 \u092c\u0947\u091a\u0948\u0928\u0940 \u0932\u0917\u0947 \u0924\u094b \u092f\u0939 \u0915\u0930\u0947\u0902'),
+        'quick_step_1' => $decodeUnicode('\u0930\u0947\u0928 \u0939\u0936 \u092f\u093e \u092c\u094d\u0930\u093e\u0909\u0928 \u0928\u0949\u0907\u095b \u091a\u0941\u0928\u0947\u0902\u0964'),
+        'quick_step_2' => $decodeUnicode('\u0935\u0949\u0907\u0938 \u0911\u0928 \u0930\u0916\u0947\u0902 \u0914\u0930 5 \u092e\u093f\u0928\u091f \u091f\u093e\u0907\u092e\u0930 \u091a\u0941\u0928\u0947\u0902\u0964'),
+        'quick_step_3' => $decodeUnicode('\u0927\u0940\u092e\u0947 \u0938\u0947 \u092c\u0948\u0920\u0947\u0902, \u0915\u0902\u0927\u0947 \u0922\u0940\u0932\u0947 \u091b\u094b\u0921\u093c\u0947\u0902, \u0914\u0930 \u092c\u0938 \u0938\u0941\u0928\u0947\u0902\u0964'),
+        'voice_playlists' => $decodeUnicode('\u0935\u0949\u0907\u0938 \u092a\u094d\u0932\u0947\u0932\u093f\u0938\u094d\u091f'),
+        'pick_tone' => $decodeUnicode('\u091c\u094b \u0938\u0941\u0928\u0928\u093e \u091a\u093e\u0939\u0947\u0902, \u0935\u0939 \u091a\u0941\u0928\u0947\u0902'),
+        'soft_affirmations' => $decodeUnicode('\u0938\u0949\u092b\u094d\u091f \u0905\u092b\u0930\u094d\u092e\u0947\u0936\u0928'),
+        'soft_affirmations_desc' => $decodeUnicode('\u0927\u0940\u0930\u0947 \u0914\u0930 \u0906\u0936\u094d\u0935\u0938\u094d\u0924 \u0915\u0930\u0928\u0947 \u0935\u093e\u0932\u0947 \u091b\u094b\u091f\u0947 \u0935\u093e\u0915\u094d\u092f\u0964'),
+        'grounding_voice' => $decodeUnicode('\u0917\u094d\u0930\u093e\u0909\u0902\u0921\u093f\u0902\u0917 \u0935\u0949\u0907\u0938'),
+        'grounding_voice_desc' => $decodeUnicode('\u0936\u0930\u0940\u0930 \u0914\u0930 \u0915\u092e\u0930\u0947 \u092e\u0947\u0902 \u0935\u093e\u092a\u0938 \u0906\u0928\u0947 \u092e\u0947\u0902 \u092e\u0926\u0926\u0964'),
+        'gentle_wisdom' => $decodeUnicode('\u0917\u0941\u0930\u0941 \u091c\u094d\u091e\u093e\u0928 \u0932\u093e\u0907\u091f'),
+        'gentle_wisdom_desc' => $decodeUnicode('\u091b\u094b\u091f\u0947 \u0935\u093f\u091a\u093e\u0930 \u091c\u094b \u0926\u092c\u093e\u0935 \u0928\u0939\u0940\u0902, \u0938\u0939\u093e\u0930\u093e \u0926\u0947\u0902\u0964'),
+        'gentle_note' => $decodeUnicode('\u0928\u0930\u092e \u0928\u094b\u091f'),
+        'support_note' => $decodeUnicode('\u092f\u0939 \u0938\u094d\u092a\u0947\u0938 \u0906\u0930\u093e\u092e \u0914\u0930 \u0939\u0932\u094d\u0915\u093e \u0938\u0939\u093e\u0930\u093e \u0926\u0947\u0928\u0947 \u0915\u0947 \u0932\u093f\u090f \u0939\u0948\u0964 \u092f\u0939 professional care \u0915\u093e \u0935\u093f\u0915\u0932\u094d\u092a \u0928\u0939\u0940\u0902 \u0939\u0948\u0964 \u0905\u0917\u0930 \u0906\u092a \u0916\u0941\u0926 \u0915\u094b unsafe \u092e\u0939\u0938\u0942\u0938 \u0915\u0930 \u0930\u0939\u0947 \u0939\u0948\u0902, \u0924\u0941\u0930\u0902\u0924 support \u092a\u0947\u091c \u0916\u094b\u0932\u0947\u0902\u0964'),
+        'open_support' => $decodeUnicode('\u0938\u092a\u094b\u0930\u094d\u091f \u0916\u094b\u0932\u0947\u0902'),
+        'voice_lines' => [
+            'affirmations' => [
+                $decodeUnicode('\u0906\u092a \u0905\u092d\u0940 \u0938\u0941\u0930\u0915\u094d\u0937\u093f\u0924 \u0939\u0948\u0902\u0964'),
+                $decodeUnicode('\u0927\u0940\u0930\u0947 \u091a\u0932\u0928\u093e \u092d\u0940 \u092a\u094d\u0930\u0917\u0924\u093f \u0939\u0948\u0964'),
+                $decodeUnicode('\u0906\u092a\u0915\u094b \u0905\u092d\u0940 \u0938\u092c \u0920\u0940\u0915 \u0915\u0930\u0928\u093e \u095b\u0930\u0942\u0930\u0940 \u0928\u0939\u0940\u0902 \u0939\u0948\u0964'),
+                $decodeUnicode('\u090f\u0915 \u0938\u093e\u0901\u0938, \u092b\u093f\u0930 \u0905\u0917\u0932\u093e \u091b\u094b\u091f\u093e \u0915\u0926\u092e\u0964'),
+                $decodeUnicode('\u0925\u0915\u093e\u0928 \u0915\u093e \u092e\u0924\u0932\u092c \u0939\u093e\u0930 \u0928\u0939\u0940\u0902 \u0939\u094b\u0924\u093e\u0964'),
+            ],
+            'grounding' => [
+                $decodeUnicode('\u0905\u092a\u0928\u0947 \u092a\u0948\u0930\u094b\u0902 \u0915\u093e \u095b\u092e\u0940\u0928 \u0938\u0947 \u0932\u0917\u0928\u093e \u092e\u0939\u0938\u0942\u0938 \u0915\u0930\u0947\u0902\u0964'),
+                $decodeUnicode('\u091c\u092c\u0921\u093c\u093e \u0922\u0940\u0932\u093e \u091b\u094b\u0921\u093c\u0947\u0902, \u0915\u0902\u0927\u0947 \u0928\u0940\u091a\u0947 \u0906\u0928\u0947 \u0926\u0947\u0902\u0964'),
+                $decodeUnicode('\u0915\u092e\u0930\u0947 \u092e\u0947\u0902 \u0924\u0940\u0928 \u0936\u093e\u0902\u0924 \u091a\u0940\u095b\u0947\u0902 \u0926\u0947\u0916\u0947\u0902\u0964'),
+                $decodeUnicode('\u0938\u093e\u0901\u0938 \u0915\u094b \u0916\u0940\u0902\u091a\u0928\u093e \u0928\u0939\u0940\u0902 \u0939\u0948, \u092c\u0938 \u0928\u094b\u091f\u093f\u0938 \u0915\u0930\u0928\u093e \u0939\u0948\u0964'),
+                $decodeUnicode('\u0906\u092a \u0907\u0938 \u092a\u0932 \u092e\u0947\u0902 \u0935\u093e\u092a\u0938 \u0906 \u0930\u0939\u0947 \u0939\u0948\u0902\u0964'),
+            ],
+            'wisdom' => [
+                $decodeUnicode('\u092e\u0928 \u0915\u094b \u0939\u0930 \u092c\u093e\u0930 \u0927\u0915\u094d\u0915\u093e \u0928\u0939\u0940\u0902, \u0915\u092d\u0940-\u0915\u092d\u0940 \u0938\u0939\u093e\u0930\u093e \u091a\u093e\u0939\u093f\u090f\u0964'),
+                $decodeUnicode('\u0936\u093e\u0902\u0924\u093f \u0905\u0915\u094d\u0938\u0930 \u0927\u0940\u092e\u0947\u092a\u0928 \u092e\u0947\u0902 \u092e\u093f\u0932\u0924\u0940 \u0939\u0948, \u091c\u0932\u094d\u0926\u092c\u093e\u095b\u0940 \u092e\u0947\u0902 \u0928\u0939\u0940\u0902\u0964'),
+                $decodeUnicode('\u0906\u091c \u0915\u093e \u091b\u094b\u091f\u093e \u0906\u0930\u093e\u092e \u092d\u0940 \u092e\u0939\u0924\u094d\u0924\u094d\u0935\u092a\u0942\u0930\u094d\u0923 \u0939\u0948\u0964'),
+                $decodeUnicode('\u0915\u0920\u093f\u0928 \u0926\u093f\u0928 \u0906\u092a\u0915\u093e \u092a\u0942\u0930\u093e \u0938\u091a \u0928\u0939\u0940\u0902 \u092c\u0924\u093e\u0924\u0947\u0964'),
+                $decodeUnicode('\u0930\u0941\u0915\u0928\u093e \u091f\u0942\u091f\u0928\u093e \u0928\u0939\u0940\u0902 \u0939\u0948, \u0930\u0941\u0915\u0928\u093e \u0938\u0902\u092d\u0932\u0928\u093e \u092d\u0940 \u0939\u094b \u0938\u0915\u0924\u093e \u0939\u0948\u0964'),
+            ],
+        ],
+    ];
 @endphp
+
+@section('title', ($isHindi ? $hi['page_title'] : 'Calm Audio Space') . ' - Arogio')
 
 <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 sm:py-12">
     <section class="relative overflow-hidden rounded-[2rem] border border-emerald-100/80 bg-gradient-to-br from-white via-emerald-50/70 to-cyan-50/70 p-6 shadow-sm dark:border-slate-800 dark:from-slate-900 dark:via-slate-900 dark:to-slate-950 sm:p-8 lg:p-10">
@@ -16,36 +113,36 @@
             <div class="max-w-3xl">
                 <div class="inline-flex items-center gap-2 rounded-full border border-emerald-200/80 bg-white/90 px-3 py-1.5 text-[11px] font-bold uppercase tracking-[0.24em] text-emerald-700 shadow-sm dark:border-emerald-900/50 dark:bg-slate-950/80 dark:text-emerald-300">
                     <i data-lucide="headphones" class="h-4 w-4"></i>
-                    {{ $isHindi ? 'ऑडियो कम्फर्ट' : 'Audio Comfort' }}
+                    {{ $isHindi ? $hi['audio_comfort'] : 'Audio Comfort' }}
                 </div>
                 <h1 class="mt-4 text-3xl font-extrabold tracking-tight text-slate-950 dark:text-white sm:text-5xl">
-                    {{ $isHindi ? 'फ्री शांत संगीत, सुकून भरी आवाज़ें और छोटे सहायक विचार' : 'Free calming sounds, gentle voices, and short uplifting thoughts' }}
+                    {{ $isHindi ? $hi['hero_title'] : 'Free calming sounds, gentle voices, and short uplifting thoughts' }}
                 </h1>
                 <p class="mt-4 max-w-2xl text-base leading-7 text-slate-600 dark:text-slate-300 sm:text-lg">
-                    {{ $isHindi ? 'जब मन भारी लगे, यहाँ एक शांत जगह मिले। हल्की ambient sound, guided voice cues, grounding reminders और छोटे wisdom playlists के साथ थोड़ी राहत लें।' : 'When the mind feels heavy, this gives you a softer place to land. Mix ambient sounds, guided voice cues, grounding reminders, and short wisdom playlists for a gentler reset.' }}
+                    {{ $isHindi ? $hi['hero_copy'] : 'When the mind feels heavy, this gives you a softer place to land. Mix ambient sounds, guided voice cues, grounding reminders, and short wisdom playlists for a gentler reset.' }}
                 </p>
                 <div class="mt-6 flex flex-wrap gap-3">
                     <button type="button" data-play-all class="inline-flex items-center justify-center gap-2 rounded-[1.25rem] bg-emerald-600 px-6 py-3.5 text-sm font-bold text-white shadow-lg shadow-emerald-500/20 transition hover:bg-emerald-700">
                         <i data-lucide="play" class="h-4 w-4"></i>
-                        {{ $isHindi ? 'शांत सत्र शुरू करें' : 'Start calm session' }}
+                        {{ $isHindi ? $hi['start_session'] : 'Start calm session' }}
                     </button>
                     <button type="button" data-stop-all class="inline-flex items-center justify-center gap-2 rounded-[1.25rem] border border-slate-200 bg-white px-6 py-3.5 text-sm font-bold text-slate-900 transition hover:bg-slate-50 dark:border-slate-700 dark:bg-slate-900 dark:text-slate-100 dark:hover:bg-slate-800">
                         <i data-lucide="square" class="h-4 w-4"></i>
-                        {{ $isHindi ? 'रोकें' : 'Stop' }}
+                        {{ $isHindi ? $hi['stop'] : 'Stop' }}
                     </button>
                 </div>
                 <div class="mt-6 flex flex-wrap gap-3 text-sm">
                     <span class="inline-flex items-center gap-2 rounded-full border border-white/80 bg-white/85 px-4 py-2 font-semibold text-slate-700 shadow-sm dark:border-slate-800 dark:bg-slate-950/80 dark:text-slate-200">
                         <i data-lucide="music-4" class="h-4 w-4 text-emerald-600 dark:text-emerald-300"></i>
-                        {{ $isHindi ? 'फ्री ब्राउज़र-बेस्ड साउंड' : 'Free browser-based sound' }}
+                        {{ $isHindi ? $hi['free_browser_sound'] : 'Free browser-based sound' }}
                     </span>
                     <span class="inline-flex items-center gap-2 rounded-full border border-white/80 bg-white/85 px-4 py-2 font-semibold text-slate-700 shadow-sm dark:border-slate-800 dark:bg-slate-950/80 dark:text-slate-200">
                         <i data-lucide="mic-2" class="h-4 w-4 text-cyan-600 dark:text-cyan-300"></i>
-                        {{ $isHindi ? 'गाइडेड आवाज़ें' : 'Guided voice cues' }}
+                        {{ $isHindi ? $hi['guided_voice_cues'] : 'Guided voice cues' }}
                     </span>
                     <span class="inline-flex items-center gap-2 rounded-full border border-white/80 bg-white/85 px-4 py-2 font-semibold text-slate-700 shadow-sm dark:border-slate-800 dark:bg-slate-950/80 dark:text-slate-200">
                         <i data-lucide="timer-reset" class="h-4 w-4 text-indigo-600 dark:text-indigo-300"></i>
-                        {{ $isHindi ? '5, 10, 20 मिनट टाइमर' : '5, 10, 20 minute timer' }}
+                        {{ $isHindi ? $hi['minute_timer'] : '5, 10, 20 minute timer' }}
                     </span>
                 </div>
             </div>
@@ -53,8 +150,8 @@
             <div class="rounded-[2rem] border border-white/80 bg-white/85 p-5 shadow-xl backdrop-blur dark:border-slate-800 dark:bg-slate-950/80 sm:p-6">
                 <div class="flex items-center justify-between gap-3">
                     <div>
-                        <p class="text-xs font-bold uppercase tracking-[0.22em] text-emerald-700 dark:text-emerald-300">{{ $isHindi ? 'अभी चल रहा है' : 'Now playing' }}</p>
-                        <h2 id="session-title" class="mt-2 text-2xl font-extrabold text-slate-950 dark:text-white">{{ $isHindi ? 'शांत शुरुआत' : 'Calm start' }}</h2>
+                        <p class="text-xs font-bold uppercase tracking-[0.22em] text-emerald-700 dark:text-emerald-300">{{ $isHindi ? $hi['now_playing'] : 'Now playing' }}</p>
+                        <h2 id="session-title" class="mt-2 text-2xl font-extrabold text-slate-950 dark:text-white">{{ $isHindi ? $hi['calm_start'] : 'Calm start' }}</h2>
                     </div>
                     <div class="inline-flex items-center rounded-full bg-emerald-100 px-3 py-1 text-xs font-bold text-emerald-700 dark:bg-emerald-950/40 dark:text-emerald-200">
                         <span id="timer-status">05:00</span>
@@ -65,17 +162,17 @@
                     <div class="absolute inset-0" id="calm-wave-field"></div>
                     <div class="relative z-10 flex h-40 w-40 items-center justify-center rounded-full border border-white/70 bg-white/70 shadow-2xl shadow-emerald-400/10 backdrop-blur dark:border-white/10 dark:bg-slate-900/70">
                         <div class="text-center">
-                            <div id="voice-phase" class="text-xs font-bold uppercase tracking-[0.3em] text-emerald-700 dark:text-emerald-300">{{ $isHindi ? 'सुनें' : 'Listen' }}</div>
-                            <div id="voice-caption" class="mt-3 text-xl font-extrabold text-slate-950 dark:text-white">{{ $isHindi ? 'एक कोमल विराम लें' : 'Take a gentle pause' }}</div>
+                            <div id="voice-phase" class="text-xs font-bold uppercase tracking-[0.3em] text-emerald-700 dark:text-emerald-300">{{ $isHindi ? $hi['listen'] : 'Listen' }}</div>
+                            <div id="voice-caption" class="mt-3 text-xl font-extrabold text-slate-950 dark:text-white">{{ $isHindi ? $hi['take_pause'] : 'Take a gentle pause' }}</div>
                         </div>
                     </div>
                 </div>
 
                 <div class="mt-6 grid gap-3 sm:grid-cols-3">
                     @foreach([
-                        ['label' => $isHindi ? 'साउंड' : 'Sound', 'value' => $isHindi ? 'रेन + ड्रोन' : 'Rain + Drone'],
-                        ['label' => $isHindi ? 'वॉइस' : 'Voice', 'value' => $isHindi ? 'सुकून भरे विचार' : 'Gentle thoughts'],
-                        ['label' => $isHindi ? 'मोड' : 'Mode', 'value' => $isHindi ? 'कम उत्तेजना' : 'Low stimulation'],
+                        ['label' => $isHindi ? $hi['sound'] : 'Sound', 'value' => $isHindi ? $hi['rain_drone'] : 'Rain + Drone'],
+                        ['label' => $isHindi ? $hi['voice'] : 'Voice', 'value' => $isHindi ? $hi['gentle_thoughts'] : 'Gentle thoughts'],
+                        ['label' => $isHindi ? $hi['mode'] : 'Mode', 'value' => $isHindi ? $hi['low_stimulation'] : 'Low stimulation'],
                     ] as $stat)
                         <div class="rounded-2xl border border-slate-200/80 bg-white/80 px-4 py-3 dark:border-slate-800 dark:bg-slate-900/70">
                             <p class="text-[11px] font-bold uppercase tracking-[0.2em] text-slate-400">{{ $stat['label'] }}</p>
@@ -91,21 +188,24 @@
         <div class="rounded-[2rem] border border-slate-200/80 bg-white/90 p-6 shadow-sm dark:border-slate-800 dark:bg-slate-900/90 sm:p-8">
             <div class="flex flex-col gap-3 sm:flex-row sm:items-end sm:justify-between">
                 <div>
-                    <p class="text-xs font-bold uppercase tracking-[0.22em] text-slate-500 dark:text-slate-400">{{ $isHindi ? 'अपना मिश्रण बनाएँ' : 'Build your mix' }}</p>
-                    <h2 class="mt-2 text-2xl font-extrabold text-slate-950 dark:text-white">{{ $isHindi ? 'वातावरण, आवाज़ और टाइमर चुनें' : 'Choose your ambient layer, voice, and timer' }}</h2>
+                    <p class="text-xs font-bold uppercase tracking-[0.22em] text-slate-500 dark:text-slate-400">{{ $isHindi ? $hi['build_mix'] : 'Build your mix' }}</p>
+                    <h2 class="mt-2 text-2xl font-extrabold text-slate-950 dark:text-white">{{ $isHindi ? $hi['choose_mix'] : 'Choose your ambient layer, voice, and timer' }}</h2>
                 </div>
-                <label class="inline-flex items-center gap-2 rounded-full border border-slate-200 bg-slate-50 px-3 py-2 text-sm font-semibold text-slate-700 dark:border-slate-700 dark:bg-slate-950 dark:text-slate-200">
-                    <input id="voice-enabled" type="checkbox" checked class="rounded border-slate-300 text-emerald-600 focus:ring-emerald-500">
-                    {{ $isHindi ? 'आवाज़ चालू' : 'Voice on' }}
+                <label class="inline-flex items-center gap-3 rounded-full border border-slate-200 bg-white px-3.5 py-2 text-sm font-semibold text-slate-700 shadow-sm dark:border-slate-700 dark:bg-slate-950 dark:text-slate-200 cursor-pointer select-none">
+                    <input id="voice-enabled" type="checkbox" checked class="peer sr-only">
+                    <span class="relative inline-flex h-7 w-12 shrink-0 items-center rounded-full bg-slate-200 transition peer-checked:bg-emerald-500 dark:bg-slate-700 dark:peer-checked:bg-emerald-500">
+                        <span class="absolute left-1 h-5 w-5 rounded-full bg-white shadow-sm transition-transform peer-checked:translate-x-5"></span>
+                    </span>
+                    <span>{{ $isHindi ? $hi['voice_on'] : 'Voice on' }}</span>
                 </label>
             </div>
 
             <div class="mt-6 grid gap-4 md:grid-cols-2">
                 @foreach([
-                    ['id' => 'rain', 'title' => $isHindi ? 'रेन हश' : 'Rain Hush', 'description' => $isHindi ? 'लगातार बारिश जैसी मुलायम शोर परत।' : 'A soft, steady rain-like wash for overstimulated moments.', 'icon' => 'cloud-rain'],
-                    ['id' => 'drone', 'title' => $isHindi ? 'डीप ड्रोन' : 'Deep Drone', 'description' => $isHindi ? 'धीमा warm tone जो शरीर को settle करने में मदद करे।' : 'A slow warm tone bed that can help the body feel more settled.', 'icon' => 'waves'],
-                    ['id' => 'chimes', 'title' => $isHindi ? 'सॉफ्ट चाइम्स' : 'Soft Chimes', 'description' => $isHindi ? 'हल्की अंतराल वाली चमकती टोन।' : 'Gentle periodic chimes for light uplift without rush.', 'icon' => 'bell-ring'],
-                    ['id' => 'brown', 'title' => $isHindi ? 'ब्राउन नॉइज़' : 'Brown Noise', 'description' => $isHindi ? 'लो-फ्रिक्वेंसी mask जो बाहरी अव्यवस्था कम करे।' : 'Low-frequency masking sound for noisy surroundings.', 'icon' => 'audio-lines'],
+                    ['id' => 'rain', 'title' => $isHindi ? $hi['rain_hush'] : 'Rain Hush', 'description' => $isHindi ? $hi['rain_hush_desc'] : 'A soft, steady rain-like wash for overstimulated moments.', 'icon' => 'cloud-rain'],
+                    ['id' => 'drone', 'title' => $isHindi ? $hi['deep_drone'] : 'Deep Drone', 'description' => $isHindi ? $hi['deep_drone_desc'] : 'A slow warm tone bed that can help the body feel more settled.', 'icon' => 'waves'],
+                    ['id' => 'chimes', 'title' => $isHindi ? $hi['soft_chimes'] : 'Soft Chimes', 'description' => $isHindi ? $hi['soft_chimes_desc'] : 'Gentle periodic chimes for light uplift without rush.', 'icon' => 'bell-ring'],
+                    ['id' => 'brown', 'title' => $isHindi ? $hi['brown_noise'] : 'Brown Noise', 'description' => $isHindi ? $hi['brown_noise_desc'] : 'Low-frequency masking sound for noisy surroundings.', 'icon' => 'audio-lines'],
                 ] as $scene)
                     <button type="button" class="sound-card text-left rounded-[1.6rem] border border-slate-200/80 bg-slate-50/70 p-5 transition hover:-translate-y-0.5 hover:border-emerald-200 dark:border-slate-800 dark:bg-slate-950/70" data-sound-card="{{ $scene['id'] }}">
                         <div class="flex items-start gap-4">
@@ -124,7 +224,7 @@
             <div class="mt-6 grid gap-4 lg:grid-cols-[1fr_0.9fr]">
                 <div class="rounded-[1.6rem] border border-slate-200/80 bg-white p-5 dark:border-slate-800 dark:bg-slate-950">
                     <div class="flex items-center justify-between gap-3">
-                        <label for="master-volume" class="text-sm font-bold text-slate-900 dark:text-slate-100">{{ $isHindi ? 'वॉल्यूम' : 'Volume' }}</label>
+                        <label for="master-volume" class="text-sm font-bold text-slate-900 dark:text-slate-100">{{ $isHindi ? $hi['volume'] : 'Volume' }}</label>
                         <span id="volume-value" class="text-xs font-bold uppercase tracking-[0.18em] text-slate-400">60%</span>
                     </div>
                     <input id="master-volume" type="range" min="0" max="100" value="60" class="mt-4 w-full accent-emerald-600">
@@ -132,19 +232,19 @@
                     <div class="mt-5 flex flex-wrap gap-3">
                         @foreach([5, 10, 20] as $minutes)
                             <button type="button" class="timer-chip inline-flex items-center justify-center rounded-full border border-slate-200 bg-slate-50 px-4 py-2 text-sm font-bold text-slate-700 transition hover:border-emerald-200 hover:text-emerald-700 dark:border-slate-700 dark:bg-slate-900 dark:text-slate-200" data-minutes="{{ $minutes }}">
-                                {{ $minutes }} {{ $isHindi ? 'मिनट' : 'min' }}
+                                {{ $minutes }} {{ $isHindi ? $hi['minute'] : 'min' }}
                             </button>
                         @endforeach
                     </div>
                 </div>
 
                 <div class="rounded-[1.6rem] border border-cyan-200/80 bg-gradient-to-br from-cyan-50 to-emerald-50 p-5 dark:border-cyan-900/40 dark:from-cyan-950/20 dark:to-emerald-950/20">
-                    <p class="text-xs font-bold uppercase tracking-[0.22em] text-cyan-700 dark:text-cyan-300">{{ $isHindi ? 'जल्दी मदद' : 'Quick help' }}</p>
-                    <h3 class="mt-2 text-lg font-extrabold text-slate-950 dark:text-white">{{ $isHindi ? 'बहुत बेचैनी लगे तो यह करें' : 'If anxiety spikes, try this' }}</h3>
+                    <p class="text-xs font-bold uppercase tracking-[0.22em] text-cyan-700 dark:text-cyan-300">{{ $isHindi ? $hi['quick_help'] : 'Quick help' }}</p>
+                    <h3 class="mt-2 text-lg font-extrabold text-slate-950 dark:text-white">{{ $isHindi ? $hi['anxiety_spikes'] : 'If anxiety spikes, try this' }}</h3>
                     <ol class="mt-4 space-y-3 text-sm leading-7 text-slate-700 dark:text-slate-200">
-                        <li>1. {{ $isHindi ? 'रेन हश या ब्राउन नॉइज़ चुनें।' : 'Choose Rain Hush or Brown Noise.' }}</li>
-                        <li>2. {{ $isHindi ? 'वॉइस ऑन रखें और 5 मिनट टाइमर चुनें।' : 'Keep voice on and choose the 5 minute timer.' }}</li>
-                        <li>3. {{ $isHindi ? 'धीमे से बैठें, कंधे ढीले छोड़ें, और बस सुनें।' : 'Sit softly, drop your shoulders, and just listen.' }}</li>
+                        <li>1. {{ $isHindi ? $hi['quick_step_1'] : 'Choose Rain Hush or Brown Noise.' }}</li>
+                        <li>2. {{ $isHindi ? $hi['quick_step_2'] : 'Keep voice on and choose the 5 minute timer.' }}</li>
+                        <li>3. {{ $isHindi ? $hi['quick_step_3'] : 'Sit softly, drop your shoulders, and just listen.' }}</li>
                     </ol>
                 </div>
             </div>
@@ -152,13 +252,13 @@
 
         <div class="space-y-6">
             <section class="rounded-[2rem] border border-slate-200/80 bg-white/90 p-6 shadow-sm dark:border-slate-800 dark:bg-slate-900/90">
-                <p class="text-xs font-bold uppercase tracking-[0.22em] text-indigo-700 dark:text-indigo-300">{{ $isHindi ? 'वॉइस प्लेलिस्ट' : 'Voice playlists' }}</p>
-                <h2 class="mt-2 text-2xl font-extrabold text-slate-950 dark:text-white">{{ $isHindi ? 'जो सुनना चाहें, वह चुनें' : 'Pick the tone you need right now' }}</h2>
+                <p class="text-xs font-bold uppercase tracking-[0.22em] text-indigo-700 dark:text-indigo-300">{{ $isHindi ? $hi['voice_playlists'] : 'Voice playlists' }}</p>
+                <h2 class="mt-2 text-2xl font-extrabold text-slate-950 dark:text-white">{{ $isHindi ? $hi['pick_tone'] : 'Pick the tone you need right now' }}</h2>
                 <div class="mt-5 space-y-3">
                     @foreach([
-                        ['id' => 'affirmations', 'title' => $isHindi ? 'सॉफ्ट अफर्मेशन' : 'Soft affirmations', 'description' => $isHindi ? 'धीरे और आश्वस्त करने वाले छोटे वाक्य।' : 'Short reassuring lines for tender moments.', 'icon' => 'heart-handshake'],
-                        ['id' => 'grounding', 'title' => $isHindi ? 'ग्राउंडिंग वॉइस' : 'Grounding voice', 'description' => $isHindi ? 'शरीर और कमरे में वापस आने में मदद।' : 'Helps you come back to the room and your body.', 'icon' => 'compass'],
-                        ['id' => 'wisdom', 'title' => $isHindi ? 'गुरु ज्ञान लाइट' : 'Gentle wisdom', 'description' => $isHindi ? 'छोटे विचार जो दबाव नहीं, सहारा दें।' : 'Short reflective thoughts that comfort without preaching.', 'icon' => 'sparkles'],
+                        ['id' => 'affirmations', 'title' => $isHindi ? $hi['soft_affirmations'] : 'Soft affirmations', 'description' => $isHindi ? $hi['soft_affirmations_desc'] : 'Short reassuring lines for tender moments.', 'icon' => 'heart-handshake'],
+                        ['id' => 'grounding', 'title' => $isHindi ? $hi['grounding_voice'] : 'Grounding voice', 'description' => $isHindi ? $hi['grounding_voice_desc'] : 'Helps you come back to the room and your body.', 'icon' => 'compass'],
+                        ['id' => 'wisdom', 'title' => $isHindi ? $hi['gentle_wisdom'] : 'Gentle wisdom', 'description' => $isHindi ? $hi['gentle_wisdom_desc'] : 'Short reflective thoughts that comfort without preaching.', 'icon' => 'sparkles'],
                     ] as $playlist)
                         <button type="button" class="playlist-card flex w-full items-start gap-4 rounded-[1.4rem] border border-slate-200/80 bg-slate-50/70 p-4 text-left transition hover:border-indigo-200 dark:border-slate-800 dark:bg-slate-950/70" data-playlist="{{ $playlist['id'] }}">
                             <div class="flex h-11 w-11 shrink-0 items-center justify-center rounded-2xl bg-indigo-100 text-indigo-700 dark:bg-indigo-950/40 dark:text-indigo-200">
@@ -179,13 +279,13 @@
                         <i data-lucide="shield-heart" class="h-5 w-5"></i>
                     </div>
                     <div>
-                        <h2 class="text-lg font-extrabold text-slate-950 dark:text-white">{{ $isHindi ? 'नरम नोट' : 'Gentle note' }}</h2>
+                        <h2 class="text-lg font-extrabold text-slate-950 dark:text-white">{{ $isHindi ? $hi['gentle_note'] : 'Gentle note' }}</h2>
                         <p class="mt-2 text-sm leading-7 text-slate-700 dark:text-slate-200">
-                            {{ $isHindi ? 'यह स्पेस आराम और हल्का सहारा देने के लिए है। यह professional care का विकल्प नहीं है। अगर आप खुद को unsafe महसूस कर रहे हैं, तुरंत support पेज खोलें।' : 'This space is here for comfort and light support. It is not a replacement for professional care. If you feel unsafe, please open support right away.' }}
+                            {{ $isHindi ? $hi['support_note'] : 'This space is here for comfort and light support. It is not a replacement for professional care. If you feel unsafe, please open support right away.' }}
                         </p>
                         <a href="{{ route('support.crisis') }}" class="mt-4 inline-flex items-center gap-2 rounded-2xl bg-slate-950 px-4 py-3 text-sm font-bold text-white dark:bg-white dark:text-slate-950">
                             <i data-lucide="life-buoy" class="h-4 w-4"></i>
-                            {{ $isHindi ? 'सपोर्ट खोलें' : 'Open support' }}
+                            {{ $isHindi ? $hi['open_support'] : 'Open support' }}
                         </a>
                     </div>
                 </div>
@@ -197,47 +297,7 @@
 @push('scripts')
 <script>
 (() => {
-    const voiceLines = {
-        affirmations: @json($isHindi ? [
-            'आप अभी सुरक्षित हैं।',
-            'धीरे चलना भी प्रगति है।',
-            'आपको अभी सब ठीक करना जरूरी नहीं है।',
-            'एक साँस, फिर अगला छोटा कदम।',
-            'थकान का मतलब हार नहीं होता।',
-        ] : [
-            'You are safe in this moment.',
-            'Going slowly still counts as progress.',
-            'You do not have to solve everything right now.',
-            'One breath, then the next small step.',
-            'Feeling tired does not mean you are failing.',
-        ]),
-        grounding: @json($isHindi ? [
-            'अपने पैरों का ज़मीन से लगना महसूस करें।',
-            'जबड़ा ढीला छोड़ें, कंधे नीचे आने दें।',
-            'कमरे में तीन शांत चीज़ें देखें।',
-            'साँस को खींचना नहीं है, बस नोटिस करना है।',
-            'आप इस पल में वापस आ रहे हैं।',
-        ] : [
-            'Feel your feet making contact with the ground.',
-            'Let your jaw soften and your shoulders drop.',
-            'Look around and notice three steady things.',
-            'You do not need to force the breath, only notice it.',
-            'You are returning to this moment.',
-        ]),
-        wisdom: @json($isHindi ? [
-            'मन को हर बार धक्का नहीं, कभी-कभी सहारा चाहिए।',
-            'शांति अक्सर धीमेपन में मिलती है, जल्दबाज़ी में नहीं।',
-            'आज का छोटा आराम भी महत्वपूर्ण है।',
-            'कठिन दिन आपका पूरा सच नहीं बताते।',
-            'रुकना टूटना नहीं है, रुकना संभलना भी हो सकता है।',
-        ] : [
-            'The mind often needs support, not more pressure.',
-            'Calm usually arrives through softness, not force.',
-            'A small rest today still matters.',
-            'A hard day does not describe your whole story.',
-            'Pausing is not breaking down. Pausing can be repair.',
-        ]),
-    };
+    const voiceLines = @json($isHindi ? $hi['voice_lines'] : $voiceLines);
 
     const soundFactories = {};
     const soundStates = new Map();

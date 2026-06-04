@@ -496,45 +496,48 @@
     <!-- Floating Chatbot Widget -->
     <div class="fixed bottom-5 right-4 sm:bottom-6 sm:right-6 z-[95]" id="chatbot-container">
         <!-- Chat Button -->
-        <button id="chatbot-toggle-btn" aria-label="Open AI assistant" onclick="toggleChatbot()" class="chatbot-fab fab-contracted relative isolate overflow-visible flex items-center gap-3 bg-cyan-600 dark:bg-cyan-500 text-white px-7 py-4 rounded-full shadow-[0_18px_40px_rgba(8,145,178,0.52)] dark:shadow-[0_18px_40px_rgba(6,182,212,0.4)] hover:bg-cyan-500 dark:hover:bg-cyan-400 hover:scale-105 transition-all duration-300 transform group ring-2 ring-white/35 dark:ring-cyan-100/35 border border-cyan-300/60 dark:border-cyan-200/45">
+        <button id="chatbot-toggle-btn" aria-label="Open Jeeva assistant" onclick="toggleChatbot()" class="chatbot-fab fab-contracted relative isolate overflow-visible flex items-center gap-3 text-white px-7 py-4 rounded-full transition-all duration-300 transform group">
+            <span class="chatbot-fab-presence" aria-hidden="true"></span>
             <div class="chatbot-fab-icon w-6 h-6 flex items-center justify-center shrink-0">
-                <i data-lucide="message-square" class="w-6 h-6 text-white"></i>
+                <i data-lucide="sparkles" class="w-5 h-5 text-white"></i>
             </div>
-            <span id="chatbot-fab-label" class="chatbot-fab-label font-extrabold text-[17px] tracking-wide whitespace-nowrap leading-none pt-0.5">
-                {{ $locale === 'hi' ? 'स्वास्थ्य साथी से पूछें' : 'Ask Swasthya Saathi' }}
+            <span id="chatbot-fab-label" class="chatbot-fab-label whitespace-nowrap leading-none">
+                <span class="chatbot-fab-title">{{ $locale === 'hi' ? 'Talk to Jeeva' : 'Talk to Jeeva' }}</span>
             </span>
         </button>
 
         <!-- Chat Window -->
-        <div id="chatbot-window" class="hidden w-[94vw] sm:w-[420px] h-[74vh] max-h-[680px] min-h-[520px] bg-white dark:bg-slate-950 rounded-3xl shadow-2xl border border-slate-300/90 dark:border-slate-800 flex flex-col overflow-hidden animate-in fade-in duration-300 chatbot-window">
+        <div id="chatbot-window" class="hidden w-[95vw] sm:w-[460px] h-[78vh] max-h-[760px] min-h-[560px] bg-white dark:bg-slate-950 rounded-3xl shadow-2xl border border-slate-300/90 dark:border-slate-800 flex flex-col overflow-hidden animate-in fade-in duration-300 chatbot-window">
             <!-- Header -->
-            <div id="chatbot-header" class="relative bg-gradient-to-r from-cyan-900 via-teal-800 to-cyan-900 text-white p-4 flex justify-between items-start shadow-md">
-                <div class="flex items-start space-x-3 min-w-0 pr-2">
-                    <div class="p-2 bg-teal-500/20 rounded-2xl border border-teal-500/30">
-                        <i data-lucide="bot" class="w-6 h-6 text-teal-400"></i>
-                    </div>
-                    <div class="min-w-0">
-                        <div class="flex items-center gap-2">
-                            <h3 class="font-bold text-[17px] leading-tight text-white">Swasthya Saathi</h3>
-                            <button type="button" id="chatbot-important-toggle" onclick="toggleChatbotImportant()" class="inline-flex items-center justify-center w-5 h-5 rounded-full bg-amber-500/90 text-[11px] font-bold text-white hover:bg-amber-400 transition-all" aria-label="Show important assistant details">i</button>
+            <div id="chatbot-header" class="relative chatbot-header text-white p-3.5 sm:p-4 shadow-md">
+                <div class="flex items-start justify-between gap-3">
+                <div class="flex items-center gap-3 min-w-0 flex-1 pr-1">
+                    <div class="chatbot-avatar-shell">
+                        <div class="chatbot-avatar-core">
+                            <i data-lucide="sparkles" class="w-5 h-5 text-white"></i>
                         </div>
-                        <p class="text-xs sm:text-[12px] text-teal-200 leading-snug mt-1 break-words">
-                            {{ $locale === 'hi' ? 'तेज़ हेल्थकेयर खोज' : 'Quick healthcare search' }}
-                        </p>
+                    </div>
+                    <div class="min-w-0 flex-1">
+                        <div class="chatbot-title-row">
+                            <h3 class="font-bold text-[17px] leading-tight text-white">Jeeva</h3>
+                            <span class="chatbot-status-badge">{{ $locale === 'hi' ? 'Here for you' : 'Here for you' }}</span>
+                            <button type="button" id="chatbot-important-toggle" onclick="toggleChatbotImportant()" class="chatbot-info-btn" aria-label="Show important assistant details">i</button>
+                        </div>
                     </div>
                 </div>
-                <div class="flex items-center space-x-2 shrink-0">
-                    <select id="chatbot-language" class="text-xs bg-white dark:bg-slate-800 text-slate-900 dark:text-slate-100 border border-white/40 rounded-lg px-2 py-1 focus:outline-none focus:ring-2 focus:ring-teal-400/60">
+                <div class="chatbot-header-actions shrink-0">
+                    <select id="chatbot-language" class="chatbot-header-select text-xs bg-white dark:bg-slate-800 text-slate-900 dark:text-slate-100 border border-white/40 rounded-lg px-2 py-1 focus:outline-none focus:ring-2 focus:ring-teal-400/60">
                         <option value="en" {{ $locale === 'en' ? 'selected' : '' }}>EN</option>
                         <option value="hi" {{ $locale === 'hi' ? 'selected' : '' }}>HI</option>
                     </select>
-                    <button type="button" onclick="toggleSpeakEnabled()" id="chatbot-speak-toggle" class="p-2 text-slate-300 hover:text-white hover:bg-white/10 rounded-xl transition-all duration-200" title="Speak replies">
+                    <button type="button" onclick="toggleSpeakEnabled()" id="chatbot-speak-toggle" class="chatbot-header-icon-btn" title="Speak replies">
                         <i data-lucide="volume-2" class="w-4 h-4"></i>
                     </button>
+                    <button onclick="toggleChatbot()" aria-label="Close AI assistant" class="chatbot-header-icon-btn">
+                        <i data-lucide="x" class="w-4.5 h-4.5"></i>
+                    </button>
                 </div>
-                <button onclick="toggleChatbot()" aria-label="Close AI assistant" class="p-2 text-slate-300 hover:text-white hover:bg-white/10 rounded-xl transition-all duration-200">
-                    <i data-lucide="x" class="w-5 h-5"></i>
-                </button>
+                </div>
                 <div id="chatbot-important-details" class="hidden absolute left-4 right-4 top-[74px] z-20 text-[11px] leading-relaxed text-amber-950 bg-white border border-amber-200 rounded-xl px-3 py-2 shadow-xl">
                     This assistant does not provide diagnosis or treatment. For severe or urgent symptoms, visit the nearest hospital immediately and consult a qualified healthcare professional.
                 </div>
@@ -569,15 +572,15 @@
             </div>
 
             <!-- Messages Body -->
-            <div id="chatbot-messages" class="flex-1 p-4 overflow-y-auto space-y-4 bg-gradient-to-b from-cyan-50/50 via-white to-indigo-50/30 dark:from-slate-900/40 dark:via-slate-950 dark:to-slate-900/20">
+            <div id="chatbot-messages" class="chatbot-messages-surface flex-1 p-4 overflow-y-auto space-y-4">
                 <!-- Initial Bot Message -->
                 <div class="flex justify-start">
                     <div class="flex space-x-2 max-w-[85%] flex-row">
-                        <div class="w-7 h-7 rounded-full bg-teal-500 text-white flex items-center justify-center shrink-0 shadow-sm">
-                            <i data-lucide="bot" class="w-4 h-4"></i>
+                        <div class="chatbot-message-avatar">
+                            <i data-lucide="sparkles" class="w-4 h-4"></i>
                         </div>
-                        <div id="chatbot-initial-message" class="p-3.5 rounded-2xl text-sm shadow-sm leading-relaxed bg-white dark:bg-slate-900 text-slate-800 dark:text-slate-100 border border-slate-200/60 dark:border-slate-700 rounded-tl-none">
-                            {{ $locale === 'hi' ? 'नमस्ते, मैं डॉक्टर, अस्पताल, ब्लड बैंक और हेल्थ जानकारी खोजने में मदद कर सकता हूँ।' : "Hi, I can help you find doctors, hospitals, blood banks, and health information." }}
+                        <div id="chatbot-initial-message" class="chatbot-bot-bubble p-3.5 rounded-2xl text-sm leading-relaxed rounded-tl-none">
+                            {{ $locale === 'hi' ? "Hello! I'm Jeeva. How can I help you today?" : "Hello! I'm Jeeva. How can I help you today?" }}
                         </div>
                     </div>
                 </div>
@@ -595,21 +598,20 @@
                 </div>
                 <div id="chatbot-post-city-questions-wrapper" class="hidden ml-9 max-w-[85%] rounded-xl border border-teal-100 dark:border-teal-900/60 bg-teal-50/80 dark:bg-teal-950/25 px-3 py-2">
                     <p class="text-[11px] font-semibold text-teal-900 dark:text-teal-100">
-                        {{ $locale === 'hi' ? 'उदाहरण: "Nearby में cardiologist", "नज़दीकी hospital", "A+ blood bank"' : 'Try: "cardiologist near me", "nearby hospital", "A+ blood bank"' }}
+                        {{ $locale === 'hi' ? 'Try: "What to do", "I have fever", "How do I start a symptom check?"' : 'Try: "What to do", "I have fever", "How do I start a symptom check?"' }}
                     </p>
                 </div>
 
                 <div class="hidden" id="chatbot-quick-prompts-wrap">
                     <div class="ml-9 max-w-[85%]">
                         <div class="flex flex-wrap gap-1.5 mb-2" id="chatbot-quick-prompts">
-                            <button type="button" onclick="handleQuickAction('doctors')" class="chatbot-chip">{{ $locale === 'hi' ? 'डॉक्टर खोजें' : 'Find Doctors' }}</button>
-                            <button type="button" onclick="handleQuickAction('hospitals')" class="chatbot-chip">{{ $locale === 'hi' ? 'अस्पताल खोजें' : 'Find Hospitals' }}</button>
-                            <button type="button" onclick="handleQuickAction('blood_banks')" class="chatbot-chip">{{ $locale === 'hi' ? 'ब्लड बैंक खोजें' : 'Find Blood Banks' }}</button>
+                            <button type="button" onclick="useQuickPrompt(this)" class="chatbot-chip" data-message="{{ $locale === 'hi' ? 'What to do' : 'What to do' }}">{{ $locale === 'hi' ? 'What to do?' : 'What to do?' }}</button>
+                            <button type="button" onclick="goToSymptomTest()" class="chatbot-chip">{{ $locale === 'hi' ? 'लक्षण टेस्ट शुरू करें' : 'Start Symptom Test' }}</button>
                             <button type="button" onclick="useQuickPrompt(this)" class="chatbot-chip chatbot-chip-danger" data-message="{{ $locale === 'hi' ? 'मुझे आपातकालीन मदद चाहिए' : 'I need emergency help' }}">{{ $locale === 'hi' ? 'आपातकालीन मदद' : 'Emergency Help' }}</button>
                         </div>
                         <div class="rounded-xl border border-cyan-200 dark:border-cyan-900/60 bg-cyan-50 dark:bg-cyan-950/25 px-3 py-2">
                             <p class="text-[11px] font-bold text-cyan-900 dark:text-cyan-100 mb-1.5">
-                                {{ $locale === 'hi' ? 'त्वरित लक्षण विकल्प' : 'Quick Symptoms' }}
+                                {{ $locale === 'hi' ? 'जल्दी पूछें' : 'Quick prompts' }}
                             </p>
                             <div class="flex flex-wrap gap-1.5">
                                 <button type="button" onclick="useQuickPrompt(this)" class="chatbot-chip" data-message="{{ $locale === 'hi' ? 'मुझे बुखार है' : 'I have fever' }}">{{ $locale === 'hi' ? 'बुखार' : 'Fever' }}</button>
@@ -622,15 +624,15 @@
             </div>
 
             <!-- Loading Indicator -->
-            <div id="chatbot-loading" class="hidden px-4 py-2.5 flex space-x-2.5 items-center text-slate-700 dark:text-slate-200 text-sm bg-cyan-50/70 dark:bg-slate-900/80 border-y border-cyan-100 dark:border-slate-800">
+            <div id="chatbot-loading" class="chatbot-loading-shell hidden px-4 py-2.5 flex space-x-2.5 items-center text-slate-700 dark:text-slate-200 text-sm border-y">
                 <div class="typing-dots" aria-hidden="true">
                     <span></span><span></span><span></span>
                 </div>
-                <span id="chatbot-loading-text">{{ $locale === 'hi' ? 'Swasthya AI सोच रहा है...' : 'Swasthya AI is thinking...' }}</span>
+                <span id="chatbot-loading-text">{{ $locale === 'hi' ? 'Jeeva is thinking...' : 'Jeeva is thinking...' }}</span>
             </div>
             <!-- Input Footer -->
             <form id="chatbot-form" onsubmit="handleChatbotSubmit(event)" class="p-3 bg-slate-50 dark:bg-slate-900 border-t border-slate-200/80 dark:border-slate-800 flex items-center space-x-2 shadow-lg">
-                <input type="text" id="chatbot-input" placeholder="{{ $locale === 'hi' ? 'लक्षण लिखें या डॉक्टर, अस्पताल, ब्लड बैंक खोजें...' : 'Describe symptoms or search doctors, hospitals, blood banks...' }}" class="flex-1 bg-white dark:bg-slate-950 border border-slate-300/80 dark:border-slate-700 rounded-2xl px-4 py-2.5 text-sm text-slate-900 dark:text-slate-100 placeholder:text-slate-400 dark:placeholder:text-slate-500 focus:outline-none focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-500/80 transition-all duration-200">
+                <input type="text" id="chatbot-input" placeholder="{{ $locale === 'hi' ? 'Describe your symptoms or ask a health question...' : 'Describe your symptoms or ask a health question...' }}" class="flex-1 bg-white dark:bg-slate-950 border border-slate-300/80 dark:border-slate-700 rounded-2xl px-4 py-2.5 text-sm text-slate-900 dark:text-slate-100 placeholder:text-slate-400 dark:placeholder:text-slate-500 focus:outline-none focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-500/80 transition-all duration-200">
                 <button type="button" id="chatbot-voice-btn" onclick="toggleVoiceTyping()" class="bg-teal-600 hover:bg-teal-500 dark:bg-cyan-700 dark:hover:bg-cyan-600 text-white p-2.5 rounded-2xl shadow-md transition-all duration-200 transform active:scale-95" title="{{ $locale === 'hi' ? 'वॉइस टाइपिंग चालू/बंद करें' : 'Start/Stop voice typing' }}">
                     <i data-lucide="mic" class="w-5 h-5"></i>
                 </button>
@@ -650,7 +652,7 @@
                         <div class="p-2 bg-gradient-to-tr from-teal-500 to-cyan-600 rounded-xl shadow-md">
                             <i data-lucide="heart-pulse" class="w-6 h-6 text-white"></i>
                         </div>
-                        <span class="text-xl font-bold tracking-tight">Swasthya<span class="text-teal-400">Search</span></span>
+                        <span class="text-xl font-bold tracking-tight">Arogio</span>
                     </div>
                     <p class="text-sm text-slate-300">
                         {{ $locale === 'hi' ? 'Arogio स्वास्थ्य सेवा प्रदाता खोजने में मदद करता है। हम निदान, उपचार या आपातकालीन प्रतिक्रिया प्रदान नहीं करते। जाने से पहले कृपया कॉल करें।' : 'Arogio helps users find healthcare providers. We do not provide diagnosis, treatment, or emergency response. Please call before visiting.' }}
@@ -1412,7 +1414,7 @@
                     'bot',
                     chatbotLocale === 'hi' ?
                     `बहुत बढ़िया, आपने ${chatbotCity} चुना है। अब लक्षण लिखें या नीचे दिए गए विकल्प चुनें।` :
-                    `Great, you've selected ${chatbotCity}. Now type your symptoms or use the quick options below.`
+                    `Great, you've selected ${chatbotCity}. Now describe your symptoms or ask a health question.`
                 );
             }
         }
@@ -1458,7 +1460,7 @@
                 moveQuickPromptsToBottom();
                 if (input) {
                     input.disabled = false;
-                    input.placeholder = chatbotLocale === 'hi' ? 'लक्षण बताएं या डॉक्टर, अस्पताल, ब्लड बैंक खोजें...' : 'Describe symptoms or search doctors, hospitals, blood banks...';
+                    input.placeholder = 'Describe your symptoms or ask a health question...';
                 }
                 if (sendBtn) sendBtn.disabled = false;
                 if (voiceBtn) voiceBtn.disabled = false;
@@ -1472,7 +1474,7 @@
                 if (citySelectMessage) citySelectMessage.classList.remove('hidden');
                 if (input) {
                     input.disabled = true;
-                    input.placeholder = chatbotLocale === 'hi' ? 'पहले शहर चुनें...' : 'Choose a city from the pills above';
+                    input.placeholder = 'Choose a city from the options above';
                 }
                 if (sendBtn) sendBtn.disabled = true;
                 if (voiceBtn) voiceBtn.disabled = true;
@@ -1485,28 +1487,14 @@
                 if (citySelectMessage) citySelectMessage.classList.add('hidden');
                 if (input) {
                     input.disabled = false;
-                    input.placeholder = chatbotLocale === 'hi' ? 'लक्षण लिखें या हेल्थ सवाल पूछें...' : 'Describe symptoms or ask a health question...';
+                    input.placeholder = 'Describe your symptoms or ask a health question...';
                 }
                 if (sendBtn) sendBtn.disabled = false;
                 if (voiceBtn) voiceBtn.disabled = false;
             }
         }
         function getInitialChatbotMessage() {
-            const fixedCity = @json(config('healthcare.active_city', 'Jaipur'));
-            const fixedCityHi = @json(config('healthcare.active_city_hi', 'जयपुर'));
-            if (!chatbotHasCityChoices()) {
-                return chatbotLocale === 'hi'
-                    ? 'नमस्ते, मैं Swasthya AI Assistant हूँ। आप अबही सामान्य हेल्थ सवाल पूछ सकते हैं। शहर डाटा उपलब्ध होने पर नज़दीकी डॉक्टर और अस्पताल सुझाव भी दिखेंगे।'
-                    : 'Hi, I'm Swasthya AI Assistant. You can ask general health questions right now. Nearby doctor and hospital suggestions will appear when city data is available.';
-            }
-            if (chatbotCity) {
-                return chatbotLocale === 'hi' ?
-                    `नमस्ते, मैं ${fixedCityHi} में डॉक्टर, अस्पताल, ब्लड बैंक और हेल्थ जानकारी खोजने में मदद कर सकता हूँ। आपको क्या चाहिए?` :
-                    `Hi, I can help you find doctors, hospitals, blood banks, and health information in ${fixedCity}. What do you need help with today?`;
-            }
-            return chatbotLocale === 'hi'
-                ? `नमस्ते, मैं ${fixedCityHi} में डॉक्टर, अस्पताल, ब्लड बैंक और हेल्थ जानकारी खोजने में मदद कर सकता हूँ। आपको क्या चाहिए?`
-                : `Hi, I can help you find doctors, hospitals, blood banks, and health information in ${fixedCity}. What do you need help with today?`;
+            return "Hello! I'm Jeeva. How can I help you today?";
         }
         function initializeChatbotCity() {
             chatbotCity = @json(config('healthcare.active_city', 'Jaipur'));
@@ -1540,20 +1528,7 @@
                     });
                     const data = await res.json();
                     if (data.history && data.history.length > 0) {
-                        const messagesDiv = document.getElementById('chatbot-messages');
-                        messagesDiv.innerHTML = '';
-                        let lastBotMsgIndex = -1;
-                        for (let i = data.history.length - 1; i >= 0; i--) {
-                            if (data.history[i].sender === 'bot') {
-                                lastBotMsgIndex = i;
-                                break;
-                            }
-                        }
-                        data.history.forEach((msg, idx) => {
-                            appendMessageObj(msg, idx === lastBotMsgIndex, data.history, idx);
-                        });
-                        window.refreshLucideIcons();
-                        scrollToChatBottom();
+                        renderChatHistory(data.history);
                     }
                 } catch (e) {
                     console.error("Error loading chat history:", e);
@@ -1625,12 +1600,8 @@
             }
         }
 
-        function handleQuickAction(action) {
-            const selectedCity = resolveSelectedCity();
-            const query = selectedCity ? `?city=${encodeURIComponent(selectedCity)}` : '';
-            if (action === 'doctors') window.location.href = `{{ route('doctors.index') }}${query}`;
-            if (action === 'hospitals') window.location.href = `{{ route('hospitals.index') }}${query}`;
-            if (action === 'blood_banks') window.location.href = `{{ route('blood_banks.index') }}${query}`;
+        function goToSymptomTest() {
+            window.location.href = `{{ route('symptom-test') }}`;
         }
 
         function clearChatConversation() {
@@ -1640,22 +1611,50 @@
             appendMessage('bot',
                 chatbotCity ?
                 (chatbotLocale === 'hi' ?
-                    `Chat cleared. Your selected city is ${chatbotCity}. What would you like to find?` :
-                    `Chat cleared. Your selected city is ${chatbotCity}. What would you like to find?`) :
+                    `Chat cleared. Your selected city is ${chatbotCity}. What would you like help with?` :
+                    `Chat cleared. Your selected city is ${chatbotCity}. What would you like help with?`) :
                 (chatbotLocale === 'hi' ?
-                    'Chat cleared. Please choose a city to continue.' :
-                    'Chat cleared. Please choose a city to continue.')
+                    'Chat cleared. Please continue with your symptom or health question.' :
+                    'Chat cleared. Please continue with your symptom or health question.')
             );
             refreshChatbotCityUI();
+        }
+
+        function renderChatHistory(history = [], options = {}) {
+            const messagesDiv = document.getElementById('chatbot-messages');
+            if (!messagesDiv) return;
+
+            const preserveScroll = options.preserveScroll === true;
+            const previousScrollTop = preserveScroll ? messagesDiv.scrollTop : 0;
+
+            messagesDiv.innerHTML = '';
+
+            let lastBotMsgIndex = -1;
+            for (let i = history.length - 1; i >= 0; i--) {
+                if (history[i].sender === 'bot') {
+                    lastBotMsgIndex = i;
+                    break;
+                }
+            }
+
+            history.forEach((msg, idx) => {
+                appendMessageObj(msg, idx === lastBotMsgIndex, history, idx);
+            });
+
+            if (preserveScroll) {
+                const maxScrollTop = Math.max(0, messagesDiv.scrollHeight - messagesDiv.clientHeight);
+                messagesDiv.scrollTop = Math.min(previousScrollTop, maxScrollTop);
+            } else {
+                scrollToChatBottom();
+            }
+
+            window.refreshLucideIcons();
         }
 
         function toggleChatbotImportant() {
             const details = document.getElementById('chatbot-important-details');
             if (!details) return;
             details.classList.toggle('hidden');
-            if (!details.classList.contains('hidden')) {
-                setTimeout(() => scrollToChatBottom(), 20);
-            }
         }
         async function useQuickPrompt(btn) {
             const msg = btn?.dataset?.message || '';
@@ -1888,21 +1887,7 @@
                 pendingChatAbortController = null;
 
                 if (data.history) {
-                    // Re-render history
-                    const messagesDiv = document.getElementById('chatbot-messages');
-                    messagesDiv.innerHTML = '';
-                    let lastBotMsgIndex = -1;
-                    for (let i = data.history.length - 1; i >= 0; i--) {
-                        if (data.history[i].sender === 'bot') {
-                            lastBotMsgIndex = i;
-                            break;
-                        }
-                    }
-                    data.history.forEach((msg, idx) => {
-                        appendMessageObj(msg, idx === lastBotMsgIndex, data.history, idx);
-                    });
-                    window.refreshLucideIcons();
-                    scrollToChatBottom();
+                    renderChatHistory(data.history, { preserveScroll: true });
                 }
             } catch (error) {
                 if (error?.name === 'AbortError') return;
@@ -1915,7 +1900,7 @@
                 if (sendBtn) sendBtn.disabled = false;
                 isSubmittingChat = false;
                 pendingChatAbortController = null;
-                appendMessage('bot', 'We could not process your request due to a technical issue. Please try again or choose "Find Doctors".');
+                appendMessage('bot', 'We could not process your request due to a technical issue. Please try again.');
             }
         }
 
@@ -1997,24 +1982,11 @@
                 pendingChatAbortController = null;
 
                 if (loadingText) {
-                    loadingText.textContent = 'Swasthya AI is thinking...';
+                    loadingText.textContent = 'Jeeva is thinking...';
                 }
 
                 if (data.history) {
-                    const messagesDiv = document.getElementById('chatbot-messages');
-                    messagesDiv.innerHTML = '';
-                    let lastBotMsgIndex = -1;
-                    for (let i = data.history.length - 1; i >= 0; i--) {
-                        if (data.history[i].sender === 'bot') {
-                            lastBotMsgIndex = i;
-                            break;
-                        }
-                    }
-                    data.history.forEach((msg, idx) => {
-                        appendMessageObj(msg, idx === lastBotMsgIndex, data.history, idx);
-                    });
-                    window.refreshLucideIcons();
-                    scrollToChatBottom();
+                    renderChatHistory(data.history, { preserveScroll: true });
                 }
             } catch (error) {
                 if (error?.name === 'AbortError') return;
@@ -2029,7 +2001,7 @@
                 isSubmittingChat = false;
                 pendingChatAbortController = null;
                 if (loadingText) {
-                    loadingText.textContent = 'Swasthya AI is thinking...';
+                    loadingText.textContent = 'Jeeva is thinking...';
                 }
                 appendMessage('bot', 'We could not load options due to a technical issue. Please try again.');
             }
@@ -2089,11 +2061,11 @@
             let html = `
                 <div class="flex ${isUser ? 'justify-end' : 'justify-start'} animate-in fade-in duration-200">
                     <div class="flex space-x-2 max-w-[85%] ${isUser ? 'flex-row-reverse space-x-reverse' : 'flex-row'}">
-                        <div class="w-7 h-7 rounded-full flex items-center justify-center shrink-0 shadow-sm ${isUser ? 'bg-cyan-600 text-white' : 'bg-teal-500 text-white'}">
-                            <i data-lucide="${isUser ? 'user' : 'bot'}" class="w-4 h-4"></i>
+                        <div class="${isUser ? 'chatbot-user-avatar' : 'chatbot-message-avatar'}">
+                            <i data-lucide="${isUser ? 'user-round' : 'sparkles'}" class="w-4 h-4"></i>
                         </div>
                         <div class="space-y-2">
-                            <div class="p-3.5 rounded-2xl text-sm shadow-sm leading-relaxed ${isUser ? 'bg-gradient-to-r from-indigo-600 to-indigo-500 text-white rounded-tr-none border border-indigo-400/50' : isWarning ? 'bg-amber-50 dark:bg-amber-950/30 text-amber-900 dark:text-amber-100 border border-amber-200 dark:border-amber-900/60 rounded-tl-none' : 'bg-white/95 dark:bg-slate-900 text-slate-800 dark:text-slate-100 border border-slate-200/70 dark:border-slate-700 rounded-tl-none backdrop-blur-sm'}">
+                            <div class="p-3.5 rounded-2xl text-sm shadow-sm leading-relaxed ${isUser ? 'chatbot-user-bubble rounded-tr-none' : isWarning ? 'chatbot-warning-bubble rounded-tl-none' : 'chatbot-bot-bubble rounded-tl-none'}">
                                 ${isUser ? escapeHtml(msg.text) : formatMessageText(msg.text)}
                             </div>
                             <div class="flex flex-wrap gap-2 items-center">
@@ -3012,12 +2984,15 @@
         /* --- CHATBOT WIDGET DARK MODE --- */
         .dark .chatbot-window {
             background: linear-gradient(180deg, #111827 0%, #030712 100%) !important;
-            border-color: #1f2937 !important;
+            border-color: rgba(51, 65, 85, 0.9) !important;
             color: #cbd5e1 !important;
         }
 
-        .dark #chatbot-messages {
-            background: linear-gradient(180deg, rgba(15, 23, 42, 0.6) 0%, rgba(3, 7, 18, 0.8) 100%) !important;
+        .dark #chatbot-messages,
+        .dark .chatbot-messages-surface {
+            background: radial-gradient(circle at top left, rgba(45, 212, 191, 0.12), transparent 36%),
+                radial-gradient(circle at bottom right, rgba(99, 102, 241, 0.14), transparent 34%),
+                linear-gradient(180deg, rgba(15, 23, 42, 0.76) 0%, rgba(3, 7, 18, 0.9) 100%) !important;
         }
 
         .dark .chatbot-chip {
@@ -3090,9 +3065,212 @@
         }
 
         .chatbot-window {
-            box-shadow: 0 24px 64px rgba(15, 23, 42, 0.24);
-            background: linear-gradient(180deg, #ffffff 0%, #f8fafc 100%);
-            border-color: #cbd5e1;
+            box-shadow: 0 28px 70px rgba(15, 23, 42, 0.26);
+            background: linear-gradient(180deg, rgba(255, 255, 255, 0.98) 0%, rgba(248, 250, 252, 0.96) 100%);
+            border-color: rgba(203, 213, 225, 0.8);
+            backdrop-filter: blur(22px);
+        }
+
+        .chatbot-header {
+            background:
+                radial-gradient(circle at top left, rgba(125, 211, 252, 0.18), transparent 26%),
+                radial-gradient(circle at bottom right, rgba(45, 212, 191, 0.2), transparent 28%),
+                linear-gradient(135deg, #082f49 0%, #115e59 42%, #1d4ed8 100%);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .chatbot-avatar-shell,
+        .chatbot-message-avatar,
+        .chatbot-user-avatar {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 9999px;
+            flex-shrink: 0;
+        }
+
+        .chatbot-avatar-shell {
+            width: 2.6rem;
+            height: 2.6rem;
+            padding: 0.16rem;
+            background: linear-gradient(135deg, rgba(125, 211, 252, 0.55), rgba(45, 212, 191, 0.2), rgba(255, 255, 255, 0.2));
+            box-shadow: 0 12px 24px rgba(8, 145, 178, 0.24);
+            flex-shrink: 0;
+        }
+
+        .chatbot-avatar-core {
+            width: 100%;
+            height: 100%;
+            border-radius: 9999px;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            background: linear-gradient(135deg, #2dd4bf, #0ea5e9 55%, #6366f1);
+            box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.22);
+        }
+
+        .chatbot-avatar-core i {
+            filter: drop-shadow(0 1px 3px rgba(8, 47, 73, 0.28));
+        }
+
+        .chatbot-title-row {
+            display: flex;
+            align-items: center;
+            gap: 0.45rem;
+            min-width: 0;
+            flex-wrap: wrap;
+        }
+
+        .chatbot-status-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.32rem;
+            padding: 0.22rem 0.52rem;
+            border-radius: 9999px;
+            background: rgba(255, 255, 255, 0.12);
+            border: 1px solid rgba(255, 255, 255, 0.18);
+            color: #dcfce7;
+            font-size: 10px;
+            font-weight: 700;
+            letter-spacing: 0.02em;
+            line-height: 1;
+            white-space: nowrap;
+        }
+
+        .chatbot-status-badge::before {
+            content: '';
+            width: 0.42rem;
+            height: 0.42rem;
+            border-radius: 9999px;
+            background: #86efac;
+            box-shadow: 0 0 0 5px rgba(134, 239, 172, 0.12);
+        }
+
+        .chatbot-info-btn {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            width: 1.25rem;
+            height: 1.25rem;
+            border-radius: 9999px;
+            background: rgba(251, 191, 36, 0.92);
+            color: #ffffff;
+            font-size: 11px;
+            font-weight: 800;
+            line-height: 1;
+            box-shadow: 0 6px 14px rgba(245, 158, 11, 0.22);
+            transition: transform 0.2s ease, background-color 0.2s ease, box-shadow 0.2s ease;
+        }
+
+        .chatbot-info-btn:hover {
+            background: rgba(251, 191, 36, 1);
+            transform: translateY(-1px);
+            box-shadow: 0 8px 18px rgba(245, 158, 11, 0.28);
+        }
+
+        .chatbot-header-actions {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.45rem;
+            padding-top: 0.05rem;
+        }
+
+        .chatbot-header-select {
+            height: 2rem;
+            min-width: 3.4rem;
+            padding-left: 0.55rem;
+            padding-right: 0.55rem;
+            border-radius: 0.8rem;
+            background: rgba(255, 255, 255, 0.96) !important;
+            border-color: rgba(255, 255, 255, 0.2) !important;
+            box-shadow: 0 8px 20px rgba(8, 47, 73, 0.12);
+        }
+
+        .chatbot-header-icon-btn {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            width: 2rem;
+            height: 2rem;
+            border-radius: 0.9rem;
+            color: rgba(255, 255, 255, 0.88);
+            background: rgba(255, 255, 255, 0.08);
+            border: 1px solid rgba(255, 255, 255, 0.12);
+            transition: transform 0.2s ease, background-color 0.2s ease, color 0.2s ease;
+        }
+
+        .chatbot-header-icon-btn:hover {
+            color: #ffffff;
+            background: rgba(255, 255, 255, 0.14);
+            transform: translateY(-1px);
+        }
+
+        .chatbot-header-icon-btn:active,
+        .chatbot-info-btn:active {
+            transform: scale(0.97);
+        }
+
+        .chatbot-messages-surface {
+            background:
+                radial-gradient(circle at top left, rgba(236, 254, 255, 0.95), transparent 26%),
+                radial-gradient(circle at bottom right, rgba(224, 231, 255, 0.85), transparent 24%),
+                linear-gradient(180deg, rgba(248, 250, 252, 0.92) 0%, rgba(255, 255, 255, 0.96) 100%);
+        }
+
+        .chatbot-message-avatar {
+            width: 1.9rem;
+            height: 1.9rem;
+            color: #ffffff;
+            background: linear-gradient(135deg, #2dd4bf 0%, #0ea5e9 58%, #6366f1 100%);
+            box-shadow: 0 10px 20px rgba(14, 165, 233, 0.18);
+        }
+
+        .chatbot-user-avatar {
+            width: 1.9rem;
+            height: 1.9rem;
+            color: #ffffff;
+            background: linear-gradient(135deg, #4f46e5 0%, #7c3aed 100%);
+            box-shadow: 0 10px 20px rgba(79, 70, 229, 0.18);
+        }
+
+        .chatbot-bot-bubble {
+            color: #0f172a;
+            background: rgba(255, 255, 255, 0.9);
+            border: 1px solid rgba(191, 219, 254, 0.8);
+            box-shadow: 0 14px 30px rgba(148, 163, 184, 0.16);
+            backdrop-filter: blur(12px);
+        }
+
+        .chatbot-user-bubble {
+            color: #ffffff;
+            background: linear-gradient(135deg, #0f766e 0%, #0891b2 55%, #4f46e5 100%);
+            border: 1px solid rgba(125, 211, 252, 0.3);
+            box-shadow: 0 16px 28px rgba(8, 145, 178, 0.24);
+        }
+
+        .chatbot-warning-bubble {
+            color: #78350f;
+            background: linear-gradient(180deg, rgba(255, 251, 235, 0.96) 0%, rgba(254, 243, 199, 0.92) 100%);
+            border: 1px solid rgba(252, 211, 77, 0.58);
+            box-shadow: 0 12px 24px rgba(245, 158, 11, 0.14);
+        }
+
+        .dark .chatbot-bot-bubble {
+            color: #f8fafc;
+            background: rgba(15, 23, 42, 0.84);
+            border-color: rgba(51, 65, 85, 0.9);
+            box-shadow: 0 16px 28px rgba(2, 6, 23, 0.28);
+        }
+
+        .dark .chatbot-user-bubble {
+            background: linear-gradient(135deg, #0f766e 0%, #0369a1 50%, #4338ca 100%);
+            border-color: rgba(103, 232, 249, 0.22);
+        }
+
+        .dark .chatbot-warning-bubble {
+            color: #fef3c7;
+            background: linear-gradient(180deg, rgba(69, 26, 3, 0.86) 0%, rgba(120, 53, 15, 0.72) 100%);
+            border-color: rgba(217, 119, 6, 0.5);
         }
 
         .chatbot-chip {
@@ -3181,6 +3359,17 @@
             opacity: 0.5;
             cursor: not-allowed;
             transform: none !important;
+        }
+
+        .chatbot-loading-shell {
+            background: rgba(236, 254, 255, 0.76);
+            border-color: rgba(186, 230, 253, 0.9);
+            backdrop-filter: blur(10px);
+        }
+
+        .dark .chatbot-loading-shell {
+            background: rgba(15, 23, 42, 0.84);
+            border-color: rgba(51, 65, 85, 0.9);
         }
 
         .typing-dots {
@@ -3371,10 +3560,10 @@
         .chatbot-fab {
             display: inline-flex !important;
             align-items: center;
-            height: 56px;
-            min-width: 56px;
-            padding-left: 24px !important;
-            padding-right: 28px !important;
+            height: 52px;
+            min-width: 52px;
+            padding-left: 14px !important;
+            padding-right: 18px !important;
             border-radius: 9999px;
             overflow: visible;
             white-space: nowrap;
@@ -3382,6 +3571,9 @@
             opacity: 1;
             visibility: visible;
             pointer-events: auto;
+            background: linear-gradient(135deg, #14b8a6 0%, #0891b2 48%, #4f46e5 100%);
+            border: 1px solid rgba(167, 243, 208, 0.32);
+            box-shadow: 0 22px 44px rgba(8, 145, 178, 0.34), 0 6px 16px rgba(79, 70, 229, 0.18);
             transition: width 460ms cubic-bezier(0.22, 0.65, 0.22, 1),
                 padding 460ms cubic-bezier(0.22, 0.65, 0.22, 1),
                 transform 460ms cubic-bezier(0.22, 0.65, 0.22, 1),
@@ -3390,11 +3582,23 @@
                 visibility 280ms step-end !important;
         }
 
+        .chatbot-fab-presence {
+            position: absolute;
+            top: 7px;
+            right: 7px;
+            width: 8px;
+            height: 8px;
+            border-radius: 9999px;
+            background: #bbf7d0;
+            box-shadow: 0 0 0 0 rgba(187, 247, 208, 0.6);
+            animation: chatbotPresencePulse 2.4s ease-in-out infinite;
+        }
+
         .chatbot-fab::before,
         .chatbot-fab::after {
             content: '';
             position: absolute;
-            inset: -7px;
+            inset: -8px;
             border-radius: 9999px;
             pointer-events: none;
             opacity: 0;
@@ -3405,10 +3609,10 @@
             z-index: -2;
             background: conic-gradient(from 0deg,
                     rgba(255, 255, 255, 0) 0deg,
-                    rgba(34, 211, 238, 0.18) 52deg,
-                    rgba(59, 130, 246, 0.56) 138deg,
-                    rgba(20, 184, 166, 0.24) 210deg,
-                    rgba(255, 255, 255, 0) 310deg,
+                    rgba(125, 211, 252, 0.18) 54deg,
+                    rgba(99, 102, 241, 0.52) 138deg,
+                    rgba(45, 212, 191, 0.3) 212deg,
+                    rgba(255, 255, 255, 0) 314deg,
                     rgba(255, 255, 255, 0) 360deg);
             filter: blur(0.35px);
             -webkit-mask: radial-gradient(farthest-side, transparent calc(100% - 9px), #000 calc(100% - 7px));
@@ -3417,11 +3621,11 @@
 
         .chatbot-fab::after {
             z-index: -3;
-            inset: -14px;
+            inset: -16px;
             background: radial-gradient(circle at center,
-                    rgba(34, 211, 238, 0.24) 0%,
-                    rgba(14, 165, 233, 0.16) 32%,
-                    rgba(79, 70, 229, 0.08) 52%,
+                    rgba(94, 234, 212, 0.28) 0%,
+                    rgba(14, 165, 233, 0.18) 32%,
+                    rgba(99, 102, 241, 0.12) 52%,
                     rgba(79, 70, 229, 0) 72%);
             filter: blur(8px);
             transform: scale(0.92);
@@ -3441,10 +3645,11 @@
         }
 
         .chatbot-fab-label {
-            display: inline-block;
-            max-width: 280px;
-            /* Enough to display 'Ask Swasthya Saathi' or 'स्वास्थ्य साथी से पूछें' */
-            margin-left: 12px;
+            display: inline-flex;
+            flex-direction: column;
+            align-items: flex-start;
+            max-width: 220px;
+            margin-left: 10px;
             opacity: 1;
             overflow: hidden;
             white-space: nowrap;
@@ -3455,9 +3660,16 @@
                 transform 460ms cubic-bezier(0.22, 0.65, 0.22, 1);
         }
 
+        .chatbot-fab-title {
+            display: block;
+            font-size: 14px;
+            font-weight: 800;
+            letter-spacing: 0.01em;
+        }
+
         .chatbot-fab.fab-contracted {
-            width: 56px;
-            min-width: 56px;
+            width: 52px;
+            min-width: 52px;
             padding-left: 0 !important;
             padding-right: 0 !important;
             justify-content: center !important;
@@ -3486,11 +3698,11 @@
         }
 
         .chatbot-fab.fab-contracted .chatbot-fab-icon {
-            animation: none !important;
             margin: 0 auto !important;
             display: flex;
             align-items: center;
             justify-content: center;
+            animation: chatbotFabFloat 3.2s ease-in-out infinite;
         }
 
         .chatbot-fab:hover::before,
@@ -3502,6 +3714,16 @@
         .chatbot-fab:focus-visible::after {
             transform: scale(1);
             opacity: 1;
+        }
+
+        .chatbot-fab:hover,
+        .chatbot-fab:focus-visible {
+            transform: translateY(-2px) scale(1.03);
+            box-shadow: 0 28px 54px rgba(8, 145, 178, 0.38), 0 10px 20px rgba(79, 70, 229, 0.2);
+        }
+
+        .chatbot-fab:active {
+            transform: translateY(0) scale(0.98);
         }
 
         @keyframes chatbotWhirlpoolSpin {
@@ -3531,6 +3753,28 @@
             }
         }
 
+        @keyframes chatbotFabFloat {
+            0%,
+            100% {
+                transform: translateY(0);
+            }
+
+            50% {
+                transform: translateY(-2px);
+            }
+        }
+
+        @keyframes chatbotPresencePulse {
+            0%,
+            100% {
+                box-shadow: 0 0 0 0 rgba(187, 247, 208, 0.52);
+            }
+
+            50% {
+                box-shadow: 0 0 0 8px rgba(187, 247, 208, 0);
+            }
+        }
+
         @media (prefers-reduced-motion: reduce) {
             .chatbot-fab::before,
             .chatbot-fab::after {
@@ -3547,7 +3791,7 @@
 
             #chatbot-window {
                 width: calc(100vw - 1rem);
-                max-width: 430px;
+                max-width: 470px;
                 height: calc(100dvh - 1.5rem - env(safe-area-inset-bottom));
                 max-height: calc(100dvh - 1.5rem - env(safe-area-inset-bottom));
                 min-height: 0;

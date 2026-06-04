@@ -73,7 +73,7 @@ class ChatbotController extends Controller
                     'qa_answer' => $generalHelpPayload['qa_answer'],
                     'city' => $selectedCity !== '' ? $selectedCity : null,
                     'locale' => $locale,
-                    'show_options' => true,
+                    'show_options' => false,
                     'response_mode' => 'general_help',
                     'suggest_details' => (bool) $generalHelpPayload['suggest_details'],
                     'timestamp' => now()->toIso8601String(),
@@ -116,7 +116,7 @@ class ChatbotController extends Controller
                     'text' => $medicinePayload['text'],
                     'city' => $selectedCity !== '' ? $selectedCity : null,
                     'locale' => $locale,
-                    'show_options' => true,
+                    'show_options' => false,
                     'response_mode' => 'medicine_help',
                     'timestamp' => now()->toIso8601String(),
                 ];
@@ -269,7 +269,7 @@ class ChatbotController extends Controller
                 'sender' => 'bot',
                 'city' => $selectedCity,
                 'locale' => $locale,
-                'show_options' => true,
+                'show_options' => false,
                 'timestamp' => now()->toIso8601String(),
             ];
 
@@ -484,7 +484,7 @@ class ChatbotController extends Controller
         } else {
             // Cache miss: query Groq AI
             if ($apiKey) {
-                $systemPrompt = "You are Swasthya Saathi AI, a professional medical and healthcare assistant. " .
+                $systemPrompt = "You are Jeeva, a professional medical and healthcare assistant. " .
                     "You must return a JSON object containing exactly these 7 keys:\n" .
                     "1. 'question_en': A concise English translation or summary of the user's symptom/query (e.g. 'Acute knee pain when climbing stairs').\n" .
                     "2. 'question_hi': A concise Hindi translation or summary of the user's symptom/query.\n" .
@@ -831,21 +831,19 @@ class ChatbotController extends Controller
             );
 
             $locale = (string) ($request->input('locale') ?: app()->getLocale());
-            $fallbackReply = $locale === 'hi'
-                ? 'कुछ तकनीकी समस्या आई, लेकिन मैं आपकी मदद के लिए तैयार हूँ। कृपया फिर से संदेश भेजें या "Find Doctors" विकल्प चुनें।'
-                : 'A technical issue occurred, but I am ready to help. Please resend your message or choose "Find Doctors".';
+            $fallbackReply = 'A technical issue occurred. Please resend your message in a moment.';
 
             return response()->json([
                 'session_token' => (string) ($request->input('session_token') ?: Str::random(32)),
                 'reply' => $fallbackReply,
                 'city' => (string) ($request->input('city') ?: ''),
                 'locale' => $locale === 'hi' ? 'hi' : 'en',
-                'show_options' => true,
+                'show_options' => false,
                 'suggest_details' => false,
                 'history' => [[
                     'sender' => 'bot',
                     'text' => $fallbackReply,
-                    'show_options' => true,
+                    'show_options' => false,
                     'suggest_details' => false,
                     'timestamp' => now()->toIso8601String(),
                 ]],
@@ -1212,6 +1210,11 @@ class ChatbotController extends Controller
             return null;
         }
 
+        $onboardingResponse = $this->resolveOnboardingResponse($normalized, $locale);
+        if ($onboardingResponse !== null) {
+            return $onboardingResponse;
+        }
+
         $strictDbMatch = $this->findStrictConversationMatch($normalized, $locale);
         if ($strictDbMatch !== null) {
             return $strictDbMatch;
@@ -1287,6 +1290,45 @@ class ChatbotController extends Controller
                     'source' => 'general_questions',
                 ],
                 'suggest_details' => !empty($detailed) && !$isDetailRequest,
+            ];
+        }
+
+        return null;
+    }
+
+    private function resolveOnboardingResponse(string $normalizedMessage, string $locale): ?array
+    {
+        $isHindi = $locale === 'hi';
+
+        $onboardingPhrases = [
+            'what to do',
+            'how to start',
+            'how do i start',
+            'what should i do',
+            'how to use',
+            'where do i start',
+            'kya karu',
+            'kya karna chahiye',
+            'shuru kaise karu',
+        ];
+
+        foreach ($onboardingPhrases as $phrase) {
+            if (! str_contains($normalizedMessage, $phrase)) {
+                continue;
+            }
+
+            return [
+                'text' => $isHindi
+                    ? 'आप मुखपृष्ठ पर अपने लक्षण सामान्य भाषा में लिखकर शुरू कर सकते हैं। हमारा स्मार्ट symptom test आपको समझने में मदद करेगा कि आगे क्या करना है। बेहतर मार्गदर्शन के लिए step-by-step symptom check खोलें और अपनी जानकारी धीरे-धीरे भरें।'
+                    : 'You can start by entering your symptoms in plain language on the homepage, and our AI will provide a smart assessment and clear advice on next steps. Try using the "Simple Analysis" or "Advanced Check" tool for personalized guidance.',
+                'qa_answer' => [
+                    'question' => $isHindi ? 'What to do' : 'What to do',
+                    'answer' => $isHindi
+                        ? 'आप मुखपृष्ठ पर अपने लक्षण सामान्य भाषा में लिखकर शुरू कर सकते हैं।'
+                        : 'You can start by entering your symptoms in plain language on the homepage, and our AI will provide a smart assessment and clear advice on next steps.',
+                    'source' => 'chatbot_onboarding',
+                ],
+                'suggest_details' => false,
             ];
         }
 
