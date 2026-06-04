@@ -16,7 +16,7 @@ class AdminSeeder extends Seeder
     {
         // Seed Admin Guard User
         Admin::firstOrCreate(
-            ['email' => 'admin@swasthyasearch.com'],
+            ['email' => 'admin@arogio.com'],
             [
                 'name' => 'System Administrator',
                 'password' => Hash::make('password'),
@@ -25,7 +25,7 @@ class AdminSeeder extends Seeder
 
         // Seed Web Guard User (Fallback for Filament if default guard is used)
         User::firstOrCreate(
-            ['email' => 'admin@swasthyasearch.com'],
+            ['email' => 'admin@arogio.com'],
             [
                 'name' => 'Filament Admin',
                 'password' => Hash::make('password'),

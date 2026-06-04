@@ -75,14 +75,25 @@ class BloodBankController extends Controller
 
         // Get all blood banks first
         $bloodBanks = $query->get();
-        
+
         // If user location provided, calculate distances and sort
         if ($hasUserLocation) {
-            $nearbyBloodBanks = $bloodBanks->map(fn(BloodBank $bank) => $this->formatBloodBank($bank, $userLat, $userLng))
-                ->sortBy('distance_km')
-                ->filter(fn($b) => $b['distance_km'] !== null && $b['distance_km'] < 50)
+            $formattedBloodBanks = $bloodBanks
+                ->map(fn(BloodBank $bank) => $this->formatBloodBank($bank, $userLat, $userLng))
                 ->values();
-            $bloodBanks = $this->paginateCollection($nearbyBloodBanks, $request, 30);
+
+            $nearbyBloodBanks = $formattedBloodBanks
+                ->filter(fn($bank) => $bank['distance_km'] !== null && $bank['distance_km'] < 50)
+                ->sortBy('distance_km')
+                ->values();
+
+            $bloodBanks = $this->paginateCollection(
+                $nearbyBloodBanks->isNotEmpty()
+                    ? $nearbyBloodBanks
+                    : $formattedBloodBanks->sortBy(fn($bank) => $bank['distance_km'] ?? PHP_FLOAT_MAX)->values(),
+                $request,
+                30
+            );
         } else {
             $bloodBanks = $query
                 ->paginate(30)
@@ -122,6 +133,7 @@ class BloodBankController extends Controller
             'emergency_phone' => $bank->emergency_phone,
             'email' => $bank->email,
             'website' => $bank->website,
+            'map_directions_url' => $bank->map_directions_url,
             'is_verified' => $bank->is_verified,
             'is_24_7' => $bank->is_24_7,
             'is_government' => $bank->is_government,

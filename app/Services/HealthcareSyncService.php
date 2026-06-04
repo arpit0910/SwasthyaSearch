@@ -343,7 +343,7 @@ class HealthcareSyncService
         }
         $rawPhone = $sourceData['phone'] ?? ($existingDoctor?->phone ?: null);
         $phoneParts = self::splitPhone($rawPhone);
-        $website = $sourceData['website'] ?? ($existingDoctor?->website && !str_contains($existingDoctor->website, 'swasthyasearch.com') ? $existingDoctor->website : null);
+        $website = $sourceData['website'] ?? ($existingDoctor?->website && !str_contains($existingDoctor->website, 'arogio.com') ? $existingDoctor->website : null);
 
         $doctor = Doctor::updateOrCreate(
             [

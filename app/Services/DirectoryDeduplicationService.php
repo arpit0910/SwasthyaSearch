@@ -285,7 +285,7 @@ class DirectoryDeduplicationService
 
     private function hospitalKeys(Hospital $hospital): array
     {
-        $name = $this->normalizeText($hospital->name_en);
+        $name = $this->normalizeFacilityIdentity($hospital->name_en, 'hospital');
         $city = $this->normalizeText($hospital->city);
         $phone = $this->normalizePhone($hospital->phone_1 ?? $hospital->emergency_phone ?? null);
         $address = $this->normalizeText($hospital->address_line1);
@@ -299,7 +299,7 @@ class DirectoryDeduplicationService
 
     private function bloodBankKeys(BloodBank $bloodBank): array
     {
-        $name = $this->normalizeText($bloodBank->name_en);
+        $name = $this->normalizeFacilityIdentity($bloodBank->name_en, 'blood_bank');
         $city = $this->normalizeText($bloodBank->city);
         $phone = $this->normalizePhone($bloodBank->phone);
 
@@ -360,6 +360,54 @@ class DirectoryDeduplicationService
         $value = preg_replace('/[^a-z0-9]+/i', ' ', $value) ?? $value;
 
         return trim(preg_replace('/\s+/', ' ', $value) ?? $value);
+    }
+
+    private function normalizeFacilityIdentity(?string $value, string $type): string
+    {
+        $value = $this->normalizeText($value);
+
+        if ($value === '') {
+            return '';
+        }
+
+        if ($type === 'blood_bank') {
+            $value = preg_replace('/\b(blood bank|blood centre|blood center|transfusion centre|transfusion center|component unit)\b/', ' ', $value) ?? $value;
+        }
+
+        $value = preg_replace('/\b(jaipur|rajasthan)\b/', ' ', $value) ?? $value;
+        $value = preg_replace('/\b(the|unit|centre|center|hospitals)\b/', ' ', $value) ?? $value;
+
+        $aliases = [
+            '/\bck birla hospitals?\s*rbh\b/' => 'rukmani birla hospital',
+            '/\brbh\b/' => 'rukmani birla hospital',
+            '/\brukmani birla\b/' => 'rukmani birla hospital',
+            '/\bfortis escorts\b/' => 'fortis escorts hospital',
+            '/\bsms\b/' => 'sawai man singh hospital',
+            '/\bsawai man barkatullah\b/' => 'sawai man singh',
+            '/\bsawai man singh sms hospital\b/' => 'sawai man singh hospital',
+            '/\bsawai man singh hospital hospital\b/' => 'sawai man singh hospital',
+        ];
+
+        foreach ($aliases as $pattern => $replacement) {
+            $value = preg_replace($pattern, $replacement, $value) ?? $value;
+        }
+
+        $value = preg_replace('/\b(hospital|medical college|medical|clinic)\b/', ' ', $value) ?? $value;
+        $value = trim(preg_replace('/\s+/', ' ', $value) ?? $value);
+
+        if (str_contains($value, 'sawai man singh')) {
+            return 'sawai man singh';
+        }
+
+        if (str_contains($value, 'rukmani birla')) {
+            return 'rukmani birla';
+        }
+
+        if (str_contains($value, 'fortis escorts')) {
+            return 'fortis escorts';
+        }
+
+        return $value;
     }
 
     private function normalizePhone(?string $value): string

@@ -164,6 +164,7 @@ Route::get('/activities', [ActivityController::class, 'index'])->name('activitie
 Route::get('/activities/breathing', [ActivityController::class, 'breathing'])->name('activities.breathing');
 Route::get('/activities/grounding', [ActivityController::class, 'grounding'])->name('activities.grounding');
 Route::get('/activities/mood-check', [ActivityController::class, 'moodCheck'])->name('activities.mood-check');
+Route::get('/activities/calm-audio', [ActivityController::class, 'calmAudio'])->name('activities.calm-audio');
 Route::get('/activities/games/memory', [ActivityController::class, 'memoryGame'])->name('activities.games.memory');
 Route::get('/activities/games/calm-tap', [ActivityController::class, 'calmTap'])->name('activities.games.calm-tap');
 Route::get('/support/crisis', [ActivityController::class, 'crisis'])->name('support.crisis');
@@ -190,6 +191,7 @@ Route::get('/sitemap.xml', function () {
         ['loc' => route('activities.breathing'), 'changefreq' => 'monthly', 'priority' => '0.6', 'lastmod' => now()->toDateString()],
         ['loc' => route('activities.grounding'), 'changefreq' => 'monthly', 'priority' => '0.6', 'lastmod' => now()->toDateString()],
         ['loc' => route('activities.mood-check'), 'changefreq' => 'monthly', 'priority' => '0.6', 'lastmod' => now()->toDateString()],
+        ['loc' => route('activities.calm-audio'), 'changefreq' => 'monthly', 'priority' => '0.6', 'lastmod' => now()->toDateString()],
         ['loc' => route('activities.games.memory'), 'changefreq' => 'monthly', 'priority' => '0.5', 'lastmod' => now()->toDateString()],
         ['loc' => route('activities.games.calm-tap'), 'changefreq' => 'monthly', 'priority' => '0.5', 'lastmod' => now()->toDateString()],
         ['loc' => route('quizzes.index'), 'changefreq' => 'weekly', 'priority' => '0.7', 'lastmod' => now()->toDateString()],

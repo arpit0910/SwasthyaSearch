@@ -69,6 +69,32 @@
             </div>
         </section>
 
+        <section class="mt-6 grid gap-4 lg:grid-cols-[1fr_1fr_1fr]">
+            <a href="{{ route('activities.breathing') }}" class="rounded-[1.6rem] border border-teal-200/80 bg-white/90 p-5 shadow-sm transition hover:-translate-y-0.5 dark:border-teal-900/40 dark:bg-slate-900/90">
+                <div class="flex h-11 w-11 items-center justify-center rounded-2xl bg-teal-100 text-teal-700 dark:bg-teal-950/40 dark:text-teal-200">
+                    <i data-lucide="wind" class="h-5 w-5"></i>
+                </div>
+                <h2 class="mt-4 text-lg font-extrabold text-slate-950 dark:text-white">{{ $isHindi ? 'पहले एक शांत साँस?' : 'Need one calm breath first?' }}</h2>
+                <p class="mt-2 text-sm leading-7 text-slate-600 dark:text-slate-300">{{ $isHindi ? 'अगर यह स्क्रीन थोड़ा भारी लगे, 60 सेकंड की guided breathing लेकर वापस आएँ।' : 'If this screen feels a little heavy, take a 60 second guided breathing pause and come back.' }}</p>
+            </a>
+
+            <a href="{{ route('activities.calm-audio') }}" class="rounded-[1.6rem] border border-emerald-200/80 bg-white/90 p-5 shadow-sm transition hover:-translate-y-0.5 dark:border-emerald-900/40 dark:bg-slate-900/90">
+                <div class="flex h-11 w-11 items-center justify-center rounded-2xl bg-emerald-100 text-emerald-700 dark:bg-emerald-950/40 dark:text-emerald-200">
+                    <i data-lucide="headphones" class="h-5 w-5"></i>
+                </div>
+                <h2 class="mt-4 text-lg font-extrabold text-slate-950 dark:text-white">{{ $isHindi ? 'फ्री calm audio' : 'Free calm audio' }}</h2>
+                <p class="mt-2 text-sm leading-7 text-slate-600 dark:text-slate-300">{{ $isHindi ? 'ambient sounds, voice cues और छोटे uplifting thoughts के साथ stress को थोड़ा नीचे लाएँ।' : 'Use ambient sounds, voice cues, and short uplifting thoughts to bring stress down a notch.' }}</p>
+            </a>
+
+            <div class="rounded-[1.6rem] border border-cyan-200/80 bg-gradient-to-br from-cyan-50 to-white p-5 shadow-sm dark:border-cyan-900/40 dark:from-cyan-950/20 dark:to-slate-900">
+                <div class="flex h-11 w-11 items-center justify-center rounded-2xl bg-cyan-100 text-cyan-700 dark:bg-cyan-950/40 dark:text-cyan-200">
+                    <i data-lucide="shield-check" class="h-5 w-5"></i>
+                </div>
+                <h2 class="mt-4 text-lg font-extrabold text-slate-950 dark:text-white">{{ $isHindi ? 'नरम याद' : 'Gentle reminder' }}</h2>
+                <p class="mt-2 text-sm leading-7 text-slate-600 dark:text-slate-300">{{ $isHindi ? 'यह एक final diagnosis नहीं है। इसे direction tool की तरह लें, pressure test की तरह नहीं।' : 'This is not a final diagnosis. Use it as a direction tool, not as a pressure test.' }}</p>
+            </div>
+        </section>
+
         <div class="mt-8 grid gap-6 xl:grid-cols-[minmax(0,1.1fr)_380px]">
             <section class="glass-card overflow-hidden rounded-[2rem] border border-slate-200/80 bg-white/95 shadow-xl dark:border-slate-800 dark:bg-slate-950/95">
                 <div class="border-b border-slate-100 bg-gradient-to-r from-slate-50/90 via-white to-cyan-50/60 px-4 py-5 dark:border-slate-800 dark:from-slate-900 dark:via-slate-900 dark:to-slate-900 sm:px-8">

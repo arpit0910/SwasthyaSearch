@@ -40,6 +40,11 @@ class ActivityController extends Controller
         return view('activities.mood-check', ['locale' => app()->getLocale()]);
     }
 
+    public function calmAudio()
+    {
+        return view('activities.calm-audio', ['locale' => app()->getLocale()]);
+    }
+
     public function crisis()
     {
         return view('support.crisis', ['locale' => app()->getLocale()]);

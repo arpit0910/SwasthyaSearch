@@ -1,94 +1,556 @@
-@extends('layouts.public')
+﻿@extends('layouts.public')
 
-@section('title', ($locale === 'hi' ? 'श्वास अभ्यास' : 'Breathing Exercise') . ' - Arogio')
+@section('title', ($locale === 'hi' ? '????? ??????' : 'Breathing Exercise') . ' - Arogio')
 
 @section('content')
-<main class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-8 sm:py-12">
-    <section class="rounded-[2rem] border border-teal-100/80 dark:border-slate-800 bg-white/90 dark:bg-slate-900/90 shadow-sm p-6 sm:p-8 text-center">
-        <p class="text-xs font-bold uppercase tracking-[0.22em] text-teal-700 dark:text-teal-300">{{ $locale === 'hi' ? 'शांत अभ्यास' : 'Calming Exercise' }}</p>
-        <h1 class="mt-2 text-3xl font-extrabold text-slate-950 dark:text-white">{{ $locale === 'hi' ? 'श्वास अभ्यास' : 'Breathing Exercise' }}</h1>
-        <p class="mt-3 text-sm leading-7 text-slate-600 dark:text-slate-300">{{ $locale === 'hi' ? 'यदि इस अभ्यास से चक्कर या असहजता हो, तो रुकें और सामान्य रूप से सांस लें।' : 'If this exercise makes you dizzy or uncomfortable, stop and breathe normally.' }}</p>
+@php
+    $isHindi = $locale === 'hi';
+@endphp
+<main class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-8 sm:py-12">
+    <style>
+        .breath-shell {
+            position: relative;
+            overflow: hidden;
+            background:
+                radial-gradient(circle at 20% 20%, rgba(45, 212, 191, 0.18), transparent 30%),
+                radial-gradient(circle at 80% 25%, rgba(96, 165, 250, 0.16), transparent 28%),
+                linear-gradient(135deg, rgba(255,255,255,0.98), rgba(240,249,255,0.96));
+        }
 
-        <div class="mt-8 flex justify-center">
-            <div id="breathing-circle" class="w-44 h-44 sm:w-56 sm:h-56 rounded-full bg-gradient-to-br from-teal-400 to-cyan-500 text-white flex items-center justify-center text-xl font-bold shadow-2xl transition-all duration-1000">
-                <span id="breathing-phase">{{ $locale === 'hi' ? 'तैयार' : 'Ready' }}</span>
+        .dark .breath-shell {
+            background:
+                radial-gradient(circle at 20% 20%, rgba(45, 212, 191, 0.14), transparent 30%),
+                radial-gradient(circle at 80% 25%, rgba(96, 165, 250, 0.12), transparent 28%),
+                linear-gradient(135deg, rgba(15,23,42,0.97), rgba(2,132,199,0.08));
+        }
+
+        .breath-stage-wrap {
+            position: relative;
+            width: min(29rem, 86vw);
+            aspect-ratio: 1;
+            margin-inline: auto;
+        }
+
+        .breath-progress-ring {
+            position: absolute;
+            inset: 0;
+            border-radius: 9999px;
+            background: conic-gradient(from -90deg, rgba(20,184,166,0.92) calc(var(--progress, 0) * 1%), rgba(226,232,240,0.65) 0);
+            padding: 14px;
+            box-shadow: 0 24px 70px rgba(20, 184, 166, 0.18);
+        }
+
+        .dark .breath-progress-ring {
+            background: conic-gradient(from -90deg, rgba(45,212,191,0.9) calc(var(--progress, 0) * 1%), rgba(30,41,59,0.9) 0);
+            box-shadow: 0 24px 70px rgba(8, 145, 178, 0.16);
+        }
+
+        .breath-progress-ring::before {
+            content: "";
+            position: absolute;
+            inset: 14px;
+            border-radius: inherit;
+            background: rgba(255,255,255,0.62);
+            backdrop-filter: blur(10px);
+        }
+
+        .dark .breath-progress-ring::before {
+            background: rgba(2, 6, 23, 0.72);
+        }
+
+        .breath-stage {
+            position: absolute;
+            inset: 40px;
+            border-radius: 9999px;
+            background:
+                radial-gradient(circle at 34% 28%, rgba(255,255,255,0.14), rgba(255,255,255,0.03) 18%, transparent 38%),
+                linear-gradient(145deg, #14b8a6 0%, #0f766e 42%, #0369a1 100%);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            color: white;
+            overflow: hidden;
+            transition: transform 1.2s ease, box-shadow 0.9s ease, filter 0.9s ease;
+            box-shadow: 0 24px 70px rgba(15, 118, 110, 0.28);
+        }
+
+        .breath-stage::before,
+        .breath-stage::after {
+            content: "";
+            position: absolute;
+            border-radius: 9999px;
+            border: 1px solid rgba(255,255,255,0.22);
+            inset: 10%;
+        }
+
+        .breath-stage::after {
+            inset: 21%;
+            border-style: dashed;
+            opacity: 0.65;
+        }
+
+        .breath-stage.is-inhale {
+            transform: scale(1.04);
+            box-shadow: 0 34px 90px rgba(34, 211, 238, 0.28);
+        }
+
+        .breath-stage.is-hold {
+            transform: scale(1.07);
+            filter: saturate(1.08);
+            box-shadow: 0 34px 90px rgba(59, 130, 246, 0.24);
+        }
+
+        .breath-stage.is-exhale {
+            transform: scale(0.92);
+            box-shadow: 0 22px 55px rgba(14, 116, 144, 0.18);
+        }
+
+        .breath-orbit,
+        .breath-orbit-inner {
+            position: absolute;
+            inset: 0;
+            border-radius: 9999px;
+        }
+
+        .breath-orbit {
+            animation: breathSpin 18s linear infinite;
+        }
+
+        .breath-orbit-inner {
+            animation: breathSpinReverse 14s linear infinite;
+        }
+
+        .breath-dot {
+            position: absolute;
+            width: 10px;
+            height: 10px;
+            border-radius: 9999px;
+            background: rgba(255,255,255,0.96);
+            box-shadow: 0 0 24px rgba(255,255,255,0.45);
+            transition: transform 1s ease, opacity 0.7s ease;
+        }
+
+        .breath-wave {
+            position: absolute;
+            width: 54%;
+            height: 54%;
+            border-radius: 9999px;
+            background: radial-gradient(circle, rgba(255,255,255,0.08), transparent 68%);
+            animation: breathPulse 5s ease-in-out infinite;
+        }
+
+        .breath-center-copy {
+            position: relative;
+            max-width: 16.5rem;
+            margin-inline: auto;
+            padding: 1.3rem 1.15rem;
+            border-radius: 1.5rem;
+            background: linear-gradient(180deg, rgba(2, 6, 23, 0.34), rgba(15, 23, 42, 0.46));
+            backdrop-filter: blur(12px);
+            box-shadow: inset 0 1px 0 rgba(255,255,255,0.12), 0 16px 34px rgba(2, 6, 23, 0.22);
+        }
+
+        .breath-center-copy::before {
+            content: "";
+            position: absolute;
+            inset: 0;
+            border-radius: inherit;
+            border: 1px solid rgba(255,255,255,0.16);
+            pointer-events: none;
+        }
+
+        .breath-center-text {
+            color: rgba(255,255,255,0.99);
+            text-shadow: 0 3px 24px rgba(2, 6, 23, 0.5);
+        }
+
+
+        .breath-panel {
+            background: rgba(255,255,255,0.72);
+            backdrop-filter: blur(12px);
+        }
+
+        .dark .breath-panel {
+            background: rgba(15, 23, 42, 0.7);
+        }
+
+        @keyframes breathSpin {
+            from { transform: rotate(0deg); }
+            to { transform: rotate(360deg); }
+        }
+
+        @keyframes breathSpinReverse {
+            from { transform: rotate(360deg); }
+            to { transform: rotate(0deg); }
+        }
+
+        @keyframes breathPulse {
+            0%, 100% { transform: scale(0.9); opacity: 0.45; }
+            50% { transform: scale(1.12); opacity: 0.95; }
+        }
+
+        @media (prefers-reduced-motion: reduce) {
+            .breath-orbit,
+            .breath-orbit-inner,
+            .breath-wave {
+                animation: none !important;
+            }
+        }
+    </style>
+
+    <section class="breath-shell rounded-[2rem] border border-cyan-100/80 dark:border-slate-800 shadow-sm p-5 sm:p-8 lg:p-10">
+        <div class="grid gap-8 xl:grid-cols-[0.95fr_1.05fr] xl:items-center">
+            <div class="space-y-6">
+                <div>
+                    <p class="text-xs font-bold uppercase tracking-[0.24em] text-teal-700 dark:text-teal-300">{{ $isHindi ? '????? ????????' : 'Calm Breathing' }}</p>
+                    <h1 class="mt-3 text-3xl sm:text-5xl font-extrabold tracking-tight text-slate-950 dark:text-white">{{ $isHindi ? '?? guided breathing session ?? ?? ??? ????? ??' : 'A guided breathing session that actually feels calming' }}</h1>
+                    <p class="mt-4 text-sm sm:text-base leading-7 text-slate-600 dark:text-slate-300">{{ $isHindi ? '????? start ?????? ??? ???????, motion ?? voice cues ???? ????-???? inhale, hold ?? exhale ??? guide ??????? ?? flow ?? clutter ?? ?? pressure ?? ??? ????? ??? ???' : 'Just press start. The screen, motion, and voice cues then gently guide you through inhale, hold, and exhale with less clutter and less pressure.' }}</p>
+                </div>
+
+                <div class="grid gap-3 sm:grid-cols-3">
+                    <div class="breath-panel rounded-[1.5rem] border border-white/80 dark:border-slate-700/80 p-4">
+                        <p class="text-xs font-bold uppercase tracking-[0.2em] text-teal-700 dark:text-teal-300">{{ $isHindi ? 'Inhale' : 'Inhale' }}</p>
+                        <p class="mt-2 text-2xl font-extrabold text-slate-950 dark:text-white">4s</p>
+                        <p class="mt-1 text-sm text-slate-600 dark:text-slate-300">{{ $isHindi ? '??? ?? ???? ???? ???' : 'Slow breath in through the nose' }}</p>
+                    </div>
+                    <div class="breath-panel rounded-[1.5rem] border border-white/80 dark:border-slate-700/80 p-4">
+                        <p class="text-xs font-bold uppercase tracking-[0.2em] text-sky-700 dark:text-sky-300">{{ $isHindi ? 'Hold' : 'Hold' }}</p>
+                        <p class="mt-2 text-2xl font-extrabold text-slate-950 dark:text-white">4s</p>
+                        <p class="mt-1 text-sm text-slate-600 dark:text-slate-300">{{ $isHindi ? '???? ?? ??? ????' : 'Keep the body soft' }}</p>
+                    </div>
+                    <div class="breath-panel rounded-[1.5rem] border border-white/80 dark:border-slate-700/80 p-4">
+                        <p class="text-xs font-bold uppercase tracking-[0.2em] text-cyan-700 dark:text-cyan-300">{{ $isHindi ? 'Exhale' : 'Exhale' }}</p>
+                        <p class="mt-2 text-2xl font-extrabold text-slate-950 dark:text-white">6s</p>
+                        <p class="mt-1 text-sm text-slate-600 dark:text-slate-300">{{ $isHindi ? '???? ?? ???? release' : 'Long, slow release' }}</p>
+                    </div>
+                </div>
+
+                <div class="breath-panel rounded-[1.6rem] border border-white/80 dark:border-slate-700/80 p-5">
+                    <div class="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
+                        <div>
+                            <p class="text-sm font-bold text-slate-950 dark:text-white">{{ $isHindi ? 'Session notes' : 'Session notes' }}</p>
+                            <p id="breathing-support-copy" class="mt-1 text-sm leading-6 text-slate-600 dark:text-slate-300">{{ $isHindi ? '??? ?????, ?????? ?? ?????? ???, ?? ??????? ???? ?? ??? ????' : 'If you feel dizzy, panicky, or uncomfortable, return to your normal breathing.' }}</p>
+                        </div>
+                        <div class="flex flex-wrap gap-3">
+                            <button id="breathing-start" class="inline-flex items-center justify-center rounded-[1.25rem] bg-teal-600 px-7 py-4 text-base font-extrabold text-white shadow-lg shadow-teal-600/20 transition hover:-translate-y-0.5 hover:bg-teal-700">{{ $isHindi ? '?? ???? ????' : 'Start now' }}</button>
+                            <button id="breathing-voice" class="rounded-[1.1rem] border border-slate-200 dark:border-slate-700 px-4 py-3 text-sm font-bold text-slate-800 dark:text-slate-100">{{ $isHindi ? 'Voice On' : 'Voice On' }}</button>
+                            <button id="breathing-restart" class="hidden rounded-[1.1rem] border border-slate-200 dark:border-slate-700 px-4 py-3 text-sm font-bold text-slate-800 dark:text-slate-100">{{ $isHindi ? 'Restart' : 'Restart' }}</button>
+                        </div>
+                    </div>
+                </div>
             </div>
-        </div>
 
-        <div class="mt-5 text-sm text-slate-600 dark:text-slate-300">
-            <div id="breathing-instruction">{{ $locale === 'hi' ? 'धीरे से सांस लें' : 'Breathe in slowly' }}</div>
-            <div class="mt-2 font-bold text-slate-950 dark:text-white" id="breathing-timer">00:00</div>
-        </div>
+            <div class="space-y-5">
+                <div class="breath-stage-wrap">
+                    <div id="breathing-progress-ring" class="breath-progress-ring" style="--progress: 0"></div>
+                    <div id="breathing-stage" class="breath-stage">
+                        <div class="breath-orbit" id="breathing-orbit"></div>
+                        <div class="breath-orbit-inner" id="breathing-orbit-inner"></div>
+                        <div class="breath-wave"></div>
+                        <div class="relative z-10 px-8">
+                            <div class="breath-center-copy">
+                                <div id="breathing-phase-chip" class="breath-center-text inline-flex rounded-full bg-slate-950/26 px-4 py-2 text-xs font-bold uppercase tracking-[0.24em]">{{ $isHindi ? 'Ready' : 'Ready' }}</div>
+                                <div id="breathing-phase" class="breath-center-text mt-4 text-4xl sm:text-5xl font-extrabold">{{ $isHindi ? '???? ????' : 'Start' }}</div>
+                                <div id="breathing-instruction" class="breath-center-text mt-3 text-sm sm:text-base font-medium leading-7">{{ $isHindi ? '?? ????, ??? ???? ?? ??? start ??????' : 'Press start for one calm, guided breathing loop.' }}</div>
+                            </div>
+                            <div class="mt-6 flex items-center justify-center gap-3">
+                                <div class="rounded-full bg-slate-950/28 px-4 py-2 text-sm font-bold text-white shadow-sm"><span id="breathing-countdown">4</span>s</div>
+                                <div id="breathing-cycle" class="rounded-full bg-slate-950/28 px-4 py-2 text-sm font-bold text-white shadow-sm">{{ $isHindi ? 'Round 0/5' : 'Round 0/5' }}</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
 
-        <div class="mt-6 flex flex-wrap justify-center gap-3">
-            <button id="breathing-start" class="rounded-2xl bg-teal-600 hover:bg-teal-700 px-5 py-3 text-sm font-bold text-white">{{ $locale === 'hi' ? 'शुरू करें' : 'Start' }}</button>
-            <button id="breathing-stop" class="rounded-2xl border border-slate-200 dark:border-slate-700 px-5 py-3 text-sm font-bold text-slate-800 dark:text-slate-100">{{ $locale === 'hi' ? 'रोकें' : 'Stop' }}</button>
-            <button id="breathing-reset" class="rounded-2xl border border-slate-200 dark:border-slate-700 px-5 py-3 text-sm font-bold text-slate-800 dark:text-slate-100">{{ $locale === 'hi' ? 'फिर से शुरू' : 'Restart' }}</button>
+                <div class="grid gap-4 sm:grid-cols-3">
+                    <div class="breath-panel rounded-[1.4rem] border border-white/80 dark:border-slate-700/80 p-4">
+                        <p class="text-xs uppercase tracking-[0.2em] text-slate-500 dark:text-slate-400">{{ $isHindi ? 'Now' : 'Now' }}</p>
+                        <p id="breathing-status" class="mt-2 text-sm font-semibold leading-6 text-slate-900 dark:text-slate-100">{{ $isHindi ? '????? ???? ?? start ??????' : 'Press start when you feel ready.' }}</p>
+                    </div>
+                    <div class="breath-panel rounded-[1.4rem] border border-white/80 dark:border-slate-700/80 p-4">
+                        <p class="text-xs uppercase tracking-[0.2em] text-slate-500 dark:text-slate-400">{{ $isHindi ? 'Elapsed' : 'Elapsed' }}</p>
+                        <p id="breathing-timer" class="mt-2 text-2xl font-extrabold text-slate-950 dark:text-white">00:00</p>
+                    </div>
+                    <div class="breath-panel rounded-[1.4rem] border border-white/80 dark:border-slate-700/80 p-4">
+                        <p class="text-xs uppercase tracking-[0.2em] text-slate-500 dark:text-slate-400">{{ $isHindi ? 'Benefit' : 'Benefit' }}</p>
+                        <p id="breathing-benefit" class="mt-2 text-sm font-semibold leading-6 text-slate-900 dark:text-slate-100">{{ $isHindi ? '???? exhale nervous system ?? soften ???? ???' : 'A longer exhale helps soften the nervous system.' }}</p>
+                    </div>
+                </div>
+            </div>
         </div>
     </section>
 </main>
+
 @push('scripts')
 <script>
-    (() => {
-        const phases = [
-            { key: 'inhale', seconds: 4, label: @json($locale === 'hi' ? 'सांस लें' : 'Inhale'), instruction: @json($locale === 'hi' ? 'धीरे से सांस लें' : 'Breathe in slowly'), scale: 'scale-110' },
-            { key: 'hold', seconds: 4, label: @json($locale === 'hi' ? 'रोकें' : 'Hold'), instruction: @json($locale === 'hi' ? 'रोकें' : 'Hold'), scale: 'scale-110' },
-            { key: 'exhale', seconds: 6, label: @json($locale === 'hi' ? 'सांस छोड़ें' : 'Exhale'), instruction: @json($locale === 'hi' ? 'धीरे से सांस छोड़ें' : 'Breathe out gently'), scale: 'scale-95' },
-            { key: 'rest', seconds: 2, label: @json($locale === 'hi' ? 'आराम' : 'Rest'), instruction: @json($locale === 'hi' ? 'आराम' : 'Rest'), scale: 'scale-100' },
-        ];
+(() => {
+    const isHindi = @json($isHindi);
+    const totalRounds = 5;
+    const phases = [
+        {
+            key: 'inhale',
+            seconds: 4,
+            label: isHindi ? 'Inhale' : 'Inhale',
+            chip: isHindi ? 'Inhale' : 'Inhale',
+            instruction: isHindi ? '??? ?? ????-???? ???? ???? ????' : 'Breathe in slowly through your nose.',
+            status: isHindi ? '???? ????? ???? ???? ?????' : 'Fill the breath gently. Keep your shoulders soft.',
+            benefit: isHindi ? 'Inhale ???? ?? grounded feel ????? ???' : 'Inhale helps you feel grounded and present.',
+            scale: 1.04,
+        },
+        {
+            key: 'hold',
+            seconds: 4,
+            label: isHindi ? 'Hold' : 'Hold',
+            chip: isHindi ? 'Hold' : 'Hold',
+            instruction: isHindi ? '???? ?????, ????? ???? ??? ???? ? ?????' : 'Hold the breath without tightening the body.',
+            status: isHindi ? '?????? ????? ?? ???? ???? ?????' : 'Pause. Relax your jaw and forehead.',
+            benefit: isHindi ? 'Short hold ????? ?? ???-??? ???? ?? ????? ???' : 'A short hold helps your attention settle.',
+            scale: 1.08,
+        },
+        {
+            key: 'exhale',
+            seconds: 6,
+            label: isHindi ? 'Exhale' : 'Exhale',
+            chip: isHindi ? 'Exhale' : 'Exhale',
+            instruction: isHindi ? '????-???? ???? ???? ???? ???????' : 'Let the breath out slowly and completely.',
+            status: isHindi ? '??????? ??? ?????? ???? ?? ?????? calm ???? ???' : 'Release slowly. This is the part that calms the body most.',
+            benefit: isHindi ? '???? exhale stress response ?? ???? ?? ???? ???' : 'A longer exhale can slow the stress response.',
+            scale: 0.92,
+        },
+    ];
 
-        const circle = document.getElementById('breathing-circle');
-        const phaseEl = document.getElementById('breathing-phase');
-        const instructionEl = document.getElementById('breathing-instruction');
-        const timerEl = document.getElementById('breathing-timer');
-        let phaseIndex = 0;
-        let phaseRemaining = phases[0].seconds;
-        let elapsed = 0;
-        let interval = null;
+    const texts = {
+        readyPhase: isHindi ? '???? ????' : 'Start',
+        readyChip: 'Ready',
+        readyInstruction: isHindi ? '?? ????, ??? ???? ?? ??? start ??????' : 'Press start for one calm, guided breathing loop.',
+        readyStatus: isHindi ? '????? ???? ?? start ??????' : 'Press start when you feel ready.',
+        readyBenefit: isHindi ? '???? exhale nervous system ?? soften ???? ???' : 'A longer exhale helps soften the nervous system.',
+        completePhase: isHindi ? '????? ????' : 'Well done',
+        completeInstruction: isHindi ? 'Session ???? ???? ??????? ???? ?? ????? ?? ????? ?? ???? ????? ????? ?? ??? ?? ?? ?????' : 'The session is complete. Return to your normal breath and notice whether your body feels even a little lighter.',
+        completeStatus: isHindi ? '???? 5 guided rounds ???? ?? ????' : 'You completed 5 guided rounds.',
+        completeBenefit: isHindi ? '???? calm breaks ??? ?? ??? ???-??? ??? ???? ????' : 'Small calm breaks help most when repeated through the day.',
+        voiceOn: 'Voice On',
+        voiceOff: 'Voice Off',
+        supportDefault: isHindi ? '??? ?????, ?????? ?? ?????? ???, ?? ??????? ???? ?? ??? ????' : 'If you feel dizzy, panicky, or uncomfortable, return to your normal breathing.',
+        supportComplete: isHindi ? '??? ?????, ?? ?? round ?? ???? ??? — ????? ???? pressure ???' : 'If you want, you can do another round — without pressure.',
+        roundLabel: 'Round',
+    };
 
-        const render = () => {
-            const phase = phases[phaseIndex];
-            phaseEl.textContent = phase.label;
-            instructionEl.textContent = phase.instruction;
-            circle.classList.remove('scale-95', 'scale-100', 'scale-110');
-            circle.classList.add(phase.scale);
-            const mins = String(Math.floor(elapsed / 60)).padStart(2, '0');
-            const secs = String(elapsed % 60).padStart(2, '0');
-            timerEl.textContent = `${mins}:${secs}`;
-        };
+    const stage = document.getElementById('breathing-stage');
+    const ring = document.getElementById('breathing-progress-ring');
+    const orbit = document.getElementById('breathing-orbit');
+    const orbitInner = document.getElementById('breathing-orbit-inner');
+    const startButton = document.getElementById('breathing-start');
+    const restartButton = document.getElementById('breathing-restart');
+    const voiceButton = document.getElementById('breathing-voice');
+    const phaseEl = document.getElementById('breathing-phase');
+    const chipEl = document.getElementById('breathing-phase-chip');
+    const instructionEl = document.getElementById('breathing-instruction');
+    const countdownEl = document.getElementById('breathing-countdown');
+    const cycleEl = document.getElementById('breathing-cycle');
+    const statusEl = document.getElementById('breathing-status');
+    const timerEl = document.getElementById('breathing-timer');
+    const benefitEl = document.getElementById('breathing-benefit');
+    const supportCopyEl = document.getElementById('breathing-support-copy');
 
-        const tick = () => {
-            elapsed += 1;
-            phaseRemaining -= 1;
-            if (phaseRemaining <= 0) {
-                phaseIndex = (phaseIndex + 1) % phases.length;
-                phaseRemaining = phases[phaseIndex].seconds;
+    let voiceEnabled = true;
+    let interval = null;
+    let phaseIndex = 0;
+    let phaseRemaining = phases[0].seconds;
+    let round = 0;
+    let elapsed = 0;
+    let phaseElapsed = 0;
+    const speechReady = 'speechSynthesis' in window;
+
+    const makeDots = (container, count, radiusBase) => {
+        Array.from({ length: count }).forEach((_, index) => {
+            const dot = document.createElement('span');
+            dot.className = 'breath-dot';
+            dot.dataset.index = index;
+            dot.dataset.radiusBase = radiusBase;
+            container.appendChild(dot);
+        });
+    };
+
+    makeDots(orbit, 10, 132);
+    makeDots(orbitInner, 6, 94);
+
+    const positionDots = (phaseKey) => {
+        document.querySelectorAll('.breath-dot').forEach((dot) => {
+            const index = Number(dot.dataset.index || 0);
+            const total = dot.parentElement === orbit ? 10 : 6;
+            const base = Number(dot.dataset.radiusBase || 100);
+            const angle = (Math.PI * 2 * index) / total;
+            let radius = base;
+            let opacity = 0.5;
+
+            if (phaseKey === 'inhale') {
+                radius = base + 10;
+                opacity = 0.95;
+            } else if (phaseKey === 'hold') {
+                radius = base + 16;
+                opacity = 0.78;
+            } else if (phaseKey === 'exhale') {
+                radius = base - 22;
+                opacity = 0.34;
             }
-            render();
-        };
 
-        document.getElementById('breathing-start').addEventListener('click', () => {
-            if (interval) return;
-            render();
-            interval = setInterval(tick, 1000);
+            const x = Math.cos(angle) * radius;
+            const y = Math.sin(angle) * radius;
+            dot.style.left = '50%';
+            dot.style.top = '50%';
+            dot.style.opacity = opacity;
+            dot.style.transform = `translate(${x}px, ${y}px)`;
         });
+    };
 
-        document.getElementById('breathing-stop').addEventListener('click', () => {
-            clearInterval(interval);
-            interval = null;
-        });
+    const setProgress = (currentPhase) => {
+        const phase = phases[currentPhase];
+        const ratio = phase.seconds ? (phaseElapsed / phase.seconds) : 0;
+        const totalProgress = (((round * phases.length) + currentPhase + ratio) / (totalRounds * phases.length)) * 100;
+        ring.style.setProperty('--progress', totalProgress.toFixed(2));
+    };
 
-        document.getElementById('breathing-reset').addEventListener('click', () => {
-            clearInterval(interval);
-            interval = null;
+    const updateStageState = (phase) => {
+        stage.classList.remove('is-inhale', 'is-hold', 'is-exhale');
+        stage.classList.add(`is-${phase.key}`);
+        stage.style.transform = `scale(${phase.scale})`;
+        positionDots(phase.key);
+    };
+
+    const speak = (text) => {
+        if (!voiceEnabled || !speechReady) return;
+        window.speechSynthesis.cancel();
+        const utterance = new SpeechSynthesisUtterance(text);
+        utterance.lang = isHindi ? 'hi-IN' : 'en-IN';
+        utterance.rate = 0.92;
+        utterance.pitch = 1;
+        window.speechSynthesis.speak(utterance);
+    };
+
+    const renderPhase = () => {
+        const phase = phases[phaseIndex];
+        phaseEl.textContent = phase.label;
+        chipEl.textContent = phase.chip;
+        instructionEl.textContent = phase.instruction;
+        statusEl.textContent = phase.status;
+        benefitEl.textContent = phase.benefit;
+        countdownEl.textContent = Math.max(phaseRemaining, 0);
+        cycleEl.textContent = `${texts.roundLabel} ${Math.min(round + 1, totalRounds)}/${totalRounds}`;
+        updateStageState(phase);
+        setProgress(phaseIndex);
+        const mins = String(Math.floor(elapsed / 60)).padStart(2, '0');
+        const secs = String(elapsed % 60).padStart(2, '0');
+        timerEl.textContent = `${mins}:${secs}`;
+    };
+
+    const finishSession = () => {
+        clearInterval(interval);
+        interval = null;
+        if (speechReady) {
+            window.speechSynthesis.cancel();
+        }
+        ring.style.setProperty('--progress', '100');
+        stage.classList.remove('is-inhale', 'is-hold', 'is-exhale');
+        stage.style.transform = 'scale(1)';
+        phaseEl.textContent = texts.completePhase;
+        chipEl.textContent = 'Complete';
+        instructionEl.textContent = texts.completeInstruction;
+        statusEl.textContent = texts.completeStatus;
+        benefitEl.textContent = texts.completeBenefit;
+        supportCopyEl.textContent = texts.supportComplete;
+        countdownEl.textContent = '0';
+        cycleEl.textContent = `${texts.roundLabel} ${totalRounds}/${totalRounds}`;
+        startButton.classList.add('hidden');
+        restartButton.classList.remove('hidden');
+        speak(texts.completePhase);
+    };
+
+    const advancePhase = () => {
+        phaseIndex += 1;
+        phaseElapsed = 0;
+
+        if (phaseIndex >= phases.length) {
             phaseIndex = 0;
-            phaseRemaining = phases[0].seconds;
-            elapsed = 0;
-            render();
-        });
+            round += 1;
+        }
 
-        render();
-    })();
+        if (round >= totalRounds) {
+            finishSession();
+            return;
+        }
+
+        phaseRemaining = phases[phaseIndex].seconds;
+        renderPhase();
+        speak(phases[phaseIndex].label);
+    };
+
+    const tick = () => {
+        elapsed += 1;
+        phaseElapsed += 1;
+        phaseRemaining -= 1;
+        renderPhase();
+        if (phaseRemaining <= 0) {
+            advancePhase();
+        }
+    };
+
+    const resetSession = () => {
+        clearInterval(interval);
+        interval = null;
+        if (speechReady) {
+            window.speechSynthesis.cancel();
+        }
+        phaseIndex = 0;
+        phaseRemaining = phases[0].seconds;
+        phaseElapsed = 0;
+        round = 0;
+        elapsed = 0;
+        ring.style.setProperty('--progress', '0');
+        phaseEl.textContent = texts.readyPhase;
+        chipEl.textContent = texts.readyChip;
+        instructionEl.textContent = texts.readyInstruction;
+        statusEl.textContent = texts.readyStatus;
+        benefitEl.textContent = texts.readyBenefit;
+        supportCopyEl.textContent = texts.supportDefault;
+        countdownEl.textContent = phases[0].seconds;
+        cycleEl.textContent = `${texts.roundLabel} 0/${totalRounds}`;
+        timerEl.textContent = '00:00';
+        stage.classList.remove('is-inhale', 'is-hold', 'is-exhale');
+        stage.style.transform = 'scale(1)';
+        positionDots('exhale');
+        startButton.classList.remove('hidden');
+        restartButton.classList.add('hidden');
+    };
+
+    startButton.addEventListener('click', () => {
+        if (interval) return;
+        supportCopyEl.textContent = texts.supportDefault;
+        startButton.classList.add('hidden');
+        restartButton.classList.remove('hidden');
+        phaseIndex = 0;
+        phaseRemaining = phases[0].seconds;
+        phaseElapsed = 0;
+        round = 0;
+        elapsed = 0;
+        renderPhase();
+        speak(phases[0].label);
+        interval = setInterval(tick, 1000);
+    });
+
+    restartButton.addEventListener('click', resetSession);
+
+    voiceButton.addEventListener('click', () => {
+        voiceEnabled = !voiceEnabled;
+        voiceButton.textContent = voiceEnabled ? texts.voiceOn : texts.voiceOff;
+        if (!voiceEnabled && speechReady) {
+            window.speechSynthesis.cancel();
+        }
+    });
+
+    voiceButton.textContent = texts.voiceOn;
+    resetSession();
+})();
 </script>
 @endpush
 @endsection

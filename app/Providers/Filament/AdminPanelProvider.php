@@ -40,7 +40,7 @@ class AdminPanelProvider extends PanelProvider
                 'gray' => Color::Slate,
             ])
             ->brandName('Arogio Admin')
-            ->brandLogo(fn() => new HtmlString('<div style="font-weight:bold;font-size:1.5rem;letter-spacing:-0.025em;"><span class="text-white">Swasthya<span style="color:#14b8a6;">Search</span></span></div>'))
+            ->brandLogo(fn() => new HtmlString('<img src="' . asset('img/arogio-logo-dark.png') . '" alt="Arogio" style="height: 2.25rem; width: auto; display: block;">'))
             ->sidebarCollapsibleOnDesktop()
             ->navigationGroups([
                 NavigationGroup::make()

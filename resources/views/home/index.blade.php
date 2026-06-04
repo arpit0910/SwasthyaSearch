@@ -13,11 +13,191 @@ $locale === 'hi'
 @endphp
 
 <!-- Hero Section -->
+<style>
+    .hero-brand-motif {
+        position: absolute;
+        inset: 0;
+        pointer-events: none;
+        overflow: hidden;
+    }
+
+    .hero-brand-cluster {
+        position: absolute;
+        left: 50%;
+        top: 54%;
+        width: min(28rem, 68vw);
+        aspect-ratio: 1;
+        transform: translate(-50%, -50%);
+        opacity: 0.18;
+        filter: drop-shadow(0 0 40px rgba(103, 232, 249, 0.16));
+    }
+
+    .hero-brand-ring,
+    .hero-brand-ring::before,
+    .hero-brand-ring::after {
+        position: absolute;
+        inset: 0;
+        border-radius: 9999px;
+    }
+
+    .hero-brand-ring {
+        border: 1px solid rgba(255, 255, 255, 0.18);
+        animation: heroSpin 18s linear infinite;
+    }
+
+    .hero-brand-ring::before,
+    .hero-brand-ring::after {
+        content: "";
+        inset: 12%;
+        border: 1px dashed rgba(125, 211, 252, 0.25);
+        animation: heroReverseSpin 24s linear infinite;
+    }
+
+    .hero-brand-ring::after {
+        inset: 26%;
+        border-style: solid;
+        border-color: rgba(45, 212, 191, 0.24);
+        animation-duration: 14s;
+    }
+
+    .hero-brand-core {
+        position: absolute;
+        inset: 34%;
+        border-radius: 9999px;
+        background:
+            radial-gradient(circle at 30% 30%, rgba(255,255,255,0.9), rgba(255,255,255,0.16) 28%, transparent 58%),
+            linear-gradient(135deg, rgba(45, 212, 191, 0.34), rgba(59, 130, 246, 0.24));
+        backdrop-filter: blur(4px);
+        animation: heroPulse 5s ease-in-out infinite;
+    }
+
+    .hero-brand-wave {
+        position: absolute;
+        left: 50%;
+        top: 50%;
+        width: 36%;
+        height: 12%;
+        transform: translate(-50%, -50%);
+        border-radius: 9999px;
+        background: linear-gradient(90deg, rgba(255,255,255,0), rgba(255,255,255,0.65), rgba(255,255,255,0));
+        filter: blur(1px);
+        animation: heroWave 3.8s ease-in-out infinite;
+    }
+
+    .hero-brand-wave::before,
+    .hero-brand-wave::after {
+        content: "";
+        position: absolute;
+        top: 50%;
+        width: 34%;
+        height: 100%;
+        border-radius: 9999px;
+        background: inherit;
+    }
+
+    .hero-brand-wave::before {
+        left: -18%;
+        transform: translateY(-50%) rotate(-36deg);
+    }
+
+    .hero-brand-wave::after {
+        right: -18%;
+        transform: translateY(-50%) rotate(36deg);
+    }
+
+    .hero-brand-dot {
+        position: absolute;
+        width: 0.65rem;
+        height: 0.65rem;
+        border-radius: 9999px;
+        background: rgba(255, 255, 255, 0.92);
+        box-shadow: 0 0 24px rgba(103, 232, 249, 0.32);
+        animation: heroFloat 6s ease-in-out infinite;
+    }
+
+    .hero-brand-dot.dot-1 { left: 16%; top: 22%; animation-delay: 0s; }
+    .hero-brand-dot.dot-2 { right: 18%; top: 28%; animation-delay: 1.4s; }
+    .hero-brand-dot.dot-3 { left: 22%; bottom: 20%; animation-delay: 2.2s; }
+    .hero-brand-dot.dot-4 { right: 24%; bottom: 16%; animation-delay: 3.1s; }
+    .hero-brand-dot.dot-5 { left: 50%; top: 12%; animation-delay: 0.8s; }
+
+    .hero-brand-beam {
+        position: absolute;
+        inset: auto 10% 14% 10%;
+        height: 1px;
+        background: linear-gradient(90deg, transparent, rgba(255,255,255,0.4), transparent);
+        opacity: 0.6;
+        animation: heroBeam 4.8s ease-in-out infinite;
+    }
+
+    @keyframes heroSpin {
+        from { transform: rotate(0deg); }
+        to { transform: rotate(360deg); }
+    }
+
+    @keyframes heroReverseSpin {
+        from { transform: rotate(360deg); }
+        to { transform: rotate(0deg); }
+    }
+
+    @keyframes heroPulse {
+        0%, 100% { transform: scale(0.96); opacity: 0.72; }
+        50% { transform: scale(1.06); opacity: 1; }
+    }
+
+    @keyframes heroFloat {
+        0%, 100% { transform: translateY(0px) scale(1); opacity: 0.7; }
+        50% { transform: translateY(-12px) scale(1.18); opacity: 1; }
+    }
+
+    @keyframes heroWave {
+        0%, 100% { transform: translate(-50%, -50%) scaleX(0.94); opacity: 0.48; }
+        50% { transform: translate(-50%, -50%) scaleX(1.14); opacity: 0.92; }
+    }
+
+    @keyframes heroBeam {
+        0%, 100% { opacity: 0.15; transform: scaleX(0.85); }
+        50% { opacity: 0.72; transform: scaleX(1); }
+    }
+
+    @media (max-width: 640px) {
+        .hero-brand-cluster {
+            width: min(20rem, 92vw);
+            top: 48%;
+            opacity: 0.14;
+        }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+        .hero-brand-ring,
+        .hero-brand-ring::before,
+        .hero-brand-ring::after,
+        .hero-brand-core,
+        .hero-brand-wave,
+        .hero-brand-dot,
+        .hero-brand-beam {
+            animation: none !important;
+        }
+    }
+</style>
 <header id="home-hero" class="relative overflow-hidden py-6 lg:py-9 mb-1 bg-gradient-to-b from-cyan-700 via-sky-700 to-blue-800 dark:from-slate-950 dark:via-slate-900 dark:to-indigo-950 text-white indian-motif-bg">
     <!-- Glowing background blobs -->
     <div class="glow-blob w-[400px] h-[400px] bg-teal-500/10 top-0 left-0"></div>
     <div class="glow-blob w-[500px] h-[500px] bg-cyan-500/10 bottom-0 right-0"></div>
     <div class="absolute inset-0 opacity-20 bg-[radial-gradient(#67e8f9_1px,transparent_1px)] [background-size:18px_18px]"></div>
+    <div class="hero-brand-motif" aria-hidden="true">
+        <div class="hero-brand-cluster">
+            <div class="hero-brand-ring"></div>
+            <div class="hero-brand-core"></div>
+            <div class="hero-brand-wave"></div>
+            <span class="hero-brand-dot dot-1"></span>
+            <span class="hero-brand-dot dot-2"></span>
+            <span class="hero-brand-dot dot-3"></span>
+            <span class="hero-brand-dot dot-4"></span>
+            <span class="hero-brand-dot dot-5"></span>
+            <div class="hero-brand-beam"></div>
+        </div>
+    </div>
 
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10 text-center">
         <div class="flex flex-wrap justify-center items-center gap-3 mb-4">
@@ -163,9 +343,9 @@ $locale === 'hi'
                     <p class="mt-3 text-xs sm:text-sm font-semibold text-rose-700 dark:text-rose-300">{{ $locale === 'hi' ? 'यदि यह जीवन-घातक आपातस्थिति है, तो तुरंत इमरजेंसी सेवाओं से संपर्क करें या नज़दीकी अस्पताल जाएँ।' : 'If this is a life-threatening emergency, contact emergency services or go to the nearest hospital immediately.' }}</p>
                 </div>
                 <div class="grid gap-3 sm:grid-cols-3 lg:w-[440px]">
-                    <a href="{{ route('hospitals.index') }}" class="inline-flex items-center justify-center rounded-2xl border border-rose-200 dark:border-rose-900/50 bg-white/90 dark:bg-slate-950 px-4 py-3 text-sm font-bold text-rose-700 dark:text-rose-200 shadow-sm transition hover:-translate-y-0.5 hover:border-rose-300 hover:bg-rose-50 dark:hover:bg-rose-950/20">{{ $locale === 'hi' ? '??????? ?????' : 'View Hospitals' }}</a>
-                    <a href="{{ route('blood_banks.index') }}" class="inline-flex items-center justify-center rounded-2xl border border-red-200 dark:border-red-900/50 bg-white/90 dark:bg-slate-950 px-4 py-3 text-sm font-bold text-red-700 dark:text-red-200 shadow-sm transition hover:-translate-y-0.5 hover:border-red-300 hover:bg-red-50 dark:hover:bg-red-950/20">{{ $locale === 'hi' ? '???? ???? ?????' : 'View Blood Banks' }}</a>
-                    <button type="button" onclick="toggleChatbot()" class="inline-flex items-center justify-center rounded-2xl bg-slate-900 dark:bg-cyan-600 px-4 py-3 text-sm font-bold text-white shadow-lg shadow-slate-900/10 transition hover:-translate-y-0.5 hover:bg-slate-800 dark:hover:bg-cyan-500">{{ $locale === 'hi' ? 'AI ?????' : 'Ask Health Assistant' }}</button>
+                    <a href="{{ route('hospitals.index') }}" class="group relative inline-flex items-center justify-center overflow-hidden rounded-2xl border border-rose-200 dark:border-rose-900/50 bg-white/90 dark:bg-slate-950 px-4 py-3 text-sm font-bold text-rose-700 dark:text-rose-200 shadow-sm transition-all duration-300 ease-out hover:-translate-y-0.5 hover:border-rose-500 hover:text-white dark:hover:text-rose-950 active:scale-[0.98] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-rose-400 focus-visible:ring-offset-2 focus-visible:ring-offset-white dark:focus-visible:ring-offset-slate-950"><span class="pointer-events-none absolute inset-0 bg-gradient-to-r from-rose-500 via-rose-500 to-red-500 translate-y-full transition-transform duration-300 ease-out group-hover:translate-y-0 group-active:translate-y-0"></span><span class="pointer-events-none absolute inset-0 opacity-0 transition-opacity duration-300 group-hover:opacity-100 bg-white/10"></span><span class="relative z-10">{{ $locale === 'hi' ? 'अस्पताल देखें' : 'View Hospitals' }}</span></a>
+                    <a href="{{ route('blood_banks.index') }}" class="group relative inline-flex items-center justify-center overflow-hidden rounded-2xl border border-red-200 dark:border-red-900/50 bg-white/90 dark:bg-slate-950 px-4 py-3 text-sm font-bold text-red-700 dark:text-red-200 shadow-sm transition-all duration-300 ease-out hover:-translate-y-0.5 hover:border-red-500 hover:text-white dark:hover:text-red-950 active:scale-[0.98] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-red-400 focus-visible:ring-offset-2 focus-visible:ring-offset-white dark:focus-visible:ring-offset-slate-950"><span class="pointer-events-none absolute inset-0 bg-gradient-to-r from-red-500 via-rose-500 to-red-600 translate-y-full transition-transform duration-300 ease-out group-hover:translate-y-0 group-active:translate-y-0"></span><span class="pointer-events-none absolute inset-0 opacity-0 transition-opacity duration-300 group-hover:opacity-100 bg-white/10"></span><span class="relative z-10">{{ $locale === 'hi' ? 'ब्लड बैंक देखें' : 'View Blood Banks' }}</span></a>
+                    <button type="button" onclick="toggleChatbot()" class="group relative inline-flex items-center justify-center overflow-hidden rounded-2xl border border-slate-900 dark:border-cyan-500 bg-slate-900 dark:bg-cyan-600 px-4 py-3 text-sm font-bold text-white shadow-lg shadow-slate-900/10 transition-all duration-300 ease-out hover:-translate-y-0.5 hover:border-cyan-400 active:scale-[0.98] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-cyan-400 focus-visible:ring-offset-2 focus-visible:ring-offset-white dark:focus-visible:ring-offset-slate-950"><span class="pointer-events-none absolute inset-0 bg-gradient-to-r from-cyan-400 via-teal-400 to-cyan-500 translate-y-full transition-transform duration-300 ease-out group-hover:translate-y-0 group-active:translate-y-0"></span><span class="pointer-events-none absolute inset-0 opacity-0 transition-opacity duration-300 group-hover:opacity-100 bg-white/10"></span><span class="relative z-10">{{ $locale === 'hi' ? 'AI सहायक' : 'Ask Health Assistant' }}</span></button>
                 </div>
             </div>
         </section>
@@ -176,30 +356,26 @@ $locale === 'hi'
             <div class="relative z-10 grid gap-6">
                 <div class="grid gap-8 xl:grid-cols-[1.15fr,0.85fr] xl:items-center">
                     <div class="max-w-3xl">
-                        <p class="text-xs font-bold uppercase tracking-[0.22em] text-emerald-700 dark:text-emerald-300">{{ $locale === 'hi' ? '??????? ???????' : 'Medicine Information' }}</p>
-                        <h2 class="mt-2 text-2xl sm:text-3xl font-extrabold text-slate-950 dark:text-white">{{ $locale === 'hi' ? '??? ????? ?? ??? ?? ???? ?? ???????? ???' : 'A cleaner way to understand medicines' }}</h2>
-                        <p class="mt-3 text-sm sm:text-base leading-7 text-slate-600 dark:text-slate-300">{{ $locale === 'hi' ? '????? ?? ?????, ??????????, ??????? ?????????? ?? ?????????? ??????? ?? ???, ????? ??? ???? ???????? ??? ??????' : 'Explore uses, precautions, common side effects, and key guidance in a simple, easy-to-scan format.' }}</p>
+                        <p class="text-xs font-bold uppercase tracking-[0.22em] text-emerald-700 dark:text-emerald-300">{{ $locale === 'hi' ? 'दवा जानकारी' : 'Medicine Information' }}</p>
+                        <h2 class="mt-2 text-2xl sm:text-3xl font-extrabold text-slate-950 dark:text-white">{{ $locale === 'hi' ? 'दवाओं को समझने का एक साफ़ तरीका' : 'A cleaner way to understand medicines' }}</h2>
+                        <p class="mt-3 text-sm sm:text-base leading-7 text-slate-600 dark:text-slate-300">{{ $locale === 'hi' ? 'उपयोग, सावधानियाँ, सामान्य साइड इफेक्ट और जरूरी गाइडेंस को आसान, स्कैन-फ्रेंडली फॉर्मेट में देखें।' : 'Explore uses, precautions, common side effects, and key guidance in a simple, easy-to-scan format.' }}</p>
                         <div class="mt-5 flex flex-wrap gap-2.5">
                             <span class="inline-flex items-center gap-2 rounded-full bg-white/90 dark:bg-slate-900/80 px-3 py-2 text-xs font-bold text-slate-700 dark:text-slate-200 border border-emerald-100 dark:border-emerald-900/50">
                                 <i data-lucide="pill" class="w-3.5 h-3.5 text-emerald-600 dark:text-emerald-300"></i>
-                                {{ $locale === 'hi' ? '????? ?? ???? ???????' : 'Uses and dosage notes' }}
+                                {{ $locale === 'hi' ? 'उपयोग और खुराक नोट्स' : 'Uses and dosage notes' }}
                             </span>
                             <span class="inline-flex items-center gap-2 rounded-full bg-white/90 dark:bg-slate-900/80 px-3 py-2 text-xs font-bold text-slate-700 dark:text-slate-200 border border-cyan-100 dark:border-cyan-900/50">
                                 <i data-lucide="alert-triangle" class="w-3.5 h-3.5 text-cyan-600 dark:text-cyan-300"></i>
-                                {{ $locale === 'hi' ? '?????????? ?? ???????' : 'Precautions and warnings' }}
+                                {{ $locale === 'hi' ? 'सावधानियाँ और चेतावनियाँ' : 'Precautions and warnings' }}
                             </span>
                             <span class="inline-flex items-center gap-2 rounded-full bg-white/90 dark:bg-slate-900/80 px-3 py-2 text-xs font-bold text-slate-700 dark:text-slate-200 border border-amber-100 dark:border-amber-900/50">
                                 <i data-lucide="clipboard-list" class="w-3.5 h-3.5 text-amber-600 dark:text-amber-300"></i>
-                                {{ $locale === 'hi' ? '??????? ?? ????? ??????' : 'Report and update options' }}
+                                {{ $locale === 'hi' ? 'रिपोर्टिंग और अपडेट विकल्प' : 'Report and update options' }}
                             </span>
                         </div>
                         <div class="mt-6 flex flex-wrap gap-3">
-                            <a href="{{ route('medicines.index') }}" class="inline-flex items-center justify-center rounded-2xl bg-emerald-600 px-5 py-3 text-sm font-bold text-white shadow-lg shadow-emerald-600/20 transition hover:bg-emerald-700">
-                                {{ $locale === 'hi' ? '????? ?????' : 'Browse Medicines' }}
-                            </a>
-                            <button type="button" onclick="toggleChatbot()" class="inline-flex items-center justify-center rounded-2xl border border-slate-200 dark:border-slate-700 bg-white/90 dark:bg-slate-950 px-5 py-3 text-sm font-bold text-slate-800 dark:text-slate-100 transition hover:border-emerald-200 hover:bg-emerald-50 dark:hover:bg-emerald-950/20">
-                                {{ $locale === 'hi' ? '??? ?? ???? ??? ?????' : 'Ask About a Medicine' }}
-                            </button>
+                            <a href="{{ route('medicines.index') }}" class="group relative inline-flex items-center justify-center overflow-hidden rounded-2xl border border-emerald-600 bg-emerald-600 px-5 py-3 text-sm font-bold text-white shadow-lg shadow-emerald-600/20 transition-all duration-300 ease-out hover:-translate-y-0.5 hover:border-emerald-500 active:scale-[0.98] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-emerald-400 focus-visible:ring-offset-2 focus-visible:ring-offset-white dark:focus-visible:ring-offset-slate-950"><span class="pointer-events-none absolute inset-0 bg-gradient-to-r from-emerald-400 via-teal-400 to-emerald-500 translate-y-full transition-transform duration-300 ease-out group-hover:translate-y-0 group-active:translate-y-0"></span><span class="pointer-events-none absolute inset-0 opacity-0 transition-opacity duration-300 group-hover:opacity-100 bg-white/10"></span><span class="relative z-10">{{ $locale === 'hi' ? 'दवाएं देखें' : 'Browse Medicines' }}</span></a>
+                            <button type="button" onclick="toggleChatbot()" class="group relative inline-flex items-center justify-center overflow-hidden rounded-2xl border border-slate-200 dark:border-slate-700 bg-white/90 dark:bg-slate-950 px-5 py-3 text-sm font-bold text-slate-800 dark:text-slate-100 transition-all duration-300 ease-out hover:-translate-y-0.5 hover:border-emerald-400 hover:text-white dark:hover:text-emerald-950 active:scale-[0.98] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-emerald-400 focus-visible:ring-offset-2 focus-visible:ring-offset-white dark:focus-visible:ring-offset-slate-950"><span class="pointer-events-none absolute inset-0 bg-gradient-to-r from-emerald-500 via-teal-500 to-emerald-600 translate-y-full transition-transform duration-300 ease-out group-hover:translate-y-0 group-active:translate-y-0"></span><span class="pointer-events-none absolute inset-0 opacity-0 transition-opacity duration-300 group-hover:opacity-100 bg-white/10"></span><span class="relative z-10">{{ $locale === 'hi' ? 'किसी दवा पर पूछें' : 'Ask About a Medicine' }}</span></button>
                         </div>
                     </div>
 
@@ -209,7 +385,7 @@ $locale === 'hi'
                         <div class="relative rounded-[2rem] border border-white/70 dark:border-slate-800 bg-white/90 dark:bg-slate-900/90 p-5 shadow-2xl">
                             <div class="flex items-center justify-between">
                                 <div>
-                                    <p class="text-[11px] font-bold uppercase tracking-[0.22em] text-emerald-700 dark:text-emerald-300">{{ $locale === 'hi' ? '??? ????' : 'Simple View' }}</p>
+                                    <p class="text-[11px] font-bold uppercase tracking-[0.22em] text-emerald-700 dark:text-emerald-300">{{ $locale === 'hi' ? 'सरल दृश्य' : 'Simple View' }}</p>
                                     <h3 class="mt-1 text-lg font-bold text-slate-900 dark:text-white">Paracetamol 650</h3>
                                 </div>
                                 <div class="flex h-14 w-14 items-center justify-center rounded-2xl bg-gradient-to-br from-emerald-500 to-cyan-500 text-white shadow-lg">
@@ -218,17 +394,17 @@ $locale === 'hi'
                             </div>
                             <div class="mt-5 space-y-3">
                                 <div class="rounded-2xl border border-emerald-100 dark:border-emerald-900/50 bg-emerald-50/70 dark:bg-emerald-950/20 p-4">
-                                    <p class="text-xs font-bold uppercase tracking-wider text-emerald-700 dark:text-emerald-300">{{ $locale === 'hi' ? '????? ?? ?????' : 'Commonly used for' }}</p>
-                                    <p class="mt-1 text-sm font-medium text-slate-700 dark:text-slate-200">{{ $locale === 'hi' ? '?????, ???? ????, ???????' : 'Fever, body ache, headache' }}</p>
+                                    <p class="text-xs font-bold uppercase tracking-wider text-emerald-700 dark:text-emerald-300">{{ $locale === 'hi' ? 'आमतौर पर उपयोग' : 'Commonly used for' }}</p>
+                                    <p class="mt-1 text-sm font-medium text-slate-700 dark:text-slate-200">{{ $locale === 'hi' ? 'बुखार, शरीर दर्द, सिरदर्द' : 'Fever, body ache, headache' }}</p>
                                 </div>
                                 <div class="grid grid-cols-2 gap-3">
                                     <div class="rounded-2xl border border-slate-200 dark:border-slate-800 bg-slate-50/80 dark:bg-slate-950/70 p-4">
-                                        <p class="text-[11px] font-bold uppercase tracking-wider text-slate-500 dark:text-slate-400">{{ $locale === 'hi' ? '???????' : 'Caution' }}</p>
-                                        <p class="mt-1 text-sm font-medium text-slate-700 dark:text-slate-200">{{ $locale === 'hi' ? '???? ??? ??? ?????? ?? ?????' : 'Check with a doctor in liver disease' }}</p>
+                                        <p class="text-[11px] font-bold uppercase tracking-wider text-slate-500 dark:text-slate-400">{{ $locale === 'hi' ? 'सावधानी' : 'Caution' }}</p>
+                                        <p class="mt-1 text-sm font-medium text-slate-700 dark:text-slate-200">{{ $locale === 'hi' ? 'लिवर समस्या में डॉक्टर से पूछें' : 'Check with a doctor in liver disease' }}</p>
                                     </div>
                                     <div class="rounded-2xl border border-slate-200 dark:border-slate-800 bg-slate-50/80 dark:bg-slate-950/70 p-4">
-                                        <p class="text-[11px] font-bold uppercase tracking-wider text-slate-500 dark:text-slate-400">{{ $locale === 'hi' ? '????? ???' : 'Watch for' }}</p>
-                                        <p class="mt-1 text-sm font-medium text-slate-700 dark:text-slate-200">{{ $locale === 'hi' ? '???????? ?????? ?? ???? ????' : 'Unusual allergy or accidental overuse' }}</p>
+                                        <p class="text-[11px] font-bold uppercase tracking-wider text-slate-500 dark:text-slate-400">{{ $locale === 'hi' ? 'ध्यान दें' : 'Watch for' }}</p>
+                                        <p class="mt-1 text-sm font-medium text-slate-700 dark:text-slate-200">{{ $locale === 'hi' ? 'असामान्य एलर्जी या गलती से ज्यादा खुराक' : 'Unusual allergy or accidental overuse' }}</p>
                                     </div>
                                 </div>
                                 <div class="rounded-2xl border border-cyan-100 dark:border-cyan-900/50 bg-cyan-50/80 dark:bg-cyan-950/20 p-4">
@@ -237,8 +413,8 @@ $locale === 'hi'
                                             <i data-lucide="sparkles" class="w-4 h-4"></i>
                                         </div>
                                         <div>
-                                            <p class="text-sm font-semibold text-slate-900 dark:text-white">{{ $locale === 'hi' ? '??????, ????? ???? ????? ???????' : 'Clear, scan-friendly information' }}</p>
-                                            <p class="mt-1 text-xs leading-6 text-slate-600 dark:text-slate-300">{{ $locale === 'hi' ? '???? ???? ??????? ??????? ??, ?????? ??????? ????? ?????' : 'Find useful guidance quickly without heavy text walls.' }}</p>
+                                            <p class="text-sm font-semibold text-slate-900 dark:text-white">{{ $locale === 'hi' ? 'साफ़, स्कैन-फ्रेंडली जानकारी' : 'Clear, scan-friendly information' }}</p>
+                                            <p class="mt-1 text-xs leading-6 text-slate-600 dark:text-slate-300">{{ $locale === 'hi' ? 'भारी टेक्स्ट के बिना जरूरी गाइडेंस जल्दी पाएँ।' : 'Find useful guidance quickly without heavy text walls.' }}</p>
                                         </div>
                                     </div>
                                 </div>
@@ -249,8 +425,8 @@ $locale === 'hi'
 
                 <div class="grid gap-4 xl:grid-cols-3">
                     <div class="xl:col-span-3 rounded-[1.5rem] border border-white/80 dark:border-slate-800 bg-white/75 dark:bg-slate-900/70 px-5 py-4">
-                        <p class="text-xs font-bold uppercase tracking-[0.22em] text-slate-500 dark:text-slate-400">{{ $locale === 'hi' ? '?????? ??????' : 'Quick Access' }}</p>
-                        <h3 class="mt-2 text-xl font-bold text-slate-950 dark:text-white">{{ $locale === 'hi' ? '??? ??????? ?? ??? ????? ?????? ?????' : 'Tools that pair well with medicine info' }}</h3>
+                        <p class="text-xs font-bold uppercase tracking-[0.22em] text-slate-500 dark:text-slate-400">{{ $locale === 'hi' ? 'तेज़ पहुंच' : 'Quick Access' }}</p>
+                        <h3 class="mt-2 text-xl font-bold text-slate-950 dark:text-white">{{ $locale === 'hi' ? 'औषधि जानकारी के साथ जुड़ने वाले उपयोगी टूल्स' : 'Tools that pair well with medicine info' }}</h3>
                     </div>
 
                     <a href="{{ route('symptom-test') }}" class="flex items-start gap-4 rounded-2xl border border-teal-100 dark:border-teal-900/40 bg-white/90 dark:bg-teal-950/20 p-4 transition hover:-translate-y-0.5">
@@ -258,8 +434,8 @@ $locale === 'hi'
                             <i data-lucide="stethoscope" class="w-5 h-5"></i>
                         </div>
                         <div>
-                            <p class="text-sm font-bold text-slate-900 dark:text-white">{{ $locale === 'hi' ? '????? ???????' : 'Symptom Test' }}</p>
-                            <p class="mt-1 text-xs leading-6 text-slate-600 dark:text-slate-300">{{ $locale === 'hi' ? '??????? ?????? ????? ?? ??? ????? ?? ?????' : 'Understand a likely condition and reach the right department.' }}</p>
+                            <p class="text-sm font-bold text-slate-900 dark:text-white">{{ $locale === 'hi' ? 'लक्षण परीक्षण' : 'Symptom Test' }}</p>
+                            <p class="mt-1 text-xs leading-6 text-slate-600 dark:text-slate-300">{{ $locale === 'hi' ? 'संभावित समस्या समझें और सही विभाग तक पहुँचें।' : 'Understand a likely condition and reach the right department.' }}</p>
                         </div>
                     </a>
 
@@ -268,8 +444,8 @@ $locale === 'hi'
                             <i data-lucide="bot" class="w-5 h-5"></i>
                         </div>
                         <div>
-                            <p class="text-sm font-bold text-slate-900 dark:text-white">{{ $locale === 'hi' ? 'AI ?????' : 'AI Health Assistant' }}</p>
-                            <p class="mt-1 text-xs leading-6 text-slate-600 dark:text-slate-300">{{ $locale === 'hi' ? '???, ?????? ?? ???? ????? ?? ?????? ?????????? ????' : 'Get quick guidance about medicines, doctors, and next steps.' }}</p>
+                            <p class="text-sm font-bold text-slate-900 dark:text-white">{{ $locale === 'hi' ? 'AI सहायक' : 'AI Health Assistant' }}</p>
+                            <p class="mt-1 text-xs leading-6 text-slate-600 dark:text-slate-300">{{ $locale === 'hi' ? 'दवा, डॉक्टर और अगले कदमों पर तेज़ गाइडेंस पाएँ।' : 'Get quick guidance about medicines, doctors, and next steps.' }}</p>
                         </div>
                     </button>
 
@@ -278,41 +454,43 @@ $locale === 'hi'
                             <i data-lucide="book-open" class="w-5 h-5"></i>
                         </div>
                         <div>
-                            <p class="text-sm font-bold text-slate-900 dark:text-white">{{ $locale === 'hi' ? '????????? ???' : 'Health Articles' }}</p>
-                            <p class="mt-1 text-xs leading-6 text-slate-600 dark:text-slate-300">{{ $locale === 'hi' ? '?????, ????? ?? ?????? ?? ???? ??????' : 'Easy reading on treatments, medicines, and prevention.' }}</p>
+                            <p class="text-sm font-bold text-slate-900 dark:text-white">{{ $locale === 'hi' ? 'स्वास्थ्य लेख' : 'Health Articles' }}</p>
+                            <p class="mt-1 text-xs leading-6 text-slate-600 dark:text-slate-300">{{ $locale === 'hi' ? 'उपचार, दवाओं और बचाव पर आसान भाषा में लेख पढ़ें।' : 'Easy reading on treatments, medicines, and prevention.' }}</p>
                         </div>
                     </a>
                 </div>
             </div>
         </section>
 
-        <section class="relative overflow-hidden rounded-[2rem] border border-cyan-200/70 dark:border-cyan-900/40 bg-gradient-to-br from-cyan-50 via-white to-indigo-50/70 dark:from-slate-900 dark:via-slate-900 dark:to-slate-950 p-6 sm:p-8 shadow-sm">
-            <div class="absolute right-0 top-0 h-44 w-44 rounded-full bg-cyan-300/15 blur-3xl"></div>
-            <div class="absolute bottom-0 left-0 h-36 w-36 rounded-full bg-indigo-300/15 blur-3xl"></div>
-            <div class="flex flex-col gap-3 sm:flex-row sm:items-end sm:justify-between mb-6">
-                <div class="max-w-3xl">
+        <section class="relative overflow-hidden rounded-[2rem] border border-cyan-200/70 dark:border-cyan-900/40 bg-gradient-to-br from-cyan-50 via-white to-indigo-50/70 dark:from-slate-900 dark:via-slate-900 dark:to-slate-950 p-5 sm:p-8 shadow-sm">
+            <div class="pointer-events-none absolute right-0 top-0 h-44 w-44 rounded-full bg-cyan-300/15 blur-3xl"></div>
+            <div class="pointer-events-none absolute bottom-0 left-0 h-36 w-36 rounded-full bg-indigo-300/15 blur-3xl"></div>
+            <div class="relative z-10 mb-6 flex flex-col gap-4 sm:flex-row sm:items-end sm:justify-between">
+                <div class="max-w-3xl min-w-0">
                     <p class="text-xs font-bold uppercase tracking-[0.22em] text-cyan-700 dark:text-cyan-300">{{ $locale === 'hi' ? 'वेलनेस टूल्स' : 'Wellness Tools' }}</p>
                     <h2 class="mt-2 text-2xl sm:text-3xl font-extrabold text-slate-950 dark:text-white">{{ $locale === 'hi' ? 'गतिविधियां, क्विज़ और शांत अभ्यास' : 'Activities, Quizzes, and Calming Tools' }}</h2>
                     <p class="mt-3 text-sm sm:text-base leading-7 text-slate-600 dark:text-slate-300">{{ $locale === 'hi' ? 'तनाव राहत, आत्म-जागरूकता और छोटे शांत विराम के लिए सहायक टूल्स खोजें।' : 'Explore supportive tools for stress relief, self-awareness, and calmer daily pauses.' }}</p>
                 </div>
-                <a href="{{ route('activities.index') }}" class="inline-flex items-center justify-center rounded-2xl border border-cyan-200 dark:border-cyan-800/60 bg-white dark:bg-slate-950 px-4 py-3 text-sm font-bold text-cyan-800 dark:text-cyan-200 hover:border-cyan-300 hover:bg-cyan-50 dark:hover:bg-cyan-950/30">
-                    {{ $locale === 'hi' ? 'सभी वेलनेस टूल्स देखें' : 'View All Wellness Tools' }}
+                <a href="{{ route('activities.index') }}" class="group relative z-20 inline-flex w-full sm:w-auto items-center justify-center overflow-hidden rounded-2xl border border-cyan-200 dark:border-cyan-800/60 bg-white dark:bg-slate-950 px-4 py-3 text-sm font-bold text-cyan-800 dark:text-cyan-200 transition-all duration-300 ease-out hover:border-cyan-500 hover:text-white dark:hover:text-cyan-950 active:scale-[0.98] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-cyan-400 focus-visible:ring-offset-2 focus-visible:ring-offset-white dark:focus-visible:ring-offset-slate-950">
+                    <span class="pointer-events-none absolute inset-0 bg-gradient-to-r from-cyan-500 via-teal-500 to-cyan-600 translate-y-full transition-transform duration-300 ease-out group-hover:translate-y-0 group-active:translate-y-0"></span>
+                    <span class="pointer-events-none absolute inset-0 opacity-0 transition-opacity duration-300 group-hover:opacity-100 bg-white/10"></span>
+                    <span class="relative z-10">{{ $locale === 'hi' ? 'सभी वेलनेस टूल्स देखें' : 'View All Wellness Tools' }}</span>
                 </a>
             </div>
 
-            <div class="grid grid-cols-1 xl:grid-cols-[0.9fr,1.1fr] gap-5 items-start">
+            <div class="relative z-10 grid grid-cols-1 gap-5 items-start xl:grid-cols-[0.9fr,1.1fr]">
                 <div class="rounded-[1.75rem] border border-white/80 dark:border-slate-800 bg-white/90 dark:bg-slate-900/90 p-6 shadow-sm">
-                    <div class="flex items-center justify-between gap-4">
-                        <div>
+                    <div class="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
+                        <div class="min-w-0">
                             <p class="text-[11px] font-bold uppercase tracking-[0.22em] text-indigo-700 dark:text-indigo-300">{{ $locale === 'hi' ? 'माइक्रो ब्रेक्स' : 'Micro Breaks' }}</p>
                             <h3 class="mt-2 text-xl font-bold text-slate-950 dark:text-white">{{ $locale === 'hi' ? 'मानसिक स्पेस बनाने के छोटे टूल्स' : 'Small tools that create mental breathing room' }}</h3>
                         </div>
-                        <div class="flex h-14 w-14 shrink-0 items-center justify-center rounded-2xl bg-gradient-to-br from-cyan-500 to-indigo-500 text-white shadow-lg">
+                        <div class="flex h-14 w-14 shrink-0 self-start items-center justify-center rounded-2xl bg-gradient-to-br from-cyan-500 to-indigo-500 text-white shadow-lg">
                             <i data-lucide="sparkles" class="w-6 h-6"></i>
                         </div>
                     </div>
                     <div class="mt-6 rounded-[1.5rem] border border-indigo-100 dark:border-indigo-900/40 bg-gradient-to-br from-indigo-50 to-cyan-50 dark:from-indigo-950/20 dark:to-cyan-950/20 p-5">
-                        <div class="flex items-end justify-between gap-4">
+                        <div class="flex flex-col gap-5 sm:flex-row sm:items-end sm:justify-between">
                             <div class="space-y-2">
                                 <div class="flex items-center gap-2 text-sm font-semibold text-slate-800 dark:text-slate-100">
                                     <span class="inline-flex h-8 w-8 items-center justify-center rounded-xl bg-white dark:bg-slate-900 text-cyan-700 dark:text-cyan-300 shadow-sm">1</span>
@@ -327,7 +505,7 @@ $locale === 'hi'
                                     <span>{{ $locale === 'hi' ? 'रिलीज़ करें' : 'Reset' }}</span>
                                 </div>
                             </div>
-                            <div class="grid h-28 w-28 place-items-center rounded-full border-8 border-cyan-100 dark:border-cyan-900/40 bg-white/80 dark:bg-slate-900/80 shadow-inner">
+                            <div class="mx-auto grid h-24 w-24 place-items-center rounded-full border-8 border-cyan-100 dark:border-cyan-900/40 bg-white/80 dark:bg-slate-900/80 shadow-inner sm:mx-0 sm:h-28 sm:w-28">
                                 <div class="grid h-16 w-16 place-items-center rounded-full bg-cyan-500/10 text-cyan-700 dark:text-cyan-300">
                                     <i data-lucide="sparkles" class="w-8 h-8"></i>
                                 </div>
@@ -528,21 +706,21 @@ $locale === 'hi'
                     <p class="text-[11px] sm:text-xs font-bold uppercase tracking-wider text-teal-700 dark:text-teal-300">
                         {{ $locale === 'hi' ? '100% निःशुल्क और पारदर्शी' : '100% Free & Transparent' }}
                     </p>
-                    <p class="text-sm sm:text-base font-semibold text-slate-900 dark:text-white mt-1">
+                    <p class="mt-1 text-sm font-semibold leading-6 text-slate-900 dark:text-white sm:text-base">
                         {{ $locale === 'hi' ? 'आयुष्मान भारत और जन आधार कार्ड स्वीकृत' : 'Ayushman Bharat & Jan Aadhaar Cards Accepted' }}
                     </p>
-                    <p class="text-xs sm:text-sm text-slate-600 dark:text-slate-300 mt-1">
+                    <p class="mt-1 text-xs leading-6 text-slate-600 dark:text-slate-300 sm:text-sm">
                         {{ $locale === 'hi' ? 'सत्यापित अस्पतालों और डॉक्टरों से सीधे जुड़ें। न बिचौलिया, न बुकिंग शुल्क, और सरकारी स्वास्थ्य योजनाओं का पूरा समर्थन।' : 'Connect directly with verified hospitals and doctors. Zero intermediaries, zero booking fees, and full support for government health schemes.' }}
                     </p>
                 </div>
-                <div class="flex items-center gap-2.5 flex-nowrap overflow-x-auto whitespace-nowrap pb-1">
-                    <span class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-emerald-50 dark:bg-emerald-950/30 border border-emerald-200 dark:border-emerald-900 text-xs font-bold text-emerald-700 dark:text-emerald-300">
+                <div class="grid grid-cols-1 gap-2 sm:flex sm:flex-wrap sm:items-center sm:gap-2.5">
+                    <span class="inline-flex w-full items-center justify-center gap-1.5 rounded-lg border border-emerald-200 bg-emerald-50 px-3 py-2 text-xs font-bold text-emerald-700 dark:border-emerald-900 dark:bg-emerald-950/30 dark:text-emerald-300 sm:w-auto sm:justify-start">
                         <i data-lucide="check-circle-2" class="w-3.5 h-3.5"></i> {{ $locale === 'hi' ? 'आयुष्मान भारत' : 'Ayushman Bharat' }}
                     </span>
-                    <span class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-sky-50 dark:bg-sky-950/30 border border-sky-200 dark:border-sky-900 text-xs font-bold text-sky-700 dark:text-sky-300">
+                    <span class="inline-flex w-full items-center justify-center gap-1.5 rounded-lg border border-sky-200 bg-sky-50 px-3 py-2 text-xs font-bold text-sky-700 dark:border-sky-900 dark:bg-sky-950/30 dark:text-sky-300 sm:w-auto sm:justify-start">
                         <i data-lucide="check-circle-2" class="w-3.5 h-3.5"></i> {{ $locale === 'hi' ? 'जन आधार' : 'Jan Aadhaar' }}
                     </span>
-                    <span class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-violet-50 dark:bg-violet-950/30 border border-violet-200 dark:border-violet-900 text-xs font-bold text-violet-700 dark:text-violet-300">
+                    <span class="inline-flex w-full items-center justify-center gap-1.5 rounded-lg border border-violet-200 bg-violet-50 px-3 py-2 text-xs font-bold text-violet-700 dark:border-violet-900 dark:bg-violet-950/30 dark:text-violet-300 sm:w-auto sm:justify-start">
                         <i data-lucide="check-circle-2" class="w-3.5 h-3.5"></i> {{ $locale === 'hi' ? 'कैशलेस बीमा' : 'Cashless Insurance' }}
                     </span>
                 </div>

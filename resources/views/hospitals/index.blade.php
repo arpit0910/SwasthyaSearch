@@ -6,14 +6,33 @@
 $seoCityInput = request('city');
 $seoCity = $activeCity ?? config('healthcare.active_city', 'Jaipur');
 $hasCity = true;
-$pageTitle = "Hospitals in {$seoCity} | Find Services & Contacts | Arogio";
+$pageTitle = "Hospitals & Clinics | Find Services & Contacts | Arogio";
 $pageDescription = $hasCity
 ? "Find hospitals in {$seoCity} by service, department, and location. Call hospitals directly to confirm services and timings before visiting."
-: 'Search hospitals by department, service, or locality in Jaipur. Find hospital contact details, locations, and direct access to healthcare providers.';
+: 'Search hospitals by department, service, or locality. Find hospital contact details, locations, and direct access to healthcare providers.';
 $hasActiveMobileFilters = !empty(array_filter((array) request('type', [])))
     || !empty(array_filter((array) request('city', [])))
     || !empty(array_filter((array) request('benefit', [])));
 $isNearbyActive = filled(request('user_lat')) && filled(request('user_lng'));
+$normalizeCityOption = function ($city): string {
+    if (is_array($city)) {
+        $city = $city['name'] ?? $city['city'] ?? $city['label'] ?? $city['value'] ?? reset($city);
+    }
+
+    return is_scalar($city) ? trim((string) $city) : '';
+};
+
+$cityOptions = collect((array) ($cities ?? []))
+    ->map($normalizeCityOption)
+    ->filter()
+    ->unique(fn ($city) => strtolower(preg_replace('/\s+/', ' ', $city)))
+    ->values();
+if ($cityOptions->isEmpty() && filled($seoCity)) {
+    $cityOptions = collect([$seoCity]);
+}
+$selectedCity = request('city');
+$selectedCity = is_array($selectedCity) ? ($selectedCity[0] ?? null) : $selectedCity;
+$selectedCity = filled($selectedCity) ? trim((string) $selectedCity) : ($cityOptions->first() ?? $seoCity);
 @endphp
 @section('meta_title', $pageTitle)
 @section('meta_description', $pageDescription)
@@ -32,7 +51,7 @@ $isNearbyActive = filled(request('user_lat')) && filled(request('user_lng'));
         </span>
         <h1
             class="text-3xl sm:text-5xl font-extrabold tracking-tight mb-4 bg-gradient-to-r from-white via-slate-100 to-slate-300 bg-clip-text text-transparent py-2 leading-normal">
-            {{ $hasCity ? "Find Hospitals in {$seoCity}" : 'Find Hospitals in Jaipur' }}
+            {{ $locale === 'hi' ? 'अस्पताल और क्लीनिक खोजें' : 'Find Hospitals & Clinics' }}
         </h1>
         <p class="max-w-2xl mx-auto text-slate-300 text-base sm:text-lg leading-relaxed">
             {{ $locale === 'hi' ? 'आपातकालीन संपर्क नंबरों और पूर्ण पते के साथ आपके शहर में 100% सत्यापित और विश्वसनीय चिकित्सा सुविधाएं।' : 'Discover accredited hospitals and specialized healthcare clinics near you. Complete with verified emergency contacts and locations.' }}
@@ -40,21 +59,12 @@ $isNearbyActive = filled(request('user_lat')) && filled(request('user_lng'));
     </div>
 </header>
 
-<section class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 mt-6">
-    <div class="text-center">
-        <p class="text-sm text-slate-600 max-w-5xl mx-auto mb-4">
-            Find hospitals, clinics, emergency care, and healthcare facilities in Jaipur. Please call before visiting to confirm services, timings, and emergency availability.
-        </p>
-    </div>
-</section>
-
-<section class="lg:hidden max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 mt-4 sm:-mt-8 relative z-20 w-full mb-6">
+<section class="lg:hidden max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 mt-4 relative z-20 w-full mb-6">
     <form action="{{ route('hospitals.index') }}" method="POST" class="bg-white dark:bg-slate-900 rounded-2xl shadow-xl border border-slate-200/80 dark:border-slate-700/70 p-4 sm:p-5 backdrop-blur-xl">
         @csrf
         @foreach ((array) request('type', []) as $typeVal)
         <input type="hidden" name="type[]" value="{{ $typeVal }}">
         @endforeach
-        <input type="hidden" name="city[]" value="{{ $activeCity ?? config('healthcare.active_city', 'Jaipur') }}">
         @foreach ((array) request('benefit', []) as $benefitVal)
         <input type="hidden" name="benefit[]" value="{{ $benefitVal }}">
         @endforeach
@@ -65,8 +75,8 @@ $isNearbyActive = filled(request('user_lat')) && filled(request('user_lng'));
             <input type="text" name="search"
                 placeholder="{{ $locale === 'hi' ? 'अस्पताल, सेवाएँ, स्थान खोजें...' : 'Search hospitals, services, location...' }}"
                 value="{{ request('search', $filters['search'] ?? '') }}"
-                class="h-12 w-full pl-10 pr-14 bg-slate-50 border border-slate-200 rounded-xl text-sm focus:outline-none focus:border-teal-500 focus:ring-2 focus:ring-teal-500/20 transition-all duration-200 font-medium" />
-            <button type="button" data-open-mobile-filters onclick="openMobileFilters()" aria-label="Open filters" class="lg:hidden absolute right-2 top-1/2 -translate-y-1/2 w-8 h-8 rounded-lg border flex items-center justify-center transition-all duration-200 {{ $hasActiveMobileFilters ? 'border-teal-600 bg-teal-600 text-white shadow-md shadow-teal-500/30' : 'border-teal-200 bg-white text-teal-700 hover:bg-teal-50' }}" title="Filters">
+                class="h-12 w-full pl-10 pr-12 bg-slate-50 border border-slate-200 rounded-xl text-sm focus:outline-none focus:border-teal-500 focus:ring-2 focus:ring-teal-500/20 transition-all duration-200 font-medium" />
+            <button type="button" data-open-mobile-filters onclick="openMobileFilters()" aria-label="Open filters" class="lg:hidden absolute right-1.5 top-1/2 -translate-y-1/2 w-9 h-9 rounded-lg border flex items-center justify-center transition-all duration-200 {{ $hasActiveMobileFilters ? 'border-teal-600 bg-teal-600 text-white shadow-md shadow-teal-500/30' : 'border-teal-200 bg-white text-teal-700 hover:bg-teal-50' }}" title="Filters">
                 <i data-lucide="filter" class="w-4 h-4"></i>
             </button>
         </div>
@@ -130,16 +140,11 @@ $isNearbyActive = filled(request('user_lat')) && filled(request('user_lng'));
                 </div>
 
                 <!-- City Filter -->
-                <div class="hidden">
+                <div>
                     <label class="block text-xs font-bold text-slate-600 mb-2 uppercase tracking-wider">{{ $locale === 'hi' ? 'शहर' : 'City' }}</label>
-                    @php 
-                        $selectedCities = is_array(request('city')) ? request('city') : (request('city') && request('city') !== 'All' ? [request('city')] : []);
-                    @endphp
-                    <select name="city[]" multiple
-                        data-placeholder="{{ $locale === 'hi' ? 'शहर चुनें' : 'Select cities' }}"
-                        class="h-12 w-full px-4 bg-slate-50 border border-slate-200 rounded-xl text-sm focus:outline-none focus:border-teal-500 focus:ring-2 focus:ring-teal-500/20 transition-all duration-200 font-medium text-slate-700">
-                        @foreach ($cities as $c)
-                        <option value="{{ $c }}" {{ in_array($c, $selectedCities) ? 'selected' : '' }}>{{ $c }}</option>
+                    <select name="city[]" class="h-12 w-full px-4 bg-slate-50 border border-slate-200 rounded-xl text-sm focus:outline-none focus:border-teal-500 focus:ring-2 focus:ring-teal-500/20 transition-all duration-200 font-medium text-slate-700">
+                        @foreach ($cityOptions as $cityOption)
+                        <option value="{{ $cityOption }}" {{ $selectedCity === $cityOption ? 'selected' : '' }}>{{ $cityOption }}</option>
                         @endforeach
                     </select>
                 </div>
@@ -194,7 +199,7 @@ $isNearbyActive = filled(request('user_lat')) && filled(request('user_lng'));
             <div class="relative">
                 <i data-lucide="search" class="absolute inset-y-0 left-0 flex items-center pl-4 pointer-events-none w-4 h-4 text-slate-400"></i>
                 <input type="text" name="search"
-                    placeholder="{{ $locale === 'hi' ? 'अस्पताल, क्लिनिक, पता या शहर खोजें...' : 'Search hospitals, clinics, address, city...' }}"
+                    placeholder="{{ $locale === 'hi' ? 'अस्पताल, क्लिनिक, पता या शहर खोजें...' : 'Search hospitals, clinics, address, or services...' }}"
                     value="{{ request('search', $filters['search'] ?? '') }}"
                     class="h-12 w-full pl-10 pr-4 bg-slate-50 border border-slate-200 rounded-xl text-sm focus:outline-none focus:border-teal-500 focus:ring-2 focus:ring-teal-500/20 transition-all duration-200 font-medium" />
             </div>
@@ -212,17 +217,11 @@ $isNearbyActive = filled(request('user_lat')) && filled(request('user_lng'));
                     @endforeach
                 </select>
             </div>
-
-            <!-- City Filter - Multiselect -->
+            <!-- City Filter -->
             <div>
-                @php 
-                    $selectedCities = is_array(request('city')) ? request('city') : (request('city') && request('city') !== 'All' ? [request('city')] : []);
-                @endphp
-                <select name="city[]" multiple
-                    data-placeholder="{{ $locale === 'hi' ? 'शहर चुनें' : 'Select cities' }}"
-                    class="h-12 w-full px-4 bg-slate-50 border border-slate-200 rounded-xl text-sm focus:outline-none focus:border-teal-500 focus:ring-2 focus:ring-teal-500/20 transition-all duration-200 font-medium text-slate-700">
-                    @foreach ($cities as $c)
-                    <option value="{{ $c }}" {{ in_array($c, $selectedCities) ? 'selected' : '' }}>{{ $c }}</option>
+                <select name="city[]" class="h-12 w-full px-4 bg-slate-50 border border-slate-200 rounded-xl text-sm focus:outline-none focus:border-teal-500 focus:ring-2 focus:ring-teal-500/20 transition-all duration-200 font-medium text-slate-700">
+                    @foreach ($cityOptions as $cityOption)
+                    <option value="{{ $cityOption }}" {{ $selectedCity === $cityOption ? 'selected' : '' }}>{{ $cityOption }}</option>
                     @endforeach
                 </select>
             </div>

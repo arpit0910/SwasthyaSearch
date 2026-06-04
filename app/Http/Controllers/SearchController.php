@@ -197,7 +197,7 @@ class SearchController extends Controller
             'phone_2' => $doctor->phone_2 ?: $doctor->hospitals->first()?->phone_2,
             'country_code_1' => $doctor->country_code_1,
             'country_code_2' => $doctor->country_code_2,
-            'website' => $doctor->website && !str_contains($doctor->website, 'swasthyasearch.com') ? $doctor->website : null,
+            'website' => $doctor->website && !str_contains($doctor->website, 'arogio.com') ? $doctor->website : null,
             'gender' => $doctor->gender,
             'languages_spoken' => $doctor->languages_spoken ?: [],
             'consultation_fee' => $doctor->consultation_fee ?: $doctor->hospitals->first()?->pivot?->consultation_fee,

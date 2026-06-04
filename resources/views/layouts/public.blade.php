@@ -56,10 +56,10 @@
 
     $defaultTitle = $isHindi
     ? 'Arogio - डॉक्टर, अस्पताल और ब्लड बैंक खोजें'
-    : 'Arogio - Find Doctors, Hospitals, and Blood Banks in Jaipur';
+    : 'Arogio - Find Doctors, Hospitals, and Blood Banks';
     $defaultDescription = $isHindi
     ? 'arogio पर अपने शहर में सत्यापित डॉक्टर, अस्पताल, क्लिनिक और ब्लड बैंक खोजें।'
-    : 'Find verified doctors, hospitals, clinics, blood banks, and health articles in Jaipur on Arogio.';
+    : 'Find verified doctors, hospitals, clinics, blood banks, and health articles on Arogio.';
 
     $routeName = request()->route()?->getName() ?? '';
     $routeSeo = [
@@ -117,7 +117,7 @@
     ],
     'support.crisis' => [
     'title' => $isHindi ? 'संकट सहायता | Arogio' : 'Crisis Support | Arogio',
-    'description' => $isHindi ? 'असुरक्षित महसूस होने पर जयपुर में तुरंत सहायता विकल्प देखें।' : 'See immediate support options in Jaipur if you feel unsafe.',
+    'description' => $isHindi ? 'असुरक्षित महसूस होने पर तुरंत सहायता विकल्प देखें।' : 'See immediate support options if you feel unsafe.',
     ],
     'about' => [
     'title' => $isHindi ? 'हमारे बारे में | Arogio' : 'About Us | Arogio',
@@ -140,7 +140,7 @@
     ? 'noindex,follow,max-image-preview:large,max-snippet:-1,max-video-preview:-1'
     : 'index,follow,max-image-preview:large,max-snippet:-1,max-video-preview:-1';
     $metaRobots = trim($__env->yieldContent('meta_robots', $defaultRobots));
-    $metaKeywords = trim($__env->yieldContent('meta_keywords', 'Jaipur doctors, Jaipur hospitals, Jaipur blood banks, Jaipur healthcare, medical specialists'));
+    $metaKeywords = trim($__env->yieldContent('meta_keywords', 'doctors, hospitals, blood banks, healthcare, medical specialists'));
     $brandLogoUrl = asset('img/arogio-logo.png');
     $brandLogoDarkUrl = asset('img/arogio-logo-dark.png');
     $brandFaviconUrl = asset('img/fav-icon.png');
@@ -233,7 +233,7 @@
     'blood_banks.index' => $isHindi ? 'ब्लड बैंक' : 'Blood Banks',
     'articles.index' => $isHindi ? 'लेख' : 'Articles',
     'articles.show' => $isHindi ? 'लेख विवरण' : 'Article',
-    'medicines.index' => $isHindi ? 'दवाएं' : 'Medicines',
+
     'medicines.show' => $isHindi ? 'दवा विवरण' : 'Medicine Details',
     'activities.index' => $isHindi ? 'गतिविधियां' : 'Activities',
     'activities.breathing' => $isHindi ? 'श्वास अभ्यास' : 'Breathing Exercise',
@@ -342,9 +342,6 @@
                         <a href="{{ route('blood_banks.index') }}" class="px-3 py-2 rounded-xl text-sm font-semibold transition-all duration-200 {{ request()->routeIs('blood_banks.*') ? 'bg-teal-50 dark:bg-teal-900/40 text-teal-700 dark:text-teal-400 border border-teal-100/80 dark:border-teal-900/50 shadow-2xs' : 'text-slate-600 dark:text-slate-300 hover:text-slate-900 dark:hover:text-white hover:bg-slate-50 dark:hover:bg-slate-800' }}">
                             {{ $locale === 'hi' ? 'ब्लड बैंक' : 'Blood Banks' }}
                         </a>
-                        <a href="{{ route('medicines.index') }}" class="px-3 py-2 rounded-xl text-sm font-semibold transition-all duration-200 {{ request()->routeIs('medicines.*') ? 'bg-teal-50 dark:bg-teal-900/40 text-teal-700 dark:text-teal-400 border border-teal-100/80 dark:border-teal-900/50 shadow-2xs' : 'text-slate-600 dark:text-slate-300 hover:text-slate-900 dark:hover:text-white hover:bg-slate-50 dark:hover:bg-slate-800' }}">
-                            {{ $locale === 'hi' ? 'दवाएं' : 'Medicines' }}
-                        </a>
                         <a href="{{ route('articles.index') }}" class="px-3 py-2 rounded-xl text-sm font-semibold transition-all duration-200 {{ request()->routeIs('articles.*') ? 'bg-teal-50 dark:bg-teal-900/40 text-teal-700 dark:text-teal-400 border border-teal-100/80 dark:border-teal-900/50 shadow-2xs' : 'text-slate-600 dark:text-slate-300 hover:text-slate-900 dark:hover:text-white hover:bg-slate-50 dark:hover:bg-slate-800' }}">
                             {{ $locale === 'hi' ? 'स्वास्थ्य लेख' : 'Articles' }}
                         </a>
@@ -404,10 +401,6 @@
                     <a href="{{ route('blood_banks.index') }}" class="mobile-nav-item {{ request()->routeIs('blood_banks.*') ? 'active' : '' }}">
                         <i data-lucide="droplet" class="w-4 h-4"></i>
                         <span>{{ $locale === 'hi' ? 'ब्लड बैंक' : 'Blood Banks' }}</span>
-                    </a>
-                    <a href="{{ route('medicines.index') }}" class="mobile-nav-item {{ request()->routeIs('medicines.*') ? 'active' : '' }}">
-                        <i data-lucide="pill" class="w-4 h-4"></i>
-                        <span>{{ $locale === 'hi' ? 'दवाएं' : 'Medicines' }}</span>
                     </a>
                     <a href="{{ route('articles.index') }}" class="mobile-nav-item {{ request()->routeIs('articles.*') ? 'active' : '' }}">
                         <i data-lucide="book-open" class="w-4 h-4"></i>
@@ -584,13 +577,13 @@
                             <i data-lucide="bot" class="w-4 h-4"></i>
                         </div>
                         <div id="chatbot-initial-message" class="p-3.5 rounded-2xl text-sm shadow-sm leading-relaxed bg-white dark:bg-slate-900 text-slate-800 dark:text-slate-100 border border-slate-200/60 dark:border-slate-700 rounded-tl-none">
-                            {{ $locale === 'hi' ? 'नमस्ते, मैं जयपुर में डॉक्टर, अस्पताल, ब्लड बैंक और हेल्थ जानकारी खोजने में मदद कर सकता हूँ।' : "Hi, I can help you find doctors, hospitals, blood banks, and health information in Jaipur." }}
+                            {{ $locale === 'hi' ? 'नमस्ते, मैं डॉक्टर, अस्पताल, ब्लड बैंक और हेल्थ जानकारी खोजने में मदद कर सकता हूँ।' : "Hi, I can help you find doctors, hospitals, blood banks, and health information." }}
                         </div>
                     </div>
                 </div>
                 <div id="chatbot-city-select-message" class="hidden ml-9 max-w-[85%] rounded-xl border border-indigo-200 bg-cyan-50 px-3 py-2.5 dark:border-indigo-800 dark:bg-indigo-950/30">
                     <p class="text-xs font-bold text-indigo-900 dark:text-indigo-100 mb-2 leading-relaxed">
-                        {{ $locale === 'hi' ? 'सक्रिय शहर: जयपुर' : 'Active city: Jaipur' }}
+                        {{ $locale === 'hi' ? 'सक्रिय शहर: ' . $activeCityHi : 'Active city: ' . $activeCity }}
                     </p>
                     <div class="flex flex-wrap gap-1.5">
                         @foreach($chatbotCityPills as $city)
@@ -660,7 +653,7 @@
                         <span class="text-xl font-bold tracking-tight">Swasthya<span class="text-teal-400">Search</span></span>
                     </div>
                     <p class="text-sm text-slate-300">
-                        {{ $locale === 'hi' ? 'arogio जयपुर में स्वास्थ्य सेवा प्रदाता खोजने में मदद करता है। हम निदान, उपचार या आपातकालीन प्रतिक्रिया प्रदान नहीं करते। जाने से पहले कृपया कॉल करें।' : 'Arogio helps users find healthcare providers in Jaipur. We do not provide diagnosis, treatment, or emergency response. Please call before visiting.' }}
+                        {{ $locale === 'hi' ? 'Arogio स्वास्थ्य सेवा प्रदाता खोजने में मदद करता है। हम निदान, उपचार या आपातकालीन प्रतिक्रिया प्रदान नहीं करते। जाने से पहले कृपया कॉल करें।' : 'Arogio helps users find healthcare providers. We do not provide diagnosis, treatment, or emergency response. Please call before visiting.' }}
                     </p>
                 </div>
                 <div>
@@ -668,18 +661,18 @@
                     <div class="space-y-2 text-sm text-slate-400">
                         <a href="{{ route('about') }}" class="block hover:text-white">About</a>
                         <a href="{{ route('contact') }}" class="block hover:text-white">Contact</a>
-                        <a href="{{ route('medicines.index') }}" class="block hover:text-white">{{ $locale === 'hi' ? 'दवाएं' : 'Medicines' }}</a>
+
                         <a href="{{ route('activities.index') }}" class="block hover:text-white">{{ $locale === 'hi' ? 'गतिविधियां' : 'Activities' }}</a>
                         <a href="{{ route('quizzes.index') }}" class="block hover:text-white">{{ $locale === 'hi' ? 'क्विज़' : 'Quizzes' }}</a>
                         <a href="{{ route('articles.index') }}" class="block hover:text-white">Articles</a>
                     </div>
                 </div>
                 <div>
-                    <h4 class="text-sm font-semibold mb-3 text-slate-100">{{ $locale === 'hi' ? 'जयपुर हेल्थकेयर' : 'Healthcare in Jaipur' }}</h4>
+                    <h4 class="text-sm font-semibold mb-3 text-slate-100">{{ $locale === 'hi' ? 'शहर हेल्थकेयर' : 'Healthcare in Your City' }}</h4>
                     <div class="space-y-2 text-sm text-slate-400">
-                        <a href="{{ route('doctors.index') }}" class="block hover:text-white">{{ $locale === 'hi' ? 'जयपुर के डॉक्टर' : 'Doctors in Jaipur' }}</a>
-                        <a href="{{ route('hospitals.index') }}" class="block hover:text-white">{{ $locale === 'hi' ? 'जयपुर के अस्पताल' : 'Hospitals in Jaipur' }}</a>
-                        <a href="{{ route('blood_banks.index') }}" class="block hover:text-white">{{ $locale === 'hi' ? 'जयपुर के ब्लड बैंक' : 'Blood Banks in Jaipur' }}</a>
+                        <a href="{{ route('doctors.index') }}" class="block hover:text-white">{{ $locale === 'hi' ? 'डॉक्टर खोजें' : 'Find Doctors' }}</a>
+                        <a href="{{ route('hospitals.index') }}" class="block hover:text-white">{{ $locale === 'hi' ? 'अस्पताल खोजें' : 'Find Hospitals' }}</a>
+                        <a href="{{ route('blood_banks.index') }}" class="block hover:text-white">{{ $locale === 'hi' ? 'ब्लड बैंक खोजें' : 'Find Blood Banks' }}</a>
                         <a href="{{ route('medicines.index') }}" class="block hover:text-white">{{ $locale === 'hi' ? 'दवा जानकारी' : 'Medicine Information' }}</a>
                         <a href="{{ route('support.crisis') }}" class="block hover:text-white">{{ $locale === 'hi' ? 'संकट सहायता' : 'Crisis Support' }}</a>
                     </div>
@@ -1022,7 +1015,7 @@
         let chatbotDetailBlockCounter = 0;
         let activeListenButton = null;
         const CHATBOT_CITY_STORAGE_KEY = 'arogio_selected_city';
-        const LEGACY_CHATBOT_CITY_STORAGE_KEYS = ['swasthya_selected_city', 'swasthyasearch_chatbot_city'];
+        const LEGACY_CHATBOT_CITY_STORAGE_KEYS = ['selected_city', 'chatbot_city'];
         const CHATBOT_CITY_ONBOARDED_KEY = 'arogio_chatbot_city_onboarded';
 
         function hasCompletedCityOnboarding() {
