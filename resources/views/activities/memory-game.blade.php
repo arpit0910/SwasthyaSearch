@@ -159,7 +159,7 @@
         movesEl.textContent = '0';
         matchesEl.textContent = `0 / ${activeLevel.tiles / 2}`;
         levelEl.textContent = String(activeLevel.level);
-        status.textContent = isHindi ? '?? ????? ????? ?? ?? ??? ???? ????? ?????? ?? ?????? ?????' : 'Flip two cards and try to find a matching pair.';
+        status.textContent = isHindi ? 'दो कार्ड पलटें और एक मेल खाता जोड़ा ढूंढने का प्रयास करें।' : 'Flip two cards and try to find a matching pair.';
 
         grid.innerHTML = '';
         setGridColumns();
@@ -225,3 +225,4 @@
 </script>
 @endpush
 @endsection
+
