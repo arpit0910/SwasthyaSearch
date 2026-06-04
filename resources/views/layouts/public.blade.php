@@ -277,6 +277,43 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&family=Inter:wght@300;400;500;600;700&family=Noto+Sans+Devanagari:wght@400;500;600;700&family=Hind:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        .ss-mobile-only {
+            display: none;
+        }
+
+        .ss-mobile-menu-panel {
+            display: none;
+        }
+
+        .ss-mobile-menu-panel.is-open {
+            display: block;
+        }
+
+        @media (max-width: 767px) {
+            .ss-desktop-only {
+                display: none !important;
+            }
+
+            .ss-mobile-only {
+                display: flex !important;
+            }
+
+            .ss-mobile-menu-panel.ss-mobile-only {
+                display: none !important;
+            }
+
+            .ss-mobile-menu-panel.ss-mobile-only.is-open {
+                display: block !important;
+            }
+        }
+
+        @media (min-width: 768px) {
+            .ss-mobile-menu-panel {
+                display: none !important;
+            }
+        }
+    </style>
 
     <!-- Tailwind CSS CDN -->
     <script src="https://cdn.tailwindcss.com"></script>
@@ -321,8 +358,8 @@
     @endphp
 
     <!-- Header Navbar -->
-    <nav class="sticky top-0 z-50 glass-panel shadow-sm transition-all duration-300">
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+    <nav class="sticky top-0 z-50 glass-panel shadow-sm site-header">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative">
             <div class="flex justify-between min-h-16 py-2 items-center gap-2 sm:gap-4">
                 <div class="flex items-center min-w-0">
                     <a href="{{ route('home') }}" class="flex items-center space-x-1.5 sm:space-x-3 group mr-1 sm:mr-6 shrink min-w-0">
@@ -355,7 +392,7 @@
                 </div>
 
                 <div class="flex items-center gap-1 sm:gap-2 shrink-0">
-                    <div class="flex items-center bg-slate-100 dark:bg-slate-800 p-0.5 rounded-xl border border-slate-200/60 dark:border-slate-700/60 shadow-inner">
+                    <div class="hidden md:flex items-center bg-slate-100 dark:bg-slate-800 p-0.5 rounded-xl border border-slate-200/60 dark:border-slate-700/60 shadow-inner">
                         <form action="{{ route('switch.locale') }}" method="POST" class="inline">
                             @csrf
                             <input type="hidden" name="locale" value="en">
@@ -382,14 +419,34 @@
                     <button type="button" onclick="toggleMobileMenu()"
                         id="mobile-menu-toggle-btn"
                         class="md:hidden p-2 rounded-xl border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 text-slate-700 dark:text-slate-200 hover:bg-slate-50 dark:hover:bg-slate-700 transition-colors"
+                        aria-controls="mobile-nav-menu"
+                        aria-expanded="false"
                         aria-label="Open navigation menu">
                         <i data-lucide="menu" id="mobile-menu-open-icon" class="w-5 h-5"></i>
                         <i data-lucide="x" id="mobile-menu-close-icon" class="w-5 h-5 hidden"></i>
                     </button>
                 </div>
             </div>
-            <div id="mobile-nav-menu" class="md:hidden hidden pb-3 pt-2 border-t border-slate-200/80 dark:border-slate-800/80">
+            <div id="mobile-nav-menu" class="md:hidden ss-mobile-menu-panel absolute left-4 right-4 top-full mt-2 z-40">
                 <div class="mobile-nav-list">
+                    <div class="grid grid-cols-2 gap-2 p-3 border-b border-slate-200 dark:border-slate-800 bg-slate-50/80 dark:bg-slate-900/70">
+                        <form action="{{ route('switch.locale') }}" method="POST">
+                            @csrf
+                            <input type="hidden" name="locale" value="en">
+                            <button type="submit" class="w-full flex items-center justify-center gap-1 px-3 py-2 rounded-xl text-xs font-semibold {{ $locale === 'en' ? 'bg-white dark:bg-slate-700 text-indigo-900 dark:text-indigo-200 shadow-sm' : 'bg-transparent text-slate-600 dark:text-slate-300' }}">
+                                <i data-lucide="globe" class="w-3.5 h-3.5 text-teal-600 shrink-0"></i>
+                                <span>English</span>
+                            </button>
+                        </form>
+                        <form action="{{ route('switch.locale') }}" method="POST">
+                            @csrf
+                            <input type="hidden" name="locale" value="hi">
+                            <button type="submit" class="w-full flex items-center justify-center gap-1 px-3 py-2 rounded-xl text-xs font-semibold {{ $locale === 'hi' ? 'bg-white dark:bg-slate-700 text-indigo-900 dark:text-indigo-200 shadow-sm' : 'bg-transparent text-slate-600 dark:text-slate-300' }}">
+                                <i data-lucide="globe" class="w-3.5 h-3.5 text-teal-600 shrink-0"></i>
+                                <span>à¤¹à¤¿à¤¨à¥à¤¦à¥€</span>
+                            </button>
+                        </form>
+                    </div>
                     <a href="{{ route('doctors.index') }}" class="mobile-nav-item {{ request()->routeIs('doctors.*') ? 'active' : '' }}">
                         <i data-lucide="stethoscope" class="w-4 h-4"></i>
                         <span>{{ $locale === 'hi' ? 'डॉक्टर खोजें' : 'Doctors' }}</span>
@@ -1284,7 +1341,7 @@
         function toggleMobileMenu() {
             const menu = document.getElementById('mobile-nav-menu');
             if (!menu) return;
-            menu.classList.toggle('hidden');
+            menu.classList.toggle('is-open');
             updateMobileMenuIcon();
         }
 
@@ -1413,7 +1470,7 @@
         function closeMobileMenu() {
             const menu = document.getElementById('mobile-nav-menu');
             if (!menu) return;
-            menu.classList.add('hidden');
+            menu.classList.remove('is-open');
             updateMobileMenuIcon();
         }
 
@@ -1423,7 +1480,7 @@
             const closeIcon = document.getElementById('mobile-menu-close-icon');
             const btn = document.getElementById('mobile-menu-toggle-btn');
             if (!menu || !openIcon || !closeIcon || !btn) return;
-            const isOpen = !menu.classList.contains('hidden');
+            const isOpen = menu.classList.contains('is-open');
             if (isOpen) {
                 openIcon.classList.add('hidden');
                 closeIcon.classList.remove('hidden');
@@ -1431,6 +1488,7 @@
                 openIcon.classList.remove('hidden');
                 closeIcon.classList.add('hidden');
             }
+            btn.setAttribute('aria-expanded', isOpen ? 'true' : 'false');
             btn.setAttribute('aria-label', isOpen ? 'Close navigation menu' : 'Open navigation menu');
         }
 
@@ -1808,60 +1866,114 @@
             if (isVoiceTyping) {
                 btn.classList.remove('bg-teal-600', 'hover:bg-teal-500');
                 btn.classList.add('bg-rose-600', 'hover:bg-rose-500');
-                btn.title = 'Stop voice typing';
+                btn.title = chatbotLocale === 'hi' ? 'वॉइस टाइपिंग बंद करें' : 'Stop voice typing';
             } else {
                 btn.classList.remove('bg-rose-600', 'hover:bg-rose-500');
                 btn.classList.add('bg-teal-600', 'hover:bg-teal-500');
-                btn.title = 'Start voice typing';
+                btn.title = chatbotLocale === 'hi' ? 'वॉइस टाइपिंग शुरू करें' : 'Start voice typing';
             }
         }
 
         function toggleVoiceTyping() {
             const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+            const input = document.getElementById('chatbot-input');
 
             if (!SpeechRecognition) {
                 appendMessage('bot', chatbotLocale === 'hi' ?
-                    'Voice typing is not supported in your browser. Please use Chrome or Edge.' :
+                    'वॉइस टाइपिंग आपके ब्राउज़र में समर्थित नहीं है। कृपया Chrome या Edge का उपयोग करें।' :
                     'Voice typing is not supported in your browser. Please use Chrome or Edge.');
                 return;
             }
 
-            if (!speechRecognition) {
-                speechRecognition = new SpeechRecognition();
-                speechRecognition.lang = getSpeechLocale();
-                speechRecognition.interimResults = true;
-                speechRecognition.continuous = false;
-
-                speechRecognition.onresult = function(event) {
-                    let transcript = '';
-                    for (let i = event.resultIndex; i < event.results.length; i++) {
-                        transcript += event.results[i][0].transcript;
-                    }
-                    document.getElementById('chatbot-input').value = transcript.trim();
-                };
-
-                speechRecognition.onerror = function() {
-                    isVoiceTyping = false;
-                    updateVoiceButtonState();
-                };
-
-                speechRecognition.onend = function() {
-                    isVoiceTyping = false;
-                    updateVoiceButtonState();
-                };
-            }
-
             if (isVoiceTyping) {
-                speechRecognition.stop();
+                speechRecognition?.stop?.();
                 isVoiceTyping = false;
                 updateVoiceButtonState();
                 return;
             }
 
+            if (input?.disabled) {
+                appendMessage('bot', chatbotLocale === 'hi'
+                    ? 'पहले शहर चुनें, फिर वॉइस टाइपिंग का उपयोग करें।'
+                    : 'Please select your city first, then use voice typing.');
+                return;
+            }
+
+            try {
+                speechRecognition?.abort?.();
+            } catch (error) {}
+
+            speechRecognition = new SpeechRecognition();
             speechRecognition.lang = getSpeechLocale();
-            speechRecognition.start();
-            isVoiceTyping = true;
-            updateVoiceButtonState();
+            speechRecognition.interimResults = true;
+            speechRecognition.continuous = false;
+            speechRecognition.maxAlternatives = 1;
+
+            let transcript = input?.value?.trim?.() || '';
+
+            speechRecognition.onstart = function() {
+                isVoiceTyping = true;
+                updateVoiceButtonState();
+                input?.focus?.();
+            };
+
+            speechRecognition.onresult = function(event) {
+                let nextTranscript = '';
+                for (let i = event.resultIndex; i < event.results.length; i++) {
+                    nextTranscript += event.results[i][0].transcript + ' ';
+                }
+                transcript = nextTranscript.trim();
+                if (input) {
+                    input.value = transcript;
+                    input.dispatchEvent(new Event('input', { bubbles: true }));
+                }
+            };
+
+            speechRecognition.onnomatch = function() {
+                appendMessage('bot', chatbotLocale === 'hi'
+                    ? 'आवाज़ साफ़ नहीं मिली। कृपया फिर से बोलें।'
+                    : 'I could not catch that clearly. Please try speaking again.');
+            };
+
+            speechRecognition.onerror = function(event) {
+                isVoiceTyping = false;
+                updateVoiceButtonState();
+
+                if (event?.error === 'not-allowed' || event?.error === 'service-not-allowed') {
+                    appendMessage('bot', chatbotLocale === 'hi'
+                        ? 'माइक्रोफोन अनुमति नहीं मिली। कृपया ब्राउज़र में microphone permission allow करें।'
+                        : 'Microphone permission was denied. Please allow microphone access in your browser.');
+                    return;
+                }
+
+                if (event?.error === 'no-speech') {
+                    appendMessage('bot', chatbotLocale === 'hi'
+                        ? 'कोई आवाज़ नहीं मिली। कृपया माइक के पास बोलें।'
+                        : 'No speech was detected. Please speak closer to the microphone.');
+                    return;
+                }
+
+                if (event?.error === 'audio-capture') {
+                    appendMessage('bot', chatbotLocale === 'hi'
+                        ? 'माइक्रोफोन उपलब्ध नहीं है। कृपया डिवाइस माइक जांचें।'
+                        : 'No microphone was found. Please check your device microphone.');
+                }
+            };
+
+            speechRecognition.onend = function() {
+                isVoiceTyping = false;
+                updateVoiceButtonState();
+            };
+
+            try {
+                speechRecognition.start();
+            } catch (error) {
+                isVoiceTyping = false;
+                updateVoiceButtonState();
+                appendMessage('bot', chatbotLocale === 'hi'
+                    ? 'वॉइस टाइपिंग अभी शुरू नहीं हो सकी। कृपया फिर से प्रयास करें।'
+                    : 'Voice typing could not start right now. Please try again.');
+            }
         }
 
         async function submitChatbotMessage(message) {
@@ -2422,11 +2534,12 @@
 
         window.addEventListener('resize', () => {
             if (!chatbotOpen && window.innerWidth >= 640) setupFabHintCycle();
+            if (window.innerWidth >= 768) closeMobileMenu();
         });
         document.addEventListener('click', function(e) {
             const menu = document.getElementById('mobile-nav-menu');
             const btn = document.getElementById('mobile-menu-toggle-btn');
-            if (!menu || !btn || menu.classList.contains('hidden')) return;
+            if (!menu || !btn || !menu.classList.contains('is-open')) return;
             const target = e.target;
             if (!(target instanceof Node)) return;
             if (!menu.contains(target) && !btn.contains(target)) {
@@ -2571,6 +2684,10 @@
         });
 
         function initializePageAnimations() {
+            if (window.innerWidth < 768) {
+                return;
+            }
+
             document.body.classList.add('motion-ready');
             document.body.classList.add('preload-anim');
             requestAnimationFrame(() => {
@@ -3162,7 +3279,7 @@
             align-items: center;
             gap: 0.45rem;
             min-width: 0;
-            flex-wrap: wrap;
+            flex-wrap: nowrap;
         }
 
         .chatbot-status-badge {
@@ -3446,6 +3563,14 @@
             box-shadow: 0 10px 24px rgba(15, 23, 42, 0.08);
         }
 
+        .ss-mobile-menu-panel {
+            display: none;
+        }
+
+        .ss-mobile-menu-panel.is-open {
+            display: block;
+        }
+
         .mobile-nav-item {
             display: flex;
             align-items: center;
@@ -3479,6 +3604,83 @@
         @media (max-width: 420px) {
             .brand-wordmark {
                 display: none;
+            }
+        }
+
+        @media (max-width: 767px) {
+            body {
+                transition: none;
+            }
+
+            .site-header,
+            .site-header *,
+            #mobile-nav-menu,
+            #mobile-nav-menu * {
+                transition-property: none !important;
+            }
+
+            .glass-panel {
+                backdrop-filter: none !important;
+                -webkit-backdrop-filter: none !important;
+            }
+
+            .glow-blob {
+                filter: blur(38px);
+            }
+
+            #chatbot-header > div:first-child {
+                gap: 0.5rem;
+            }
+
+            #chatbot-header .chatbot-avatar-shell {
+                width: 2.2rem;
+                height: 2.2rem;
+            }
+
+            #chatbot-header .chatbot-title-row {
+                gap: 0.28rem;
+                align-items: center;
+            }
+
+            #chatbot-header .chatbot-title-row h3 {
+                font-size: 15px;
+            }
+
+            #chatbot-header .chatbot-status-badge {
+                gap: 0.22rem;
+                padding: 0.18rem 0.42rem;
+                font-size: 9px;
+            }
+
+            #chatbot-header .chatbot-status-badge::before {
+                width: 0.34rem;
+                height: 0.34rem;
+            }
+
+            #chatbot-header .chatbot-info-btn {
+                width: 1rem;
+                height: 1rem;
+                font-size: 9px;
+                box-shadow: 0 4px 10px rgba(245, 158, 11, 0.18);
+                flex-shrink: 0;
+            }
+
+            #chatbot-header .chatbot-header-actions {
+                gap: 0.3rem;
+            }
+
+            #chatbot-header .chatbot-header-select {
+                height: 1.8rem;
+                min-width: 2.9rem;
+                padding-left: 0.4rem;
+                padding-right: 0.4rem;
+                font-size: 11px;
+            }
+
+            #chatbot-header .chatbot-header-icon-btn {
+                width: 1.8rem;
+                height: 1.8rem;
+                border-radius: 0.75rem;
             }
         }
 

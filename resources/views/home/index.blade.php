@@ -160,11 +160,21 @@ $locale === 'hi'
         50% { opacity: 0.72; transform: scaleX(1); }
     }
 
-    @media (max-width: 640px) {
+    @media (max-width: 767px) {
         .hero-brand-cluster {
             width: min(20rem, 92vw);
             top: 48%;
             opacity: 0.14;
+        }
+
+        .hero-brand-ring,
+        .hero-brand-ring::before,
+        .hero-brand-ring::after,
+        .hero-brand-core,
+        .hero-brand-wave,
+        .hero-brand-dot,
+        .hero-brand-beam {
+            animation: none !important;
         }
     }
 
