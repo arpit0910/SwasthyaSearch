@@ -1330,6 +1330,41 @@
             document.body.classList.add('overflow-hidden');
         }
 
+        function closeAllListingActionMenus() {
+            document.querySelectorAll('.listing-action-menu').forEach((menu) => {
+                menu.classList.add('hidden');
+            });
+            document.querySelectorAll('.listing-action-trigger').forEach((button) => {
+                button.setAttribute('aria-expanded', 'false');
+            });
+        }
+
+        function toggleListingActionMenu(event, menuId) {
+            event?.stopPropagation?.();
+            const menu = document.getElementById(menuId);
+            if (!menu) return;
+            const willOpen = menu.classList.contains('hidden');
+            closeAllListingActionMenus();
+            if (willOpen) {
+                menu.classList.remove('hidden');
+                event?.currentTarget?.setAttribute?.('aria-expanded', 'true');
+            }
+        }
+
+        function openListingReportFromMenu(entityType, entityId, entityName, menuId) {
+            if (menuId) {
+                document.getElementById(menuId)?.classList.add('hidden');
+            }
+            openListingReportModal(entityType, entityId, entityName);
+        }
+
+        async function submitUsefulVoteAndClose(entityType, entityId, entityName, menuId) {
+            if (menuId) {
+                document.getElementById(menuId)?.classList.add('hidden');
+            }
+            await submitGreenVote(entityType, entityId, entityName);
+        }
+
         function getVoteCountElementId(entityType, voteType, entityId) {
             return `vote-${voteType}-${entityType}-${entityId}`;
         }
@@ -2401,9 +2436,18 @@
         document.querySelectorAll('#mobile-nav-menu a').forEach(link => {
             link.addEventListener('click', closeMobileMenu);
         });
+        document.addEventListener('click', function(e) {
+            const target = e.target;
+            if (!(target instanceof Node)) return;
+            if (target.closest('.listing-action-menu') || target.closest('.listing-action-trigger')) return;
+            closeAllListingActionMenus();
+        });
         document.addEventListener('keydown', function(event) {
             if (event.key === 'Escape' && chatbotOpen) {
                 toggleChatbot();
+            }
+            if (event.key === 'Escape') {
+                closeAllListingActionMenus();
             }
         });
         document.querySelectorAll('select[name="city"]').forEach(select => {

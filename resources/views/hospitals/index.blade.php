@@ -330,24 +330,34 @@ $selectedCity = filled($selectedCity) ? trim((string) $selectedCity) : ($cityOpt
                             class="font-extrabold text-lg text-slate-900 dark:text-white line-clamp-3 leading-snug group-hover:text-teal-600 transition-colors duration-200">
                             {{ $hName }}
                         </h3>
-                        <div class="shrink-0 flex items-center gap-1.5 mt-0.5">
+                        <div class="shrink-0 flex items-center gap-1.5 mt-0.5 relative">
                             @if ($h->is_verified)
                             <i data-lucide="check-circle-2" class="w-4 h-4 text-teal-500"></i>
                             @endif
                             <button
                                 type="button"
-                                onclick="submitGreenVote('hospital', {{ $h->id }}, @js($hName))"
-                                aria-label="{{ $locale === 'hi' ? 'सही जानकारी के लिए वोट करें' : 'Vote as correct' }}"
-                                class="w-7 h-7 inline-flex items-center justify-center rounded-full border border-emerald-300 dark:border-emerald-800 text-emerald-700 dark:text-emerald-300 bg-emerald-50/95 dark:bg-emerald-950/55 hover:bg-emerald-100 dark:hover:bg-emerald-900/70 shadow-sm transition-all duration-200">
-                                <i data-lucide="flag" class="w-3.5 h-3.5"></i>
+                                onclick="toggleListingActionMenu(event, 'hospital-actions-{{ $h->id }}')"
+                                aria-label="{{ $locale === 'hi' ? 'और विकल्प' : 'More actions' }}"
+                                aria-expanded="false"
+                                class="listing-action-trigger w-8 h-8 inline-flex items-center justify-center rounded-full border border-slate-200 dark:border-slate-700 text-slate-600 dark:text-slate-300 bg-white/95 dark:bg-slate-900/90 hover:bg-slate-100 dark:hover:bg-slate-800 shadow-sm transition-all duration-200">
+                                <i data-lucide="ellipsis" class="w-4 h-4"></i>
                             </button>
-                            <button
-                                type="button"
-                                onclick="openListingReportModal('hospital', {{ $h->id }}, @js($hName))"
-                                aria-label="{{ $locale === 'hi' ? 'गलत जानकारी रिपोर्ट करें' : 'Report incorrect details' }}"
-                                class="w-7 h-7 inline-flex items-center justify-center rounded-full border border-rose-300 dark:border-rose-800 text-rose-700 dark:text-rose-300 bg-rose-50/95 dark:bg-rose-950/55 hover:bg-rose-100 dark:hover:bg-rose-900/70 shadow-sm transition-all duration-200">
-                                <i data-lucide="flag" class="w-3.5 h-3.5"></i>
-                            </button>
+                            <div id="hospital-actions-{{ $h->id }}" class="listing-action-menu hidden absolute right-0 top-10 z-20 w-52 rounded-2xl border border-slate-200/90 dark:border-slate-700 bg-white/95 dark:bg-slate-900/95 shadow-xl p-2 backdrop-blur">
+                                <button
+                                    type="button"
+                                    onclick="submitUsefulVoteAndClose('hospital', {{ $h->id }}, @js($hName), 'hospital-actions-{{ $h->id }}')"
+                                    class="flex w-full items-center gap-3 rounded-xl px-3 py-2.5 text-left text-sm font-semibold text-slate-700 dark:text-slate-200 hover:bg-emerald-50 dark:hover:bg-emerald-950/30">
+                                    <i data-lucide="thumbs-up" class="w-4 h-4 text-emerald-600 dark:text-emerald-300"></i>
+                                    <span>{{ $locale === 'hi' ? 'उपयोगी चिह्नित करें' : 'Mark useful' }}</span>
+                                </button>
+                                <button
+                                    type="button"
+                                    onclick="openListingReportFromMenu('hospital', {{ $h->id }}, @js($hName), 'hospital-actions-{{ $h->id }}')"
+                                    class="flex w-full items-center gap-3 rounded-xl px-3 py-2.5 text-left text-sm font-semibold text-slate-700 dark:text-slate-200 hover:bg-rose-50 dark:hover:bg-rose-950/30">
+                                    <i data-lucide="triangle-alert" class="w-4 h-4 text-rose-600 dark:text-rose-300"></i>
+                                    <span>{{ $locale === 'hi' ? 'गलत जानकारी रिपोर्ट करें' : 'Report incorrect details' }}</span>
+                                </button>
+                            </div>
                         </div>
                     </div>
                     <div class="flex items-center space-x-2">
