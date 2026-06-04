@@ -154,7 +154,7 @@
 
             @foreach(($quiz->questions_json ?? []) as $qIndex => $question)
 
-                <section class="quiz-step {{ $qIndex === 0 ? 'छिपा हुआ' : 'hidden' }}" data-step="{{ $qIndex + 1 }}">
+                <section class="quiz-step {{ $qIndex === 0 ? '' : 'hidden' }}" data-step="{{ $qIndex + 1 }}">
 
                     <div class="rounded-[2rem] border border-slate-200/80 bg-white/90 p-6 shadow-sm dark:border-slate-800 dark:bg-slate-900/90 sm:p-8">
 
@@ -184,13 +184,13 @@
 
                             @foreach(($question['options'] ?? []) as $oIndex => $option)
 
-                                <label class="quiz-option flex items-start gap-4 rounded-[1.4rem] border border-slate-200 bg-slate-50/60 p-4 cursor-pointer transition hover:border-violet-200 hover:bg-violet-50/60 dark:border-slate-800 dark:bg-slate-950/60 dark:hover:bg-violet-950/20">
+                                <label class="quiz-option flex items-start gap-3 sm:gap-4 rounded-[1.4rem] border border-slate-200 bg-slate-50/60 p-4 cursor-pointer transition hover:border-violet-200 hover:bg-violet-50/60 dark:border-slate-800 dark:bg-slate-950/60 dark:hover:bg-violet-950/20">
 
                                     <input type="radio" name="answers[{{ $qIndex }}]" value="{{ $oIndex }}" class="sr-only" required>
 
                                     <span class="mt-0.5 flex h-8 w-8 shrink-0 items-center justify-center rounded-full border border-slate-300 bg-white text-xs font-extrabold text-slate-500 dark:border-slate-600 dark:bg-slate-900 dark:text-slate-300">{{ chr(65 + $oIndex) }}</span>
 
-                                    <span class="text-sm leading-7 text-slate-700 dark:text-slate-200">{{ $isHindi ? ($option['label_hi'] ?? $option['label_en']) : ($option['label_en'] ?? $option['label_hi']) }}</span>
+                                    <span class="text-sm leading-6 sm:leading-7 text-slate-700 dark:text-slate-200">{{ $isHindi ? ($option['label_hi'] ?? $option['label_en']) : ($option['label_en'] ?? $option['label_hi']) }}</span>
 
                                 </label>
 
@@ -200,9 +200,13 @@
 
 
 
+                        <div class="mt-4 rounded-2xl border border-violet-100 bg-violet-50/70 px-4 py-3 text-sm font-medium text-violet-800 dark:border-violet-900/40 dark:bg-violet-950/20 dark:text-violet-200">
+                            Choose one option, then move to the next question.
+                        </div>
+
                         <div class="mt-8 flex flex-col-reverse gap-3 sm:flex-row sm:items-center sm:justify-between">
 
-                            <button type="button" class="quiz-back inline-flex {{ $qIndex === 0 ? '' : '' }} items-center justify-center gap-2 rounded-2xl border border-slate-200 bg-white px-5 py-3 text-sm font-bold text-slate-800 dark:border-slate-700 dark:bg-slate-950 dark:text-slate-100">
+                            <button type="button" class="quiz-back inline-flex items-center justify-center gap-2 rounded-2xl border border-slate-200 bg-white px-5 py-3 text-sm font-bold text-slate-800 dark:border-slate-700 dark:bg-slate-950 dark:text-slate-100 {{ $qIndex === 0 ? 'sm:invisible' : '' }}">
 
                                 <i data-lucide="arrow-left" class="h-4 w-4"></i>
 
@@ -403,4 +407,5 @@
 @endpush
 
 @endsection
+
 

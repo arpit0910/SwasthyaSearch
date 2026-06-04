@@ -242,7 +242,7 @@
 
     <section class="mt-8">
 
-        <div class="flex items-center justify-between gap-4">
+        <div class="flex flex-col items-start gap-2 sm:flex-row sm:items-center sm:justify-between">
 
             <h2 class="text-2xl font-extrabold text-slate-950 dark:text-white">{{ $isHindi ? 'सबसे पहले यहीं से शुरुआत करें' : 'Start here first' }}</h2>
 
@@ -250,11 +250,11 @@
 
         </div>
 
-        <div class="mt-5 grid grid-cols-1 gap-6 lg:grid-cols-3">
+        <div class="mt-5 grid grid-cols-1 gap-4 sm:gap-5 lg:grid-cols-3">
 
             @foreach($primaryTools as $tool)
 
-                <a href="{{ $tool['url'] }}" class="group rounded-[1.9rem] border border-slate-200/80 bg-white/90 p-6 shadow-sm transition hover:-translate-y-1 hover:shadow-lg dark:border-slate-800 dark:bg-slate-900/90">
+                <a href="{{ $tool['url'] }}" class="group flex h-full flex-col rounded-[1.9rem] border border-slate-200/80 bg-white/90 p-5 shadow-sm transition hover:-translate-y-1 hover:shadow-lg dark:border-slate-800 dark:bg-slate-900/90 sm:p-6">
 
                     <div class="flex items-start justify-between gap-3">
 
@@ -268,9 +268,9 @@
 
                     </div>
 
-                    <h3 class="mt-5 text-xl font-extrabold text-slate-950 dark:text-white">{{ $tool['title'] }}</h3>
+                    <h3 class="mt-4 text-lg font-extrabold text-slate-950 dark:text-white sm:mt-5 sm:text-xl">{{ $tool['title'] }}</h3>
 
-                    <p class="mt-3 text-sm leading-7 text-slate-600 dark:text-slate-300">{{ $tool['description'] }}</p>
+                    <p class="mt-2 text-sm leading-6 text-slate-600 dark:text-slate-300 sm:mt-3 sm:leading-7">{{ $tool['description'] }}</p>
 
                     <span class="mt-5 inline-flex text-sm font-bold text-teal-700 transition group-hover:translate-x-1 dark:text-teal-300">{{ $tool['cta'] }}</span>
 
@@ -306,11 +306,11 @@
 
 
 
-        <div class="mt-6 grid grid-cols-1 gap-5 md:grid-cols-2 xl:grid-cols-3">
+        <div class="mt-6 grid grid-cols-1 gap-4 sm:gap-5 md:grid-cols-2 xl:grid-cols-3">
 
             @foreach($supportTools as $tool)
 
-                <a href="{{ $tool['url'] }}" class="group rounded-[1.7rem] border border-slate-200/80 bg-slate-50/70 p-5 transition hover:-translate-y-0.5 hover:border-cyan-200 hover:bg-white dark:border-slate-800 dark:bg-slate-950/70 dark:hover:bg-slate-900">
+                <a href="{{ $tool['url'] }}" class="group flex h-full flex-col rounded-[1.7rem] border border-slate-200/80 bg-slate-50/70 p-4 transition hover:-translate-y-0.5 hover:border-cyan-200 hover:bg-white dark:border-slate-800 dark:bg-slate-950/70 dark:hover:bg-slate-900 sm:p-5">
 
                     <div class="flex h-11 w-11 items-center justify-center rounded-2xl bg-{{ $tool['tone'] }}-100 text-{{ $tool['tone'] }}-700 dark:bg-{{ $tool['tone'] }}-950/40 dark:text-{{ $tool['tone'] }}-200">
 
@@ -318,9 +318,9 @@
 
                     </div>
 
-                    <h3 class="mt-4 text-lg font-bold text-slate-950 dark:text-white">{{ $tool['title'] }}</h3>
+                    <h3 class="mt-3 text-lg font-bold text-slate-950 dark:text-white sm:mt-4">{{ $tool['title'] }}</h3>
 
-                    <p class="mt-2 text-sm leading-7 text-slate-600 dark:text-slate-300">{{ $tool['description'] }}</p>
+                    <p class="mt-2 text-sm leading-6 text-slate-600 dark:text-slate-300 sm:leading-7">{{ $tool['description'] }}</p>
 
                     <span class="mt-4 inline-flex text-sm font-bold text-cyan-700 dark:text-cyan-300">{{ $isHindi ? 'खुला' : 'Open' }}</span>
 

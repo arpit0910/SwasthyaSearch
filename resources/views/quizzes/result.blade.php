@@ -70,7 +70,7 @@
 
 
 
-        <div class="mt-6 grid gap-5 md:grid-cols-3">
+        <div class="mt-6 grid gap-4 sm:gap-5 md:grid-cols-3">
 
             @foreach([
 
@@ -118,7 +118,7 @@
 
             ] as $card)
 
-                <a href="{{ $card['url'] }}" class="rounded-[1.5rem] border border-slate-200/80 bg-white/90 p-5 shadow-sm transition hover:-translate-y-0.5 dark:border-slate-800 dark:bg-slate-900/90">
+                <a href="{{ $card['url'] }}" class="flex h-full flex-col rounded-[1.5rem] border border-slate-200/80 bg-white/90 p-4 shadow-sm transition hover:-translate-y-0.5 dark:border-slate-800 dark:bg-slate-900/90 sm:p-5">
 
                     <div class="flex h-11 w-11 items-center justify-center rounded-2xl bg-{{ $card['tone'] }}-100 text-{{ $card['tone'] }}-700 dark:bg-{{ $card['tone'] }}-950/40 dark:text-{{ $card['tone'] }}-200">
 
@@ -126,9 +126,9 @@
 
                     </div>
 
-                    <h3 class="mt-4 text-lg font-bold text-slate-950 dark:text-white">{{ $card['title'] }}</h3>
+                    <h3 class="mt-4 text-lg font-bold text-slate-950 dark:text-white sm:mt-4">{{ $card['title'] }}</h3>
 
-                    <p class="mt-2 text-sm leading-7 text-slate-600 dark:text-slate-300">{{ $card['description'] }}</p>
+                    <p class="mt-2 text-sm leading-6 text-slate-600 dark:text-slate-300 sm:leading-7">{{ $card['description'] }}</p>
 
                     <span class="mt-4 inline-flex text-sm font-bold text-violet-700 dark:text-violet-300">{{ $isHindi ? 'खुला' : 'Open' }}</span>
 
@@ -148,7 +148,7 @@
 
 
 
-        <div class="mt-6 flex flex-wrap gap-3">
+        <div class="mt-6 flex flex-col gap-3 sm:flex-row sm:flex-wrap">
 
             <a href="{{ route('quizzes.index') }}" class="rounded-2xl border border-slate-200 px-5 py-3 text-sm font-bold text-slate-900 dark:border-slate-700 dark:text-slate-100">{{ $isHindi ? 'अधिक क्विज़ खोजें' : 'Explore more quizzes' }}</a>
 

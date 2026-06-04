@@ -121,15 +121,29 @@
                 <p class="mt-4 max-w-2xl text-base leading-7 text-slate-600 dark:text-slate-300 sm:text-lg">
                     {{ $isHindi ? $hi['hero_copy'] : 'When the mind feels heavy, this gives you a softer place to land. Mix ambient sounds, guided voice cues, grounding reminders, and short wisdom playlists for a gentler reset.' }}
                 </p>
-                <div class="mt-6 flex flex-wrap gap-3">
-                    <button type="button" data-play-all class="inline-flex items-center justify-center gap-2 rounded-[1.25rem] bg-emerald-600 px-6 py-3.5 text-sm font-bold text-white shadow-lg shadow-emerald-500/20 transition hover:bg-emerald-700">
+                <div class="mt-6 flex flex-col gap-3 sm:flex-row sm:flex-wrap">
+                    <button type="button" data-play-all class="inline-flex w-full sm:w-auto items-center justify-center gap-2 rounded-[1.25rem] bg-emerald-600 px-6 py-3.5 text-sm font-bold text-white shadow-lg shadow-emerald-500/20 transition hover:bg-emerald-700">
                         <i data-lucide="play" class="h-4 w-4"></i>
                         {{ $isHindi ? $hi['start_session'] : 'Start calm session' }}
                     </button>
-                    <button type="button" data-stop-all class="inline-flex items-center justify-center gap-2 rounded-[1.25rem] border border-slate-200 bg-white px-6 py-3.5 text-sm font-bold text-slate-900 transition hover:bg-slate-50 dark:border-slate-700 dark:bg-slate-900 dark:text-slate-100 dark:hover:bg-slate-800">
+                    <button type="button" data-stop-all class="inline-flex w-full sm:w-auto items-center justify-center gap-2 rounded-[1.25rem] border border-slate-200 bg-white px-6 py-3.5 text-sm font-bold text-slate-900 transition hover:bg-slate-50 dark:border-slate-700 dark:bg-slate-900 dark:text-slate-100 dark:hover:bg-slate-800">
                         <i data-lucide="square" class="h-4 w-4"></i>
                         {{ $isHindi ? $hi['stop'] : 'Stop' }}
                     </button>
+                </div>
+                <div class="mt-4 grid gap-3 sm:grid-cols-3">
+                    <div class="rounded-2xl border border-slate-200/80 bg-white/90 px-4 py-3 dark:border-slate-800 dark:bg-slate-950/80">
+                        <p class="text-[11px] font-bold uppercase tracking-[0.2em] text-slate-400">{{ $isHindi ? 'साउंड' : 'Sound' }}</p>
+                        <p id="selected-sounds" class="mt-1 text-sm font-bold text-slate-950 dark:text-white">{{ $isHindi ? 'कोई नहीं चुना' : 'None selected' }}</p>
+                    </div>
+                    <div class="rounded-2xl border border-slate-200/80 bg-white/90 px-4 py-3 dark:border-slate-800 dark:bg-slate-950/80">
+                        <p class="text-[11px] font-bold uppercase tracking-[0.2em] text-slate-400">{{ $isHindi ? 'वॉइस' : 'Voice' }}</p>
+                        <p id="selected-voice" class="mt-1 text-sm font-bold text-slate-950 dark:text-white">{{ $isHindi ? 'सॉफ्ट अफर्मेशन' : 'Soft affirmations' }}</p>
+                    </div>
+                    <div class="rounded-2xl border border-slate-200/80 bg-white/90 px-4 py-3 dark:border-slate-800 dark:bg-slate-950/80">
+                        <p class="text-[11px] font-bold uppercase tracking-[0.2em] text-slate-400">{{ $isHindi ? 'टाइमर' : 'Timer' }}</p>
+                        <p id="selected-timer" class="mt-1 text-sm font-bold text-slate-950 dark:text-white">5 {{ $isHindi ? $hi['minute'] : 'min' }}</p>
+                    </div>
                 </div>
                 <div class="mt-6 flex flex-wrap gap-3 text-sm">
                     <span class="inline-flex items-center gap-2 rounded-full border border-white/80 bg-white/85 px-4 py-2 font-semibold text-slate-700 shadow-sm dark:border-slate-800 dark:bg-slate-950/80 dark:text-slate-200">
@@ -158,12 +172,12 @@
                     </div>
                 </div>
 
-                <div class="mt-6 relative flex h-64 items-center justify-center overflow-hidden rounded-[1.75rem] bg-[radial-gradient(circle_at_center,rgba(16,185,129,0.18),rgba(255,255,255,0.92)_45%,rgba(236,253,245,0.9)_100%)] dark:bg-[radial-gradient(circle_at_center,rgba(16,185,129,0.24),rgba(15,23,42,0.98)_48%,rgba(2,6,23,0.98)_100%)]">
+                <div class="mt-6 relative flex h-48 sm:h-64 items-center justify-center overflow-hidden rounded-[1.75rem] bg-[radial-gradient(circle_at_center,rgba(16,185,129,0.18),rgba(255,255,255,0.92)_45%,rgba(236,253,245,0.9)_100%)] dark:bg-[radial-gradient(circle_at_center,rgba(16,185,129,0.24),rgba(15,23,42,0.98)_48%,rgba(2,6,23,0.98)_100%)]">
                     <div class="absolute inset-0" id="calm-wave-field"></div>
-                    <div class="relative z-10 flex h-40 w-40 items-center justify-center rounded-full border border-white/70 bg-white/70 shadow-2xl shadow-emerald-400/10 backdrop-blur dark:border-white/10 dark:bg-slate-900/70">
+                    <div class="relative z-10 flex h-32 w-32 sm:h-40 sm:w-40 items-center justify-center rounded-full border border-white/70 bg-white/70 p-4 shadow-2xl shadow-emerald-400/10 backdrop-blur dark:border-white/10 dark:bg-slate-900/70">
                         <div class="text-center">
                             <div id="voice-phase" class="text-xs font-bold uppercase tracking-[0.3em] text-emerald-700 dark:text-emerald-300">{{ $isHindi ? $hi['listen'] : 'Listen' }}</div>
-                            <div id="voice-caption" class="mt-3 text-xl font-extrabold text-slate-950 dark:text-white">{{ $isHindi ? $hi['take_pause'] : 'Take a gentle pause' }}</div>
+                            <div id="voice-caption" class="mt-3 text-base sm:text-xl font-extrabold text-slate-950 dark:text-white">{{ $isHindi ? $hi['take_pause'] : 'Take a gentle pause' }}</div>
                         </div>
                     </div>
                 </div>
@@ -298,17 +312,18 @@
 <script>
 (() => {
     const voiceLines = @json($isHindi ? $hi['voice_lines'] : $voiceLines);
-
     const soundFactories = {};
     const soundStates = new Map();
     let audioContext = null;
     let globalGain = null;
     let timerInterval = null;
     let voiceInterval = null;
-    let timeRemaining = 300;
+    let selectedDuration = 5;
+    let timeRemaining = selectedDuration * 60;
     let currentPlaylist = 'affirmations';
     let voiceIndex = 0;
     let voiceEnabled = true;
+    let sessionActive = false;
 
     const waveField = document.getElementById('calm-wave-field');
     const sessionTitle = document.getElementById('session-title');
@@ -318,14 +333,26 @@
     const volumeInput = document.getElementById('master-volume');
     const volumeValue = document.getElementById('volume-value');
     const voiceToggle = document.getElementById('voice-enabled');
+    const selectedSoundsEl = document.getElementById('selected-sounds');
+    const selectedVoiceEl = document.getElementById('selected-voice');
+    const selectedTimerEl = document.getElementById('selected-timer');
+    const playAllButton = document.querySelector('[data-play-all]');
+    const stopAllButton = document.querySelector('[data-stop-all]');
     const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    const playlistTitles = new Map([...document.querySelectorAll('[data-playlist]')].map((card) => [card.dataset.playlist, card.querySelector('h3')?.textContent?.trim() || '']));
+    const soundTitles = new Map([...document.querySelectorAll('[data-sound-card]')].map((card) => [card.dataset.soundCard, card.querySelector('h3')?.textContent?.trim() || '']));
 
     function ensureAudio() {
-        if (audioContext) return;
-        audioContext = new (window.AudioContext || window.webkitAudioContext)();
-        globalGain = audioContext.createGain();
-        globalGain.gain.value = Number(volumeInput.value) / 100;
-        globalGain.connect(audioContext.destination);
+        if (!audioContext) {
+            audioContext = new (window.AudioContext || window.webkitAudioContext)();
+            globalGain = audioContext.createGain();
+            globalGain.gain.value = Number(volumeInput.value) / 100;
+            globalGain.connect(audioContext.destination);
+        }
+        if (audioContext.state === 'suspended') {
+            return audioContext.resume();
+        }
+        return Promise.resolve();
     }
 
     function createNoiseBuffer(durationSeconds = 2) {
@@ -333,23 +360,17 @@
         const buffer = audioContext.createBuffer(1, frameCount, audioContext.sampleRate);
         const data = buffer.getChannelData(0);
         let last = 0;
-
         for (let index = 0; index < frameCount; index += 1) {
             const white = (Math.random() * 2) - 1;
             last = (last + (0.02 * white)) / 1.02;
             data[index] = last * 3.5;
         }
-
         return buffer;
     }
 
     function activateVisual(tone = 'emerald') {
         waveField.innerHTML = '';
-
-        if (prefersReducedMotion) {
-            return;
-        }
-
+        if (prefersReducedMotion) return;
         for (let index = 0; index < 12; index += 1) {
             const dot = document.createElement('span');
             dot.className = 'absolute rounded-full opacity-70';
@@ -357,20 +378,12 @@
             dot.style.height = dot.style.width;
             dot.style.left = `${10 + ((index * 7) % 78)}%`;
             dot.style.top = `${12 + ((index * 9) % 72)}%`;
-            dot.style.background = tone === 'indigo'
-                ? 'rgba(99, 102, 241, 0.26)'
-                : tone === 'cyan'
-                    ? 'rgba(6, 182, 212, 0.24)'
-                    : 'rgba(16, 185, 129, 0.24)';
+            dot.style.background = tone === 'indigo' ? 'rgba(99, 102, 241, 0.26)' : tone === 'cyan' ? 'rgba(6, 182, 212, 0.24)' : 'rgba(16, 185, 129, 0.24)';
             dot.animate([
                 { transform: 'translate3d(0, 0, 0) scale(1)', opacity: 0.35 },
                 { transform: `translate3d(${(index % 2 ? -18 : 18)}px, ${index % 3 ? -22 : 22}px, 0) scale(1.25)`, opacity: 0.8 },
                 { transform: 'translate3d(0, 0, 0) scale(1)', opacity: 0.35 },
-            ], {
-                duration: 3500 + (index * 180),
-                iterations: Infinity,
-                easing: 'ease-in-out',
-            });
+            ], { duration: 3500 + (index * 180), iterations: Infinity, easing: 'ease-in-out' });
             waveField.appendChild(dot);
         }
     }
@@ -379,19 +392,15 @@
         const source = audioContext.createBufferSource();
         source.buffer = createNoiseBuffer();
         source.loop = true;
-
         const filter = audioContext.createBiquadFilter();
         filter.type = 'lowpass';
         filter.frequency.value = 900;
-
         const gain = audioContext.createGain();
         gain.gain.value = 0.18;
-
         source.connect(filter);
         filter.connect(gain);
         gain.connect(globalGain);
         source.start();
-
         return { stop: () => source.stop(), gain };
     };
 
@@ -399,19 +408,15 @@
         const source = audioContext.createBufferSource();
         source.buffer = createNoiseBuffer();
         source.loop = true;
-
         const filter = audioContext.createBiquadFilter();
         filter.type = 'lowpass';
         filter.frequency.value = 320;
-
         const gain = audioContext.createGain();
         gain.gain.value = 0.16;
-
         source.connect(filter);
         filter.connect(gain);
         gain.connect(globalGain);
         source.start();
-
         return { stop: () => source.stop(), gain };
     };
 
@@ -419,26 +424,17 @@
         const oscillator = audioContext.createOscillator();
         const harmonic = audioContext.createOscillator();
         const gain = audioContext.createGain();
-
         oscillator.type = 'sine';
         harmonic.type = 'triangle';
         oscillator.frequency.value = 136.1;
         harmonic.frequency.value = 204.15;
         gain.gain.value = 0.05;
-
         oscillator.connect(gain);
         harmonic.connect(gain);
         gain.connect(globalGain);
         oscillator.start();
         harmonic.start();
-
-        return {
-            stop: () => {
-                oscillator.stop();
-                harmonic.stop();
-            },
-            gain,
-        };
+        return { stop: () => { oscillator.stop(); harmonic.stop(); }, gain };
     };
 
     soundFactories.chimes = () => {
@@ -457,20 +453,33 @@
             osc.stop(audioContext.currentTime + 1.7);
             nodes.push(osc);
         }, 3800);
-
-        return {
-            stop: () => {
-                window.clearInterval(interval);
-                nodes.forEach((osc) => {
-                    try { osc.stop(); } catch (error) {}
-                });
-            },
-        };
+        return { stop: () => { clearInterval(interval); nodes.forEach((osc) => { try { osc.stop(); } catch (error) {} }); } };
     };
 
-    function toggleSound(soundId) {
-        ensureAudio();
+    function formatTime(seconds) {
+        const mins = String(Math.floor(seconds / 60)).padStart(2, '0');
+        const secs = String(seconds % 60).padStart(2, '0');
+        return `${mins}:${secs}`;
+    }
 
+    function updateSelectionSummary() {
+        const soundNames = [...soundStates.keys()].map((soundId) => soundTitles.get(soundId)).filter(Boolean);
+        if (selectedSoundsEl) selectedSoundsEl.textContent = soundNames.length ? soundNames.join(', ') : 'None selected';
+        if (selectedVoiceEl) selectedVoiceEl.textContent = voiceEnabled ? (playlistTitles.get(currentPlaylist) || 'Soft affirmations') : 'Voice off';
+        if (selectedTimerEl) selectedTimerEl.textContent = `${selectedDuration} ${@json($isHindi ? $hi['minute'] : 'min')}`;
+    }
+
+    function updateSessionButtons() {
+        if (!playAllButton || !stopAllButton) return;
+        playAllButton.innerHTML = sessionActive ? `<i data-lucide="play" class="h-4 w-4"></i>${'Session running'}` : `<i data-lucide="play" class="h-4 w-4"></i>${@json($isHindi ? $hi['start_session'] : 'Start calm session')}`;
+        stopAllButton.disabled = !sessionActive;
+        stopAllButton.classList.toggle('opacity-50', !sessionActive);
+        stopAllButton.classList.toggle('cursor-not-allowed', !sessionActive);
+        window.refreshLucideIcons?.();
+    }
+
+    async function toggleSound(soundId) {
+        await ensureAudio();
         if (soundStates.has(soundId)) {
             const existing = soundStates.get(soundId);
             existing.stop();
@@ -478,13 +487,13 @@
         } else {
             soundStates.set(soundId, soundFactories[soundId]());
         }
-
         document.querySelectorAll('[data-sound-card]').forEach((card) => {
             const active = soundStates.has(card.dataset.soundCard);
             card.classList.toggle('border-emerald-300', active);
             card.classList.toggle('bg-emerald-50', active);
             card.classList.toggle('dark:bg-emerald-950/20', active);
         });
+        updateSelectionSummary();
     }
 
     function stopAllSounds() {
@@ -493,19 +502,12 @@
         document.querySelectorAll('[data-sound-card]').forEach((card) => {
             card.classList.remove('border-emerald-300', 'bg-emerald-50', 'dark:bg-emerald-950/20');
         });
-    }
-
-    function formatTime(seconds) {
-        const mins = String(Math.floor(seconds / 60)).padStart(2, '0');
-        const secs = String(seconds % 60).padStart(2, '0');
-        return `${mins}:${secs}`;
+        updateSelectionSummary();
     }
 
     function stopVoicePlayback() {
-        window.clearInterval(voiceInterval);
-        if ('speechSynthesis' in window) {
-            window.speechSynthesis.cancel();
-        }
+        clearInterval(voiceInterval);
+        if ('speechSynthesis' in window) window.speechSynthesis.cancel();
     }
 
     function speakNextLine() {
@@ -513,9 +515,8 @@
         const lines = voiceLines[currentPlaylist] || voiceLines.affirmations;
         const line = lines[voiceIndex % lines.length];
         voiceIndex += 1;
-        voicePhase.textContent = @json($isHindi ? 'सुनें' : 'Listen');
+        voicePhase.textContent = 'Listen';
         voiceCaption.textContent = line;
-
         const utterance = new SpeechSynthesisUtterance(line);
         utterance.rate = 0.9;
         utterance.pitch = 1;
@@ -527,112 +528,109 @@
     function startVoiceLoop() {
         stopVoicePlayback();
         speakNextLine();
-        voiceInterval = window.setInterval(speakNextLine, 12000);
+        voiceInterval = setInterval(speakNextLine, 12000);
     }
 
-    function startTimer(minutes = 5) {
-        window.clearInterval(timerInterval);
+    function startTimer(minutes = selectedDuration) {
+        clearInterval(timerInterval);
         timeRemaining = minutes * 60;
         timerStatus.textContent = formatTime(timeRemaining);
-
-        timerInterval = window.setInterval(() => {
+        timerInterval = setInterval(() => {
             timeRemaining -= 1;
             timerStatus.textContent = formatTime(Math.max(timeRemaining, 0));
-            if (timeRemaining <= 0) {
-                stopSession();
-            }
+            if (timeRemaining <= 0) stopSession();
         }, 1000);
     }
 
     function stopSession() {
-        window.clearInterval(timerInterval);
+        sessionActive = false;
+        clearInterval(timerInterval);
         stopVoicePlayback();
         stopAllSounds();
+        timeRemaining = selectedDuration * 60;
         timerStatus.textContent = formatTime(timeRemaining);
-        sessionTitle.textContent = @json($isHindi ? 'शांत विराम पूरा हुआ' : 'Calm pause complete');
-        voicePhase.textContent = @json($isHindi ? 'आराम' : 'Rest');
-        voiceCaption.textContent = @json($isHindi ? 'धीरे वापस आएँ' : 'Come back slowly');
+        sessionTitle.textContent = 'Calm pause complete';
+        voicePhase.textContent = 'Rest';
+        voiceCaption.textContent = 'Come back slowly';
         activateVisual('cyan');
+        updateSelectionSummary();
+        updateSessionButtons();
     }
 
-    function startSession() {
-        sessionTitle.textContent = @json($isHindi ? 'शांत सत्र चल रहा है' : 'Calm session in progress');
-        currentPlaylist = currentPlaylist || 'affirmations';
+    async function startSession() {
+        await ensureAudio();
+        sessionActive = true;
+        sessionTitle.textContent = 'Calm session in progress';
         activateVisual('emerald');
-        if (!soundStates.has('rain')) toggleSound('rain');
-        if (!soundStates.has('drone')) toggleSound('drone');
-        startTimer(Number(document.querySelector('.timer-chip.border-emerald-300')?.dataset.minutes || 5));
+        if (soundStates.size == 0) await toggleSound('rain');
+        startTimer(selectedDuration);
         if (voiceEnabled) {
             startVoiceLoop();
         } else {
-            voicePhase.textContent = @json($isHindi ? 'साउंड' : 'Sound');
-            voiceCaption.textContent = @json($isHindi ? 'बस ध्वनि के साथ आराम करें' : 'Rest with sound only');
+            voicePhase.textContent = 'Sound';
+            voiceCaption.textContent = 'Rest with sound only';
         }
+        updateSelectionSummary();
+        updateSessionButtons();
     }
 
     document.querySelectorAll('[data-sound-card]').forEach((card) => {
-        card.addEventListener('click', () => {
-            toggleSound(card.dataset.soundCard);
+        card.addEventListener('click', async () => {
+            await toggleSound(card.dataset.soundCard);
             activateVisual(card.dataset.soundCard === 'chimes' ? 'indigo' : card.dataset.soundCard === 'brown' ? 'cyan' : 'emerald');
         });
     });
 
     document.querySelectorAll('.timer-chip').forEach((chip, index) => {
-        if (index === 0) {
-            chip.classList.add('border-emerald-300', 'bg-emerald-50', 'text-emerald-700', 'dark:bg-emerald-950/20');
-        }
+        if (index === 0) chip.classList.add('border-emerald-300', 'bg-emerald-50', 'text-emerald-700', 'dark:bg-emerald-950/20');
         chip.addEventListener('click', () => {
-            document.querySelectorAll('.timer-chip').forEach((item) => {
-                item.classList.remove('border-emerald-300', 'bg-emerald-50', 'text-emerald-700', 'dark:bg-emerald-950/20');
-            });
+            document.querySelectorAll('.timer-chip').forEach((item) => item.classList.remove('border-emerald-300', 'bg-emerald-50', 'text-emerald-700', 'dark:bg-emerald-950/20'));
             chip.classList.add('border-emerald-300', 'bg-emerald-50', 'text-emerald-700', 'dark:bg-emerald-950/20');
-            timerStatus.textContent = formatTime(Number(chip.dataset.minutes) * 60);
+            selectedDuration = Number(chip.dataset.minutes) || 5;
+            if (!sessionActive) timerStatus.textContent = formatTime(selectedDuration * 60);
+            updateSelectionSummary();
         });
     });
 
     document.querySelectorAll('[data-playlist]').forEach((card, index) => {
-        if (index === 0) {
-            card.classList.add('border-indigo-300', 'bg-indigo-50', 'dark:bg-indigo-950/20');
-        }
+        if (index === 0) card.classList.add('border-indigo-300', 'bg-indigo-50', 'dark:bg-indigo-950/20');
         card.addEventListener('click', () => {
             currentPlaylist = card.dataset.playlist;
             voiceIndex = 0;
-            document.querySelectorAll('[data-playlist]').forEach((item) => {
-                item.classList.remove('border-indigo-300', 'bg-indigo-50', 'dark:bg-indigo-950/20');
-            });
+            document.querySelectorAll('[data-playlist]').forEach((item) => item.classList.remove('border-indigo-300', 'bg-indigo-50', 'dark:bg-indigo-950/20'));
             card.classList.add('border-indigo-300', 'bg-indigo-50', 'dark:bg-indigo-950/20');
-            sessionTitle.textContent = card.querySelector('h3').textContent;
-            if (voiceEnabled) {
-                startVoiceLoop();
-            }
+            sessionTitle.textContent = card.querySelector('h3')?.textContent || sessionTitle.textContent;
+            updateSelectionSummary();
+            if (voiceEnabled && sessionActive) startVoiceLoop();
         });
     });
 
     volumeInput.addEventListener('input', () => {
         const volume = Number(volumeInput.value) / 100;
         volumeValue.textContent = `${volumeInput.value}%`;
-        if (globalGain) {
-            globalGain.gain.value = volume;
-        }
+        if (globalGain) globalGain.gain.value = volume;
     });
 
     voiceToggle.addEventListener('change', () => {
         voiceEnabled = voiceToggle.checked;
         if (!voiceEnabled) {
             stopVoicePlayback();
-            voicePhase.textContent = @json($isHindi ? 'साउंड' : 'Sound');
-            voiceCaption.textContent = @json($isHindi ? 'आवाज़ बंद है' : 'Voice is off');
+            voicePhase.textContent = 'Sound';
+            voiceCaption.textContent = 'Voice is off';
+            updateSelectionSummary();
             return;
         }
-
-        startVoiceLoop();
+        updateSelectionSummary();
+        if (sessionActive) startVoiceLoop();
     });
 
-    document.querySelector('[data-play-all]').addEventListener('click', startSession);
-    document.querySelector('[data-stop-all]').addEventListener('click', stopSession);
+    playAllButton?.addEventListener('click', startSession);
+    stopAllButton?.addEventListener('click', stopSession);
 
     activateVisual('emerald');
     volumeValue.textContent = `${volumeInput.value}%`;
+    updateSelectionSummary();
+    updateSessionButtons();
 })();
 </script>
 @endpush

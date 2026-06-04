@@ -353,14 +353,14 @@ $locale === 'hi'
                     <p class="mt-3 text-xs sm:text-sm font-semibold text-rose-700 dark:text-rose-300">{{ $locale === 'hi' ? 'यदि यह जीवन-घातक आपातस्थिति है, तो तुरंत इमरजेंसी सेवाओं से संपर्क करें या नज़दीकी अस्पताल जाएँ।' : 'If this is a life-threatening emergency, contact emergency services or go to the nearest hospital immediately.' }}</p>
                 </div>
                 <div class="grid gap-3 sm:grid-cols-3 lg:w-[440px]">
-                    <a href="{{ route('hospitals.index') }}" class="group relative inline-flex items-center justify-center overflow-hidden rounded-2xl border border-rose-200 dark:border-rose-900/50 bg-white/90 dark:bg-slate-950 px-4 py-3 text-sm font-bold text-rose-700 dark:text-rose-200 shadow-sm transition-all duration-300 ease-out hover:-translate-y-0.5 hover:border-rose-500 hover:text-white dark:hover:text-rose-950 active:scale-[0.98] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-rose-400 focus-visible:ring-offset-2 focus-visible:ring-offset-white dark:focus-visible:ring-offset-slate-950"><span class="pointer-events-none absolute inset-0 bg-gradient-to-r from-rose-500 via-rose-500 to-red-500 translate-y-full transition-transform duration-300 ease-out group-hover:translate-y-0 group-active:translate-y-0"></span><span class="pointer-events-none absolute inset-0 opacity-0 transition-opacity duration-300 group-hover:opacity-100 bg-white/10"></span><span class="relative z-10">{{ $locale === 'hi' ? 'अस्पताल देखें' : 'View Hospitals' }}</span></a>
-                    <a href="{{ route('blood_banks.index') }}" class="group relative inline-flex items-center justify-center overflow-hidden rounded-2xl border border-red-200 dark:border-red-900/50 bg-white/90 dark:bg-slate-950 px-4 py-3 text-sm font-bold text-red-700 dark:text-red-200 shadow-sm transition-all duration-300 ease-out hover:-translate-y-0.5 hover:border-red-500 hover:text-white dark:hover:text-red-950 active:scale-[0.98] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-red-400 focus-visible:ring-offset-2 focus-visible:ring-offset-white dark:focus-visible:ring-offset-slate-950"><span class="pointer-events-none absolute inset-0 bg-gradient-to-r from-red-500 via-rose-500 to-red-600 translate-y-full transition-transform duration-300 ease-out group-hover:translate-y-0 group-active:translate-y-0"></span><span class="pointer-events-none absolute inset-0 opacity-0 transition-opacity duration-300 group-hover:opacity-100 bg-white/10"></span><span class="relative z-10">{{ $locale === 'hi' ? 'ब्लड बैंक देखें' : 'View Blood Banks' }}</span></a>
+                    <a href="{{ route('hospitals.index') }}" class="group relative inline-flex items-center justify-center overflow-hidden rounded-2xl border border-rose-200 dark:border-rose-900/50 bg-white/90 dark:bg-slate-950 px-4 py-3 text-sm font-bold text-rose-700 dark:text-rose-200 shadow-sm transition-all duration-300 ease-out hover:-translate-y-0.5 hover:border-rose-500 hover:text-white dark:hover:text-white active:scale-[0.98] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-rose-400 focus-visible:ring-offset-2 focus-visible:ring-offset-white dark:focus-visible:ring-offset-slate-950"><span class="pointer-events-none absolute inset-0 bg-gradient-to-r from-rose-500 via-rose-500 to-red-500 translate-y-full transition-transform duration-300 ease-out group-hover:translate-y-0 group-active:translate-y-0"></span><span class="pointer-events-none absolute inset-0 opacity-0 transition-opacity duration-300 group-hover:opacity-100 bg-white/10"></span><span class="relative z-10">{{ $locale === 'hi' ? 'अस्पताल देखें' : 'View Hospitals' }}</span></a>
+                    <a href="{{ route('blood_banks.index') }}" class="group relative inline-flex items-center justify-center overflow-hidden rounded-2xl border border-red-200 dark:border-red-900/50 bg-white/90 dark:bg-slate-950 px-4 py-3 text-sm font-bold text-red-700 dark:text-red-200 shadow-sm transition-all duration-300 ease-out hover:-translate-y-0.5 hover:border-red-500 hover:text-white dark:hover:text-white active:scale-[0.98] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-red-400 focus-visible:ring-offset-2 focus-visible:ring-offset-white dark:focus-visible:ring-offset-slate-950"><span class="pointer-events-none absolute inset-0 bg-gradient-to-r from-red-500 via-rose-500 to-red-600 translate-y-full transition-transform duration-300 ease-out group-hover:translate-y-0 group-active:translate-y-0"></span><span class="pointer-events-none absolute inset-0 opacity-0 transition-opacity duration-300 group-hover:opacity-100 bg-white/10"></span><span class="relative z-10">{{ $locale === 'hi' ? 'ब्लड बैंक देखें' : 'View Blood Banks' }}</span></a>
                     <button type="button" onclick="toggleChatbot()" class="group relative inline-flex items-center justify-center overflow-hidden rounded-2xl border border-slate-900 dark:border-cyan-500 bg-slate-900 dark:bg-cyan-600 px-4 py-3 text-sm font-bold text-white shadow-lg shadow-slate-900/10 transition-all duration-300 ease-out hover:-translate-y-0.5 hover:border-cyan-400 active:scale-[0.98] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-cyan-400 focus-visible:ring-offset-2 focus-visible:ring-offset-white dark:focus-visible:ring-offset-slate-950"><span class="pointer-events-none absolute inset-0 bg-gradient-to-r from-cyan-400 via-teal-400 to-cyan-500 translate-y-full transition-transform duration-300 ease-out group-hover:translate-y-0 group-active:translate-y-0"></span><span class="pointer-events-none absolute inset-0 opacity-0 transition-opacity duration-300 group-hover:opacity-100 bg-white/10"></span><span class="relative z-10">{{ $locale === 'hi' ? 'AI सहायक' : 'Ask Health Assistant' }}</span></button>
                 </div>
             </div>
         </section>
 
-        <section class="relative overflow-hidden rounded-[2rem] border border-emerald-200/80 dark:border-emerald-900/40 bg-gradient-to-br from-emerald-50 via-white to-cyan-50/80 dark:from-slate-900 dark:via-slate-900 dark:to-slate-950 p-6 sm:p-8 shadow-sm">
+        <section class="relative overflow-hidden rounded-[2rem] border border-emerald-200 dark:border-emerald-900/40 bg-gradient-to-br from-emerald-50 via-white to-cyan-50/80 dark:from-slate-900 dark:via-slate-900 dark:to-slate-950 p-6 sm:p-8 shadow-md shadow-emerald-100/60 dark:shadow-none">
             <div class="absolute -top-16 right-0 h-48 w-48 rounded-full bg-emerald-300/20 blur-3xl"></div>
             <div class="absolute bottom-0 left-0 h-40 w-40 rounded-full bg-cyan-300/20 blur-3xl"></div>
             <div class="relative z-10 grid gap-6">
@@ -385,14 +385,14 @@ $locale === 'hi'
                         </div>
                         <div class="mt-6 flex flex-wrap gap-3">
                             <a href="{{ route('medicines.index') }}" class="group relative inline-flex items-center justify-center overflow-hidden rounded-2xl border border-emerald-600 bg-emerald-600 px-5 py-3 text-sm font-bold text-white shadow-lg shadow-emerald-600/20 transition-all duration-300 ease-out hover:-translate-y-0.5 hover:border-emerald-500 active:scale-[0.98] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-emerald-400 focus-visible:ring-offset-2 focus-visible:ring-offset-white dark:focus-visible:ring-offset-slate-950"><span class="pointer-events-none absolute inset-0 bg-gradient-to-r from-emerald-400 via-teal-400 to-emerald-500 translate-y-full transition-transform duration-300 ease-out group-hover:translate-y-0 group-active:translate-y-0"></span><span class="pointer-events-none absolute inset-0 opacity-0 transition-opacity duration-300 group-hover:opacity-100 bg-white/10"></span><span class="relative z-10">{{ $locale === 'hi' ? 'दवाएं देखें' : 'Browse Medicines' }}</span></a>
-                            <button type="button" onclick="toggleChatbot()" class="group relative inline-flex items-center justify-center overflow-hidden rounded-2xl border border-slate-200 dark:border-slate-700 bg-white/90 dark:bg-slate-950 px-5 py-3 text-sm font-bold text-slate-800 dark:text-slate-100 transition-all duration-300 ease-out hover:-translate-y-0.5 hover:border-emerald-400 hover:text-white dark:hover:text-emerald-950 active:scale-[0.98] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-emerald-400 focus-visible:ring-offset-2 focus-visible:ring-offset-white dark:focus-visible:ring-offset-slate-950"><span class="pointer-events-none absolute inset-0 bg-gradient-to-r from-emerald-500 via-teal-500 to-emerald-600 translate-y-full transition-transform duration-300 ease-out group-hover:translate-y-0 group-active:translate-y-0"></span><span class="pointer-events-none absolute inset-0 opacity-0 transition-opacity duration-300 group-hover:opacity-100 bg-white/10"></span><span class="relative z-10">{{ $locale === 'hi' ? 'किसी दवा पर पूछें' : 'Ask About a Medicine' }}</span></button>
+                            <button type="button" onclick="toggleChatbot()" class="group relative inline-flex items-center justify-center overflow-hidden rounded-2xl border border-slate-200 dark:border-slate-700 bg-white/90 dark:bg-slate-950 px-5 py-3 text-sm font-bold text-slate-800 dark:text-slate-100 transition-all duration-300 ease-out hover:-translate-y-0.5 hover:border-emerald-400 hover:text-white dark:hover:text-white active:scale-[0.98] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-emerald-400 focus-visible:ring-offset-2 focus-visible:ring-offset-white dark:focus-visible:ring-offset-slate-950"><span class="pointer-events-none absolute inset-0 bg-gradient-to-r from-emerald-500 via-teal-500 to-emerald-600 translate-y-full transition-transform duration-300 ease-out group-hover:translate-y-0 group-active:translate-y-0"></span><span class="pointer-events-none absolute inset-0 opacity-0 transition-opacity duration-300 group-hover:opacity-100 bg-white/10"></span><span class="relative z-10">{{ $locale === 'hi' ? 'किसी दवा पर पूछें' : 'Ask About a Medicine' }}</span></button>
                         </div>
                     </div>
 
                     <div class="relative mx-auto w-full max-w-md xl:mx-0 xl:justify-self-end">
                         <div class="absolute -left-5 top-10 h-20 w-20 rounded-full bg-emerald-300/30 blur-2xl"></div>
                         <div class="absolute -right-4 bottom-8 h-24 w-24 rounded-full bg-cyan-300/30 blur-2xl"></div>
-                        <div class="relative rounded-[2rem] border border-white/70 dark:border-slate-800 bg-white/90 dark:bg-slate-900/90 p-5 shadow-2xl">
+                        <a href="{{ route('medicines.index') }}" class="group relative block rounded-[2rem] border border-emerald-200/80 dark:border-emerald-900/40 bg-white/95 dark:bg-slate-900/95 p-5 shadow-2xl shadow-emerald-200/40 transition-all duration-300 hover:-translate-y-1 hover:border-emerald-400 hover:shadow-[0_28px_70px_rgba(16,185,129,0.18)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-emerald-400 focus-visible:ring-offset-2 focus-visible:ring-offset-white dark:focus-visible:ring-offset-slate-950">
                             <div class="flex items-center justify-between">
                                 <div>
                                     <p class="text-[11px] font-bold uppercase tracking-[0.22em] text-emerald-700 dark:text-emerald-300">{{ $locale === 'hi' ? 'सरल दृश्य' : 'Simple View' }}</p>
@@ -429,7 +429,11 @@ $locale === 'hi'
                                     </div>
                                 </div>
                             </div>
-                        </div>
+                            <div class="mt-4 flex items-center justify-between rounded-2xl border border-emerald-100 bg-emerald-50/80 px-4 py-3 text-sm font-bold text-emerald-800 transition-colors group-hover:border-emerald-200 group-hover:bg-emerald-100/80 dark:border-emerald-900/40 dark:bg-emerald-950/20 dark:text-emerald-200 dark:group-hover:bg-emerald-950/30">
+                                <span>{{ $locale === 'hi' ? 'पूरी दवा जानकारी खोलें' : 'Open full medicine information' }}</span>
+                                <i data-lucide="arrow-right" class="h-4 w-4 transition-transform group-hover:translate-x-1"></i>
+                            </div>
+                        </a>
                     </div>
                 </div>
 
@@ -481,51 +485,47 @@ $locale === 'hi'
                     <h2 class="mt-2 text-2xl sm:text-3xl font-extrabold text-slate-950 dark:text-white">{{ $locale === 'hi' ? 'गतिविधियां, क्विज़ और शांत अभ्यास' : 'Activities, Quizzes, and Calming Tools' }}</h2>
                     <p class="mt-3 text-sm sm:text-base leading-7 text-slate-600 dark:text-slate-300">{{ $locale === 'hi' ? 'तनाव राहत, आत्म-जागरूकता और छोटे शांत विराम के लिए सहायक टूल्स खोजें।' : 'Explore supportive tools for stress relief, self-awareness, and calmer daily pauses.' }}</p>
                 </div>
-                <a href="{{ route('activities.index') }}" class="group relative z-20 inline-flex w-full sm:w-auto items-center justify-center overflow-hidden rounded-2xl border border-cyan-200 dark:border-cyan-800/60 bg-white dark:bg-slate-950 px-4 py-3 text-sm font-bold text-cyan-800 dark:text-cyan-200 transition-all duration-300 ease-out hover:border-cyan-500 hover:text-white dark:hover:text-cyan-950 active:scale-[0.98] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-cyan-400 focus-visible:ring-offset-2 focus-visible:ring-offset-white dark:focus-visible:ring-offset-slate-950">
+                <a href="{{ route('activities.index') }}" class="group relative z-20 inline-flex w-full sm:w-auto items-center justify-center overflow-hidden rounded-2xl border border-cyan-200 dark:border-cyan-800/60 bg-white dark:bg-slate-950 px-4 py-3 text-sm font-bold text-cyan-800 dark:text-cyan-200 transition-all duration-300 ease-out hover:border-cyan-500 hover:text-white dark:hover:text-white active:scale-[0.98] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-cyan-400 focus-visible:ring-offset-2 focus-visible:ring-offset-white dark:focus-visible:ring-offset-slate-950">
                     <span class="pointer-events-none absolute inset-0 bg-gradient-to-r from-cyan-500 via-teal-500 to-cyan-600 translate-y-full transition-transform duration-300 ease-out group-hover:translate-y-0 group-active:translate-y-0"></span>
                     <span class="pointer-events-none absolute inset-0 opacity-0 transition-opacity duration-300 group-hover:opacity-100 bg-white/10"></span>
                     <span class="relative z-10">{{ $locale === 'hi' ? 'सभी वेलनेस टूल्स देखें' : 'View All Wellness Tools' }}</span>
                 </a>
             </div>
 
-            <div class="relative z-10 grid grid-cols-1 gap-5 items-start xl:grid-cols-[0.9fr,1.1fr]">
-                <div class="rounded-[1.75rem] border border-white/80 dark:border-slate-800 bg-white/90 dark:bg-slate-900/90 p-6 shadow-sm">
-                    <div class="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
+            <div class="relative z-10 grid grid-cols-1 gap-4 lg:gap-5 lg:grid-cols-[0.95fr,1.05fr] lg:items-start">
+                <div class="rounded-[1.75rem] border border-white/80 dark:border-slate-800 bg-white/92 dark:bg-slate-900/92 p-5 sm:p-6 shadow-sm">
+                    <div class="flex items-start gap-4">
+                        <div class="flex h-12 w-12 shrink-0 items-center justify-center rounded-2xl bg-gradient-to-br from-cyan-500 to-indigo-500 text-white shadow-lg">
+                            <i data-lucide="sparkles" class="w-5 h-5"></i>
+                        </div>
                         <div class="min-w-0">
                             <p class="text-[11px] font-bold uppercase tracking-[0.22em] text-indigo-700 dark:text-indigo-300">{{ $locale === 'hi' ? 'माइक्रो ब्रेक्स' : 'Micro Breaks' }}</p>
-                            <h3 class="mt-2 text-xl font-bold text-slate-950 dark:text-white">{{ $locale === 'hi' ? 'मानसिक स्पेस बनाने के छोटे टूल्स' : 'Small tools that create mental breathing room' }}</h3>
-                        </div>
-                        <div class="flex h-14 w-14 shrink-0 self-start items-center justify-center rounded-2xl bg-gradient-to-br from-cyan-500 to-indigo-500 text-white shadow-lg">
-                            <i data-lucide="sparkles" class="w-6 h-6"></i>
+                            <h3 class="mt-2 text-lg sm:text-xl font-bold text-slate-950 dark:text-white">{{ $locale === 'hi' ? 'छोटे टूल जो दिमाग को हल्का विराम देते हैं' : 'Small tools that give your mind a softer pause' }}</h3>
+                            <p class="mt-2 text-sm leading-6 sm:leading-7 text-slate-600 dark:text-slate-300">{{ $locale === 'hi' ? 'जब आपको खोज से थोड़ा ब्रेक चाहिए, ये टूल बिना अतिरिक्त दबाव के रीसेट करने में मदद करते हैं।' : 'When you need a short break from searching, these tools help you reset without adding pressure.' }}</p>
                         </div>
                     </div>
-                    <div class="mt-6 rounded-[1.5rem] border border-indigo-100 dark:border-indigo-900/40 bg-gradient-to-br from-indigo-50 to-cyan-50 dark:from-indigo-950/20 dark:to-cyan-950/20 p-5">
-                        <div class="flex flex-col gap-5 sm:flex-row sm:items-end sm:justify-between">
-                            <div class="space-y-2">
-                                <div class="flex items-center gap-2 text-sm font-semibold text-slate-800 dark:text-slate-100">
-                                    <span class="inline-flex h-8 w-8 items-center justify-center rounded-xl bg-white dark:bg-slate-900 text-cyan-700 dark:text-cyan-300 shadow-sm">1</span>
-                                    <span>{{ $locale === 'hi' ? 'सांस लें' : 'Breathe' }}</span>
-                                </div>
-                                <div class="flex items-center gap-2 text-sm font-semibold text-slate-800 dark:text-slate-100">
-                                    <span class="inline-flex h-8 w-8 items-center justify-center rounded-xl bg-white dark:bg-slate-900 text-cyan-700 dark:text-cyan-300 shadow-sm">2</span>
-                                    <span>{{ $locale === 'hi' ? 'रुकें' : 'Pause' }}</span>
-                                </div>
-                                <div class="flex items-center gap-2 text-sm font-semibold text-slate-800 dark:text-slate-100">
-                                    <span class="inline-flex h-8 w-8 items-center justify-center rounded-xl bg-white dark:bg-slate-900 text-cyan-700 dark:text-cyan-300 shadow-sm">3</span>
-                                    <span>{{ $locale === 'hi' ? 'रिलीज़ करें' : 'Reset' }}</span>
-                                </div>
-                            </div>
-                            <div class="mx-auto grid h-24 w-24 place-items-center rounded-full border-8 border-cyan-100 dark:border-cyan-900/40 bg-white/80 dark:bg-slate-900/80 shadow-inner sm:mx-0 sm:h-28 sm:w-28">
-                                <div class="grid h-16 w-16 place-items-center rounded-full bg-cyan-500/10 text-cyan-700 dark:text-cyan-300">
-                                    <i data-lucide="sparkles" class="w-8 h-8"></i>
-                                </div>
-                            </div>
+                    <div class="mt-4 grid grid-cols-3 gap-3">
+                        <div class="rounded-2xl border border-cyan-100 dark:border-cyan-900/40 bg-cyan-50/80 dark:bg-cyan-950/20 px-3 py-3 text-center">
+                            <div class="mx-auto flex h-8 w-8 items-center justify-center rounded-xl bg-white dark:bg-slate-900 text-cyan-700 dark:text-cyan-300 shadow-sm text-sm font-bold">1</div>
+                            <p class="mt-2 text-sm font-semibold text-slate-900 dark:text-white">{{ $locale === 'hi' ? 'सांस' : 'Breathe' }}</p>
+                        </div>
+                        <div class="rounded-2xl border border-cyan-100 dark:border-cyan-900/40 bg-cyan-50/80 dark:bg-cyan-950/20 px-3 py-3 text-center">
+                            <div class="mx-auto flex h-8 w-8 items-center justify-center rounded-xl bg-white dark:bg-slate-900 text-cyan-700 dark:text-cyan-300 shadow-sm text-sm font-bold">2</div>
+                            <p class="mt-2 text-sm font-semibold text-slate-900 dark:text-white">{{ $locale === 'hi' ? 'रुकें' : 'Pause' }}</p>
+                        </div>
+                        <div class="rounded-2xl border border-cyan-100 dark:border-cyan-900/40 bg-cyan-50/80 dark:bg-cyan-950/20 px-3 py-3 text-center">
+                            <div class="mx-auto flex h-8 w-8 items-center justify-center rounded-xl bg-white dark:bg-slate-900 text-cyan-700 dark:text-cyan-300 shadow-sm text-sm font-bold">3</div>
+                            <p class="mt-2 text-sm font-semibold text-slate-900 dark:text-white">{{ $locale === 'hi' ? 'रीसेट' : 'Reset' }}</p>
                         </div>
                     </div>
-                    <p class="mt-4 text-sm leading-7 text-slate-600 dark:text-slate-300">{{ $locale === 'hi' ? 'गतिविधियां और क्विज़ हेल्थ डायरेक्टरी से अलग महसूस हों, इसलिए इन्हें हल्के, शांत और ज्यादा मानवीय तरीके से प्रस्तुत किया गया है।' : 'Activities and quizzes now sit apart from the core directory flow, with a calmer and more human feel.' }}</p>
+                    <div class="mt-4 flex flex-wrap gap-2.5">
+                        <span class="inline-flex items-center rounded-full border border-cyan-100 dark:border-cyan-900/40 bg-white/80 dark:bg-slate-900/70 px-3 py-2 text-xs font-bold text-slate-700 dark:text-slate-200">{{ $locale === 'hi' ? 'कम दबाव' : 'Low pressure' }}</span>
+                        <span class="inline-flex items-center rounded-full border border-cyan-100 dark:border-cyan-900/40 bg-white/80 dark:bg-slate-900/70 px-3 py-2 text-xs font-bold text-slate-700 dark:text-slate-200">{{ $locale === 'hi' ? 'छोटे कदम' : 'Short steps' }}</span>
+                        <span class="inline-flex items-center rounded-full border border-cyan-100 dark:border-cyan-900/40 bg-white/80 dark:bg-slate-900/70 px-3 py-2 text-xs font-bold text-slate-700 dark:text-slate-200">{{ $locale === 'hi' ? 'मोबाइल फ्रेंडली' : 'Mobile friendly' }}</span>
+                    </div>
                 </div>
 
-                <div class="grid grid-cols-1 md:grid-cols-2 gap-5">
+                <div class="grid grid-cols-1 gap-4 sm:gap-5 md:grid-cols-2">
                     @foreach([
                         [
                             'title' => $locale === 'hi' ? 'श्वास और ग्राउंडिंग' : 'Breathing and Grounding',
@@ -556,12 +556,12 @@ $locale === 'hi'
                             'icon' => 'zap',
                         ],
                     ] as $item)
-                        <a href="{{ $item['url'] }}" class="rounded-[1.75rem] border border-slate-200/80 dark:border-slate-800 bg-white/90 dark:bg-slate-900/90 shadow-sm p-5 hover:-translate-y-1 transition">
-                            <div class="w-11 h-11 rounded-2xl bg-{{ $item['tone'] }}-100 dark:bg-{{ $item['tone'] }}-950/40 text-{{ $item['tone'] }}-700 dark:text-{{ $item['tone'] }}-200 flex items-center justify-center mb-4">
+                        <a href="{{ $item['url'] }}" class="flex h-full flex-col rounded-[1.75rem] border border-slate-200/80 dark:border-slate-800 bg-white/92 dark:bg-slate-900/92 shadow-sm p-4 sm:p-5 hover:-translate-y-1 transition">
+                            <div class="flex h-11 w-11 items-center justify-center rounded-2xl bg-{{ $item['tone'] }}-100 dark:bg-{{ $item['tone'] }}-950/40 text-{{ $item['tone'] }}-700 dark:text-{{ $item['tone'] }}-200 mb-4">
                                 <i data-lucide="{{ $item['icon'] }}" class="w-5 h-5"></i>
                             </div>
-                            <h3 class="text-lg font-bold text-slate-900 dark:text-white mb-2">{{ $item['title'] }}</h3>
-                            <p class="text-sm text-slate-600 dark:text-slate-300 leading-7">{{ $item['description'] }}</p>
+                            <h3 class="text-base sm:text-lg font-bold text-slate-900 dark:text-white mb-2">{{ $item['title'] }}</h3>
+                            <p class="text-sm text-slate-600 dark:text-slate-300 leading-6 sm:leading-7">{{ $item['description'] }}</p>
                             <span class="mt-4 inline-flex text-sm font-bold text-cyan-700 dark:text-cyan-300">{{ $locale === 'hi' ? 'खोलें' : 'Open' }}</span>
                         </a>
                     @endforeach
@@ -754,7 +754,7 @@ $locale === 'hi'
                     <div class="w-11 h-11 rounded-2xl bg-indigo-100 text-cyan-700 flex items-center justify-center mb-4">
                         <i data-lucide="message-square-text" class="w-5 h-5"></i>
                     </div>
-                    <h3 class="text-lg font-bold text-slate-900 dark:text-white mb-2">
+                    <h3 class="text-base sm:text-lg font-bold text-slate-900 dark:text-white mb-2">
                         {{ $locale === 'hi' ? '1. लक्षण लिखें' : '1. Enter Symptoms' }}
                     </h3>
                     <p class="text-sm text-slate-600 dark:text-slate-300">
@@ -765,7 +765,7 @@ $locale === 'hi'
                     <div class="w-11 h-11 rounded-2xl bg-teal-100 text-teal-700 flex items-center justify-center mb-4">
                         <i data-lucide="brain-circuit" class="w-5 h-5"></i>
                     </div>
-                    <h3 class="text-lg font-bold text-slate-900 dark:text-white mb-2">
+                    <h3 class="text-base sm:text-lg font-bold text-slate-900 dark:text-white mb-2">
                         {{ $locale === 'hi' ? '2. विभाग सुझाव पाएँ' : '2. Get Department Match' }}
                     </h3>
                     <p class="text-sm text-slate-600 dark:text-slate-300">
@@ -776,7 +776,7 @@ $locale === 'hi'
                     <div class="w-11 h-11 rounded-2xl bg-amber-100 text-amber-700 flex items-center justify-center mb-4">
                         <i data-lucide="phone-call" class="w-5 h-5"></i>
                     </div>
-                    <h3 class="text-lg font-bold text-slate-900 dark:text-white mb-2">
+                    <h3 class="text-base sm:text-lg font-bold text-slate-900 dark:text-white mb-2">
                         {{ $locale === 'hi' ? '3. डॉक्टर से जुड़ें' : '3. Connect with Doctors' }}
                     </h3>
                     <p class="text-sm text-slate-600 dark:text-slate-300">
@@ -1480,6 +1480,7 @@ $locale === 'hi'
     updateStarsDisplay(0);
 </script>
 @endpush
+
 
 
 

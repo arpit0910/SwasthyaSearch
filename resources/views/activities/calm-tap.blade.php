@@ -28,7 +28,7 @@
             position: relative;
 
 
-            width: min(25rem, 86vw);
+            width: min(22rem, 82vw);
 
 
             aspect-ratio: 1;
@@ -165,6 +165,29 @@
 
         }
 
+        @media (max-width: 640px) {
+
+
+            .tap-stage {
+
+
+                width: min(18rem, 76vw);
+
+
+            }
+
+
+            .tap-button-shell {
+
+
+                inset: 18%;
+
+
+            }
+
+
+        }
+
 
     </style>
 
@@ -193,7 +216,7 @@
 
 
 
-        <div class="mt-8 grid gap-4 sm:grid-cols-3">
+        <div class="mt-8 grid gap-3 sm:gap-4 sm:grid-cols-3">
 
 
             <div class="rounded-[1.4rem] bg-teal-50 dark:bg-teal-950/30 p-4">
@@ -238,13 +261,17 @@
 
 
 
+        <div class="mx-auto mt-6 max-w-2xl rounded-[1.4rem] border border-teal-100 bg-teal-50/70 px-4 py-3 text-left text-sm leading-6 text-teal-900 dark:border-teal-900/40 dark:bg-teal-950/20 dark:text-teal-100">
+            A simple pattern works best here: tap two or three times, then take one long exhale.
+        </div>
+
         <div class="tap-stage mt-8">
 
 
             <div class="tap-aura"></div>
 
 
-            <button id="tap-button" class="tap-button-shell">
+            <button id="tap-button" class="tap-button-shell" type="button">
 
 
                 <div>
@@ -274,11 +301,13 @@
 
 
 
-        <div class="mt-6">
+        <div class="mt-6 flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-center">
 
 
             <button id="tap-reset" class="rounded-[1.15rem] border border-slate-200 dark:border-slate-700 px-5 py-3 text-sm font-bold text-slate-900 dark:text-slate-100">{{ $isHindi ? 'रीसेट करें' : 'Reset' }}</button>
 
+
+            <a href="{{ route('activities.breathing') }}" class="inline-flex w-full items-center justify-center rounded-[1.15rem] bg-teal-600 px-5 py-3 text-sm font-bold text-white sm:w-auto">One minute breathing</a>
 
         </div>
 
