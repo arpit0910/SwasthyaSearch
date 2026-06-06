@@ -2825,15 +2825,15 @@
             backdrop-filter: blur(10px) !important;
             -webkit-backdrop-filter: blur(10px) !important;
             border: 1px solid rgba(255, 255, 255, 0.18) !important;
-            box-shadow: 0 4px 30px rgba(0, 0, 0, 0.02) !important;
-            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1) !important;
+            box-shadow: 0 4px 18px rgba(15, 23, 42, 0.04) !important;
+            transition: transform 180ms ease, box-shadow 180ms ease, border-color 180ms ease, background-color 180ms ease !important;
         }
 
         .glass-card:hover {
-            background: rgba(255, 255, 255, 0.8) !important;
-            transform: translateY(-2px) !important;
-            box-shadow: 0 12px 30px rgba(0, 0, 0, 0.06) !important;
-            border-color: rgba(79, 70, 229, 0.25) !important;
+            background: rgba(255, 255, 255, 0.72) !important;
+            transform: translateY(-1px) !important;
+            box-shadow: 0 10px 24px rgba(15, 23, 42, 0.08) !important;
+            border-color: rgba(148, 163, 184, 0.24) !important;
         }
 
         .dark .glass-card {
@@ -2842,8 +2842,9 @@
         }
 
         .dark .glass-card:hover {
-            background: rgba(15, 23, 42, 0.7) !important;
-            border-color: rgba(20, 184, 166, 0.25) !important;
+            background: rgba(15, 23, 42, 0.62) !important;
+            border-color: rgba(71, 85, 105, 0.55) !important;
+            box-shadow: 0 12px 26px rgba(2, 6, 23, 0.22) !important;
         }
 
         /* Glow Blobs */
@@ -2867,12 +2868,45 @@
         }
 
         .modern-card {
-            transition: transform 260ms ease, box-shadow 260ms ease, border-color 260ms ease;
+            transition: transform 180ms ease, box-shadow 180ms ease, border-color 180ms ease, background-color 180ms ease;
         }
 
         .modern-card:hover {
-            transform: translateY(-4px);
-            box-shadow: 0 14px 30px rgba(2, 6, 23, 0.12);
+            transform: translateY(-1px);
+            box-shadow: 0 10px 22px rgba(15, 23, 42, 0.08);
+        }
+
+        :where(a, button, [role="button"]) {
+            transition-property: background-color, border-color, color, box-shadow, transform, opacity;
+            transition-duration: 180ms;
+            transition-timing-function: ease;
+        }
+
+        :where(a, button, [role="button"])[class*="hover:-translate-y"]:hover,
+        :where(article, section, div, a)[class*="hover:-translate-y"]:hover {
+            transform: translateY(-1px) !important;
+        }
+
+        :where(a, button, [role="button"])[class*="hover:shadow"]:hover {
+            box-shadow: 0 8px 18px rgba(15, 23, 42, 0.12) !important;
+        }
+
+        .dark :where(a, button, [role="button"])[class*="hover:shadow"]:hover {
+            box-shadow: 0 10px 22px rgba(2, 6, 23, 0.22) !important;
+        }
+
+        :where(a, button, [role="button"])[class*="active:scale"]:active {
+            transform: translateY(0) scale(0.99) !important;
+        }
+
+        :where(a, button, [role="button"])[class*="overflow-hidden"][class*="rounded"] > .pointer-events-none.absolute.inset-0 {
+            transform: none !important;
+            opacity: 0 !important;
+            transition: opacity 180ms ease !important;
+        }
+
+        :where(a, button, [role="button"])[class*="overflow-hidden"][class*="rounded"]:hover > .pointer-events-none.absolute.inset-0 {
+            opacity: 0.08 !important;
         }
 
         .aurora-border::after {

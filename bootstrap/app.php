@@ -20,6 +20,7 @@ return Application::configure(basePath: dirname(__DIR__))
 
         $middleware->web(append: [
             \App\Http\Middleware\BilingualLocale::class,
+            \App\Http\Middleware\RedirectToComingSoon::class,
         ]);
     })
     ->withExceptions(function (Exceptions $exceptions): void {
