@@ -84,7 +84,7 @@ class BloodBankController extends Controller
 
             $nearbyBloodBanks = $formattedBloodBanks
                 ->filter(fn($bank) => $bank['distance_km'] !== null && $bank['distance_km'] < 50)
-                ->sortBy('distance_km')
+                ->sortBy(fn($bank) => $bank['distance_km'])
                 ->values();
 
             $bloodBanks = $this->paginateCollection(

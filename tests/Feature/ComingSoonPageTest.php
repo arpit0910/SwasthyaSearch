@@ -2,11 +2,15 @@
 
 namespace Tests\Feature;
 
+use App\Models\Admin;
+use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Support\Facades\Route;
 use Tests\TestCase;
 
 class ComingSoonPageTest extends TestCase
 {
+    use RefreshDatabase;
+
     protected function setUp(): void
     {
         parent::setUp();
@@ -32,7 +36,7 @@ class ComingSoonPageTest extends TestCase
         $response = $this->get('/coming-soon');
 
         $response->assertOk();
-        $response->assertSee('Coming soon.', false);
+        $response->assertSee('Coming Soon', false);
     }
 
     public function test_live_environment_redirects_other_routes_to_coming_soon(): void
@@ -43,4 +47,30 @@ class ComingSoonPageTest extends TestCase
 
         $response->assertRedirect(route('coming-soon'));
     }
+
+    public function test_live_environment_allows_admin_login_route(): void
+    {
+        $this->app->detectEnvironment(fn () => 'live');
+
+        $response = $this->get('/admin/login');
+
+        $response->assertOk();
+    }
+
+    public function test_live_environment_allows_logged_in_admin_to_access_website(): void
+    {
+        $this->app->detectEnvironment(fn () => 'live');
+
+        $admin = Admin::create([
+            'name' => 'Admin User',
+            'email' => 'admin@example.com',
+            'password' => bcrypt('password'),
+        ]);
+
+        $response = $this->actingAs($admin, 'admin')->get('/test-protected-page');
+
+        $response->assertOk();
+        $response->assertSee('protected page');
+    }
 }
+

@@ -1152,7 +1152,7 @@ class ChennaiScraperService extends BaseScraperService
             ],
             [
                 'name_en' => 'Billroth Hospitals',
-                'name_hi' => 'बिल्ल्रॊ�¤ अस्पतालस अस्पताल (चेन्नई)',
+                'name_hi' => 'बिल्ल्रो�¤ अस्पतालस अस्पताल (चेन्नई)',
                 'type' => 'Private Hospital',
                 'address' => 'Chennai, Tamil Nadu',
                 'address_line1' => 'Main Medical Avenue',
@@ -1353,7 +1353,7 @@ class ChennaiScraperService extends BaseScraperService
             ],
             [
                 'name_en' => 'Dr. Mohan\'s Diabetes Speciality Centre',
-                'name_hi' => 'द्र्। मॊहन्स दिअबॆतॆस स्पॆचिअलित्य चॆंत्रॆ (चेन्नई)',
+                'name_hi' => 'द्र्। मोहन्स दिअबेतेस स्पेचिअलित्य चेंत्रे (चेन्नई)',
                 'type' => 'Clinic',
                 'address' => '6B, Conran Smith Road, Gopalapuram, Chennai, Tamil Nadu - 600086',
                 'address_line1' => '6B, Conran Smith Road',
@@ -1373,7 +1373,7 @@ class ChennaiScraperService extends BaseScraperService
             ],
             [
                 'name_en' => 'MIOT International',
-                'name_hi' => 'मिऒत इंतॆर्नतिऒनल (चेन्नई)',
+                'name_hi' => 'मिऒत इंतेर्नतिऒनल (चेन्नई)',
                 'type' => 'Clinic',
                 'address' => '4/112, Mount Poonamallee Road, Manapakkam, Chennai, Tamil Nadu - 600089',
                 'address_line1' => '4/112, Mount Poonamallee Road',
@@ -1393,7 +1393,7 @@ class ChennaiScraperService extends BaseScraperService
             ],
             [
                 'name_en' => 'Apollo Cancer Centre',
-                'name_hi' => 'अपॊल्लॊ चन्चॆर चॆंत्रॆ (चेन्नई)',
+                'name_hi' => 'अपोल्लो चन्चेर चेंत्रे (चेन्नई)',
                 'type' => 'Clinic',
                 'address' => '320, Padma Complex, Anna Salai, Teynampet, Chennai, Tamil Nadu - 600035',
                 'address_line1' => '320, Padma Complex',
@@ -1413,7 +1413,7 @@ class ChennaiScraperService extends BaseScraperService
             ],
             [
                 'name_en' => 'Sankara Nethralaya',
-                'name_hi' => 'सन्कर नॆथ्रलय (चेन्नई)',
+                'name_hi' => 'सन्कर नेथ्रलय (चेन्नई)',
                 'type' => 'Clinic',
                 'address' => '41, College Road, Thousand Lights, Chennai, Tamil Nadu - 600006',
                 'address_line1' => '41, College Road',
@@ -1433,7 +1433,7 @@ class ChennaiScraperService extends BaseScraperService
             ],
             [
                 'name_en' => 'Apollo Women\'s Hospital',
-                'name_hi' => 'अपॊल्लॊ वॊमॆन्स अस्पताल (चेन्नई)',
+                'name_hi' => 'अपोल्लो वोमेन्स अस्पताल (चेन्नई)',
                 'type' => 'Clinic',
                 'address' => '15, Shafee Mohammed Road, Thousand Lights, Chennai, Tamil Nadu - 600006',
                 'address_line1' => '15, Shafee Mohammed Road',
@@ -1453,7 +1453,7 @@ class ChennaiScraperService extends BaseScraperService
             ],
             [
                 'name_en' => 'Kauvery Hospital',
-                'name_hi' => 'कौवॆर्य अस्पताल (चेन्नई)',
+                'name_hi' => 'कौवेर्य अस्पताल (चेन्नई)',
                 'type' => 'Clinic',
                 'address' => '81, TTK Road, Alwarpet, Chennai, Tamil Nadu - 600018',
                 'address_line1' => '81, TTK Road',
@@ -1473,7 +1473,7 @@ class ChennaiScraperService extends BaseScraperService
             ],
             [
                 'name_en' => 'Madras ENT Research Foundation (MERF)',
-                'name_hi' => 'मद्रस ऎंत रॆसॆअर्छ फ़ॊउंदतिऒन (मॆर्फ़्) (चेन्नई)',
+                'name_hi' => 'मद्रस ऎंत रेसेअर्छ फ़ोउंदतिऒन (मेर्फ़्) (चेन्नई)',
                 'type' => 'Clinic',
                 'address' => '1, 1st Cross Street, Off Raja Annamalai Puram, Chennai, Tamil Nadu - 600028',
                 'address_line1' => '1, 1st Cross Street',
@@ -1533,7 +1533,7 @@ class ChennaiScraperService extends BaseScraperService
             ],
             [
                 'name_en' => 'Apollo Hospitals',
-                'name_hi' => 'अपॊल्लॊ अस्पतालस (चेन्नई)',
+                'name_hi' => 'अपोल्लो अस्पतालस (चेन्नई)',
                 'type' => 'Clinic',
                 'address' => '21, Greams Lane, Thousand Lights, Chennai, Tamil Nadu - 600006',
                 'address_line1' => '21, Greams Lane',
@@ -1553,7 +1553,7 @@ class ChennaiScraperService extends BaseScraperService
             ],
             [
                 'name_en' => 'Stanley Medical College Hospital',
-                'name_hi' => 'स्तंलॆय मेडिकल कॉलेज अस्पताल (चेन्नई)',
+                'name_hi' => 'स्तंलेय मेडिकल कॉलेज अस्पताल (चेन्नई)',
                 'type' => 'Clinic',
                 'address' => '1, Old Jail Road, Royapuram, Chennai, Tamil Nadu - 600001',
                 'address_line1' => '1, Old Jail Road',
@@ -1681,7 +1681,7 @@ class ChennaiScraperService extends BaseScraperService
             ],
             [
                 'name_en' => 'MIOT International Hospital',
-                'name_hi' => 'मिऒत इंतॆर्नतिऒनल अस्पताल (चेन्नई)',
+                'name_hi' => 'मिऒत इंतेर्नतिऒनल अस्पताल (चेन्नई)',
                 'type' => 'Private Hospital',
                 'address' => 'Chennai, Tamil Nadu',
                 'address_line1' => 'Main Medical Avenue',
@@ -1701,7 +1701,7 @@ class ChennaiScraperService extends BaseScraperService
             ],
             [
                 'name_en' => 'Dr. Mehta\'s Hospitals',
-                'name_hi' => 'द्र्। मॆह्तस अस्पतालस (चेन्नई)',
+                'name_hi' => 'द्र्। मेह्तस अस्पतालस (चेन्नई)',
                 'type' => 'Private Hospital',
                 'address' => 'Chennai, Tamil Nadu',
                 'address_line1' => 'Main Medical Avenue',
@@ -1741,7 +1741,7 @@ class ChennaiScraperService extends BaseScraperService
             ],
             [
                 'name_en' => 'Apollo Speciality Hospital',
-                'name_hi' => 'अपॊल्लॊ स्पॆचिअलित्य अस्पताल (चेन्नई)',
+                'name_hi' => 'अपोल्लो स्पेचिअलित्य अस्पताल (चेन्नई)',
                 'type' => 'Private Hospital',
                 'address' => 'Chennai, Tamil Nadu',
                 'address_line1' => 'Main Medical Avenue',
@@ -1781,7 +1781,7 @@ class ChennaiScraperService extends BaseScraperService
             ],
             [
                 'name_en' => 'Iswarya Fertility Centre',
-                'name_hi' => 'इस्वर्य फ़ॆर्तिलित्य चॆंत्रॆ (चेन्नई)',
+                'name_hi' => 'इस्वर्य फ़ेर्तिलित्य चेंत्रे (चेन्नई)',
                 'type' => 'Private Hospital',
                 'address' => 'Chennai, Tamil Nadu',
                 'address_line1' => 'Main Medical Avenue',
@@ -1801,7 +1801,7 @@ class ChennaiScraperService extends BaseScraperService
             ],
             [
                 'name_en' => 'Cloudnine Hospital',
-                'name_hi' => 'च्लॊउद्निनॆ अस्पताल (चेन्नई)',
+                'name_hi' => 'च्लोउद्निने अस्पताल (चेन्नई)',
                 'type' => 'Private Hospital',
                 'address' => 'Chennai, Tamil Nadu',
                 'address_line1' => 'Main Medical Avenue',
@@ -1821,7 +1821,7 @@ class ChennaiScraperService extends BaseScraperService
             ],
             [
                 'name_en' => 'Motherhood Hospital',
-                'name_hi' => 'मॊथॆर्हॊऒद अस्पताल (चेन्नई)',
+                'name_hi' => 'मोथेर्होऒद अस्पताल (चेन्नई)',
                 'type' => 'Private Hospital',
                 'address' => 'Chennai, Tamil Nadu',
                 'address_line1' => 'Main Medical Avenue',
@@ -1861,7 +1861,7 @@ class ChennaiScraperService extends BaseScraperService
             ],
             [
                 'name_en' => 'Promed Hospital',
-                'name_hi' => 'प्रॊमॆद अस्पताल (चेन्नई)',
+                'name_hi' => 'प्रोमेद अस्पताल (चेन्नई)',
                 'type' => 'Private Hospital',
                 'address' => 'Chennai, Tamil Nadu',
                 'address_line1' => 'Main Medical Avenue',
@@ -1881,7 +1881,7 @@ class ChennaiScraperService extends BaseScraperService
             ],
             [
                 'name_en' => 'Apollo Hospital',
-                'name_hi' => 'अपॊल्लॊ अस्पताल (चेन्नई)',
+                'name_hi' => 'अपोल्लो अस्पताल (चेन्नई)',
                 'type' => 'Private Hospital',
                 'address' => 'Chennai, Tamil Nadu',
                 'address_line1' => 'Main Medical Avenue',
@@ -1901,7 +1901,7 @@ class ChennaiScraperService extends BaseScraperService
             ],
             [
                 'name_en' => 'Apollo First Med Hospitals',
-                'name_hi' => 'अपॊल्लॊ फ़िर्स्त मॆद अस्पतालस (चेन्नई)',
+                'name_hi' => 'अपोल्लो फ़िर्स्त मेद अस्पतालस (चेन्नई)',
                 'type' => 'Private Hospital',
                 'address' => 'Chennai, Tamil Nadu',
                 'address_line1' => 'Main Medical Avenue',
@@ -1921,7 +1921,7 @@ class ChennaiScraperService extends BaseScraperService
             ],
             [
                 'name_en' => 'Be Well Hospital',
-                'name_hi' => 'बॆ वॆल्ल अस्पताल (चेन्नई)',
+                'name_hi' => 'बे वेल्ल अस्पताल (चेन्नई)',
                 'type' => 'Private Hospital',
                 'address' => 'Chennai, Tamil Nadu',
                 'address_line1' => 'Main Medical Avenue',
@@ -1941,7 +1941,7 @@ class ChennaiScraperService extends BaseScraperService
             ],
             [
                 'name_en' => 'New Hope Medical Centre',
-                'name_hi' => 'नॆव हॊपॆ मेडिकल सेंटर (चेन्नई)',
+                'name_hi' => 'नेव होपे मेडिकल सेंटर (चेन्नई)',
                 'type' => 'Private Hospital',
                 'address' => 'Chennai, Tamil Nadu',
                 'address_line1' => 'Main Medical Avenue',
@@ -1981,7 +1981,7 @@ class ChennaiScraperService extends BaseScraperService
             ],
             [
                 'name_en' => 'Soundarapandian Bone And Joint Hospital & Research Institute',
-                'name_hi' => 'सॊउंदरपंदिअन बॊनॆ अंद जॊइंत अस्पताल & रॆसॆअर्छ संस्थान (चेन्नई)',
+                'name_hi' => 'सोउंदरपंदिअन बोने अंद जोइंत अस्पताल & रेसेअर्छ संस्थान (चेन्नई)',
                 'type' => 'Private Hospital',
                 'address' => 'Chennai, Tamil Nadu',
                 'address_line1' => 'Main Medical Avenue',
@@ -2001,7 +2001,7 @@ class ChennaiScraperService extends BaseScraperService
             ],
             [
                 'name_en' => 'Apollo Cancer Centres Chennai',
-                'name_hi' => 'अपॊल्लॊ चन्चॆर चॆंत्रॆस (चेन्नई)',
+                'name_hi' => 'अपोल्लो चन्चेर चेंत्रेस (चेन्नई)',
                 'type' => 'Private Hospital',
                 'address' => 'Chennai, Tamil Nadu',
                 'address_line1' => 'Main Medical Avenue',
@@ -2021,7 +2021,7 @@ class ChennaiScraperService extends BaseScraperService
             ],
             [
                 'name_en' => 'Hande Hospital - Laser Piles Centre',
-                'name_hi' => 'हंदॆ अस्पताल - लसॆर पिलॆस चॆंत्रॆ (चेन्नई)',
+                'name_hi' => 'हंदे अस्पताल - लसेर पिलेस चेंत्रे (चेन्नई)',
                 'type' => 'Private Hospital',
                 'address' => 'Chennai, Tamil Nadu',
                 'address_line1' => 'Main Medical Avenue',
@@ -2041,7 +2041,7 @@ class ChennaiScraperService extends BaseScraperService
             ],
             [
                 'name_en' => 'Chennai Urology And Robotics Institute',
-                'name_hi' => 'छॆन्नै उरॊलॊग्य अंद रॊबॊतिच्स संस्थान (चेन्नई)',
+                'name_hi' => 'छेन्नै उरोलोग्य अंद रोबोतिच्स संस्थान (चेन्नई)',
                 'type' => 'Private Hospital',
                 'address' => 'Chennai, Tamil Nadu',
                 'address_line1' => 'Main Medical Avenue',
@@ -2061,7 +2061,7 @@ class ChennaiScraperService extends BaseScraperService
             ],
             [
                 'name_en' => 'Apollo Speciality Hospitals O M R',
-                'name_hi' => 'अपॊल्लॊ स्पॆचिअलित्य अस्पतालस ऒ म र (चेन्नई)',
+                'name_hi' => 'अपोल्लो स्पेचिअलित्य अस्पतालस ऒ म र (चेन्नई)',
                 'type' => 'Private Hospital',
                 'address' => 'Chennai, Tamil Nadu',
                 'address_line1' => 'Main Medical Avenue',
@@ -2081,7 +2081,7 @@ class ChennaiScraperService extends BaseScraperService
             ],
             [
                 'name_en' => 'Apollo Children\'s Hospitals',
-                'name_hi' => 'अपॊल्लॊ छिल्द्रॆन्स अस्पतालस (चेन्नई)',
+                'name_hi' => 'अपोल्लो छिल्द्रेन्स अस्पतालस (चेन्नई)',
                 'type' => 'Private Hospital',
                 'address' => 'Chennai, Tamil Nadu',
                 'address_line1' => 'Main Medical Avenue',
@@ -2161,7 +2161,7 @@ class ChennaiScraperService extends BaseScraperService
             ],
             [
                 'name_en' => 'Medicare Eye Hospital',
-                'name_hi' => 'मॆदिचरॆ आई अस्पताल (चेन्नई)',
+                'name_hi' => 'मेदिचरे आई अस्पताल (चेन्नई)',
                 'type' => 'Private Hospital',
                 'address' => 'Chennai, Tamil Nadu',
                 'address_line1' => 'Main Medical Avenue',
@@ -2181,7 +2181,7 @@ class ChennaiScraperService extends BaseScraperService
             ],
             [
                 'name_en' => 'Serene Life Hospital',
-                'name_hi' => 'सॆरॆनॆ लाइफ अस्पताल (चेन्नई)',
+                'name_hi' => 'सेरेने लाइफ अस्पताल (चेन्नई)',
                 'type' => 'Private Hospital',
                 'address' => 'Chennai, Tamil Nadu',
                 'address_line1' => 'Main Medical Avenue',
@@ -2201,7 +2201,7 @@ class ChennaiScraperService extends BaseScraperService
             ],
             [
                 'name_en' => 'Apollo Heart Centre',
-                'name_hi' => 'अपॊल्लॊ हार्ट चॆंत्रॆ (चेन्नई)',
+                'name_hi' => 'अपोल्लो हार्ट चेंत्रे (चेन्नई)',
                 'type' => 'Private Hospital',
                 'address' => 'Chennai, Tamil Nadu',
                 'address_line1' => 'Main Medical Avenue',
@@ -2221,7 +2221,7 @@ class ChennaiScraperService extends BaseScraperService
             ],
             [
                 'name_en' => 'Medway Hospitals',
-                'name_hi' => 'मॆद्वय अस्पतालस (चेन्नई)',
+                'name_hi' => 'मेद्वय अस्पतालस (चेन्नई)',
                 'type' => 'Private Hospital',
                 'address' => 'Chennai, Tamil Nadu',
                 'address_line1' => 'Main Medical Avenue',
@@ -2241,7 +2241,7 @@ class ChennaiScraperService extends BaseScraperService
             ],
             [
                 'name_en' => 'Pristyn Care- Porur Srushti Clinic',
-                'name_hi' => 'प्रिस्त्य्न चरॆ- पॊरुर स्रुश्ति क्लिनिक (चेन्नई)',
+                'name_hi' => 'प्रिस्त्य्न चरे- पोरुर स्रुश्ति क्लिनिक (चेन्नई)',
                 'type' => 'Clinic',
                 'address' => 'Chennai, Tamil Nadu',
                 'address_line1' => 'Main Medical Avenue',
@@ -2261,7 +2261,7 @@ class ChennaiScraperService extends BaseScraperService
             ],
             [
                 'name_en' => 'SIXTH SENSE WELLNESS INSTITUTE',
-                'name_hi' => 'सिक्स�¤ सॆंसॆ वॆल्ल्नॆष संस्थान अस्पताल (चेन्नई)',
+                'name_hi' => 'सिक्स�¤ सेंसे वेल्ल्नेष संस्थान अस्पताल (चेन्नई)',
                 'type' => 'Private Hospital',
                 'address' => 'Chennai, Tamil Nadu',
                 'address_line1' => 'Main Medical Avenue',
@@ -2341,7 +2341,7 @@ class ChennaiScraperService extends BaseScraperService
             ],
             [
                 'name_en' => 'Medway Heart Institute',
-                'name_hi' => 'मॆद्वय हार्ट संस्थान (चेन्नई)',
+                'name_hi' => 'मेद्वय हार्ट संस्थान (चेन्नई)',
                 'type' => 'Private Hospital',
                 'address' => 'Chennai, Tamil Nadu',
                 'address_line1' => 'Main Medical Avenue',
@@ -2381,7 +2381,7 @@ class ChennaiScraperService extends BaseScraperService
             ],
             [
                 'name_en' => 'Robin Hospitals',
-                'name_hi' => 'रॊबिन अस्पतालस (चेन्नई)',
+                'name_hi' => 'रोबिन अस्पतालस (चेन्नई)',
                 'type' => 'Private Hospital',
                 'address' => 'Chennai, Tamil Nadu',
                 'address_line1' => 'Main Medical Avenue',
@@ -2401,7 +2401,7 @@ class ChennaiScraperService extends BaseScraperService
             ],
             [
                 'name_en' => 'Jyoti Hospital',
-                'name_hi' => 'ज्यॊति अस्पताल (चेन्नई)',
+                'name_hi' => 'ज्योति अस्पताल (चेन्नई)',
                 'type' => 'Private Hospital',
                 'address' => 'Chennai, Tamil Nadu',
                 'address_line1' => 'Main Medical Avenue',
@@ -2421,7 +2421,7 @@ class ChennaiScraperService extends BaseScraperService
             ],
             [
                 'name_en' => 'Cloudnine Hospital - OMR',
-                'name_hi' => 'च्लॊउद्निनॆ अस्पताल - ऒम्र (चेन्नई)',
+                'name_hi' => 'च्लोउद्निने अस्पताल - ऒम्र (चेन्नई)',
                 'type' => 'Private Hospital',
                 'address' => 'Chennai, Tamil Nadu',
                 'address_line1' => 'Main Medical Avenue',
@@ -2441,7 +2441,7 @@ class ChennaiScraperService extends BaseScraperService
             ],
             [
                 'name_en' => 'Apollo Proton Cancer Centre',
-                'name_hi' => 'अपॊल्लॊ प्रॊतॊन चन्चॆर चॆंत्रॆ (चेन्नई)',
+                'name_hi' => 'अपोल्लो प्रोतोन चन्चेर चेंत्रे (चेन्नई)',
                 'type' => 'Private Hospital',
                 'address' => 'Chennai, Tamil Nadu',
                 'address_line1' => 'Main Medical Avenue',
@@ -2461,7 +2461,7 @@ class ChennaiScraperService extends BaseScraperService
             ],
             [
                 'name_en' => 'Apollo Womens Hospital',
-                'name_hi' => 'अपॊल्लॊ वॊमॆंस अस्पताल (चेन्नई)',
+                'name_hi' => 'अपोल्लो वोमेंस अस्पताल (चेन्नई)',
                 'type' => 'Private Hospital',
                 'address' => 'Chennai, Tamil Nadu',
                 'address_line1' => 'Main Medical Avenue',
@@ -2481,7 +2481,7 @@ class ChennaiScraperService extends BaseScraperService
             ],
             [
                 'name_en' => 'Dr.  Mehta\'s Hospitals - Global Campus',
-                'name_hi' => 'द्र्।  मॆह्तस अस्पतालस - ग्लॊबल चंपुस (चेन्नई)',
+                'name_hi' => 'द्र्।  मेह्तस अस्पतालस - ग्लोबल चंपुस (चेन्नई)',
                 'type' => 'Private Hospital',
                 'address' => 'Chennai, Tamil Nadu',
                 'address_line1' => 'Main Medical Avenue',
@@ -2501,7 +2501,7 @@ class ChennaiScraperService extends BaseScraperService
             ],
             [
                 'name_en' => 'Be Well Hospitals',
-                'name_hi' => 'बॆ वॆल्ल अस्पतालस (चेन्नई)',
+                'name_hi' => 'बे वेल्ल अस्पतालस (चेन्नई)',
                 'type' => 'Private Hospital',
                 'address' => 'Chennai, Tamil Nadu',
                 'address_line1' => 'Main Medical Avenue',
@@ -2521,7 +2521,7 @@ class ChennaiScraperService extends BaseScraperService
             ],
             [
                 'name_en' => 'Mr. & Mrs. Tooth Dental Clinic',
-                'name_hi' => 'म्र्। & म्र्स्। तॊऒ�¤ डेंटल क्लिनिक अस्पताल (चेन्नई)',
+                'name_hi' => 'म्र्। & म्र्स्। तोऒ�¤ डेंटल क्लिनिक अस्पताल (चेन्नई)',
                 'type' => 'Clinic',
                 'address' => 'Chennai, Tamil Nadu',
                 'address_line1' => 'Main Medical Avenue',
@@ -2541,7 +2541,7 @@ class ChennaiScraperService extends BaseScraperService
             ],
             [
                 'name_en' => 'Miracle Advanced Reproductive Centre',
-                'name_hi' => 'मिरच्लॆ अद्वन्चॆद रॆप्रॊदुच्तिवॆ चॆंत्रॆ (चेन्नई)',
+                'name_hi' => 'मिरच्ले अद्वन्चेद रेप्रोदुच्तिवे चेंत्रे (चेन्नई)',
                 'type' => 'Private Hospital',
                 'address' => 'Chennai, Tamil Nadu',
                 'address_line1' => 'Main Medical Avenue',
@@ -2561,7 +2561,7 @@ class ChennaiScraperService extends BaseScraperService
             ],
             [
                 'name_en' => 'Dr. Aravind\'s IVF Fertility & Pregnancy Centre',
-                'name_hi' => 'द्र्। अरविंद्स इव्फ़ फ़ॆर्तिलित्य & प्रॆग्नन्च्य चॆंत्रॆ (चेन्नई)',
+                'name_hi' => 'द्र्। अरविंद्स इव्फ़ फ़ेर्तिलित्य & प्रेग्नन्च्य चेंत्रे (चेन्नई)',
                 'type' => 'Private Hospital',
                 'address' => 'Chennai, Tamil Nadu',
                 'address_line1' => 'Main Medical Avenue',
@@ -2581,7 +2581,7 @@ class ChennaiScraperService extends BaseScraperService
             ],
             [
                 'name_en' => 'Gem Hospital',
-                'name_hi' => 'गॆम अस्पताल (चेन्नई)',
+                'name_hi' => 'गेम अस्पताल (चेन्नई)',
                 'type' => 'Private Hospital',
                 'address' => 'Chennai, Tamil Nadu',
                 'address_line1' => 'Main Medical Avenue',
@@ -2601,7 +2601,7 @@ class ChennaiScraperService extends BaseScraperService
             ],
             [
                 'name_en' => 'GEM Hospital & Research Center',
-                'name_hi' => 'गॆम अस्पताल & रिसर्च सेंटर (चेन्नई)',
+                'name_hi' => 'गेम अस्पताल & रिसर्च सेंटर (चेन्नई)',
                 'type' => 'Private Hospital',
                 'address' => 'Chennai, Tamil Nadu',
                 'address_line1' => 'Main Medical Avenue',
@@ -2661,7 +2661,7 @@ class ChennaiScraperService extends BaseScraperService
             ],
             [
                 'name_en' => 'Apple Dental Clinic',
-                'name_hi' => 'अप्प्लॆ डेंटल क्लिनिक (चेन्नई)',
+                'name_hi' => 'अप्प्ले डेंटल क्लिनिक (चेन्नई)',
                 'type' => 'Clinic',
                 'address' => 'Chennai, Tamil Nadu',
                 'address_line1' => 'Main Medical Avenue',
@@ -2681,7 +2681,7 @@ class ChennaiScraperService extends BaseScraperService
             ],
             [
                 'name_en' => 'Prime Indian Hospitals',
-                'name_hi' => 'प्रिमॆ इंदिअन अस्पतालस (चेन्नई)',
+                'name_hi' => 'प्रिमे इंदिअन अस्पतालस (चेन्नई)',
                 'type' => 'Private Hospital',
                 'address' => 'Chennai, Tamil Nadu',
                 'address_line1' => 'Main Medical Avenue',
@@ -2701,7 +2701,7 @@ class ChennaiScraperService extends BaseScraperService
             ],
             [
                 'name_en' => 'Sooriya Hospital - Vadapalani',
-                'name_hi' => 'सॊऒरिय अस्पताल - वदपलनि (चेन्नई)',
+                'name_hi' => 'सोऒरिय अस्पताल - वदपलनि (चेन्नई)',
                 'type' => 'Private Hospital',
                 'address' => 'Chennai, Tamil Nadu',
                 'address_line1' => 'Main Medical Avenue',
@@ -2721,7 +2721,7 @@ class ChennaiScraperService extends BaseScraperService
             ],
             [
                 'name_en' => 'Aakash Fertility Centre & Hospital',
-                'name_hi' => 'अअकश फ़ॆर्तिलित्य चॆंत्रॆ & अस्पताल (चेन्नई)',
+                'name_hi' => 'अअकश फ़ेर्तिलित्य चेंत्रे & अस्पताल (चेन्नई)',
                 'type' => 'Private Hospital',
                 'address' => 'Chennai, Tamil Nadu',
                 'address_line1' => 'Main Medical Avenue',
@@ -2761,7 +2761,7 @@ class ChennaiScraperService extends BaseScraperService
             ],
             [
                 'name_en' => 'Frontier Lifeline Hospital',
-                'name_hi' => 'फ़्रॊंतिऎर लाइफलिनॆ अस्पताल (चेन्नई)',
+                'name_hi' => 'फ़्रोंतिऎर लाइफलिने अस्पताल (चेन्नई)',
                 'type' => 'Private Hospital',
                 'address' => 'Chennai, Tamil Nadu',
                 'address_line1' => 'Main Medical Avenue',
@@ -2801,7 +2801,7 @@ class ChennaiScraperService extends BaseScraperService
             ],
             [
                 'name_en' => 'Srushti Fertility Centre & Women\'s Hospital',
-                'name_hi' => 'स्रुश्ति फ़ॆर्तिलित्य चॆंत्रॆ & वॊमॆन्स अस्पताल (चेन्नई)',
+                'name_hi' => 'स्रुश्ति फ़ेर्तिलित्य चेंत्रे & वोमेन्स अस्पताल (चेन्नई)',
                 'type' => 'Private Hospital',
                 'address' => 'Chennai, Tamil Nadu',
                 'address_line1' => 'Main Medical Avenue',
@@ -2821,7 +2821,7 @@ class ChennaiScraperService extends BaseScraperService
             ],
             [
                 'name_en' => 'Lifeline Rigid Hospitals',
-                'name_hi' => 'लाइफलिनॆ रिगिद अस्पतालस (चेन्नई)',
+                'name_hi' => 'लाइफलिने रिगिद अस्पतालस (चेन्नई)',
                 'type' => 'Private Hospital',
                 'address' => 'Chennai, Tamil Nadu',
                 'address_line1' => 'Main Medical Avenue',
@@ -2841,7 +2841,7 @@ class ChennaiScraperService extends BaseScraperService
             ],
             [
                 'name_en' => 'Astra Speciality Hospital',
-                'name_hi' => 'अस्त्र स्पॆचिअलित्य अस्पताल (चेन्नई)',
+                'name_hi' => 'अस्त्र स्पेचिअलित्य अस्पताल (चेन्नई)',
                 'type' => 'Private Hospital',
                 'address' => 'Chennai, Tamil Nadu',
                 'address_line1' => 'Main Medical Avenue',
@@ -2861,7 +2861,7 @@ class ChennaiScraperService extends BaseScraperService
             ],
             [
                 'name_en' => 'Noble Hospital',
-                'name_hi' => 'नॊब्लॆ अस्पताल (चेन्नई)',
+                'name_hi' => 'नोब्ले अस्पताल (चेन्नई)',
                 'type' => 'Private Hospital',
                 'address' => 'Chennai, Tamil Nadu',
                 'address_line1' => 'Main Medical Avenue',
@@ -2881,7 +2881,7 @@ class ChennaiScraperService extends BaseScraperService
             ],
             [
                 'name_en' => 'Astra Ortho N Spine Center',
-                'name_hi' => 'अस्त्र ऒर्थॊ न स्पिनॆ चॆंतॆर (चेन्नई)',
+                'name_hi' => 'अस्त्र ऒर्थो न स्पिने चेंतेर (चेन्नई)',
                 'type' => 'Private Hospital',
                 'address' => 'Chennai, Tamil Nadu',
                 'address_line1' => 'Main Medical Avenue',
@@ -2901,7 +2901,7 @@ class ChennaiScraperService extends BaseScraperService
             ],
             [
                 'name_en' => 'Deepam Hospitals',
-                'name_hi' => 'दॆऎपम अस्पतालस (चेन्नई)',
+                'name_hi' => 'देऎपम अस्पतालस (चेन्नई)',
                 'type' => 'Private Hospital',
                 'address' => 'Chennai, Tamil Nadu',
                 'address_line1' => 'Main Medical Avenue',
@@ -2941,7 +2941,7 @@ class ChennaiScraperService extends BaseScraperService
             ],
             [
                 'name_en' => 'Neuro Life Hospital',
-                'name_hi' => 'नॆउरॊ लाइफ अस्पताल (चेन्नई)',
+                'name_hi' => 'नेउरो लाइफ अस्पताल (चेन्नई)',
                 'type' => 'Private Hospital',
                 'address' => 'Chennai, Tamil Nadu',
                 'address_line1' => 'Main Medical Avenue',
@@ -2961,7 +2961,7 @@ class ChennaiScraperService extends BaseScraperService
             ],
             [
                 'name_en' => 'Laser and Laparoscopic Hospital',
-                'name_hi' => 'लसॆर अंद लपरॊस्चॊपिच अस्पताल (चेन्नई)',
+                'name_hi' => 'लसेर अंद लपरोस्चोपिच अस्पताल (चेन्नई)',
                 'type' => 'Private Hospital',
                 'address' => 'Chennai, Tamil Nadu',
                 'address_line1' => 'Main Medical Avenue',
@@ -2981,7 +2981,7 @@ class ChennaiScraperService extends BaseScraperService
             ],
             [
                 'name_en' => 'Cloudnine Fertility - IVF Centre, T-Nagar',
-                'name_hi' => 'च्लॊउद्निनॆ फ़ॆर्तिलित्य - इव्फ़ चॆंत्रॆ, त्-नगर (चेन्नई)',
+                'name_hi' => 'च्लोउद्निने फ़ेर्तिलित्य - इव्फ़ चेंत्रे, त्-नगर (चेन्नई)',
                 'type' => 'Private Hospital',
                 'address' => 'Chennai, Tamil Nadu',
                 'address_line1' => 'Main Medical Avenue',
@@ -3021,7 +3021,7 @@ class ChennaiScraperService extends BaseScraperService
             ],
             [
                 'name_en' => 'R.K. Eye Centre',
-                'name_hi' => 'र्।क्। आई चॆंत्रॆ (चेन्नई)',
+                'name_hi' => 'र्।क्। आई चेंत्रे (चेन्नई)',
                 'type' => 'Private Hospital',
                 'address' => 'Chennai, Tamil Nadu',
                 'address_line1' => 'Main Medical Avenue',
@@ -3041,7 +3041,7 @@ class ChennaiScraperService extends BaseScraperService
             ],
             [
                 'name_en' => 'TOSH (Trauma and Orthopaedic Speciality Hospital)',
-                'name_hi' => 'तॊश (त्रौम अंद ऒर्थॊपॆदिच स्पॆचिअलित्य अस्पताल) (चेन्नई)',
+                'name_hi' => 'तोश (त्रौम अंद ऒर्थोपेदिच स्पेचिअलित्य अस्पताल) (चेन्नई)',
                 'type' => 'Private Hospital',
                 'address' => 'Chennai, Tamil Nadu',
                 'address_line1' => 'Main Medical Avenue',
@@ -3061,7 +3061,7 @@ class ChennaiScraperService extends BaseScraperService
             ],
             [
                 'name_en' => 'Vasan Eye Care Hospital',
-                'name_hi' => 'वसन आई चरॆ अस्पताल (चेन्नई)',
+                'name_hi' => 'वसन आई चरे अस्पताल (चेन्नई)',
                 'type' => 'Private Hospital',
                 'address' => 'Chennai, Tamil Nadu',
                 'address_line1' => 'Main Medical Avenue',
@@ -3101,7 +3101,7 @@ class ChennaiScraperService extends BaseScraperService
             ],
             [
                 'name_en' => 'Billroth Hospital',
-                'name_hi' => 'बिल्ल्रॊ�¤ अस्पताल अस्पताल (चेन्नई)',
+                'name_hi' => 'बिल्ल्रो�¤ अस्पताल अस्पताल (चेन्नई)',
                 'type' => 'Private Hospital',
                 'address' => 'Chennai, Tamil Nadu',
                 'address_line1' => 'Main Medical Avenue',
@@ -3121,7 +3121,7 @@ class ChennaiScraperService extends BaseScraperService
             ],
             [
                 'name_en' => 'Vasan Eye Care Hospital - Ambattur',
-                'name_hi' => 'वसन आई चरॆ अस्पताल - अंबत्तुर (चेन्नई)',
+                'name_hi' => 'वसन आई चरे अस्पताल - अंबत्तुर (चेन्नई)',
                 'type' => 'Private Hospital',
                 'address' => 'Chennai, Tamil Nadu',
                 'address_line1' => 'Main Medical Avenue',
@@ -3201,7 +3201,7 @@ class ChennaiScraperService extends BaseScraperService
             ],
             [
                 'name_en' => 'Dr Kumar\'s Speciality Hospital',
-                'name_hi' => 'द्र कुमर्स स्पॆचिअलित्य अस्पताल (चेन्नई)',
+                'name_hi' => 'द्र कुमर्स स्पेचिअलित्य अस्पताल (चेन्नई)',
                 'type' => 'Private Hospital',
                 'address' => 'Chennai, Tamil Nadu',
                 'address_line1' => 'Main Medical Avenue',
@@ -3221,7 +3221,7 @@ class ChennaiScraperService extends BaseScraperService
             ],
             [
                 'name_en' => 'Meridian Hospital',
-                'name_hi' => 'मॆरिदिअन अस्पताल (चेन्नई)',
+                'name_hi' => 'मेरिदिअन अस्पताल (चेन्नई)',
                 'type' => 'Private Hospital',
                 'address' => 'Chennai, Tamil Nadu',
                 'address_line1' => 'Main Medical Avenue',
@@ -3261,7 +3261,7 @@ class ChennaiScraperService extends BaseScraperService
             ],
             [
                 'name_en' => 'SRM Prime Hospital',
-                'name_hi' => 'स्र्म प्रिमॆ अस्पताल (चेन्नई)',
+                'name_hi' => 'स्र्म प्रिमे अस्पताल (चेन्नई)',
                 'type' => 'Private Hospital',
                 'address' => 'Chennai, Tamil Nadu',
                 'address_line1' => 'Main Medical Avenue',
@@ -3301,7 +3301,7 @@ class ChennaiScraperService extends BaseScraperService
             ],
             [
                 'name_en' => 'Lakshya Fertility Centre',
-                'name_hi' => 'लक्श्य फ़ॆर्तिलित्य चॆंत्रॆ (चेन्नई)',
+                'name_hi' => 'लक्श्य फ़ेर्तिलित्य चेंत्रे (चेन्नई)',
                 'type' => 'Private Hospital',
                 'address' => 'Chennai, Tamil Nadu',
                 'address_line1' => 'Main Medical Avenue',
@@ -3321,7 +3321,7 @@ class ChennaiScraperService extends BaseScraperService
             ],
             [
                 'name_en' => 'Chennai Medical Centre',
-                'name_hi' => 'छॆन्नै मेडिकल सेंटर (चेन्नई)',
+                'name_hi' => 'छेन्नै मेडिकल सेंटर (चेन्नई)',
                 'type' => 'Private Hospital',
                 'address' => 'Chennai, Tamil Nadu',
                 'address_line1' => 'Main Medical Avenue',
@@ -3341,7 +3341,7 @@ class ChennaiScraperService extends BaseScraperService
             ],
             [
                 'name_en' => 'The Gastro Clinic and Laparoscopy Centre',
-                'name_hi' => 'थॆ गस्त्रॊ क्लिनिक अंद लपरॊस्चॊप्य चॆंत्रॆ (चेन्नई)',
+                'name_hi' => 'थे गस्त्रो क्लिनिक अंद लपरोस्चोप्य चेंत्रे (चेन्नई)',
                 'type' => 'Clinic',
                 'address' => 'Chennai, Tamil Nadu',
                 'address_line1' => 'Main Medical Avenue',
@@ -3361,7 +3361,7 @@ class ChennaiScraperService extends BaseScraperService
             ],
             [
                 'name_en' => 'Thulasi Krishna Nursing Home',
-                'name_hi' => 'थुलसि क्रिश्न नुर्सिन्ग हॊमॆ (चेन्नई)',
+                'name_hi' => 'थुलसि क्रिश्न नुर्सिन्ग होमे (चेन्नई)',
                 'type' => 'Private Hospital',
                 'address' => 'Chennai, Tamil Nadu',
                 'address_line1' => 'Main Medical Avenue',
@@ -3381,7 +3381,7 @@ class ChennaiScraperService extends BaseScraperService
             ],
             [
                 'name_en' => 'GVS Physiotherapy Clinic',
-                'name_hi' => 'ग्व्स फ्य्सिऒथॆरप्य क्लिनिक (चेन्नई)',
+                'name_hi' => 'ग्व्स फ्य्सिऒथेरप्य क्लिनिक (चेन्नई)',
                 'type' => 'Clinic',
                 'address' => 'Chennai, Tamil Nadu',
                 'address_line1' => 'Main Medical Avenue',
@@ -3401,7 +3401,7 @@ class ChennaiScraperService extends BaseScraperService
             ],
             [
                 'name_en' => 'Cherub Fertility and women\'s centre',
-                'name_hi' => 'छॆरुब फ़ॆर्तिलित्य अंद वॊमॆन्स चॆंत्रॆ (चेन्नई)',
+                'name_hi' => 'छेरुब फ़ेर्तिलित्य अंद वोमेन्स चेंत्रे (चेन्नई)',
                 'type' => 'Private Hospital',
                 'address' => 'Chennai, Tamil Nadu',
                 'address_line1' => 'Main Medical Avenue',
@@ -3461,7 +3461,7 @@ class ChennaiScraperService extends BaseScraperService
             ],
             [
                 'name_en' => 'Mental Health Clinic',
-                'name_hi' => 'मॆंतल हॆअल्�¤ क्लिनिक अस्पताल (चेन्नई)',
+                'name_hi' => 'मेंतल हेअल्�¤ क्लिनिक अस्पताल (चेन्नई)',
                 'type' => 'Clinic',
                 'address' => 'Chennai, Tamil Nadu',
                 'address_line1' => 'Main Medical Avenue',
@@ -3501,7 +3501,7 @@ class ChennaiScraperService extends BaseScraperService
             ],
             [
                 'name_en' => 'Apollo Medical Centre',
-                'name_hi' => 'अपॊल्लॊ मेडिकल सेंटर (चेन्नई)',
+                'name_hi' => 'अपोल्लो मेडिकल सेंटर (चेन्नई)',
                 'type' => 'Private Hospital',
                 'address' => 'Chennai, Tamil Nadu',
                 'address_line1' => 'Main Medical Avenue',
@@ -3521,7 +3521,7 @@ class ChennaiScraperService extends BaseScraperService
             ],
             [
                 'name_en' => 'Apollo Clinic',
-                'name_hi' => 'अपॊल्लॊ क्लिनिक (चेन्नई)',
+                'name_hi' => 'अपोल्लो क्लिनिक (चेन्नई)',
                 'type' => 'Clinic',
                 'address' => 'Chennai, Tamil Nadu',
                 'address_line1' => 'Main Medical Avenue',
@@ -3541,7 +3541,7 @@ class ChennaiScraperService extends BaseScraperService
             ],
             [
                 'name_en' => 'Ojas Health',
-                'name_hi' => 'ऒजस हॆअल्�¤ अस्पताल (चेन्नई)',
+                'name_hi' => 'ऒजस हेअल्�¤ अस्पताल (चेन्नई)',
                 'type' => 'Private Hospital',
                 'address' => 'Chennai, Tamil Nadu',
                 'address_line1' => 'Main Medical Avenue',
@@ -3561,7 +3561,7 @@ class ChennaiScraperService extends BaseScraperService
             ],
             [
                 'name_en' => 'Progress Speciality Clinic',
-                'name_hi' => 'प्रॊग्रॆष स्पॆचिअलित्य क्लिनिक (चेन्नई)',
+                'name_hi' => 'प्रोग्रेष स्पेचिअलित्य क्लिनिक (चेन्नई)',
                 'type' => 'Clinic',
                 'address' => 'Chennai, Tamil Nadu',
                 'address_line1' => 'Main Medical Avenue',
@@ -3581,7 +3581,7 @@ class ChennaiScraperService extends BaseScraperService
             ],
             [
                 'name_en' => 'Dr. Barun\'s Multispeciality Dental Centre',
-                'name_hi' => 'द्र्। बरुन्स मल्टीस्पेशलिटी डेंटल चॆंत्रॆ (चेन्नई)',
+                'name_hi' => 'द्र्। बरुन्स मल्टीस्पेशलिटी डेंटल चेंत्रे (चेन्नई)',
                 'type' => 'Clinic',
                 'address' => 'Chennai, Tamil Nadu',
                 'address_line1' => 'Main Medical Avenue',
@@ -3601,7 +3601,7 @@ class ChennaiScraperService extends BaseScraperService
             ],
             [
                 'name_en' => 'London Harley Street Women and Fertility Centre',
-                'name_hi' => 'लॊंदॊन हर्लॆय स्त्रॆऎत वॊमॆन अंद फ़ॆर्तिलित्य चॆंत्रॆ (चेन्नई)',
+                'name_hi' => 'लोंदोन हर्लेय स्त्रेऎत वोमेन अंद फ़ेर्तिलित्य चेंत्रे (चेन्नई)',
                 'type' => 'Private Hospital',
                 'address' => 'Chennai, Tamil Nadu',
                 'address_line1' => 'Main Medical Avenue',
@@ -3621,7 +3621,7 @@ class ChennaiScraperService extends BaseScraperService
             ],
             [
                 'name_en' => 'Apollo Medical Center',
-                'name_hi' => 'अपॊल्लॊ मेडिकल सेंटर (चेन्नई)',
+                'name_hi' => 'अपोल्लो मेडिकल सेंटर (चेन्नई)',
                 'type' => 'Private Hospital',
                 'address' => 'Chennai, Tamil Nadu',
                 'address_line1' => 'Main Medical Avenue',
@@ -3641,7 +3641,7 @@ class ChennaiScraperService extends BaseScraperService
             ],
             [
                 'name_en' => 'Assana Gut Health And Wellness LLP',
-                'name_hi' => 'अषन गुत हॆअल्�¤ अंद वॆल्ल्नॆष ल्ल्प अस्पताल (चेन्नई)',
+                'name_hi' => 'अषन गुत हेअल्�¤ अंद वेल्ल्नेष ल्ल्प अस्पताल (चेन्नई)',
                 'type' => 'Private Hospital',
                 'address' => 'Chennai, Tamil Nadu',
                 'address_line1' => 'Main Medical Avenue',
@@ -3661,7 +3661,7 @@ class ChennaiScraperService extends BaseScraperService
             ],
             [
                 'name_en' => 'Jays Multi- Speciality Counselling & Psychotherapy Centre',
-                'name_hi' => 'जय्स मुल्ति- स्पॆचिअलित्य चॊउंसॆल्लिन्ग & प्स्य्छॊथॆरप्य चॆंत्रॆ (चेन्नई)',
+                'name_hi' => 'जय्स मुल्ति- स्पेचिअलित्य चोउंसेल्लिन्ग & प्स्य्छोथेरप्य चेंत्रे (चेन्नई)',
                 'type' => 'Private Hospital',
                 'address' => 'Chennai, Tamil Nadu',
                 'address_line1' => 'Main Medical Avenue',
@@ -3681,7 +3681,7 @@ class ChennaiScraperService extends BaseScraperService
             ],
             [
                 'name_en' => 'Chennai Ortho Clinic',
-                'name_hi' => 'छॆन्नै ऒर्थॊ क्लिनिक (चेन्नई)',
+                'name_hi' => 'छेन्नै ऒर्थो क्लिनिक (चेन्नई)',
                 'type' => 'Clinic',
                 'address' => 'Chennai, Tamil Nadu',
                 'address_line1' => 'Main Medical Avenue',
@@ -3701,7 +3701,7 @@ class ChennaiScraperService extends BaseScraperService
             ],
             [
                 'name_en' => 'Metromale Clinic & Fertility Center',
-                'name_hi' => 'मॆत्रॊमलॆ क्लिनिक & फ़ॆर्तिलित्य चॆंतॆर (चेन्नई)',
+                'name_hi' => 'मेत्रोमले क्लिनिक & फ़ेर्तिलित्य चेंतेर (चेन्नई)',
                 'type' => 'Clinic',
                 'address' => 'Chennai, Tamil Nadu',
                 'address_line1' => 'Main Medical Avenue',
@@ -3721,7 +3721,7 @@ class ChennaiScraperService extends BaseScraperService
             ],
             [
                 'name_en' => 'Jeevan Women Care Clinic',
-                'name_hi' => 'जॆऎवन वॊमॆन चरॆ क्लिनिक (चेन्नई)',
+                'name_hi' => 'जेऎवन वोमेन चरे क्लिनिक (चेन्नई)',
                 'type' => 'Clinic',
                 'address' => 'Chennai, Tamil Nadu',
                 'address_line1' => 'Main Medical Avenue',
@@ -3761,7 +3761,7 @@ class ChennaiScraperService extends BaseScraperService
             ],
             [
                 'name_en' => 'Porur Child Health Clinic',
-                'name_hi' => 'पॊरुर छिल्द हॆअल्�¤ क्लिनिक अस्पताल (चेन्नई)',
+                'name_hi' => 'पोरुर छिल्द हेअल्�¤ क्लिनिक अस्पताल (चेन्नई)',
                 'type' => 'Clinic',
                 'address' => 'Chennai, Tamil Nadu',
                 'address_line1' => 'Main Medical Avenue',
@@ -3781,7 +3781,7 @@ class ChennaiScraperService extends BaseScraperService
             ],
             [
                 'name_en' => 'Sanjeevani Clinic',
-                'name_hi' => 'सन्जॆऎवनि क्लिनिक (चेन्नई)',
+                'name_hi' => 'सन्जेऎवनि क्लिनिक (चेन्नई)',
                 'type' => 'Clinic',
                 'address' => 'Chennai, Tamil Nadu',
                 'address_line1' => 'Main Medical Avenue',
@@ -3821,7 +3821,7 @@ class ChennaiScraperService extends BaseScraperService
             ],
             [
                 'name_en' => 'Dermis Skin & Hair Clinic',
-                'name_hi' => 'दॆर्मिस स्किन & हैर क्लिनिक (चेन्नई)',
+                'name_hi' => 'देर्मिस स्किन & हैर क्लिनिक (चेन्नई)',
                 'type' => 'Clinic',
                 'address' => 'Chennai, Tamil Nadu',
                 'address_line1' => 'Main Medical Avenue',
@@ -3841,7 +3841,7 @@ class ChennaiScraperService extends BaseScraperService
             ],
             [
                 'name_en' => 'Usha Hospital-Fertility,Maternity & Child Care (formerly Vishnu Clinic)',
-                'name_hi' => 'उश अस्पताल-फ़ॆर्तिलित्य्,मतॆर्नित्य & छिल्द चरॆ (फ़ॊर्मॆर्ल्य विश्नु क्लिनिक) (चेन्नई)',
+                'name_hi' => 'उश अस्पताल-फ़ेर्तिलित्य्,मतेर्नित्य & छिल्द चरे (फ़ोर्मेर्ल्य विश्नु क्लिनिक) (चेन्नई)',
                 'type' => 'Clinic',
                 'address' => 'Chennai, Tamil Nadu',
                 'address_line1' => 'Main Medical Avenue',
@@ -3861,7 +3861,7 @@ class ChennaiScraperService extends BaseScraperService
             ],
             [
                 'name_en' => 'Pooja Joshis Clinic',
-                'name_hi' => 'पॊऒज जॊशिस क्लिनिक (चेन्नई)',
+                'name_hi' => 'पोऒज जोशिस क्लिनिक (चेन्नई)',
                 'type' => 'Clinic',
                 'address' => 'Chennai, Tamil Nadu',
                 'address_line1' => 'Main Medical Avenue',
@@ -3881,7 +3881,7 @@ class ChennaiScraperService extends BaseScraperService
             ],
             [
                 'name_en' => 'Diya Speciality Clinic',
-                'name_hi' => 'दिय स्पॆचिअलित्य क्लिनिक (चेन्नई)',
+                'name_hi' => 'दिय स्पेचिअलित्य क्लिनिक (चेन्नई)',
                 'type' => 'Clinic',
                 'address' => 'Chennai, Tamil Nadu',
                 'address_line1' => 'Main Medical Avenue',
@@ -3901,7 +3901,7 @@ class ChennaiScraperService extends BaseScraperService
             ],
             [
                 'name_en' => 'Ashvin Urology  Clinic',
-                'name_hi' => 'अश्विन उरॊलॊग्य  क्लिनिक (चेन्नई)',
+                'name_hi' => 'अश्विन उरोलोग्य  क्लिनिक (चेन्नई)',
                 'type' => 'Clinic',
                 'address' => 'Chennai, Tamil Nadu',
                 'address_line1' => 'Main Medical Avenue',
@@ -3941,7 +3941,7 @@ class ChennaiScraperService extends BaseScraperService
             ],
             [
                 'name_en' => 'Selva Maternity Centre',
-                'name_hi' => 'सॆल्व मतॆर्नित्य चॆंत्रॆ (चेन्नई)',
+                'name_hi' => 'सेल्व मतेर्नित्य चेंत्रे (चेन्नई)',
                 'type' => 'Private Hospital',
                 'address' => 'Chennai, Tamil Nadu',
                 'address_line1' => 'Main Medical Avenue',
@@ -3981,7 +3981,7 @@ class ChennaiScraperService extends BaseScraperService
             ],
             [
                 'name_en' => 'Dr. Ram\'s Diabetes & Endocrine Clinic',
-                'name_hi' => 'द्र्। रम्स दिअबॆतॆस & ऎंदॊच्रिनॆ क्लिनिक (चेन्नई)',
+                'name_hi' => 'द्र्। रम्स दिअबेतेस & ऎंदोच्रिने क्लिनिक (चेन्नई)',
                 'type' => 'Clinic',
                 'address' => 'Chennai, Tamil Nadu',
                 'address_line1' => 'Main Medical Avenue',
@@ -4001,7 +4001,7 @@ class ChennaiScraperService extends BaseScraperService
             ],
             [
                 'name_en' => 'Nila Skin Care Clinic',
-                'name_hi' => 'निल स्किन चरॆ क्लिनिक (चेन्नई)',
+                'name_hi' => 'निल स्किन चरे क्लिनिक (चेन्नई)',
                 'type' => 'Clinic',
                 'address' => 'Chennai, Tamil Nadu',
                 'address_line1' => 'Main Medical Avenue',
@@ -4041,7 +4041,7 @@ class ChennaiScraperService extends BaseScraperService
             ],
             [
                 'name_en' => 'Laughter Dental Clinic',
-                'name_hi' => 'लौघ्तॆर डेंटल क्लिनिक (चेन्नई)',
+                'name_hi' => 'लौघ्तेर डेंटल क्लिनिक (चेन्नई)',
                 'type' => 'Clinic',
                 'address' => 'Chennai, Tamil Nadu',
                 'address_line1' => 'Main Medical Avenue',
@@ -4061,7 +4061,7 @@ class ChennaiScraperService extends BaseScraperService
             ],
             [
                 'name_en' => 'Pearl Health',
-                'name_hi' => 'पॆअर्ल हॆअल्�¤ अस्पताल (चेन्नई)',
+                'name_hi' => 'पेअर्ल हेअल्�¤ अस्पताल (चेन्नई)',
                 'type' => 'Private Hospital',
                 'address' => 'Chennai, Tamil Nadu',
                 'address_line1' => 'Main Medical Avenue',
@@ -4101,7 +4101,7 @@ class ChennaiScraperService extends BaseScraperService
             ],
             [
                 'name_en' => 'DakshinPanacea Health Llp',
-                'name_hi' => 'दक्शिन्पनचॆअ हॆअल्�¤ ल्ल्प अस्पताल (चेन्नई)',
+                'name_hi' => 'दक्शिन्पनचेअ हेअल्�¤ ल्ल्प अस्पताल (चेन्नई)',
                 'type' => 'Private Hospital',
                 'address' => 'Chennai, Tamil Nadu',
                 'address_line1' => 'Main Medical Avenue',
@@ -4121,7 +4121,7 @@ class ChennaiScraperService extends BaseScraperService
             ],
             [
                 'name_en' => 'The Mind Care Center For Mental Health',
-                'name_hi' => 'थॆ मिंद केयर सेंटर फ़ॊर मॆंतल हॆअल्�¤ अस्पताल (चेन्नई)',
+                'name_hi' => 'थे मिंद केयर सेंटर फ़ोर मेंतल हेअल्�¤ अस्पताल (चेन्नई)',
                 'type' => 'Private Hospital',
                 'address' => 'Chennai, Tamil Nadu',
                 'address_line1' => 'Main Medical Avenue',
@@ -4141,7 +4141,7 @@ class ChennaiScraperService extends BaseScraperService
             ],
             [
                 'name_en' => 'Bliss Medicare Centre',
-                'name_hi' => 'ब्लिष मॆदिकेयर सेंटर (चेन्नई)',
+                'name_hi' => 'ब्लिष मेदिकेयर सेंटर (चेन्नई)',
                 'type' => 'Clinic',
                 'address' => 'Chennai, Tamil Nadu',
                 'address_line1' => 'Main Medical Avenue',
@@ -4181,7 +4181,7 @@ class ChennaiScraperService extends BaseScraperService
             ],
             [
                 'name_en' => 'Chennai Urology Clinic',
-                'name_hi' => 'छॆन्नै उरॊलॊग्य क्लिनिक (चेन्नई)',
+                'name_hi' => 'छेन्नै उरोलोग्य क्लिनिक (चेन्नई)',
                 'type' => 'Clinic',
                 'address' => 'Chennai, Tamil Nadu',
                 'address_line1' => 'Main Medical Avenue',
@@ -4201,7 +4201,7 @@ class ChennaiScraperService extends BaseScraperService
             ],
             [
                 'name_en' => 'Biolotus Clinic',
-                'name_hi' => 'बिऒलॊतुस क्लिनिक (चेन्नई)',
+                'name_hi' => 'बिऒलोतुस क्लिनिक (चेन्नई)',
                 'type' => 'Clinic',
                 'address' => 'Chennai, Tamil Nadu',
                 'address_line1' => 'Main Medical Avenue',
@@ -4221,7 +4221,7 @@ class ChennaiScraperService extends BaseScraperService
             ],
             [
                 'name_en' => 'Mind Restore Psychological Counselling Centre',
-                'name_hi' => 'मिंद रॆस्तॊरॆ प्स्य्छॊलॊगिचल चॊउंसॆल्लिन्ग चॆंत्रॆ (चेन्नई)',
+                'name_hi' => 'मिंद रेस्तोरे प्स्य्छोलोगिचल चोउंसेल्लिन्ग चेंत्रे (चेन्नई)',
                 'type' => 'Private Hospital',
                 'address' => 'Chennai, Tamil Nadu',
                 'address_line1' => 'Main Medical Avenue',
@@ -4241,7 +4241,7 @@ class ChennaiScraperService extends BaseScraperService
             ],
             [
                 'name_en' => 'Curves Clinic',
-                'name_hi' => 'चुर्वॆस क्लिनिक (चेन्नई)',
+                'name_hi' => 'चुर्वेस क्लिनिक (चेन्नई)',
                 'type' => 'Clinic',
                 'address' => 'Chennai, Tamil Nadu',
                 'address_line1' => 'Main Medical Avenue',
@@ -4261,7 +4261,7 @@ class ChennaiScraperService extends BaseScraperService
             ],
             [
                 'name_en' => 'Sugam Physiotherapy Clinic',
-                'name_hi' => 'सुगम फ्य्सिऒथॆरप्य क्लिनिक (चेन्नई)',
+                'name_hi' => 'सुगम फ्य्सिऒथेरप्य क्लिनिक (चेन्नई)',
                 'type' => 'Clinic',
                 'address' => 'Chennai, Tamil Nadu',
                 'address_line1' => 'Main Medical Avenue',
@@ -4281,7 +4281,7 @@ class ChennaiScraperService extends BaseScraperService
             ],
             [
                 'name_en' => 'M.S Dental, Speech, Hearing & Vertigo Clinic',
-                'name_hi' => 'म्।स डेंटल, स्पॆऎछ्, हॆअरिन्ग & वॆर्तिगॊ क्लिनिक (चेन्नई)',
+                'name_hi' => 'म्।स डेंटल, स्पेऎछ्, हेअरिन्ग & वेर्तिगो क्लिनिक (चेन्नई)',
                 'type' => 'Clinic',
                 'address' => 'Chennai, Tamil Nadu',
                 'address_line1' => 'Main Medical Avenue',
@@ -4301,7 +4301,7 @@ class ChennaiScraperService extends BaseScraperService
             ],
             [
                 'name_en' => 'BEE Health Studio',
-                'name_hi' => 'बॆऎ हॆअल्�¤ स्तुदिऒ अस्पताल (चेन्नई)',
+                'name_hi' => 'बेऎ हेअल्�¤ स्तुदिऒ अस्पताल (चेन्नई)',
                 'type' => 'Private Hospital',
                 'address' => 'Chennai, Tamil Nadu',
                 'address_line1' => 'Main Medical Avenue',
@@ -4321,7 +4321,7 @@ class ChennaiScraperService extends BaseScraperService
             ],
             [
                 'name_en' => 'Jananam Fertility Center',
-                'name_hi' => 'जननम फ़ॆर्तिलित्य चॆंतॆर (चेन्नई)',
+                'name_hi' => 'जननम फ़ेर्तिलित्य चेंतेर (चेन्नई)',
                 'type' => 'Private Hospital',
                 'address' => 'Chennai, Tamil Nadu',
                 'address_line1' => 'Main Medical Avenue',
@@ -4341,7 +4341,7 @@ class ChennaiScraperService extends BaseScraperService
             ],
             [
                 'name_en' => 'Kavithalayaa Counseling Centre',
-                'name_hi' => 'कविथलयअ चॊउंसॆलिन्ग चॆंत्रॆ (चेन्नई)',
+                'name_hi' => 'कविथलयअ चोउंसेलिन्ग चेंत्रे (चेन्नई)',
                 'type' => 'Private Hospital',
                 'address' => 'Chennai, Tamil Nadu',
                 'address_line1' => 'Main Medical Avenue',
@@ -4361,7 +4361,7 @@ class ChennaiScraperService extends BaseScraperService
             ],
             [
                 'name_en' => 'Shreeya Clinic',
-                'name_hi' => 'श्रॆऎय क्लिनिक (चेन्नई)',
+                'name_hi' => 'श्रेऎय क्लिनिक (चेन्नई)',
                 'type' => 'Clinic',
                 'address' => 'Chennai, Tamil Nadu',
                 'address_line1' => 'Main Medical Avenue',
@@ -4401,7 +4401,7 @@ class ChennaiScraperService extends BaseScraperService
             ],
             [
                 'name_en' => 'Gomathy Gowthaman Diet Clinic',
-                'name_hi' => 'गॊमथ्य गॊव्थमन दिऎत क्लिनिक (चेन्नई)',
+                'name_hi' => 'गोमथ्य गोव्थमन दिऎत क्लिनिक (चेन्नई)',
                 'type' => 'Clinic',
                 'address' => 'Chennai, Tamil Nadu',
                 'address_line1' => 'Main Medical Avenue',
@@ -4421,7 +4421,7 @@ class ChennaiScraperService extends BaseScraperService
             ],
             [
                 'name_en' => 'AGAM Wellness Clinic',
-                'name_hi' => 'अगम वॆल्ल्नॆष क्लिनिक (चेन्नई)',
+                'name_hi' => 'अगम वेल्ल्नेष क्लिनिक (चेन्नई)',
                 'type' => 'Clinic',
                 'address' => 'Chennai, Tamil Nadu',
                 'address_line1' => 'Main Medical Avenue',
@@ -4441,7 +4441,7 @@ class ChennaiScraperService extends BaseScraperService
             ],
             [
                 'name_en' => 'Urology Speciality Clinic',
-                'name_hi' => 'उरॊलॊग्य स्पॆचिअलित्य क्लिनिक (चेन्नई)',
+                'name_hi' => 'उरोलोग्य स्पेचिअलित्य क्लिनिक (चेन्नई)',
                 'type' => 'Clinic',
                 'address' => 'Chennai, Tamil Nadu',
                 'address_line1' => 'Main Medical Avenue',
@@ -4461,7 +4461,7 @@ class ChennaiScraperService extends BaseScraperService
             ],
             [
                 'name_en' => 'Derma Med Spa The Skin Clinic',
-                'name_hi' => 'दॆर्म मॆद स्प थॆ स्किन क्लिनिक (चेन्नई)',
+                'name_hi' => 'देर्म मेद स्प थे स्किन क्लिनिक (चेन्नई)',
                 'type' => 'Clinic',
                 'address' => 'Chennai, Tamil Nadu',
                 'address_line1' => 'Main Medical Avenue',
@@ -4501,7 +4501,7 @@ class ChennaiScraperService extends BaseScraperService
             ],
             [
                 'name_en' => 'Rootz Dental Care and Implant Center',
-                'name_hi' => 'रॊऒत्ज़ डेंटल चरॆ अंद इंप्लंत चॆंतॆर (चेन्नई)',
+                'name_hi' => 'रोऒत्ज़ डेंटल चरे अंद इंप्लंत चेंतेर (चेन्नई)',
                 'type' => 'Clinic',
                 'address' => 'Chennai, Tamil Nadu',
                 'address_line1' => 'Main Medical Avenue',
@@ -4541,7 +4541,7 @@ class ChennaiScraperService extends BaseScraperService
             ],
             [
                 'name_en' => 'Swasam Speciality Clinic',
-                'name_hi' => 'स्वसम स्पॆचिअलित्य क्लिनिक (चेन्नई)',
+                'name_hi' => 'स्वसम स्पेचिअलित्य क्लिनिक (चेन्नई)',
                 'type' => 'Clinic',
                 'address' => 'Chennai, Tamil Nadu',
                 'address_line1' => 'Main Medical Avenue',
@@ -4561,7 +4561,7 @@ class ChennaiScraperService extends BaseScraperService
             ],
             [
                 'name_en' => 'Phoebus Prime Clinic',
-                'name_hi' => 'फॊऎबुस प्रिमॆ क्लिनिक (चेन्नई)',
+                'name_hi' => 'फोऎबुस प्रिमे क्लिनिक (चेन्नई)',
                 'type' => 'Clinic',
                 'address' => 'Chennai, Tamil Nadu',
                 'address_line1' => 'Main Medical Avenue',
@@ -4581,7 +4581,7 @@ class ChennaiScraperService extends BaseScraperService
             ],
             [
                 'name_en' => 'Promise Physiotherapy And Fitness Care Clinic',
-                'name_hi' => 'प्रॊमिसॆ फ्य्सिऒथॆरप्य अंद फ़ित्नॆष चरॆ क्लिनिक (चेन्नई)',
+                'name_hi' => 'प्रोमिसे फ्य्सिऒथेरप्य अंद फ़ित्नेष चरे क्लिनिक (चेन्नई)',
                 'type' => 'Clinic',
                 'address' => 'Chennai, Tamil Nadu',
                 'address_line1' => 'Main Medical Avenue',
@@ -4601,7 +4601,7 @@ class ChennaiScraperService extends BaseScraperService
             ],
             [
                 'name_en' => 'Chennai Siddha and Ayurveda Speciality Clinic',
-                'name_hi' => 'छॆन्नै सिढ अंद अयुर्वॆद स्पॆचिअलित्य क्लिनिक (चेन्नई)',
+                'name_hi' => 'छेन्नै सिढ अंद अयुर्वेद स्पेचिअलित्य क्लिनिक (चेन्नई)',
                 'type' => 'Clinic',
                 'address' => 'Chennai, Tamil Nadu',
                 'address_line1' => 'Main Medical Avenue',
@@ -4621,7 +4621,7 @@ class ChennaiScraperService extends BaseScraperService
             ],
             [
                 'name_en' => 'Dr. Hari\'S Dental Centre',
-                'name_hi' => 'द्र्। हरिस डेंटल चॆंत्रॆ (चेन्नई)',
+                'name_hi' => 'द्र्। हरिस डेंटल चेंत्रे (चेन्नई)',
                 'type' => 'Clinic',
                 'address' => 'Chennai, Tamil Nadu',
                 'address_line1' => 'Main Medical Avenue',
@@ -4641,7 +4641,7 @@ class ChennaiScraperService extends BaseScraperService
             ],
             [
                 'name_en' => 'Dr. Mohanty\'s Speciality ENT Clinics',
-                'name_hi' => 'द्र्। मॊहंत्य्स स्पॆचिअलित्य ऎंत क्लिनिकस (चेन्नई)',
+                'name_hi' => 'द्र्। मोहंत्य्स स्पेचिअलित्य ऎंत क्लिनिकस (चेन्नई)',
                 'type' => 'Clinic',
                 'address' => 'Chennai, Tamil Nadu',
                 'address_line1' => 'Main Medical Avenue',
@@ -4661,7 +4661,7 @@ class ChennaiScraperService extends BaseScraperService
             ],
             [
                 'name_en' => 'Dr Batra\'s Positive Health Clinic Pvt Ltd',
-                'name_hi' => 'द्र बत्रस पॊसितिवॆ हॆअल्�¤ क्लिनिक प्व्त ल्त्द अस्पताल (चेन्नई)',
+                'name_hi' => 'द्र बत्रस पोसितिवे हेअल्�¤ क्लिनिक प्व्त ल्त्द अस्पताल (चेन्नई)',
                 'type' => 'Clinic',
                 'address' => 'Chennai, Tamil Nadu',
                 'address_line1' => 'Main Medical Avenue',
@@ -4681,7 +4681,7 @@ class ChennaiScraperService extends BaseScraperService
             ],
             [
                 'name_en' => 'Chennai Obesity & Gastro Surgeons Centre',
-                'name_hi' => 'छॆन्नै ऒबॆसित्य & गस्त्रॊ सुर्गॆऒंस चॆंत्रॆ (चेन्नई)',
+                'name_hi' => 'छेन्नै ऒबेसित्य & गस्त्रो सुर्गेऒंस चेंत्रे (चेन्नई)',
                 'type' => 'Government Hospital',
                 'address' => 'Chennai, Tamil Nadu',
                 'address_line1' => 'Main Medical Avenue',
@@ -4701,7 +4701,7 @@ class ChennaiScraperService extends BaseScraperService
             ],
             [
                 'name_en' => 'The Laser Gastroenterology Clinic',
-                'name_hi' => 'थॆ लसॆर गस्त्रॊऎंतॆरॊलॊग्य क्लिनिक (चेन्नई)',
+                'name_hi' => 'थे लसेर गस्त्रोऎंतेरोलोग्य क्लिनिक (चेन्नई)',
                 'type' => 'Clinic',
                 'address' => 'Chennai, Tamil Nadu',
                 'address_line1' => 'Main Medical Avenue',
@@ -4721,7 +4721,7 @@ class ChennaiScraperService extends BaseScraperService
             ],
             [
                 'name_en' => 'Synapse Pain and Spine Clinic',
-                'name_hi' => 'स्य्नप्सॆ पैन अंद स्पिनॆ क्लिनिक (चेन्नई)',
+                'name_hi' => 'स्य्नप्से पैन अंद स्पिने क्लिनिक (चेन्नई)',
                 'type' => 'Clinic',
                 'address' => 'Chennai, Tamil Nadu',
                 'address_line1' => 'Main Medical Avenue',
@@ -4741,7 +4741,7 @@ class ChennaiScraperService extends BaseScraperService
             ],
             [
                 'name_en' => 'Sai Healthcare Foundation',
-                'name_hi' => 'सै हेल्थकेयर फ़ॊउंदतिऒन (चेन्नई)',
+                'name_hi' => 'सै हेल्थकेयर फ़ोउंदतिऒन (चेन्नई)',
                 'type' => 'Semi-Private Hospital',
                 'address' => 'Chennai, Tamil Nadu',
                 'address_line1' => 'Main Medical Avenue',
@@ -4761,7 +4761,7 @@ class ChennaiScraperService extends BaseScraperService
             ],
             [
                 'name_en' => 'Armoraa Skin, Hair And Laser Clinic',
-                'name_hi' => 'अर्मॊरअ स्किन्, हैर अंद लसॆर क्लिनिक (चेन्नई)',
+                'name_hi' => 'अर्मोरअ स्किन्, हैर अंद लसेर क्लिनिक (चेन्नई)',
                 'type' => 'Clinic',
                 'address' => 'Chennai, Tamil Nadu',
                 'address_line1' => 'Main Medical Avenue',
@@ -4781,7 +4781,7 @@ class ChennaiScraperService extends BaseScraperService
             ],
             [
                 'name_en' => 'Prema\'s Medical and Diabetes Research Centre',
-                'name_hi' => 'प्रॆमस मॆदिचल अंद दिअबॆतॆस रिसर्च सेंटर (चेन्नई)',
+                'name_hi' => 'प्रेमस मेदिचल अंद दिअबेतेस रिसर्च सेंटर (चेन्नई)',
                 'type' => 'Private Hospital',
                 'address' => 'Chennai, Tamil Nadu',
                 'address_line1' => 'Main Medical Avenue',
@@ -4801,7 +4801,7 @@ class ChennaiScraperService extends BaseScraperService
             ],
             [
                 'name_en' => 'SS Spine and Ortho Clinic',
-                'name_hi' => 'ष स्पिनॆ अंद ऒर्थॊ क्लिनिक (चेन्नई)',
+                'name_hi' => 'ष स्पिने अंद ऒर्थो क्लिनिक (चेन्नई)',
                 'type' => 'Clinic',
                 'address' => 'Chennai, Tamil Nadu',
                 'address_line1' => 'Main Medical Avenue',
@@ -4841,7 +4841,7 @@ class ChennaiScraperService extends BaseScraperService
             ],
             [
                 'name_en' => 'Dhiya Fertility and Maternity Center',
-                'name_hi' => 'धिय फ़ॆर्तिलित्य अंद मतॆर्नित्य चॆंतॆर (चेन्नई)',
+                'name_hi' => 'धिय फ़ेर्तिलित्य अंद मतेर्नित्य चेंतेर (चेन्नई)',
                 'type' => 'Private Hospital',
                 'address' => 'Chennai, Tamil Nadu',
                 'address_line1' => 'Main Medical Avenue',
@@ -4861,7 +4861,7 @@ class ChennaiScraperService extends BaseScraperService
             ],
             [
                 'name_en' => 'Chettinad Super Speciality Hospital',
-                'name_hi' => 'छॆत्तिनद सुपर स्पेशलिटी अस्पताल (चेन्नई)',
+                'name_hi' => 'छेत्तिनद सुपर स्पेशलिटी अस्पताल (चेन्नई)',
                 'type' => 'Clinic',
                 'address' => 'Chennai, Tamil Nadu',
                 'address_line1' => 'Main Medical Avenue',
@@ -11443,7 +11443,7 @@ class ChennaiScraperService extends BaseScraperService
                 'department_name_en' => 'Endocrinology',
                 'department_name_hi' => 'अंतःस्राविकी',
                 'hospital_name_en' => 'Dr. Mohan\'s Diabetes Speciality Centre',
-                'hospital_name_hi' => 'द्र्। मॊहन्स दिअबॆतॆस स्पॆचिअलित्य चॆंत्रॆ (चेन्नई)',
+                'hospital_name_hi' => 'द्र्। मोहन्स दिअबेतेस स्पेचिअलित्य चेंत्रे (चेन्नई)',
                 'address' => null,
                 'address_line1' => '6B, Conran Smith Road',
                 'address_line2' => 'Gopalapuram',
@@ -11476,7 +11476,7 @@ class ChennaiScraperService extends BaseScraperService
                 'department_name_en' => 'Orthopedics',
                 'department_name_hi' => 'हड्डी रोग विभाग',
                 'hospital_name_en' => 'MIOT International',
-                'hospital_name_hi' => 'मिऒत इंतॆर्नतिऒनल (चेन्नई)',
+                'hospital_name_hi' => 'मिऒत इंतेर्नतिऒनल (चेन्नई)',
                 'address' => null,
                 'address_line1' => '4/112, Mount Poonamallee Road',
                 'address_line2' => 'Manapakkam',
@@ -11507,7 +11507,7 @@ class ChennaiScraperService extends BaseScraperService
                 'department_name_en' => 'Oncology',
                 'department_name_hi' => 'कैंसर रोग विभाग',
                 'hospital_name_en' => 'Apollo Cancer Centre',
-                'hospital_name_hi' => 'अपॊल्लॊ चन्चॆर चॆंत्रॆ (चेन्नई)',
+                'hospital_name_hi' => 'अपोल्लो चन्चेर चेंत्रे (चेन्नई)',
                 'address' => null,
                 'address_line1' => '320, Padma Complex',
                 'address_line2' => 'Anna Salai, Teynampet',
@@ -11537,7 +11537,7 @@ class ChennaiScraperService extends BaseScraperService
                 'department_name_en' => 'Ophthalmology',
                 'department_name_hi' => 'नेत्र रोग विभाग',
                 'hospital_name_en' => 'Sankara Nethralaya',
-                'hospital_name_hi' => 'सन्कर नॆथ्रलय (चेन्नई)',
+                'hospital_name_hi' => 'सन्कर नेथ्रलय (चेन्नई)',
                 'address' => null,
                 'address_line1' => '41, College Road',
                 'address_line2' => 'Thousand Lights',
@@ -11568,7 +11568,7 @@ class ChennaiScraperService extends BaseScraperService
                 'department_name_en' => 'Gynecology',
                 'department_name_hi' => 'स्त्री रोग विभाग',
                 'hospital_name_en' => 'Apollo Women\'s Hospital',
-                'hospital_name_hi' => 'अपॊल्लॊ वॊमॆन्स अस्पताल (चेन्नई)',
+                'hospital_name_hi' => 'अपोल्लो वोमेन्स अस्पताल (चेन्नई)',
                 'address' => null,
                 'address_line1' => '15, Shafee Mohammed Road',
                 'address_line2' => 'Thousand Lights',
@@ -11598,7 +11598,7 @@ class ChennaiScraperService extends BaseScraperService
                 'department_name_en' => 'Neurology',
                 'department_name_hi' => 'तंत्रिका रोग विभाग',
                 'hospital_name_en' => 'Kauvery Hospital',
-                'hospital_name_hi' => 'कौवॆर्य अस्पताल (चेन्नई)',
+                'hospital_name_hi' => 'कौवेर्य अस्पताल (चेन्नई)',
                 'address' => null,
                 'address_line1' => '81, TTK Road',
                 'address_line2' => 'Alwarpet',
@@ -11659,7 +11659,7 @@ class ChennaiScraperService extends BaseScraperService
                 'department_name_en' => 'ENT (Otolaryngology)',
                 'department_name_hi' => 'कान, नाक और गला रोग विभाग',
                 'hospital_name_en' => 'Madras ENT Research Foundation (MERF)',
-                'hospital_name_hi' => 'मद्रस ऎंत रॆसॆअर्छ फ़ॊउंदतिऒन (मॆर्फ़्) (चेन्नई)',
+                'hospital_name_hi' => 'मद्रस ऎंत रेसेअर्छ फ़ोउंदतिऒन (मेर्फ़्) (चेन्नई)',
                 'address' => null,
                 'address_line1' => '1, 1st Cross Street',
                 'address_line2' => 'Off Raja Annamalai Puram',
@@ -11812,7 +11812,7 @@ class ChennaiScraperService extends BaseScraperService
                 'department_name_en' => 'Rheumatology',
                 'department_name_hi' => 'रूमेटोलॉजी',
                 'hospital_name_en' => 'Apollo Hospitals',
-                'hospital_name_hi' => 'अपॊल्लॊ अस्पतालस (चेन्नई)',
+                'hospital_name_hi' => 'अपोल्लो अस्पतालस (चेन्नई)',
                 'address' => null,
                 'address_line1' => '21, Greams Lane',
                 'address_line2' => 'Thousand Lights',
@@ -11842,7 +11842,7 @@ class ChennaiScraperService extends BaseScraperService
                 'department_name_en' => 'Pulmonology',
                 'department_name_hi' => 'श्वसन रोग विभाग',
                 'hospital_name_en' => 'Kauvery Hospital',
-                'hospital_name_hi' => 'कौवॆर्य अस्पताल (चेन्नई)',
+                'hospital_name_hi' => 'कौवेर्य अस्पताल (चेन्नई)',
                 'address' => null,
                 'address_line1' => '81, TTK Road',
                 'address_line2' => 'Alwarpet',
@@ -11872,7 +11872,7 @@ class ChennaiScraperService extends BaseScraperService
                 'department_name_en' => 'General Surgery',
                 'department_name_hi' => 'सामान्य शल्य चिकित्सा',
                 'hospital_name_en' => 'Billroth Hospitals',
-                'hospital_name_hi' => 'बिल्ल्रॊ�¤ अस्पतालस अस्पताल (चेन्नई)',
+                'hospital_name_hi' => 'बिल्ल्रो�¤ अस्पतालस अस्पताल (चेन्नई)',
                 'address' => null,
                 'address_line1' => '43, Lakshmi Talkies Road',
                 'address_line2' => 'Shenoy Nagar',
@@ -11902,7 +11902,7 @@ class ChennaiScraperService extends BaseScraperService
                 'department_name_en' => 'Dermatology',
                 'department_name_hi' => 'त्वचा रोग विभाग',
                 'hospital_name_en' => 'Stanley Medical College Hospital',
-                'hospital_name_hi' => 'स्तंलॆय मेडिकल कॉलेज अस्पताल (चेन्नई)',
+                'hospital_name_hi' => 'स्तंलेय मेडिकल कॉलेज अस्पताल (चेन्नई)',
                 'address' => null,
                 'address_line1' => '1, Old Jail Road',
                 'address_line2' => 'Royapuram',
@@ -12288,7 +12288,7 @@ class ChennaiScraperService extends BaseScraperService
                 'department_name_en' => 'Gynecologist/Obstetrician',
                 'department_name_hi' => 'Gynecologist/Obstetrician',
                 'hospital_name_en' => 'SRM Prime Hospital',
-                'hospital_name_hi' => 'स्र्म प्रिमॆ अस्पताल (चेन्नई)',
+                'hospital_name_hi' => 'स्र्म प्रिमे अस्पताल (चेन्नई)',
                 'address' => null,
                 'address_line1' => 'Main Medical Avenue',
                 'address_line2' => 'Chennai',
@@ -12314,7 +12314,7 @@ class ChennaiScraperService extends BaseScraperService
                 'department_name_en' => 'Neurologist',
                 'department_name_hi' => 'Neurologist',
                 'hospital_name_en' => 'Neuro Life Hospital',
-                'hospital_name_hi' => 'नॆउरॊ लाइफ अस्पताल (चेन्नई)',
+                'hospital_name_hi' => 'नेउरो लाइफ अस्पताल (चेन्नई)',
                 'address' => null,
                 'address_line1' => 'Main Medical Avenue',
                 'address_line2' => 'Chennai',
@@ -12340,7 +12340,7 @@ class ChennaiScraperService extends BaseScraperService
                 'department_name_en' => 'General Medicine',
                 'department_name_hi' => 'सामान्य चिकित्सा',
                 'hospital_name_en' => 'SRM Prime Hospital',
-                'hospital_name_hi' => 'स्र्म प्रिमॆ अस्पताल (चेन्नई)',
+                'hospital_name_hi' => 'स्र्म प्रिमे अस्पताल (चेन्नई)',
                 'address' => null,
                 'address_line1' => 'Main Medical Avenue',
                 'address_line2' => 'Chennai',
@@ -12444,7 +12444,7 @@ class ChennaiScraperService extends BaseScraperService
                 'department_name_en' => 'General Medicine',
                 'department_name_hi' => 'सामान्य चिकित्सा',
                 'hospital_name_en' => 'SRM Prime Hospital',
-                'hospital_name_hi' => 'स्र्म प्रिमॆ अस्पताल (चेन्नई)',
+                'hospital_name_hi' => 'स्र्म प्रिमे अस्पताल (चेन्नई)',
                 'address' => null,
                 'address_line1' => 'Main Medical Avenue',
                 'address_line2' => 'Chennai',
@@ -12522,7 +12522,7 @@ class ChennaiScraperService extends BaseScraperService
                 'department_name_en' => 'General Medicine',
                 'department_name_hi' => 'सामान्य चिकित्सा',
                 'hospital_name_en' => 'SRM Prime Hospital',
-                'hospital_name_hi' => 'स्र्म प्रिमॆ अस्पताल (चेन्नई)',
+                'hospital_name_hi' => 'स्र्म प्रिमे अस्पताल (चेन्नई)',
                 'address' => null,
                 'address_line1' => 'Main Medical Avenue',
                 'address_line2' => 'Chennai',
@@ -12548,7 +12548,7 @@ class ChennaiScraperService extends BaseScraperService
                 'department_name_en' => 'General Medicine',
                 'department_name_hi' => 'सामान्य चिकित्सा',
                 'hospital_name_en' => 'Billroth Hospitals',
-                'hospital_name_hi' => 'बिल्ल्रॊ�¤ अस्पतालस अस्पताल (चेन्नई)',
+                'hospital_name_hi' => 'बिल्ल्रो�¤ अस्पतालस अस्पताल (चेन्नई)',
                 'address' => null,
                 'address_line1' => 'Main Medical Avenue',
                 'address_line2' => 'Chennai',
@@ -12574,7 +12574,7 @@ class ChennaiScraperService extends BaseScraperService
                 'department_name_en' => 'Cardiologist',
                 'department_name_hi' => 'Cardiologist',
                 'hospital_name_en' => 'Frontier Lifeline Hospital',
-                'hospital_name_hi' => 'फ़्रॊंतिऎर लाइफलिनॆ अस्पताल (चेन्नई)',
+                'hospital_name_hi' => 'फ़्रोंतिऎर लाइफलिने अस्पताल (चेन्नई)',
                 'address' => null,
                 'address_line1' => 'Main Medical Avenue',
                 'address_line2' => 'Chennai',
@@ -12626,7 +12626,7 @@ class ChennaiScraperService extends BaseScraperService
                 'department_name_en' => 'General Medicine',
                 'department_name_hi' => 'सामान्य चिकित्सा',
                 'hospital_name_en' => 'SRM Prime Hospital',
-                'hospital_name_hi' => 'स्र्म प्रिमॆ अस्पताल (चेन्नई)',
+                'hospital_name_hi' => 'स्र्म प्रिमे अस्पताल (चेन्नई)',
                 'address' => null,
                 'address_line1' => 'Main Medical Avenue',
                 'address_line2' => 'Chennai',
@@ -12704,7 +12704,7 @@ class ChennaiScraperService extends BaseScraperService
                 'department_name_en' => 'Cardiologist',
                 'department_name_hi' => 'Cardiologist',
                 'hospital_name_en' => 'Frontier Lifeline Hospital',
-                'hospital_name_hi' => 'फ़्रॊंतिऎर लाइफलिनॆ अस्पताल (चेन्नई)',
+                'hospital_name_hi' => 'फ़्रोंतिऎर लाइफलिने अस्पताल (चेन्नई)',
                 'address' => null,
                 'address_line1' => 'Main Medical Avenue',
                 'address_line2' => 'Chennai',
@@ -12808,7 +12808,7 @@ class ChennaiScraperService extends BaseScraperService
                 'department_name_en' => 'Internal Medicine',
                 'department_name_hi' => 'आंतरिक चिकित्सा',
                 'hospital_name_en' => 'Sooriya Hospital - Vadapalani',
-                'hospital_name_hi' => 'सॊऒरिय अस्पताल - वदपलनि (चेन्नई)',
+                'hospital_name_hi' => 'सोऒरिय अस्पताल - वदपलनि (चेन्नई)',
                 'address' => null,
                 'address_line1' => 'Main Medical Avenue',
                 'address_line2' => 'Chennai',
@@ -12834,7 +12834,7 @@ class ChennaiScraperService extends BaseScraperService
                 'department_name_en' => 'Anesthesiologist',
                 'department_name_hi' => 'Anesthesiologist',
                 'hospital_name_en' => 'SRM Prime Hospital',
-                'hospital_name_hi' => 'स्र्म प्रिमॆ अस्पताल (चेन्नई)',
+                'hospital_name_hi' => 'स्र्म प्रिमे अस्पताल (चेन्नई)',
                 'address' => null,
                 'address_line1' => 'Main Medical Avenue',
                 'address_line2' => 'Chennai',
@@ -12860,7 +12860,7 @@ class ChennaiScraperService extends BaseScraperService
                 'department_name_en' => 'General Medicine',
                 'department_name_hi' => 'सामान्य चिकित्सा',
                 'hospital_name_en' => 'Sooriya Hospital - Vadapalani',
-                'hospital_name_hi' => 'सॊऒरिय अस्पताल - वदपलनि (चेन्नई)',
+                'hospital_name_hi' => 'सोऒरिय अस्पताल - वदपलनि (चेन्नई)',
                 'address' => null,
                 'address_line1' => 'Main Medical Avenue',
                 'address_line2' => 'Chennai',
@@ -12912,7 +12912,7 @@ class ChennaiScraperService extends BaseScraperService
                 'department_name_en' => 'General Medicine',
                 'department_name_hi' => 'सामान्य चिकित्सा',
                 'hospital_name_en' => 'Chettinad Super Speciality Hospital',
-                'hospital_name_hi' => 'छॆत्तिनद सुपर स्पेशलिटी अस्पताल (चेन्नई)',
+                'hospital_name_hi' => 'छेत्तिनद सुपर स्पेशलिटी अस्पताल (चेन्नई)',
                 'address' => null,
                 'address_line1' => 'Main Medical Avenue',
                 'address_line2' => 'Chennai',

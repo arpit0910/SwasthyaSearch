@@ -23,7 +23,7 @@ class DoctorController extends Controller
 
         // Treat nearby as the base filter: first limit to nearby doctors, then apply other filters.
         if ($hasUserLocation) {
-            $nearbyDoctorIds = Doctor::with('hospitals')
+            $allDoctorsMapped = Doctor::with('hospitals')
                 ->where('is_verified', true)
                 ->whereHas('hospitals', fn($hospitalQuery) => $hospitalQuery->where('city', 'LIKE', "%{$activeCity}%"))
                 ->get()
@@ -40,11 +40,20 @@ class DoctorController extends Controller
                         'id' => $doctor->id,
                         'distance_km' => $distanceKm,
                     ];
-                })
+                });
+
+            $nearbyDoctorIds = $allDoctorsMapped
                 ->filter(fn(array $doctor) => $doctor['distance_km'] !== null && $doctor['distance_km'] < 50)
-                ->sortBy('distance_km')
+                ->sortBy(fn(array $doctor) => $doctor['distance_km'])
                 ->pluck('id')
                 ->values();
+
+            if ($nearbyDoctorIds->isEmpty()) {
+                $nearbyDoctorIds = $allDoctorsMapped
+                    ->sortBy(fn(array $doctor) => $doctor['distance_km'] ?? PHP_FLOAT_MAX)
+                    ->pluck('id')
+                    ->values();
+            }
 
             if ($nearbyDoctorIds->isEmpty()) {
                 $doctors = $this->paginateCollection(collect(), $request, 30);
@@ -132,7 +141,7 @@ class DoctorController extends Controller
                 ->latest()
                 ->get()
                 ->map(fn(Doctor $doctor) => $this->formatDoctor($doctor, $userLat, $userLng))
-                ->sortBy('distance_km')
+                ->sortBy(fn(array $doctor) => $doctor['distance_km'] ?? PHP_FLOAT_MAX)
                 ->values();
 
             $doctors = $this->paginateCollection($doctors, $request, 30);

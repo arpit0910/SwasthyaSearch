@@ -13,7 +13,7 @@
 @section('content')
 
 
-@php($isHindi = $locale === 'hi')
+@php($isHindi = \App\Helpers\LocaleHelper::current() === 'hi')
 
 
 <main class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-8 sm:py-12">

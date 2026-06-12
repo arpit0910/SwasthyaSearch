@@ -12,6 +12,8 @@ class RedirectToComingSoon
     {
         if (
             app()->environment('live')
+            && ! auth('admin')->check()
+            && ! $request->is('admin/login')
             && ! $request->routeIs('coming-soon')
             && ! $request->is('coming-soon')
         ) {

@@ -8,13 +8,14 @@ use App\Models\Faq;
 use App\Models\GeneralQuestion;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Str;
+use App\Helpers\LocaleHelper;
 
 class MedicalQaService
 {
     /**
      * @return array{question:string,answer:string,category:string,source:string,source_id:int|null,source_table:string|null,confidence:float,detailed_answer_en:?string,detailed_answer_hi:?string,detailed_answer:?string}|null
      */
-    public function findBestAnswer(string $message, string $locale = 'en'): ?array
+    public function findBestAnswer(string $message, string $locale = LocaleHelper::current()): ?array
     {
         $normalizedMessage = $this->normalize($message);
         if ($normalizedMessage === '') {
@@ -228,7 +229,7 @@ class MedicalQaService
      *
      * @return array{question:string,answer:string,category:string,source:string,confidence:float}|null
      */
-    public function generateFallbackAnswer(string $message, string $locale = 'en'): ?array
+    public function generateFallbackAnswer(string $message, string $locale = LocaleHelper::current()): ?array
     {
         $normalizedMessage = $this->normalize($message);
         if ($normalizedMessage === '') {
@@ -490,6 +491,108 @@ class MedicalQaService
     private function tokenize(string $text): array
     {
         return array_values(array_filter(explode(' ', $text), fn ($token) => mb_strlen($token) > 2));
+    }
+
+    /**
+     * Retrieve relevant database FAQs, disease info, and medicine info for RAG context.
+     */
+    public function retrieveRelevantContext(string $message, string $locale = LocaleHelper::current()): string
+    {
+        $normalizedMessage = $this->normalize($message);
+        if ($normalizedMessage === '') {
+            return '';
+        }
+
+        $contextParts = [];
+
+        // 1. Check for Medicine matches
+        $terms = $this->expandSearchTerms($message);
+        if (!empty($terms)) {
+            $matchedMedicines = \App\Models\Medicine::query()
+                ->published()
+                ->where(function ($query) use ($terms) {
+                    foreach ($terms as $term) {
+                        $query->orWhere('name', 'LIKE', "%{$term}%")
+                            ->orWhere('generic_name', 'LIKE', "%{$term}%");
+                    }
+                })
+                ->take(3)
+                ->get();
+
+            if ($matchedMedicines->isNotEmpty()) {
+                $medStrings = [];
+                foreach ($matchedMedicines as $med) {
+                    $purpose = $med->getTranslation('purpose', $locale) ?: $med->category ?: $med->generic_name;
+                    $sideEffects = $med->getTranslation('common_side_effects', $locale) ?: $med->getTranslation('serious_side_effects', $locale);
+                    $medStrings[] = "- Medicine Name: {$med->name} (Generic: {$med->generic_name})\n  Purpose: {$purpose}\n  Side Effects: {$sideEffects}";
+                }
+                $contextParts[] = "MATCHED MEDICINES:\n" . implode("\n", $medStrings);
+            }
+        }
+
+        // 2. Check for Disease matches
+        $matchedDiseases = \App\Models\Disease::query()
+            ->with('department')
+            ->get()
+            ->filter(function ($item) use ($normalizedMessage) {
+                $nameEn = $this->normalize((string) $item->name_en);
+                $nameHi = $this->normalize((string) ($item->name_hi ?? ''));
+                return ($nameEn !== '' && str_contains($normalizedMessage, $nameEn))
+                    || ($nameHi !== '' && str_contains($normalizedMessage, $nameHi));
+            })
+            ->take(3);
+
+        if ($matchedDiseases->isNotEmpty()) {
+            $disStrings = [];
+            foreach ($matchedDiseases as $dis) {
+                $deptName = $locale === 'hi'
+                    ? ($dis->department?->name_hi ?: $dis->department?->name_en)
+                    : ($dis->department?->name_en ?: $dis->department?->name_hi);
+                $disStrings[] = "- Disease Name: {$dis->name_en} / {$dis->name_hi}\n  Recommended Department: {$deptName}";
+            }
+            $contextParts[] = "MATCHED DISEASES & DEPARTMENTS:\n" . implode("\n", $disStrings);
+        }
+
+        // 3. Check FAQs / QA database matches
+        $entries = $this->buildKnowledgeEntries();
+        if ($entries->isNotEmpty()) {
+            $scored = $entries->map(function ($entry) use ($normalizedMessage) {
+                $question = $this->normalize((string) ($entry['question_en'] ?? ''));
+                $questionHi = $this->normalize((string) ($entry['question_hi'] ?? ''));
+                $keywords = collect($entry['keywords'] ?? [])->map(fn ($k) => $this->normalize((string) $k))->filter();
+
+                $score = $this->scoreMatch($normalizedMessage, $question, $questionHi, $keywords->all());
+                $entry['match_score'] = $score;
+                return $entry;
+            })
+            ->filter(fn($entry) => $entry['match_score'] >= 25)
+            ->sortByDesc('match_score')
+            ->take(3);
+
+            if ($scored->isNotEmpty()) {
+                $faqStrings = [];
+                foreach ($scored as $entry) {
+                    $q = $locale === 'hi'
+                        ? (($entry['question_hi'] ?? null) ?: ($entry['question_en'] ?? null))
+                        : (($entry['question_en'] ?? null) ?: ($entry['question_hi'] ?? null));
+                    $a = $locale === 'hi'
+                        ? (($entry['answer_hi'] ?? null) ?: ($entry['answer_en'] ?? null))
+                        : (($entry['answer_en'] ?? null) ?: ($entry['answer_hi'] ?? null));
+                    $detailed = $locale === 'hi'
+                        ? (($entry['detailed_answer_hi'] ?? null) ?: ($entry['detailed_answer_en'] ?? null))
+                        : (($entry['detailed_answer_en'] ?? null) ?: ($entry['detailed_answer_hi'] ?? null));
+
+                    $str = "- FAQ Question: {$q}\n  FAQ Answer: {$a}";
+                    if (!empty($detailed)) {
+                        $str .= "\n  Detailed Answer: {$detailed}";
+                    }
+                    $faqStrings[] = $str;
+                }
+                $contextParts[] = "MATCHED FAQ ENTRIES:\n" . implode("\n", $faqStrings);
+            }
+        }
+
+        return implode("\n\n", $contextParts);
     }
 }
 

@@ -472,140 +472,141 @@ class ChatbotController extends Controller
         }
         $searchTokens = $this->extractSearchTokens($originalMessage);
 
-        // Cache-first lookup
         $qaAnswer = null;
-        if ($originalMessage !== '') {
-            $qaAnswer = $this->medicalQaService->findBestAnswer($originalMessage, $locale);
-        }
+        $symptomMatch = false;
 
-        if ($qaAnswer) {
-            $grokDepartment = $qaAnswer['category'] ?? null;
-            $grokDepartment = is_string($grokDepartment) ? trim($grokDepartment) : $grokDepartment;
-        } else {
-            // Cache miss: query Groq AI
-            if ($apiKey) {
-                $systemPrompt = "You are Jeeva, a professional medical and healthcare assistant. " .
-                    "You must return a JSON object containing exactly these 7 keys:\n" .
-                    "1. 'question_en': A concise English translation or summary of the user's symptom/query (e.g. 'Acute knee pain when climbing stairs').\n" .
-                    "2. 'question_hi': A concise Hindi translation or summary of the user's symptom/query.\n" .
-                    "3. 'answer_en': A very short, brief response (strictly 1 to 2 sentences max) in English giving initial medical guidance. Keep it concise so the user is not overwhelmed.\n" .
-                    "4. 'answer_hi': A very short, brief response (strictly 1 to 2 sentences max) in Hindi giving initial medical guidance. Keep it concise so the user is not overwhelmed.\n" .
-                    "5. 'detailed_answer_en': A comprehensive, detailed, and informative medical explanation in English. Break it down into clear paragraphs or bullet points where helpful.\n" .
-                    "6. 'detailed_answer_hi': A comprehensive, detailed, and informative medical explanation in Hindi. Break it down into clear paragraphs or bullet points where helpful.\n" .
-                    "7. 'department': The English name of the most appropriate medical department (e.g., 'Cardiology', 'Pediatrics', 'Neurology', 'Dermatology', 'General Medicine', 'Orthopedics', 'Gynecology', 'ENT (Otolaryngology)', 'Ophthalmology', 'Urology', etc.) corresponding to their symptoms, or null/General Medicine if no specific department is relevant.\n\n" .
-                    "If the query suggests a life-threatening medical emergency (e.g. severe chest pain, difficulty breathing, sudden weakness/stroke), warn them immediately in both short and detailed answers in the selected city: {$selectedCity}.\n\n" .
-                    "Do NOT wrap the JSON response in markdown blocks like ```json. Output ONLY raw valid JSON, starting with { and ending with }.";
+        // Try Live LLM with RAG context
+        if ($apiKey && $originalMessage !== '') {
+            $systemPrompt = "You are Jeeva, a professional, warm, empathetic, and knowledgeable medical and healthcare assistant. " .
+                "Your goal is to have a natural, helpful conversation with the user and provide initial medical guidance based on their questions, symptoms, or concerns.\n\n" .
+                "You MUST return a JSON object containing exactly these 5 keys:\n" .
+                "1. 'reply': A warm, caring, and human-like response in the language of the user's query (" . ($locale === 'hi' ? 'Hindi' : 'English') . "). Answer their query directly. Avoid sounding like a machine; use friendly, compassionate phrasing. Limit the reply to 2-3 sentences. You can ask a natural follow-up question if appropriate to keep the conversation going.\n" .
+                "2. 'detailed_reply': A comprehensive, detailed, and structured explanation in " . ($locale === 'hi' ? 'Hindi' : 'English') . " (using markdown formatting like bullet points and bold text) that explains symptoms, home care, precautions, or medical descriptions. Set to null if the query is a simple greeting or general help request (not a medical topic).\n" .
+                "3. 'department': The English name of the most appropriate medical department from this list: ['Cardiology', 'Pediatrics', 'Neurology', 'Dermatology', 'General Medicine', 'Orthopedics', 'Gynecology', 'ENT (Otolaryngology)', 'Ophthalmology', 'Urology', 'Dentistry', 'Psychiatry'] that matches the symptoms described, or null if no medical department is relevant.\n" .
+                "4. 'symptom_match': A boolean (true if the user is describing medical symptoms or asking health/medical questions, false otherwise).\n" .
+                "5. 'emergency': A boolean (true if the symptoms suggest a life-threatening medical emergency like severe chest pain, extreme breathlessness, sudden speech loss, etc.).\n\n" .
+                "Do NOT wrap the JSON response in markdown blocks like ```json. Output ONLY raw valid JSON, starting with { and ending with }.";
 
-                $grokMessages = [
-                    ['role' => 'system', 'content' => $systemPrompt]
-                ];
+            $grokMessages = [
+                ['role' => 'system', 'content' => $systemPrompt]
+            ];
 
-                // Include past message history, excluding the final user message which was already pushed to $messages
-                $pastMessages = collect($messages)
-                    ->slice(0, -1)
-                    ->filter(fn($msg) => isset($msg['sender']) && isset($msg['text']) && in_array($msg['sender'], ['user', 'bot'], true))
-                    ->take(-10);
-
-                foreach ($pastMessages as $msg) {
-                    $grokMessages[] = [
-                        'role' => $msg['sender'] === 'user' ? 'user' : 'assistant',
-                        'content' => $msg['text'],
-                    ];
-                }
-
-                $grokMessages[] = [
-                    'role' => 'user',
-                    'content' => $originalMessage,
-                ];
-
-                $models = [
-                    'llama-3.1-8b-instant',
-                    'meta-llama/llama-4-scout-17b-16e-instruct'
-                ];
-
-                foreach ($models as $model) {
-                    try {
-                        $response = Http::withoutVerifying()
-                            ->withToken($apiKey)
-                            ->timeout(12)
-                            ->post('https://api.groq.com/openai/v1/chat/completions', [
-                                'messages' => $grokMessages,
-                                'model' => $model,
-                                'temperature' => 1,
-                                'max_completion_tokens' => 1024,
-                                'top_p' => 1,
-                                'stream' => false,
-                                'response_format' => ['type' => 'json_object'],
-                                'stop' => null,
-                            ]);
-
-                        if ($response->successful()) {
-                            $jsonContent = $response->json('choices.0.message.content');
-                            $decoded = json_decode($jsonContent, true);
-                            if (is_array($decoded) && isset($decoded['answer_en'], $decoded['answer_hi'])) {
-                                $cachedQuestion = CachedMedicalQuestion::updateOrCreate(
-                                    ['question_en' => trim($decoded['question_en'] ?? $originalMessage)],
-                                    [
-                                        'question_hi' => trim($decoded['question_hi'] ?? $originalMessage),
-                                        'answer_en' => trim($decoded['answer_en']),
-                                        'answer_hi' => trim($decoded['answer_hi']),
-                                        'detailed_answer_en' => isset($decoded['detailed_answer_en']) ? trim($decoded['detailed_answer_en']) : null,
-                                        'detailed_answer_hi' => isset($decoded['detailed_answer_hi']) ? trim($decoded['detailed_answer_hi']) : null,
-                                        'category' => isset($decoded['department']) ? trim($decoded['department']) : null,
-                                    ]
-                                );
-
-                                $qaAnswer = $this->medicalQaService->findBestAnswer($originalMessage, $locale);
-                                if ($qaAnswer) {
-                                    $grokDepartment = $qaAnswer['category'] ?? null;
-                                    $grokDepartment = is_string($grokDepartment) ? trim($grokDepartment) : $grokDepartment;
-                                } else {
-                                    $qaAnswer = [
-                                        'question' => $locale === 'hi' ? $cachedQuestion->question_hi : $cachedQuestion->question_en,
-                                        'answer' => $locale === 'hi' ? $cachedQuestion->answer_hi : $cachedQuestion->answer_en,
-                                        'category' => $cachedQuestion->category ?? 'General Medical',
-                                        'source' => 'grok_ai_cached',
-                                        'source_id' => $cachedQuestion->id,
-                                        'source_table' => $cachedQuestion->getTable(),
-                                        'confidence' => 100.0,
-                                        'detailed_answer_en' => $cachedQuestion->detailed_answer_en,
-                                        'detailed_answer_hi' => $cachedQuestion->detailed_answer_hi,
-                                        'detailed_answer' => $locale === 'hi'
-                                            ? ($cachedQuestion->detailed_answer_hi ?: $cachedQuestion->detailed_answer_en)
-                                            : ($cachedQuestion->detailed_answer_en ?: $cachedQuestion->detailed_answer_hi),
-                                    ];
-                                    $grokDepartment = $qaAnswer['category'] ?? null;
-                                    $grokDepartment = is_string($grokDepartment) ? trim($grokDepartment) : $grokDepartment;
-                                }
-                                break;
-                            } else {
-                                logger()->warning("Grok response from model {$model} was not in expected JSON format: " . $jsonContent);
-                            }
-                        } else {
-                            logger()->error("Grok API Error with model {$model}: Code " . $response->status() . ' - ' . $response->body());
-                        }
-                    } catch (Exception $e) {
-                        logger()->error("Grok API Exception with model {$model}: " . $e->getMessage());
-                    }
-                }
+            // Retrieve database RAG context
+            $context = $this->medicalQaService->retrieveRelevantContext($originalMessage, $locale);
+            if ($context !== '') {
+                $grokMessages[0]['content'] .= "\n\n---\nRETRIEVED KNOWLEDGE BASE CONTEXT (Use this as reference if relevant to the query):\n" . $context . "\n---";
             }
 
-            if (!$qaAnswer) {
-                $qaAnswer = $this->medicalQaService->generateFallbackAnswer($originalMessage, $locale);
-                if (!$qaAnswer) {
-                    $this->storeFailedQuery(
-                        sessionToken: $sessionToken,
-                        city: $selectedCity,
-                        locale: $locale,
-                        failureType: 'no_match_and_no_ai_answer',
-                        userMessage: $originalMessage,
-                        errorMessage: 'No DB match and no AI/fallback answer generated.',
-                        meta: [
-                            'load_type' => $loadType,
-                            'search_tokens' => $searchTokens,
-                        ]
-                    );
+            // Include past message history, excluding the final user message which was already pushed to $messages
+            $pastMessages = collect($messages)
+                ->slice(0, -1)
+                ->filter(fn($msg) => isset($msg['sender']) && isset($msg['text']) && in_array($msg['sender'], ['user', 'bot'], true))
+                ->take(-10);
+
+            foreach ($pastMessages as $msg) {
+                $grokMessages[] = [
+                    'role' => $msg['sender'] === 'user' ? 'user' : 'assistant',
+                    'content' => $msg['text'],
+                ];
+            }
+
+            $grokMessages[] = [
+                'role' => 'user',
+                'content' => $originalMessage,
+            ];
+
+            $models = [
+                'llama-3.3-70b-versatile',
+                'llama-3.1-8b-instant'
+            ];
+
+            foreach ($models as $model) {
+                try {
+                    $response = Http::withoutVerifying()
+                        ->withToken($apiKey)
+                        ->timeout(12)
+                        ->post('https://api.groq.com/openai/v1/chat/completions', [
+                            'messages' => $grokMessages,
+                            'model' => $model,
+                            'temperature' => 0.7,
+                            'max_completion_tokens' => 1024,
+                            'top_p' => 1,
+                            'stream' => false,
+                            'response_format' => ['type' => 'json_object'],
+                            'stop' => null,
+                        ]);
+
+                    if ($response->successful()) {
+                        $jsonContent = $response->json('choices.0.message.content');
+                        $decoded = json_decode($jsonContent, true);
+                        if (is_array($decoded) && isset($decoded['reply'])) {
+                            // Optionally cache it to DB for admin visibility or logs
+                            CachedMedicalQuestion::updateOrCreate(
+                                ['question_en' => trim($locale === 'en' ? $originalMessage : ($decoded['question_en'] ?? $originalMessage))],
+                                [
+                                    'question_hi' => trim($locale === 'hi' ? $originalMessage : ($decoded['question_hi'] ?? $originalMessage)),
+                                    'answer_en' => $locale === 'en' ? trim($decoded['reply']) : '',
+                                    'answer_hi' => $locale === 'hi' ? trim($decoded['reply']) : '',
+                                    'detailed_answer_en' => $locale === 'en' ? ($decoded['detailed_reply'] ?? null) : null,
+                                    'detailed_answer_hi' => $locale === 'hi' ? ($decoded['detailed_reply'] ?? null) : null,
+                                    'category' => $decoded['department'] ?? 'General Medical',
+                                ]
+                            );
+
+                            $qaAnswer = [
+                                'question' => $originalMessage,
+                                'answer' => $decoded['reply'],
+                                'category' => $decoded['department'] ?? 'General Medical',
+                                'source' => 'jeeva_ai',
+                                'source_id' => null,
+                                'source_table' => null,
+                                'confidence' => 100.0,
+                                'detailed_answer_en' => $locale === 'en' ? ($decoded['detailed_reply'] ?? null) : null,
+                                'detailed_answer_hi' => $locale === 'hi' ? ($decoded['detailed_reply'] ?? null) : null,
+                                'detailed_answer' => $decoded['detailed_reply'] ?? null,
+                            ];
+
+                            $botReply = $decoded['reply'];
+                            $symptomMatch = (bool) ($decoded['symptom_match'] ?? false);
+                            $grokDepartment = $decoded['department'] ?? null;
+                            $isEmergency = (bool) ($decoded['emergency'] ?? false);
+
+                            if ($isEmergency) {
+                                $qaAnswer['source'] = 'emergency_rule';
+                                $botReply = $locale === 'hi'
+                                    ? 'यह एक आपातकालीन स्थिति हो सकती है। यदि आपको छाती में दर्द, सांस लेने में तकलीफ, या बेहोशी महसूस हो रही है, तो तुरंत आपातकालीन सेवाओं को कॉल करें और नजदीकी आपातकालीन कक्ष में जाएं।'
+                                    : 'This may be an emergency. If you have chest pain, shortness of breath, or fainting, call emergency services immediately and go to the nearest emergency room.';
+                                $qaAnswer['answer'] = $botReply;
+                            }
+                            break;
+                        }
+                    }
+                } catch (Exception $e) {
+                    logger()->error("Groq call exception with model {$model}: " . $e->getMessage());
                 }
+            }
+        }
+
+        // Fallback to static DB match if Groq call failed or key is missing
+        if (!$qaAnswer && $originalMessage !== '') {
+            $qaAnswer = $this->medicalQaService->findBestAnswer($originalMessage, $locale);
+            if ($qaAnswer) {
+                $botReply = $qaAnswer['answer'];
+                $grokDepartment = $qaAnswer['category'] ?? null;
+                $qaSource = (string) ($qaAnswer['source'] ?? '');
+                $symptomMatch = (bool) $qaAnswer && (
+                    in_array($qaSource, ['cached_medical_questions', 'medical_qa_config', 'grok_ai', 'grok_ai_cached', 'general_questions', 'faq'], true)
+                    || str_ends_with($qaSource, '_like')
+                );
+            }
+        }
+
+        if (!$qaAnswer) {
+            $qaAnswer = $this->medicalQaService->generateFallbackAnswer($originalMessage, $locale);
+            if ($qaAnswer) {
+                $botReply = $qaAnswer['answer'];
+                $grokDepartment = $qaAnswer['category'] ?? null;
+                $symptomMatch = true;
             }
         }
 
@@ -615,8 +616,10 @@ class ChatbotController extends Controller
         $departmentInfo = null;
 
         $doctors = collect();
+        $hospitals = collect();
+        $articles = collect();
 
-        // Match department using classification from Grok AI first (or cache hit)
+        // Match department using classification from Grok AI (or fallback match)
         if (is_string($grokDepartment) && $grokDepartment !== '') {
             $cleanedGrokDept = trim($grokDepartment);
             $matchedDept = Department::where('is_active', true)
@@ -725,53 +728,46 @@ class ChatbotController extends Controller
             if ($matchedDiseaseNameEn) {
                 $disName = $locale === 'hi' ? ($matchedDiseaseNameHi ?: $matchedDiseaseNameEn) : $matchedDiseaseNameEn;
                 $departmentInfo = $locale === 'hi'
-                    ? "For '{$disName}', '{$deptName}' department is recommended."
+                    ? "आपकी खोज '{$disName}' के लिए '{$deptName}' विभाग अनुशंसित है।"
                     : "For '{$disName}', '{$deptName}' department is recommended.";
             } else {
                 $departmentInfo = $locale === 'hi'
-                    ? "Based on your query, '{$deptName}' department is recommended."
+                    ? "आपकी खोज के आधार पर '{$deptName}' विभाग अनुशंसित है।"
                     : "Based on your query, '{$deptName}' department is recommended.";
             }
         }
-
-        // Empty collections to load lazily on request
-        $doctors = collect();
-        $hospitals = collect();
-        $articles = collect();
 
         $deptForFilter = $matchedDeptId ?: 'All';
         $seeAllDoctorsUrl = route('doctors.index');
         $seeAllHospitalsUrl = route('hospitals.index');
         $seeAllArticlesUrl = route('articles.index', ['category' => $grokDepartment ?: 'All']);
-        $qaSource = (string) ($qaAnswer['source'] ?? '');
-        $symptomMatch = (bool) $qaAnswer && (
-            in_array($qaSource, ['cached_medical_questions', 'medical_qa_config', 'grok_ai', 'grok_ai_cached', 'general_questions', 'faq'], true)
-            || str_ends_with($qaSource, '_like')
-        );
 
-        if ($qaAnswer && ($qaAnswer['source'] ?? '') === 'emergency_rule') {
-            $botReply = $locale === 'hi'
-                ? 'This may be an emergency. If you have chest pain, shortness of breath, fainting, or rapidly worsening symptoms, call emergency services immediately and go to the nearest emergency room.'
-                : 'This may be an emergency. If you have chest pain, shortness of breath, fainting, or severe worsening symptoms, call emergency services immediately and go to the nearest emergency room.';
-        } elseif ($qaAnswer) {
-            if ($isDetailRequest) {
-                $detailedAnswer = $this->resolveDetailedAnswerFromSource($qaAnswer, $locale);
-                $botReply = (string) ($detailedAnswer ?: $qaAnswer['answer']);
+        if (!$botReply) {
+            if ($qaAnswer) {
+                if ($isDetailRequest) {
+                    $detailedAnswer = $locale === 'hi'
+                        ? ($qaAnswer['detailed_answer_hi'] ?? $qaAnswer['detailed_answer_en'] ?? $qaAnswer['detailed_answer'] ?? null)
+                        : ($qaAnswer['detailed_answer_en'] ?? $qaAnswer['detailed_answer_hi'] ?? $qaAnswer['detailed_answer'] ?? null);
+                    $botReply = (string) ($detailedAnswer ?: $qaAnswer['answer']);
+                } else {
+                    $botReply = (string) $qaAnswer['answer'];
+                }
+            } elseif ($departmentInfo) {
+                $botReply = $locale === 'hi'
+                    ? 'मैंने आपकी खोज का विश्लेषण किया है। आपके शहर में संबंधित डॉक्टर और अस्पताल नीचे दिए गए हैं:'
+                    : 'I analyzed your query. Here are relevant doctors and hospitals in your city:';
             } else {
-                $botReply = (string) $qaAnswer['answer'];
+                $botReply = $locale === 'hi'
+                    ? 'मुझे कोई सटीक परिणाम नहीं मिला, लेकिन आपके शहर में कुछ उपयोगी विकल्प नीचे दिए गए हैं।'
+                    : 'I could not find an exact match, but here are useful options in your city.';
             }
-        } elseif ($departmentInfo) {
-            $botReply = $locale === 'hi'
-                ? 'I analyzed your query. Here are relevant doctors and hospitals in your city:'
-                : 'I analyzed your query. Here are relevant doctors and hospitals in your city:';
-        } else {
-            $botReply = $locale === 'hi'
-                ? 'I could not find an exact match, but here are useful options in your city.'
-                : 'I could not find an exact match, but here are useful options in your city.';
         }
+
         $suggestDetails = false;
         if ($qaAnswer && !$isDetailRequest && ($qaAnswer['source'] ?? '') !== 'emergency_rule') {
-            $detailedAnswer = $this->resolveDetailedAnswerFromSource($qaAnswer, $locale);
+            $detailedAnswer = $locale === 'hi'
+                ? ($qaAnswer['detailed_answer_hi'] ?? $qaAnswer['detailed_answer_en'] ?? $qaAnswer['detailed_answer'] ?? null)
+                : ($qaAnswer['detailed_answer_en'] ?? $qaAnswer['detailed_answer_hi'] ?? $qaAnswer['detailed_answer'] ?? null);
             if (!empty($detailedAnswer)) {
                 $suggestDetails = true;
             }

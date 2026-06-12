@@ -50,7 +50,7 @@
     $currentUrl = url()->current();
     $hasQuery = request()->getQueryString() !== null;
     $locale = session('locale', app()->getLocale());
-    $isHindi = $locale === 'hi';
+    $isHindi = \App\Helpers\LocaleHelper::current() === 'hi';
     $activeCity = config('healthcare.active_city', 'Jaipur');
     $activeCityHi = config('healthcare.active_city_hi', 'जयपुर');
 

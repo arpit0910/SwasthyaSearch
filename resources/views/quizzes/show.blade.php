@@ -12,7 +12,7 @@
 
     $questionCount = count($quiz->questions_json ?? []);
 
-    $isHindi = $locale === 'hi';
+    $isHindi = \App\Helpers\LocaleHelper::current() === 'hi';
 
 @endphp
 

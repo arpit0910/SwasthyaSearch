@@ -1282,7 +1282,7 @@ class BangaloreScraperService extends BaseScraperService
             ],
             [
                 'name_en' => 'Narayana Health City',
-                'name_hi' => 'नरयन हॆअल्�¤ सिटी अस्पताल (बैंगलोर)',
+                'name_hi' => 'नरयन हेअल्�¤ सिटी अस्पताल (बैंगलोर)',
                 'type' => 'Clinic',
                 'address' => '258/A, Bommasandra Industrial Area, Hosur Road, Bangalore, Karnataka - 560099',
                 'address_line1' => '258/A, Bommasandra Industrial Area',
@@ -1322,7 +1322,7 @@ class BangaloreScraperService extends BaseScraperService
             ],
             [
                 'name_en' => 'Fortis Hospital',
-                'name_hi' => 'फ़ॊर्तिस अस्पताल (बैंगलोर)',
+                'name_hi' => 'फ़ोर्तिस अस्पताल (बैंगलोर)',
                 'type' => 'Clinic',
                 'address' => '154/9, Bannerghatta Road, Opposite IIM-B, Bangalore, Karnataka - 560076',
                 'address_line1' => '154/9, Bannerghatta Road',
@@ -1382,7 +1382,7 @@ class BangaloreScraperService extends BaseScraperService
             ],
             [
                 'name_en' => 'Milann Fertility Centre',
-                'name_hi' => 'मिलंन फ़ॆर्तिलित्य चॆंत्रॆ (बैंगलोर)',
+                'name_hi' => 'मिलंन फ़ेर्तिलित्य चेंत्रे (बैंगलोर)',
                 'type' => 'Clinic',
                 'address' => '7, East Park Road, Kumara Park East, Bangalore, Karnataka - 560001',
                 'address_line1' => '7, East Park Road',
@@ -1402,7 +1402,7 @@ class BangaloreScraperService extends BaseScraperService
             ],
             [
                 'name_en' => 'Apollo Hospitals',
-                'name_hi' => 'अपॊल्लॊ अस्पतालस (बैंगलोर)',
+                'name_hi' => 'अपोल्लो अस्पतालस (बैंगलोर)',
                 'type' => 'Clinic',
                 'address' => '154/11, Bannerghatta Road, Near IIM-B, Bangalore, Karnataka - 560076',
                 'address_line1' => '154/11, Bannerghatta Road',
@@ -1422,7 +1422,7 @@ class BangaloreScraperService extends BaseScraperService
             ],
             [
                 'name_en' => 'Nethradhama Super Speciality Eye Hospital',
-                'name_hi' => 'नॆथ्रधम सुपर स्पेशलिटी आई अस्पताल (बैंगलोर)',
+                'name_hi' => 'नेथ्रधम सुपर स्पेशलिटी आई अस्पताल (बैंगलोर)',
                 'type' => 'Clinic',
                 'address' => '256/14, Kanakapura Road, Jayanagar 7th Block, Bangalore, Karnataka - 560082',
                 'address_line1' => '256/14, Kanakapura Road',
@@ -1442,7 +1442,7 @@ class BangaloreScraperService extends BaseScraperService
             ],
             [
                 'name_en' => 'HCG Cancer Centre',
-                'name_hi' => 'ह्च्ग चन्चॆर चॆंत्रॆ (बैंगलोर)',
+                'name_hi' => 'ह्च्ग चन्चेर चेंत्रे (बैंगलोर)',
                 'type' => 'Clinic',
                 'address' => '8, P Kalinga Rao Road, Sampangiram Nagar, Bangalore, Karnataka - 560027',
                 'address_line1' => '8, P Kalinga Rao Road',
@@ -1462,7 +1462,7 @@ class BangaloreScraperService extends BaseScraperService
             ],
             [
                 'name_en' => 'Cloudnine Hospital',
-                'name_hi' => 'च्लॊउद्निनॆ अस्पताल (बैंगलोर)',
+                'name_hi' => 'च्लोउद्निने अस्पताल (बैंगलोर)',
                 'type' => 'Private Hospital',
                 'address' => 'Bangalore, Karnataka',
                 'address_line1' => 'Main Medical Avenue',
@@ -1482,7 +1482,7 @@ class BangaloreScraperService extends BaseScraperService
             ],
             [
                 'name_en' => 'Aster CMI Hospital',
-                'name_hi' => 'अस्तॆर च्मि अस्पताल (बैंगलोर)',
+                'name_hi' => 'अस्तेर च्मि अस्पताल (बैंगलोर)',
                 'type' => 'Clinic',
                 'address' => '43/2, New Airport Road, Hebbal, Bangalore, Karnataka - 560092',
                 'address_line1' => '43/2, New Airport Road',
@@ -1502,7 +1502,7 @@ class BangaloreScraperService extends BaseScraperService
             ],
             [
                 'name_en' => 'Manipal Hospital Varthur Road (formerly Columbia Asia Hospital)',
-                'name_hi' => 'मनिपल अस्पताल वर्थुर रॊअद (फ़ॊर्मॆर्ल्य चॊलुंबिअ असिअ अस्पताल) (बैंगलोर)',
+                'name_hi' => 'मनिपल अस्पताल वर्थुर रोअद (फ़ोर्मेर्ल्य चोलुंबिअ असिअ अस्पताल) (बैंगलोर)',
                 'type' => 'Private Hospital',
                 'address' => 'Bangalore, Karnataka',
                 'address_line1' => 'Main Medical Avenue',
@@ -1542,7 +1542,7 @@ class BangaloreScraperService extends BaseScraperService
             ],
             [
                 'name_en' => 'Koshys Hospital',
-                'name_hi' => 'कॊश्य्स अस्पताल (बैंगलोर)',
+                'name_hi' => 'कोश्य्स अस्पताल (बैंगलोर)',
                 'type' => 'Private Hospital',
                 'address' => 'Bangalore, Karnataka',
                 'address_line1' => 'Main Medical Avenue',
@@ -1562,7 +1562,7 @@ class BangaloreScraperService extends BaseScraperService
             ],
             [
                 'name_en' => 'Motherhood Hospital',
-                'name_hi' => 'मॊथॆर्हॊऒद अस्पताल (बैंगलोर)',
+                'name_hi' => 'मोथेर्होऒद अस्पताल (बैंगलोर)',
                 'type' => 'Private Hospital',
                 'address' => 'Bangalore, Karnataka',
                 'address_line1' => 'Main Medical Avenue',
@@ -1602,7 +1602,7 @@ class BangaloreScraperService extends BaseScraperService
             ],
             [
                 'name_en' => 'Apollo Cradle & Children's Hospital',
-                'name_hi' => 'अपॊल्लॊ च्रद्लॆ & छिल्द्रॆन्'स अस्पताल (बैंगलोर)',
+                'name_hi' => 'अपोल्लो च्रद्ले & छिल्द्रेन्'स अस्पताल (बैंगलोर)',
                 'type' => 'Private Hospital',
                 'address' => 'Bangalore, Karnataka',
                 'address_line1' => 'Main Medical Avenue',
@@ -1622,7 +1622,7 @@ class BangaloreScraperService extends BaseScraperService
             ],
             [
                 'name_en' => 'Cloudnine Hospital - Old Airport Road',
-                'name_hi' => 'च्लॊउद्निनॆ अस्पताल - ऒल्द ऐर्पॊर्त रॊअद (बैंगलोर)',
+                'name_hi' => 'च्लोउद्निने अस्पताल - ऒल्द ऐर्पोर्त रोअद (बैंगलोर)',
                 'type' => 'Private Hospital',
                 'address' => 'Bangalore, Karnataka',
                 'address_line1' => 'Main Medical Avenue',
@@ -1642,7 +1642,7 @@ class BangaloreScraperService extends BaseScraperService
             ],
             [
                 'name_en' => 'Gleneagles Hospitals',
-                'name_hi' => 'ग्लॆनॆअग्लॆस अस्पतालस (बैंगलोर)',
+                'name_hi' => 'ग्लेनेअग्लेस अस्पतालस (बैंगलोर)',
                 'type' => 'Private Hospital',
                 'address' => 'Bangalore, Karnataka',
                 'address_line1' => 'Main Medical Avenue',
@@ -1662,7 +1662,7 @@ class BangaloreScraperService extends BaseScraperService
             ],
             [
                 'name_en' => 'Apollo Hospital',
-                'name_hi' => 'अपॊल्लॊ अस्पताल (बैंगलोर)',
+                'name_hi' => 'अपोल्लो अस्पताल (बैंगलोर)',
                 'type' => 'Private Hospital',
                 'address' => 'Bangalore, Karnataka',
                 'address_line1' => 'Main Medical Avenue',
@@ -1702,7 +1702,7 @@ class BangaloreScraperService extends BaseScraperService
             ],
             [
                 'name_en' => 'Manipal Hospitals Old Airport Road',
-                'name_hi' => 'मनिपल अस्पतालस ऒल्द ऐर्पॊर्त रॊअद (बैंगलोर)',
+                'name_hi' => 'मनिपल अस्पतालस ऒल्द ऐर्पोर्त रोअद (बैंगलोर)',
                 'type' => 'Private Hospital',
                 'address' => 'Bangalore, Karnataka',
                 'address_line1' => 'Main Medical Avenue',
@@ -1722,7 +1722,7 @@ class BangaloreScraperService extends BaseScraperService
             ],
             [
                 'name_en' => 'Manipal Hospital, Millers Road ( Vikram Hospitals )',
-                'name_hi' => 'मनिपल अस्पताल, मिल्लॆर्स रॊअद ( विक्रम अस्पतालस ) (बैंगलोर)',
+                'name_hi' => 'मनिपल अस्पताल, मिल्लेर्स रोअद ( विक्रम अस्पतालस ) (बैंगलोर)',
                 'type' => 'Private Hospital',
                 'address' => 'Bangalore, Karnataka',
                 'address_line1' => 'Main Medical Avenue',
@@ -1742,7 +1742,7 @@ class BangaloreScraperService extends BaseScraperService
             ],
             [
                 'name_en' => 'Cloudnine Hospital - Whitefield',
-                'name_hi' => 'च्लॊउद्निनॆ अस्पताल - व्हितॆफ़िऎल्द (बैंगलोर)',
+                'name_hi' => 'च्लोउद्निने अस्पताल - व्हितेफ़िऎल्द (बैंगलोर)',
                 'type' => 'Private Hospital',
                 'address' => 'Bangalore, Karnataka',
                 'address_line1' => 'Main Medical Avenue',
@@ -1782,7 +1782,7 @@ class BangaloreScraperService extends BaseScraperService
             ],
             [
                 'name_en' => 'Mallige Medical Centre',
-                'name_hi' => 'मल्लिगॆ मेडिकल सेंटर (बैंगलोर)',
+                'name_hi' => 'मल्लिगे मेडिकल सेंटर (बैंगलोर)',
                 'type' => 'Private Hospital',
                 'address' => 'Bangalore, Karnataka',
                 'address_line1' => 'Main Medical Avenue',
@@ -1822,7 +1822,7 @@ class BangaloreScraperService extends BaseScraperService
             ],
             [
                 'name_en' => 'Manipal Hospital Malleshwaram',
-                'name_hi' => 'मनिपल अस्पताल मल्लॆश्वरम (बैंगलोर)',
+                'name_hi' => 'मनिपल अस्पताल मल्लेश्वरम (बैंगलोर)',
                 'type' => 'Private Hospital',
                 'address' => 'Bangalore, Karnataka',
                 'address_line1' => 'Main Medical Avenue',
@@ -1842,7 +1842,7 @@ class BangaloreScraperService extends BaseScraperService
             ],
             [
                 'name_en' => 'Cloudnine Hospital - Jayanagar',
-                'name_hi' => 'च्लॊउद्निनॆ अस्पताल - जयनगर (बैंगलोर)',
+                'name_hi' => 'च्लोउद्निने अस्पताल - जयनगर (बैंगलोर)',
                 'type' => 'Private Hospital',
                 'address' => 'Bangalore, Karnataka',
                 'address_line1' => 'Main Medical Avenue',
@@ -1902,7 +1902,7 @@ class BangaloreScraperService extends BaseScraperService
             ],
             [
                 'name_en' => 'Smiles Institute of Gastroenterology',
-                'name_hi' => 'स्मिलॆस संस्थान ऒफ़ गस्त्रॊऎंतॆरॊलॊग्य (बैंगलोर)',
+                'name_hi' => 'स्मिलेस संस्थान ऒफ़ गस्त्रोऎंतेरोलोग्य (बैंगलोर)',
                 'type' => 'Private Hospital',
                 'address' => 'Bangalore, Karnataka',
                 'address_line1' => 'Main Medical Avenue',
@@ -1922,7 +1922,7 @@ class BangaloreScraperService extends BaseScraperService
             ],
             [
                 'name_en' => 'Cloudnine Hospital - HRBR',
-                'name_hi' => 'च्लॊउद्निनॆ अस्पताल - ह्र्ब्र (बैंगलोर)',
+                'name_hi' => 'च्लोउद्निने अस्पताल - ह्र्ब्र (बैंगलोर)',
                 'type' => 'Private Hospital',
                 'address' => 'Bangalore, Karnataka',
                 'address_line1' => 'Main Medical Avenue',
@@ -1942,7 +1942,7 @@ class BangaloreScraperService extends BaseScraperService
             ],
             [
                 'name_en' => 'Cytecare Hospitals',
-                'name_hi' => 'च्य्तॆचरॆ अस्पतालस (बैंगलोर)',
+                'name_hi' => 'च्य्तेचरे अस्पतालस (बैंगलोर)',
                 'type' => 'Private Hospital',
                 'address' => 'Bangalore, Karnataka',
                 'address_line1' => 'Main Medical Avenue',
@@ -1962,7 +1962,7 @@ class BangaloreScraperService extends BaseScraperService
             ],
             [
                 'name_en' => 'Cloudnine Fertility - IVF Centre',
-                'name_hi' => 'च्लॊउद्निनॆ फ़ॆर्तिलित्य - इव्फ़ चॆंत्रॆ (बैंगलोर)',
+                'name_hi' => 'च्लोउद्निने फ़ेर्तिलित्य - इव्फ़ चेंत्रे (बैंगलोर)',
                 'type' => 'Private Hospital',
                 'address' => 'Bangalore, Karnataka',
                 'address_line1' => 'Main Medical Avenue',
@@ -1982,7 +1982,7 @@ class BangaloreScraperService extends BaseScraperService
             ],
             [
                 'name_en' => 'Manipal Hospital Whitefield',
-                'name_hi' => 'मनिपल अस्पताल व्हितॆफ़िऎल्द (बैंगलोर)',
+                'name_hi' => 'मनिपल अस्पताल व्हितेफ़िऎल्द (बैंगलोर)',
                 'type' => 'Private Hospital',
                 'address' => 'Bangalore, Karnataka',
                 'address_line1' => 'Main Medical Avenue',
@@ -2022,7 +2022,7 @@ class BangaloreScraperService extends BaseScraperService
             ],
             [
                 'name_en' => 'Shree  Dhanvantari Ayurveda Hospital',
-                'name_hi' => 'श्रॆऎ  धंवंतरि अयुर्वॆद अस्पताल (बैंगलोर)',
+                'name_hi' => 'श्रेऎ  धंवंतरि अयुर्वेद अस्पताल (बैंगलोर)',
                 'type' => 'Private Hospital',
                 'address' => 'Bangalore, Karnataka',
                 'address_line1' => 'Main Medical Avenue',
@@ -2042,7 +2042,7 @@ class BangaloreScraperService extends BaseScraperService
             ],
             [
                 'name_en' => 'Keva Ayurveda Healthcare Pvt Ltd',
-                'name_hi' => 'कॆव अयुर्वॆद हेल्थकेयर प्व्त ल्त्द (बैंगलोर)',
+                'name_hi' => 'केव अयुर्वेद हेल्थकेयर प्व्त ल्त्द (बैंगलोर)',
                 'type' => 'Private Hospital',
                 'address' => 'Bangalore, Karnataka',
                 'address_line1' => 'Main Medical Avenue',
@@ -2062,7 +2062,7 @@ class BangaloreScraperService extends BaseScraperService
             ],
             [
                 'name_en' => 'Phoenix Hospital',
-                'name_hi' => 'फॊऎनिक्स अस्पताल (बैंगलोर)',
+                'name_hi' => 'फोऎनिक्स अस्पताल (बैंगलोर)',
                 'type' => 'Private Hospital',
                 'address' => 'Bangalore, Karnataka',
                 'address_line1' => 'Main Medical Avenue',
@@ -2082,7 +2082,7 @@ class BangaloreScraperService extends BaseScraperService
             ],
             [
                 'name_en' => 'Cloudnine Fertility - IVF Centre, Malleshwaram',
-                'name_hi' => 'च्लॊउद्निनॆ फ़ॆर्तिलित्य - इव्फ़ चॆंत्रॆ, मल्लॆश्वरम (बैंगलोर)',
+                'name_hi' => 'च्लोउद्निने फ़ेर्तिलित्य - इव्फ़ चेंत्रे, मल्लेश्वरम (बैंगलोर)',
                 'type' => 'Private Hospital',
                 'address' => 'Bangalore, Karnataka',
                 'address_line1' => 'Main Medical Avenue',
@@ -2142,7 +2142,7 @@ class BangaloreScraperService extends BaseScraperService
             ],
             [
                 'name_en' => 'Anjani Women\'s Day Care Hospital',
-                'name_hi' => 'अन्जनि वॊमॆन्स दय चरॆ अस्पताल (बैंगलोर)',
+                'name_hi' => 'अन्जनि वोमेन्स दय चरे अस्पताल (बैंगलोर)',
                 'type' => 'Private Hospital',
                 'address' => 'Bangalore, Karnataka',
                 'address_line1' => 'Main Medical Avenue',
@@ -2162,7 +2162,7 @@ class BangaloreScraperService extends BaseScraperService
             ],
             [
                 'name_en' => 'Manipal Fertility - IVF Centre, HAL Old Airport Road',
-                'name_hi' => 'मनिपल फ़ॆर्तिलित्य - इव्फ़ चॆंत्रॆ, हल ऒल्द ऐर्पॊर्त रॊअद (बैंगलोर)',
+                'name_hi' => 'मनिपल फ़ेर्तिलित्य - इव्फ़ चेंत्रे, हल ऒल्द ऐर्पोर्त रोअद (बैंगलोर)',
                 'type' => 'Private Hospital',
                 'address' => 'Bangalore, Karnataka',
                 'address_line1' => 'Main Medical Avenue',
@@ -2222,7 +2222,7 @@ class BangaloreScraperService extends BaseScraperService
             ],
             [
                 'name_en' => 'Ankur Hospital (Manipal Fertility)',
-                'name_hi' => 'अन्कुर अस्पताल (मनिपल फ़ॆर्तिलित्य्) (बैंगलोर)',
+                'name_hi' => 'अन्कुर अस्पताल (मनिपल फ़ेर्तिलित्य्) (बैंगलोर)',
                 'type' => 'Private Hospital',
                 'address' => 'Bangalore, Karnataka',
                 'address_line1' => 'Main Medical Avenue',
@@ -2242,7 +2242,7 @@ class BangaloreScraperService extends BaseScraperService
             ],
             [
                 'name_en' => 'Tatkshana Ayurveda Hospital',
-                'name_hi' => 'तत्क्शन अयुर्वॆद अस्पताल (बैंगलोर)',
+                'name_hi' => 'तत्क्शन अयुर्वेद अस्पताल (बैंगलोर)',
                 'type' => 'Private Hospital',
                 'address' => 'Bangalore, Karnataka',
                 'address_line1' => 'Main Medical Avenue',
@@ -2262,7 +2262,7 @@ class BangaloreScraperService extends BaseScraperService
             ],
             [
                 'name_en' => 'Kurias Earth Ayurveda Multispeciality Hospital',
-                'name_hi' => 'कुरिअस ऎअर्�¤ अयुर्वॆद मल्टीस्पेशलिटी अस्पताल अस्पताल (बैंगलोर)',
+                'name_hi' => 'कुरिअस ऎअर्�¤ अयुर्वेद मल्टीस्पेशलिटी अस्पताल अस्पताल (बैंगलोर)',
                 'type' => 'Private Hospital',
                 'address' => 'Bangalore, Karnataka',
                 'address_line1' => 'Main Medical Avenue',
@@ -2302,7 +2302,7 @@ class BangaloreScraperService extends BaseScraperService
             ],
             [
                 'name_en' => 'Pranavam Ayurvedic Treatment Centre',
-                'name_hi' => 'प्रनवम अयुर्वॆदिच त्रॆअत्मॆंत चॆंत्रॆ (बैंगलोर)',
+                'name_hi' => 'प्रनवम अयुर्वेदिच त्रेअत्मेंत चेंत्रे (बैंगलोर)',
                 'type' => 'Private Hospital',
                 'address' => 'Bangalore, Karnataka',
                 'address_line1' => 'Main Medical Avenue',
@@ -2342,7 +2342,7 @@ class BangaloreScraperService extends BaseScraperService
             ],
             [
                 'name_en' => 'Arth Ayurveda Hospitals',
-                'name_hi' => 'अर्�¤ अयुर्वॆद अस्पतालस अस्पताल (बैंगलोर)',
+                'name_hi' => 'अर्�¤ अयुर्वेद अस्पतालस अस्पताल (बैंगलोर)',
                 'type' => 'Private Hospital',
                 'address' => 'Bangalore, Karnataka',
                 'address_line1' => 'Main Medical Avenue',
@@ -2362,7 +2362,7 @@ class BangaloreScraperService extends BaseScraperService
             ],
             [
                 'name_en' => 'Manipal Fertility - IVF Centre, Whitefield',
-                'name_hi' => 'मनिपल फ़ॆर्तिलित्य - इव्फ़ चॆंत्रॆ, व्हितॆफ़िऎल्द (बैंगलोर)',
+                'name_hi' => 'मनिपल फ़ेर्तिलित्य - इव्फ़ चेंत्रे, व्हितेफ़िऎल्द (बैंगलोर)',
                 'type' => 'Private Hospital',
                 'address' => 'Bangalore, Karnataka',
                 'address_line1' => 'Main Medical Avenue',
@@ -2382,7 +2382,7 @@ class BangaloreScraperService extends BaseScraperService
             ],
             [
                 'name_en' => 'IIGU Hospital-Indus Institute of Gastro Uro',
-                'name_hi' => 'इइगु अस्पताल-इंदुस संस्थान ऒफ़ गस्त्रॊ उरॊ (बैंगलोर)',
+                'name_hi' => 'इइगु अस्पताल-इंदुस संस्थान ऒफ़ गस्त्रो उरो (बैंगलोर)',
                 'type' => 'Private Hospital',
                 'address' => 'Bangalore, Karnataka',
                 'address_line1' => 'Main Medical Avenue',
@@ -2402,7 +2402,7 @@ class BangaloreScraperService extends BaseScraperService
             ],
             [
                 'name_en' => 'Apollo Cradle & Children\'s Hospital',
-                'name_hi' => 'अपॊल्लॊ च्रद्लॆ & छिल्द्रॆन्स अस्पताल (बैंगलोर)',
+                'name_hi' => 'अपोल्लो च्रद्ले & छिल्द्रेन्स अस्पताल (बैंगलोर)',
                 'type' => 'Private Hospital',
                 'address' => 'Bangalore, Karnataka',
                 'address_line1' => 'Main Medical Avenue',
@@ -2482,7 +2482,7 @@ class BangaloreScraperService extends BaseScraperService
             ],
             [
                 'name_en' => 'Bangalore Gastro Centre Hospitals',
-                'name_hi' => 'बन्गलॊरॆ गस्त्रॊ चॆंत्रॆ अस्पतालस (बैंगलोर)',
+                'name_hi' => 'बन्गलोरे गस्त्रो चेंत्रे अस्पतालस (बैंगलोर)',
                 'type' => 'Private Hospital',
                 'address' => 'Bangalore, Karnataka',
                 'address_line1' => 'Main Medical Avenue',
@@ -2502,7 +2502,7 @@ class BangaloreScraperService extends BaseScraperService
             ],
             [
                 'name_en' => 'Cloudnine Hospital - Electronics City',
-                'name_hi' => 'च्लॊउद्निनॆ अस्पताल - ऎलॆच्त्रॊनिच्स सिटी (बैंगलोर)',
+                'name_hi' => 'च्लोउद्निने अस्पताल - ऎलेच्त्रोनिच्स सिटी (बैंगलोर)',
                 'type' => 'Private Hospital',
                 'address' => 'Bangalore, Karnataka',
                 'address_line1' => 'Main Medical Avenue',
@@ -2522,7 +2522,7 @@ class BangaloreScraperService extends BaseScraperService
             ],
             [
                 'name_en' => 'Cloudnine Hospitals - Sahakarnagar',
-                'name_hi' => 'च्लॊउद्निनॆ अस्पतालस - सहकर्नगर (बैंगलोर)',
+                'name_hi' => 'च्लोउद्निने अस्पतालस - सहकर्नगर (बैंगलोर)',
                 'type' => 'Private Hospital',
                 'address' => 'Bangalore, Karnataka',
                 'address_line1' => 'Main Medical Avenue',
@@ -2562,7 +2562,7 @@ class BangaloreScraperService extends BaseScraperService
             ],
             [
                 'name_en' => 'Cloudnine Hospital - Kanakapura Road',
-                'name_hi' => 'च्लॊउद्निनॆ अस्पताल - कनकपुर रॊअद (बैंगलोर)',
+                'name_hi' => 'च्लोउद्निने अस्पताल - कनकपुर रोअद (बैंगलोर)',
                 'type' => 'Private Hospital',
                 'address' => 'Bangalore, Karnataka',
                 'address_line1' => 'Main Medical Avenue',
@@ -2582,7 +2582,7 @@ class BangaloreScraperService extends BaseScraperService
             ],
             [
                 'name_en' => 'Shree Manyata Hospitals',
-                'name_hi' => 'श्रॆऎ मंयत अस्पतालस (बैंगलोर)',
+                'name_hi' => 'श्रेऎ मंयत अस्पतालस (बैंगलोर)',
                 'type' => 'Private Hospital',
                 'address' => 'Bangalore, Karnataka',
                 'address_line1' => 'Main Medical Avenue',
@@ -2642,7 +2642,7 @@ class BangaloreScraperService extends BaseScraperService
             ],
             [
                 'name_en' => 'Deepasri Multispecialities Hospital',
-                'name_hi' => 'दॆऎपस्रि मुल्तिस्पॆचिअलितिऎस अस्पताल (बैंगलोर)',
+                'name_hi' => 'देऎपस्रि मुल्तिस्पेचिअलितिऎस अस्पताल (बैंगलोर)',
                 'type' => 'Private Hospital',
                 'address' => 'Bangalore, Karnataka',
                 'address_line1' => 'Main Medical Avenue',
@@ -2682,7 +2682,7 @@ class BangaloreScraperService extends BaseScraperService
             ],
             [
                 'name_en' => 'Move More Physiotherapy Center',
-                'name_hi' => 'मॊवॆ मॊरॆ फ्य्सिऒथॆरप्य चॆंतॆर (बैंगलोर)',
+                'name_hi' => 'मोवे मोरे फ्य्सिऒथेरप्य चेंतेर (बैंगलोर)',
                 'type' => 'Private Hospital',
                 'address' => 'Bangalore, Karnataka',
                 'address_line1' => 'Main Medical Avenue',
@@ -2702,7 +2702,7 @@ class BangaloreScraperService extends BaseScraperService
             ],
             [
                 'name_en' => 'Sri Sri College of Ayurvedic Science and Research Hospital',
-                'name_hi' => 'स्रि स्रि चॊल्लॆगॆ ऒफ़ अयुर्वॆदिच स्चिऎन्चॆ अंद रॆसॆअर्छ अस्पताल (बैंगलोर)',
+                'name_hi' => 'स्रि स्रि चोल्लेगे ऒफ़ अयुर्वेदिच स्चिऎन्चे अंद रेसेअर्छ अस्पताल (बैंगलोर)',
                 'type' => 'Private Hospital',
                 'address' => 'Bangalore, Karnataka',
                 'address_line1' => 'Main Medical Avenue',
@@ -2722,7 +2722,7 @@ class BangaloreScraperService extends BaseScraperService
             ],
             [
                 'name_en' => 'Sri Raghavendra physiotherapy centre',
-                'name_hi' => 'स्रि रघवॆंद्र फ्य्सिऒथॆरप्य चॆंत्रॆ (बैंगलोर)',
+                'name_hi' => 'स्रि रघवेंद्र फ्य्सिऒथेरप्य चेंत्रे (बैंगलोर)',
                 'type' => 'Private Hospital',
                 'address' => 'Bangalore, Karnataka',
                 'address_line1' => 'Main Medical Avenue',
@@ -2742,7 +2742,7 @@ class BangaloreScraperService extends BaseScraperService
             ],
             [
                 'name_en' => 'Apollo Cradle and Children s Hospital - Rajajinagar',
-                'name_hi' => 'अपॊल्लॊ च्रद्लॆ अंद छिल्द्रॆन स अस्पताल - रजजिनगर (बैंगलोर)',
+                'name_hi' => 'अपोल्लो च्रद्ले अंद छिल्द्रेन स अस्पताल - रजजिनगर (बैंगलोर)',
                 'type' => 'Private Hospital',
                 'address' => 'Bangalore, Karnataka',
                 'address_line1' => 'Main Medical Avenue',
@@ -2762,7 +2762,7 @@ class BangaloreScraperService extends BaseScraperService
             ],
             [
                 'name_en' => 'Sparsh Hospital for Women & Children',
-                'name_hi' => 'स्पर्श अस्पताल फ़ॊर वॊमॆन & छिल्द्रॆन (बैंगलोर)',
+                'name_hi' => 'स्पर्श अस्पताल फ़ोर वोमेन & छिल्द्रेन (बैंगलोर)',
                 'type' => 'Private Hospital',
                 'address' => 'Bangalore, Karnataka',
                 'address_line1' => 'Main Medical Avenue',
@@ -2782,7 +2782,7 @@ class BangaloreScraperService extends BaseScraperService
             ],
             [
                 'name_en' => 'Lotus Multispeciality Health Care',
-                'name_hi' => 'लॊतुस मल्टीस्पेशलिटी हेल्थकेयर (बैंगलोर)',
+                'name_hi' => 'लोतुस मल्टीस्पेशलिटी हेल्थकेयर (बैंगलोर)',
                 'type' => 'Private Hospital',
                 'address' => 'Bangalore, Karnataka',
                 'address_line1' => 'Main Medical Avenue',
@@ -2802,7 +2802,7 @@ class BangaloreScraperService extends BaseScraperService
             ],
             [
                 'name_en' => 'Apollo Clinic',
-                'name_hi' => 'अपॊल्लॊ क्लिनिक (बैंगलोर)',
+                'name_hi' => 'अपोल्लो क्लिनिक (बैंगलोर)',
                 'type' => 'Clinic',
                 'address' => 'Bangalore, Karnataka',
                 'address_line1' => 'Main Medical Avenue',
@@ -2822,7 +2822,7 @@ class BangaloreScraperService extends BaseScraperService
             ],
             [
                 'name_en' => 'Chinmayi Child Care Clinic',
-                'name_hi' => 'छिन्मयि छिल्द चरॆ क्लिनिक (बैंगलोर)',
+                'name_hi' => 'छिन्मयि छिल्द चरे क्लिनिक (बैंगलोर)',
                 'type' => 'Clinic',
                 'address' => 'Bangalore, Karnataka',
                 'address_line1' => 'Main Medical Avenue',
@@ -2842,7 +2842,7 @@ class BangaloreScraperService extends BaseScraperService
             ],
             [
                 'name_en' => 'Dr. RAJ\'s Centre for Skin & Hair',
-                'name_hi' => 'द्र्। रज्स चॆंत्रॆ फ़ॊर स्किन & हैर (बैंगलोर)',
+                'name_hi' => 'द्र्। रज्स चेंत्रे फ़ोर स्किन & हैर (बैंगलोर)',
                 'type' => 'Private Hospital',
                 'address' => 'Bangalore, Karnataka',
                 'address_line1' => 'Main Medical Avenue',
@@ -2862,7 +2862,7 @@ class BangaloreScraperService extends BaseScraperService
             ],
             [
                 'name_en' => 'Dermasculpt Skin Hair And Laser Clinic',
-                'name_hi' => 'दॆर्मस्चुल्प्त स्किन हैर अंद लसॆर क्लिनिक (बैंगलोर)',
+                'name_hi' => 'देर्मस्चुल्प्त स्किन हैर अंद लसेर क्लिनिक (बैंगलोर)',
                 'type' => 'Clinic',
                 'address' => 'Bangalore, Karnataka',
                 'address_line1' => 'Main Medical Avenue',
@@ -2882,7 +2882,7 @@ class BangaloreScraperService extends BaseScraperService
             ],
             [
                 'name_en' => 'Homeopathy Center',
-                'name_hi' => 'हॊमॆऒपथ्य चॆंतॆर (बैंगलोर)',
+                'name_hi' => 'होमेऒपथ्य चेंतेर (बैंगलोर)',
                 'type' => 'Private Hospital',
                 'address' => 'Bangalore, Karnataka',
                 'address_line1' => 'Main Medical Avenue',
@@ -2902,7 +2902,7 @@ class BangaloreScraperService extends BaseScraperService
             ],
             [
                 'name_en' => 'Samvaad Centre for Speech Therapy',
-                'name_hi' => 'सम्वअद चॆंत्रॆ फ़ॊर स्पॆऎछ थॆरप्य (बैंगलोर)',
+                'name_hi' => 'सम्वअद चेंत्रे फ़ोर स्पेऎछ थेरप्य (बैंगलोर)',
                 'type' => 'Private Hospital',
                 'address' => 'Bangalore, Karnataka',
                 'address_line1' => 'Main Medical Avenue',
@@ -2922,7 +2922,7 @@ class BangaloreScraperService extends BaseScraperService
             ],
             [
                 'name_en' => 'Patel Dental - Orthodontic & Dental Implant Center',
-                'name_hi' => 'पतॆल डेंटल - ऒर्थॊदॊंतिच & डेंटल इंप्लंत चॆंतॆर (बैंगलोर)',
+                'name_hi' => 'पतेल डेंटल - ऒर्थोदोंतिच & डेंटल इंप्लंत चेंतेर (बैंगलोर)',
                 'type' => 'Clinic',
                 'address' => 'Bangalore, Karnataka',
                 'address_line1' => 'Main Medical Avenue',
@@ -2942,7 +2942,7 @@ class BangaloreScraperService extends BaseScraperService
             ],
             [
                 'name_en' => 'First Eat Right Clinic - Koramangala',
-                'name_hi' => 'फ़िर्स्त ऎअत रिघ्त क्लिनिक - कॊरमन्गल (बैंगलोर)',
+                'name_hi' => 'फ़िर्स्त ऎअत रिघ्त क्लिनिक - कोरमन्गल (बैंगलोर)',
                 'type' => 'Clinic',
                 'address' => 'Bangalore, Karnataka',
                 'address_line1' => 'Main Medical Avenue',
@@ -2962,7 +2962,7 @@ class BangaloreScraperService extends BaseScraperService
             ],
             [
                 'name_en' => 'Sai Speciality Center',
-                'name_hi' => 'सै स्पॆचिअलित्य चॆंतॆर (बैंगलोर)',
+                'name_hi' => 'सै स्पेचिअलित्य चेंतेर (बैंगलोर)',
                 'type' => 'Private Hospital',
                 'address' => 'Bangalore, Karnataka',
                 'address_line1' => 'Main Medical Avenue',
@@ -2982,7 +2982,7 @@ class BangaloreScraperService extends BaseScraperService
             ],
             [
                 'name_en' => 'Kerala Ayurveda Clinic',
-                'name_hi' => 'कॆरल अयुर्वॆद क्लिनिक (बैंगलोर)',
+                'name_hi' => 'केरल अयुर्वेद क्लिनिक (बैंगलोर)',
                 'type' => 'Clinic',
                 'address' => 'Bangalore, Karnataka',
                 'address_line1' => 'Main Medical Avenue',
@@ -3002,7 +3002,7 @@ class BangaloreScraperService extends BaseScraperService
             ],
             [
                 'name_en' => 'Matoshree Kidney Stone Center & UroNephro Clinic',
-                'name_hi' => 'मतॊश्रॆऎ किद्नॆय स्तॊनॆ चॆंतॆर & उरॊनॆफ्रॊ क्लिनिक (बैंगलोर)',
+                'name_hi' => 'मतोश्रेऎ किद्नेय स्तोने चेंतेर & उरोनेफ्रो क्लिनिक (बैंगलोर)',
                 'type' => 'Clinic',
                 'address' => 'Bangalore, Karnataka',
                 'address_line1' => 'Main Medical Avenue',
@@ -3022,7 +3022,7 @@ class BangaloreScraperService extends BaseScraperService
             ],
             [
                 'name_en' => '32 Smiles Multispeciality Dental Clinic',
-                'name_hi' => '32 स्मिलॆस मल्टीस्पेशलिटी डेंटल क्लिनिक (बैंगलोर)',
+                'name_hi' => '32 स्मिलेस मल्टीस्पेशलिटी डेंटल क्लिनिक (बैंगलोर)',
                 'type' => 'Clinic',
                 'address' => 'Bangalore, Karnataka',
                 'address_line1' => 'Main Medical Avenue',
@@ -3042,7 +3042,7 @@ class BangaloreScraperService extends BaseScraperService
             ],
             [
                 'name_en' => 'Sthree & Shishu Care Polyclinic',
-                'name_hi' => 'स्थ्रॆऎ & शिशु चरॆ पॊल्य्क्लिनिक (बैंगलोर)',
+                'name_hi' => 'स्थ्रेऎ & शिशु चरे पोल्य्क्लिनिक (बैंगलोर)',
                 'type' => 'Clinic',
                 'address' => 'Bangalore, Karnataka',
                 'address_line1' => 'Main Medical Avenue',
@@ -3062,7 +3062,7 @@ class BangaloreScraperService extends BaseScraperService
             ],
             [
                 'name_en' => 'SurgiDerma Hospital',
-                'name_hi' => 'सुर्गिदॆर्म अस्पताल (बैंगलोर)',
+                'name_hi' => 'सुर्गिदेर्म अस्पताल (बैंगलोर)',
                 'type' => 'Private Hospital',
                 'address' => 'Bangalore, Karnataka',
                 'address_line1' => 'Main Medical Avenue',
@@ -3082,7 +3082,7 @@ class BangaloreScraperService extends BaseScraperService
             ],
             [
                 'name_en' => '32 Smiles Multispeciality Dental Clinics',
-                'name_hi' => '32 स्मिलॆस मल्टीस्पेशलिटी डेंटल क्लिनिकस (बैंगलोर)',
+                'name_hi' => '32 स्मिलेस मल्टीस्पेशलिटी डेंटल क्लिनिकस (बैंगलोर)',
                 'type' => 'Clinic',
                 'address' => 'Bangalore, Karnataka',
                 'address_line1' => 'Main Medical Avenue',
@@ -3102,7 +3102,7 @@ class BangaloreScraperService extends BaseScraperService
             ],
             [
                 'name_en' => 'Apollo Medical Centre',
-                'name_hi' => 'अपॊल्लॊ मेडिकल सेंटर (बैंगलोर)',
+                'name_hi' => 'अपोल्लो मेडिकल सेंटर (बैंगलोर)',
                 'type' => 'Private Hospital',
                 'address' => 'Bangalore, Karnataka',
                 'address_line1' => 'Main Medical Avenue',
@@ -3122,7 +3122,7 @@ class BangaloreScraperService extends BaseScraperService
             ],
             [
                 'name_en' => 'Bhagawaan Healthcare Center',
-                'name_hi' => 'भगवअन हॆअल्थ्केयर सेंटर (बैंगलोर)',
+                'name_hi' => 'भगवअन हेअल्थ्केयर सेंटर (बैंगलोर)',
                 'type' => 'Private Hospital',
                 'address' => 'Bangalore, Karnataka',
                 'address_line1' => 'Main Medical Avenue',
@@ -3142,7 +3142,7 @@ class BangaloreScraperService extends BaseScraperService
             ],
             [
                 'name_en' => 'Care Health',
-                'name_hi' => 'चरॆ हॆअल्�¤ अस्पताल (बैंगलोर)',
+                'name_hi' => 'चरे हेअल्�¤ अस्पताल (बैंगलोर)',
                 'type' => 'Private Hospital',
                 'address' => 'Bangalore, Karnataka',
                 'address_line1' => 'Main Medical Avenue',
@@ -3162,7 +3162,7 @@ class BangaloreScraperService extends BaseScraperService
             ],
             [
                 'name_en' => 'Bangalore ENT Care Centre',
-                'name_hi' => 'बन्गलॊरॆ ऎंत केयर सेंटर (बैंगलोर)',
+                'name_hi' => 'बन्गलोरे ऎंत केयर सेंटर (बैंगलोर)',
                 'type' => 'Clinic',
                 'address' => 'Bangalore, Karnataka',
                 'address_line1' => 'Main Medical Avenue',
@@ -3182,7 +3182,7 @@ class BangaloreScraperService extends BaseScraperService
             ],
             [
                 'name_en' => 'Surgeon Gowda\'s Gastro & Laparoscopy Centre',
-                'name_hi' => 'सुर्गॆऒन गॊव्दस गस्त्रॊ & लपरॊस्चॊप्य चॆंत्रॆ (बैंगलोर)',
+                'name_hi' => 'सुर्गेऒन गोव्दस गस्त्रो & लपरोस्चोप्य चेंत्रे (बैंगलोर)',
                 'type' => 'Private Hospital',
                 'address' => 'Bangalore, Karnataka',
                 'address_line1' => 'Main Medical Avenue',
@@ -3202,7 +3202,7 @@ class BangaloreScraperService extends BaseScraperService
             ],
             [
                 'name_en' => 'Sports Orthopedics Institute',
-                'name_hi' => 'स्पॊर्त्स ऒर्थॊपॆदिच्स संस्थान (बैंगलोर)',
+                'name_hi' => 'स्पोर्त्स ऒर्थोपेदिच्स संस्थान (बैंगलोर)',
                 'type' => 'Private Hospital',
                 'address' => 'Bangalore, Karnataka',
                 'address_line1' => 'Main Medical Avenue',
@@ -3222,7 +3222,7 @@ class BangaloreScraperService extends BaseScraperService
             ],
             [
                 'name_en' => 'Smile Care Orthodontic Center & Multispeciality Dental Clinic',
-                'name_hi' => 'स्मिलॆ चरॆ ऒर्थॊदॊंतिच चॆंतॆर & मल्टीस्पेशलिटी डेंटल क्लिनिक (बैंगलोर)',
+                'name_hi' => 'स्मिले चरे ऒर्थोदोंतिच चेंतेर & मल्टीस्पेशलिटी डेंटल क्लिनिक (बैंगलोर)',
                 'type' => 'Clinic',
                 'address' => 'Bangalore, Karnataka',
                 'address_line1' => 'Main Medical Avenue',
@@ -3242,7 +3242,7 @@ class BangaloreScraperService extends BaseScraperService
             ],
             [
                 'name_en' => 'Sai Divine Medical Center',
-                'name_hi' => 'सै दिविनॆ मेडिकल सेंटर (बैंगलोर)',
+                'name_hi' => 'सै दिविने मेडिकल सेंटर (बैंगलोर)',
                 'type' => 'Private Hospital',
                 'address' => 'Bangalore, Karnataka',
                 'address_line1' => 'Main Medical Avenue',
@@ -3262,7 +3262,7 @@ class BangaloreScraperService extends BaseScraperService
             ],
             [
                 'name_en' => 'Six Face Clinic',
-                'name_hi' => 'सिक्स फ़चॆ क्लिनिक (बैंगलोर)',
+                'name_hi' => 'सिक्स फ़चे क्लिनिक (बैंगलोर)',
                 'type' => 'Clinic',
                 'address' => 'Bangalore, Karnataka',
                 'address_line1' => 'Main Medical Avenue',
@@ -3282,7 +3282,7 @@ class BangaloreScraperService extends BaseScraperService
             ],
             [
                 'name_en' => 'Smile Care Orthodontic Centre and Multispeciality Dental Clinic',
-                'name_hi' => 'स्मिलॆ चरॆ ऒर्थॊदॊंतिच चॆंत्रॆ अंद मल्टीस्पेशलिटी डेंटल क्लिनिक (बैंगलोर)',
+                'name_hi' => 'स्मिले चरे ऒर्थोदोंतिच चेंत्रे अंद मल्टीस्पेशलिटी डेंटल क्लिनिक (बैंगलोर)',
                 'type' => 'Clinic',
                 'address' => 'Bangalore, Karnataka',
                 'address_line1' => 'Main Medical Avenue',
@@ -3302,7 +3302,7 @@ class BangaloreScraperService extends BaseScraperService
             ],
             [
                 'name_en' => 'New Smile Multispeciality Dental Clinic',
-                'name_hi' => 'नॆव स्मिलॆ मल्टीस्पेशलिटी डेंटल क्लिनिक (बैंगलोर)',
+                'name_hi' => 'नेव स्मिले मल्टीस्पेशलिटी डेंटल क्लिनिक (बैंगलोर)',
                 'type' => 'Clinic',
                 'address' => 'Bangalore, Karnataka',
                 'address_line1' => 'Main Medical Avenue',
@@ -3322,7 +3322,7 @@ class BangaloreScraperService extends BaseScraperService
             ],
             [
                 'name_en' => 'International Knee & Orthopaedic Centre',
-                'name_hi' => 'इंतॆर्नतिऒनल क्नॆऎ & ऒर्थॊपॆदिच चॆंत्रॆ (बैंगलोर)',
+                'name_hi' => 'इंतेर्नतिऒनल क्नेऎ & ऒर्थोपेदिच चेंत्रे (बैंगलोर)',
                 'type' => 'Private Hospital',
                 'address' => 'Bangalore, Karnataka',
                 'address_line1' => 'Main Medical Avenue',
@@ -3342,7 +3342,7 @@ class BangaloreScraperService extends BaseScraperService
             ],
             [
                 'name_en' => 'Healvibe Healthcare',
-                'name_hi' => 'हॆअल्विबॆ हेल्थकेयर (बैंगलोर)',
+                'name_hi' => 'हेअल्विबे हेल्थकेयर (बैंगलोर)',
                 'type' => 'Private Hospital',
                 'address' => 'Bangalore, Karnataka',
                 'address_line1' => 'Main Medical Avenue',
@@ -3362,7 +3362,7 @@ class BangaloreScraperService extends BaseScraperService
             ],
             [
                 'name_en' => 'MBS Holistic Clinic',
-                'name_hi' => 'ंब्स हॊलिस्तिच क्लिनिक (बैंगलोर)',
+                'name_hi' => 'ंब्स होलिस्तिच क्लिनिक (बैंगलोर)',
                 'type' => 'Clinic',
                 'address' => 'Bangalore, Karnataka',
                 'address_line1' => 'Main Medical Avenue',
@@ -3382,7 +3382,7 @@ class BangaloreScraperService extends BaseScraperService
             ],
             [
                 'name_en' => 'DermaZeal Clinic',
-                'name_hi' => 'दॆर्मज़ॆअल क्लिनिक (बैंगलोर)',
+                'name_hi' => 'देर्मज़ेअल क्लिनिक (बैंगलोर)',
                 'type' => 'Clinic',
                 'address' => 'Bangalore, Karnataka',
                 'address_line1' => 'Main Medical Avenue',
@@ -3402,7 +3402,7 @@ class BangaloreScraperService extends BaseScraperService
             ],
             [
                 'name_en' => 'Shree Vaishnavi Heart Centre Multi Speciality Clinic',
-                'name_hi' => 'श्रॆऎ वैश्नवि हार्ट चॆंत्रॆ मुल्ति स्पॆचिअलित्य क्लिनिक (बैंगलोर)',
+                'name_hi' => 'श्रेऎ वैश्नवि हार्ट चेंत्रे मुल्ति स्पेचिअलित्य क्लिनिक (बैंगलोर)',
                 'type' => 'Clinic',
                 'address' => 'Bangalore, Karnataka',
                 'address_line1' => 'Main Medical Avenue',
@@ -3422,7 +3422,7 @@ class BangaloreScraperService extends BaseScraperService
             ],
             [
                 'name_en' => 'Susheel Orthopaedic Centre',
-                'name_hi' => 'सुशॆऎल ऒर्थॊपॆदिच चॆंत्रॆ (बैंगलोर)',
+                'name_hi' => 'सुशेऎल ऒर्थोपेदिच चेंत्रे (बैंगलोर)',
                 'type' => 'Private Hospital',
                 'address' => 'Bangalore, Karnataka',
                 'address_line1' => 'Main Medical Avenue',
@@ -3442,7 +3442,7 @@ class BangaloreScraperService extends BaseScraperService
             ],
             [
                 'name_en' => 'Sattva Super Specialty Centre',
-                'name_hi' => 'सत्त्व सुपॆर स्पॆचिअल्त्य चॆंत्रॆ (बैंगलोर)',
+                'name_hi' => 'सत्त्व सुपेर स्पेचिअल्त्य चेंत्रे (बैंगलोर)',
                 'type' => 'Private Hospital',
                 'address' => 'Bangalore, Karnataka',
                 'address_line1' => 'Main Medical Avenue',
@@ -3462,7 +3462,7 @@ class BangaloreScraperService extends BaseScraperService
             ],
             [
                 'name_en' => 'Beautiful Mind Healthcare',
-                'name_hi' => 'बॆऔतिफ़ुल मिंद हेल्थकेयर (बैंगलोर)',
+                'name_hi' => 'बेऔतिफ़ुल मिंद हेल्थकेयर (बैंगलोर)',
                 'type' => 'Private Hospital',
                 'address' => 'Bangalore, Karnataka',
                 'address_line1' => 'Main Medical Avenue',
@@ -3482,7 +3482,7 @@ class BangaloreScraperService extends BaseScraperService
             ],
             [
                 'name_en' => 'Growing Up Children\'s Clinic',
-                'name_hi' => 'ग्रॊविन्ग उप छिल्द्रॆन्स क्लिनिक (बैंगलोर)',
+                'name_hi' => 'ग्रोविन्ग उप छिल्द्रेन्स क्लिनिक (बैंगलोर)',
                 'type' => 'Clinic',
                 'address' => 'Bangalore, Karnataka',
                 'address_line1' => 'Main Medical Avenue',
@@ -3502,7 +3502,7 @@ class BangaloreScraperService extends BaseScraperService
             ],
             [
                 'name_en' => 'Trinity Gastroentrology And Liver Clinic',
-                'name_hi' => 'त्रिनित्य गस्त्रॊऎंत्रॊलॊग्य अंद लिवॆर क्लिनिक (बैंगलोर)',
+                'name_hi' => 'त्रिनित्य गस्त्रोऎंत्रोलोग्य अंद लिवेर क्लिनिक (बैंगलोर)',
                 'type' => 'Clinic',
                 'address' => 'Bangalore, Karnataka',
                 'address_line1' => 'Main Medical Avenue',
@@ -3522,7 +3522,7 @@ class BangaloreScraperService extends BaseScraperService
             ],
             [
                 'name_en' => 'Kaveri Healthcare',
-                'name_hi' => 'कवॆरि हेल्थकेयर (बैंगलोर)',
+                'name_hi' => 'कवेरि हेल्थकेयर (बैंगलोर)',
                 'type' => 'Private Hospital',
                 'address' => 'Bangalore, Karnataka',
                 'address_line1' => 'Main Medical Avenue',
@@ -3542,7 +3542,7 @@ class BangaloreScraperService extends BaseScraperService
             ],
             [
                 'name_en' => 'Sapphire Skin And Aesthetics Clinic',
-                'name_hi' => 'सप्फिरॆ स्किन अंद अऎस्थॆतिच्स क्लिनिक (बैंगलोर)',
+                'name_hi' => 'सप्फिरे स्किन अंद अऎस्थेतिच्स क्लिनिक (बैंगलोर)',
                 'type' => 'Clinic',
                 'address' => 'Bangalore, Karnataka',
                 'address_line1' => 'Main Medical Avenue',
@@ -3562,7 +3562,7 @@ class BangaloreScraperService extends BaseScraperService
             ],
             [
                 'name_en' => 'VR Breathe - Well Clinic',
-                'name_hi' => 'व्र ब्रॆअथॆ - वॆल्ल क्लिनिक (बैंगलोर)',
+                'name_hi' => 'व्र ब्रेअथे - वेल्ल क्लिनिक (बैंगलोर)',
                 'type' => 'Clinic',
                 'address' => 'Bangalore, Karnataka',
                 'address_line1' => 'Main Medical Avenue',
@@ -3582,7 +3582,7 @@ class BangaloreScraperService extends BaseScraperService
             ],
             [
                 'name_en' => 'Nava Naveena Clinic',
-                'name_hi' => 'नव नवॆऎन क्लिनिक (बैंगलोर)',
+                'name_hi' => 'नव नवेऎन क्लिनिक (बैंगलोर)',
                 'type' => 'Clinic',
                 'address' => 'Bangalore, Karnataka',
                 'address_line1' => 'Main Medical Avenue',
@@ -3602,7 +3602,7 @@ class BangaloreScraperService extends BaseScraperService
             ],
             [
                 'name_en' => 'YCDC - Dr. Yogiraj Centre For Dermatology And Cosmetology',
-                'name_hi' => 'य्च्द्च - द्र्। यॊगिरज चॆंत्रॆ फ़ॊर दॆर्मतॊलॊग्य अंद चॊस्मॆतॊलॊग्य (बैंगलोर)',
+                'name_hi' => 'य्च्द्च - द्र्। योगिरज चेंत्रे फ़ोर देर्मतोलोग्य अंद चोस्मेतोलोग्य (बैंगलोर)',
                 'type' => 'Private Hospital',
                 'address' => 'Bangalore, Karnataka',
                 'address_line1' => 'Main Medical Avenue',
@@ -3622,7 +3622,7 @@ class BangaloreScraperService extends BaseScraperService
             ],
             [
                 'name_en' => 'Care Speciality Clinic',
-                'name_hi' => 'चरॆ स्पॆचिअलित्य क्लिनिक (बैंगलोर)',
+                'name_hi' => 'चरे स्पेचिअलित्य क्लिनिक (बैंगलोर)',
                 'type' => 'Clinic',
                 'address' => 'Bangalore, Karnataka',
                 'address_line1' => 'Main Medical Avenue',
@@ -3662,7 +3662,7 @@ class BangaloreScraperService extends BaseScraperService
             ],
             [
                 'name_en' => 'Aspire Fertility Center',
-                'name_hi' => 'अस्पिरॆ फ़ॆर्तिलित्य चॆंतॆर (बैंगलोर)',
+                'name_hi' => 'अस्पिरे फ़ेर्तिलित्य चेंतेर (बैंगलोर)',
                 'type' => 'Private Hospital',
                 'address' => 'Bangalore, Karnataka',
                 'address_line1' => 'Main Medical Avenue',
@@ -3682,7 +3682,7 @@ class BangaloreScraperService extends BaseScraperService
             ],
             [
                 'name_en' => 'Bangalore Spine Specialist Clinic',
-                'name_hi' => 'बन्गलॊरॆ स्पिनॆ स्पॆचिअलिस्त क्लिनिक (बैंगलोर)',
+                'name_hi' => 'बन्गलोरे स्पिने स्पेचिअलिस्त क्लिनिक (बैंगलोर)',
                 'type' => 'Clinic',
                 'address' => 'Bangalore, Karnataka',
                 'address_line1' => 'Main Medical Avenue',
@@ -3702,7 +3702,7 @@ class BangaloreScraperService extends BaseScraperService
             ],
             [
                 'name_en' => 'Dr. Sculpt Aesthetic Clinic',
-                'name_hi' => 'द्र्। स्चुल्प्त अऎस्थॆतिच क्लिनिक (बैंगलोर)',
+                'name_hi' => 'द्र्। स्चुल्प्त अऎस्थेतिच क्लिनिक (बैंगलोर)',
                 'type' => 'Clinic',
                 'address' => 'Bangalore, Karnataka',
                 'address_line1' => 'Main Medical Avenue',
@@ -3742,7 +3742,7 @@ class BangaloreScraperService extends BaseScraperService
             ],
             [
                 'name_en' => 'Specialist Women\'s and Men\'s Clinic',
-                'name_hi' => 'स्पॆचिअलिस्त वॊमॆन्स अंद मॆन्स क्लिनिक (बैंगलोर)',
+                'name_hi' => 'स्पेचिअलिस्त वोमेन्स अंद मेन्स क्लिनिक (बैंगलोर)',
                 'type' => 'Clinic',
                 'address' => 'Bangalore, Karnataka',
                 'address_line1' => 'Main Medical Avenue',
@@ -3762,7 +3762,7 @@ class BangaloreScraperService extends BaseScraperService
             ],
             [
                 'name_en' => 'Skinray Skin Hair & Laser Clinic',
-                'name_hi' => 'स्किंरय स्किन हैर & लसॆर क्लिनिक (बैंगलोर)',
+                'name_hi' => 'स्किंरय स्किन हैर & लसेर क्लिनिक (बैंगलोर)',
                 'type' => 'Clinic',
                 'address' => 'Bangalore, Karnataka',
                 'address_line1' => 'Main Medical Avenue',
@@ -3802,7 +3802,7 @@ class BangaloreScraperService extends BaseScraperService
             ],
             [
                 'name_en' => 'Blossom Physiotherapy Clinic',
-                'name_hi' => 'ब्लॊषॊम फ्य्सिऒथॆरप्य क्लिनिक (बैंगलोर)',
+                'name_hi' => 'ब्लोषोम फ्य्सिऒथेरप्य क्लिनिक (बैंगलोर)',
                 'type' => 'Clinic',
                 'address' => 'Bangalore, Karnataka',
                 'address_line1' => 'Main Medical Avenue',
@@ -3842,7 +3842,7 @@ class BangaloreScraperService extends BaseScraperService
             ],
             [
                 'name_en' => 'Dental and Orthodontic Clinic',
-                'name_hi' => 'डेंटल अंद ऒर्थॊदॊंतिच क्लिनिक (बैंगलोर)',
+                'name_hi' => 'डेंटल अंद ऒर्थोदोंतिच क्लिनिक (बैंगलोर)',
                 'type' => 'Clinic',
                 'address' => 'Bangalore, Karnataka',
                 'address_line1' => 'Main Medical Avenue',
@@ -3882,7 +3882,7 @@ class BangaloreScraperService extends BaseScraperService
             ],
             [
                 'name_en' => 'Nikad Ortho Centre',
-                'name_hi' => 'निकद ऒर्थॊ चॆंत्रॆ (बैंगलोर)',
+                'name_hi' => 'निकद ऒर्थो चेंत्रे (बैंगलोर)',
                 'type' => 'Private Hospital',
                 'address' => 'Bangalore, Karnataka',
                 'address_line1' => 'Main Medical Avenue',
@@ -3902,7 +3902,7 @@ class BangaloreScraperService extends BaseScraperService
             ],
             [
                 'name_en' => 'Oyster Multispeciality Clinic',
-                'name_hi' => 'ऒय्स्तॆर मल्टीस्पेशलिटी क्लिनिक (बैंगलोर)',
+                'name_hi' => 'ऒय्स्तेर मल्टीस्पेशलिटी क्लिनिक (बैंगलोर)',
                 'type' => 'Clinic',
                 'address' => 'Bangalore, Karnataka',
                 'address_line1' => 'Main Medical Avenue',
@@ -3922,7 +3922,7 @@ class BangaloreScraperService extends BaseScraperService
             ],
             [
                 'name_en' => 'Contura Clinic',
-                'name_hi' => 'चॊंतुर क्लिनिक (बैंगलोर)',
+                'name_hi' => 'चोंतुर क्लिनिक (बैंगलोर)',
                 'type' => 'Clinic',
                 'address' => 'Bangalore, Karnataka',
                 'address_line1' => 'Main Medical Avenue',
@@ -3942,7 +3942,7 @@ class BangaloreScraperService extends BaseScraperService
             ],
             [
                 'name_en' => 'BAU - Bangalore Advanced Urology Clinic',
-                'name_hi' => 'बौ - अद्वन्चॆद उरॊलॊग्य क्लिनिक (बैंगलोर)',
+                'name_hi' => 'बौ - अद्वन्चेद उरोलोग्य क्लिनिक (बैंगलोर)',
                 'type' => 'Clinic',
                 'address' => 'Bangalore, Karnataka',
                 'address_line1' => 'Main Medical Avenue',
@@ -3962,7 +3962,7 @@ class BangaloreScraperService extends BaseScraperService
             ],
             [
                 'name_en' => 'Sankalp Nethralaya and PolyClinic',
-                'name_hi' => 'सन्कल्प नॆथ्रलय अंद पॊल्य्क्लिनिक (बैंगलोर)',
+                'name_hi' => 'सन्कल्प नेथ्रलय अंद पोल्य्क्लिनिक (बैंगलोर)',
                 'type' => 'Clinic',
                 'address' => 'Bangalore, Karnataka',
                 'address_line1' => 'Main Medical Avenue',
@@ -4002,7 +4002,7 @@ class BangaloreScraperService extends BaseScraperService
             ],
             [
                 'name_en' => 'Milana Fertility Health Care Center',
-                'name_hi' => 'मिलन फ़ॆर्तिलित्य हॆअल्�¤ केयर सेंटर अस्पताल (बैंगलोर)',
+                'name_hi' => 'मिलन फ़ेर्तिलित्य हेअल्�¤ केयर सेंटर अस्पताल (बैंगलोर)',
                 'type' => 'Private Hospital',
                 'address' => 'Bangalore, Karnataka',
                 'address_line1' => 'Main Medical Avenue',
@@ -4022,7 +4022,7 @@ class BangaloreScraperService extends BaseScraperService
             ],
             [
                 'name_en' => 'First Care Clinic',
-                'name_hi' => 'फ़िर्स्त चरॆ क्लिनिक (बैंगलोर)',
+                'name_hi' => 'फ़िर्स्त चरे क्लिनिक (बैंगलोर)',
                 'type' => 'Clinic',
                 'address' => 'Bangalore, Karnataka',
                 'address_line1' => 'Main Medical Avenue',
@@ -4042,7 +4042,7 @@ class BangaloreScraperService extends BaseScraperService
             ],
             [
                 'name_en' => 'Dermacare Skin and Hair Clinic',
-                'name_hi' => 'दॆर्मचरॆ स्किन अंद हैर क्लिनिक (बैंगलोर)',
+                'name_hi' => 'देर्मचरे स्किन अंद हैर क्लिनिक (बैंगलोर)',
                 'type' => 'Clinic',
                 'address' => 'Bangalore, Karnataka',
                 'address_line1' => 'Main Medical Avenue',
@@ -4062,7 +4062,7 @@ class BangaloreScraperService extends BaseScraperService
             ],
             [
                 'name_en' => 'Amrita Homeopathy and Aesthetics Multispeciality Clinic',
-                'name_hi' => 'अम्रित हॊमॆऒपथ्य अंद अऎस्थॆतिच्स मल्टीस्पेशलिटी क्लिनिक (बैंगलोर)',
+                'name_hi' => 'अम्रित होमेऒपथ्य अंद अऎस्थेतिच्स मल्टीस्पेशलिटी क्लिनिक (बैंगलोर)',
                 'type' => 'Clinic',
                 'address' => 'Bangalore, Karnataka',
                 'address_line1' => 'Main Medical Avenue',
@@ -4082,7 +4082,7 @@ class BangaloreScraperService extends BaseScraperService
             ],
             [
                 'name_en' => 'SmileCure Multispeciality Dental Clinic',
-                'name_hi' => 'स्मिलॆचुरॆ मल्टीस्पेशलिटी डेंटल क्लिनिक (बैंगलोर)',
+                'name_hi' => 'स्मिलेचुरे मल्टीस्पेशलिटी डेंटल क्लिनिक (बैंगलोर)',
                 'type' => 'Clinic',
                 'address' => 'Bangalore, Karnataka',
                 'address_line1' => 'Main Medical Avenue',
@@ -4122,7 +4122,7 @@ class BangaloreScraperService extends BaseScraperService
             ],
             [
                 'name_en' => 'Smiles N Invisalign and Dental Implant Centre',
-                'name_hi' => 'स्मिलॆस न इंविसलिग्न अंद डेंटल इंप्लंत चॆंत्रॆ (बैंगलोर)',
+                'name_hi' => 'स्मिलेस न इंविसलिग्न अंद डेंटल इंप्लंत चेंत्रे (बैंगलोर)',
                 'type' => 'Clinic',
                 'address' => 'Bangalore, Karnataka',
                 'address_line1' => 'Main Medical Avenue',
@@ -4142,7 +4142,7 @@ class BangaloreScraperService extends BaseScraperService
             ],
             [
                 'name_en' => 'Health Today Clinic',
-                'name_hi' => 'हॆअल्�¤ तॊदय क्लिनिक अस्पताल (बैंगलोर)',
+                'name_hi' => 'हेअल्�¤ तोदय क्लिनिक अस्पताल (बैंगलोर)',
                 'type' => 'Clinic',
                 'address' => 'Bangalore, Karnataka',
                 'address_line1' => 'Main Medical Avenue',
@@ -4162,7 +4162,7 @@ class BangaloreScraperService extends BaseScraperService
             ],
             [
                 'name_en' => 'Vishvas Fertility and Gynaecology Centre',
-                'name_hi' => 'विश्वस फ़ॆर्तिलित्य अंद ग्य्नॆचॊलॊग्य चॆंत्रॆ (बैंगलोर)',
+                'name_hi' => 'विश्वस फ़ेर्तिलित्य अंद ग्य्नेचोलोग्य चेंत्रे (बैंगलोर)',
                 'type' => 'Private Hospital',
                 'address' => 'Bangalore, Karnataka',
                 'address_line1' => 'Main Medical Avenue',
@@ -4182,7 +4182,7 @@ class BangaloreScraperService extends BaseScraperService
             ],
             [
                 'name_en' => 'Royal Smiles Multi Speciality Dental and Facial Aesthetics Centre',
-                'name_hi' => 'रॊयल स्मिलॆस मुल्ति स्पॆचिअलित्य डेंटल अंद फ़चिअल अऎस्थॆतिच्स चॆंत्रॆ (बैंगलोर)',
+                'name_hi' => 'रोयल स्मिलेस मुल्ति स्पेचिअलित्य डेंटल अंद फ़चिअल अऎस्थेतिच्स चेंत्रे (बैंगलोर)',
                 'type' => 'Clinic',
                 'address' => 'Bangalore, Karnataka',
                 'address_line1' => 'Main Medical Avenue',
@@ -4202,7 +4202,7 @@ class BangaloreScraperService extends BaseScraperService
             ],
             [
                 'name_en' => 'Apollo CM Fertility Centre',
-                'name_hi' => 'अपॊल्लॊ च्म फ़ॆर्तिलित्य चॆंत्रॆ (बैंगलोर)',
+                'name_hi' => 'अपोल्लो च्म फ़ेर्तिलित्य चेंत्रे (बैंगलोर)',
                 'type' => 'Private Hospital',
                 'address' => 'Bangalore, Karnataka',
                 'address_line1' => 'Main Medical Avenue',
@@ -4222,7 +4222,7 @@ class BangaloreScraperService extends BaseScraperService
             ],
             [
                 'name_en' => 'Neo Follicle Transplant Clinic',
-                'name_hi' => 'नॆऒ फ़ॊल्लिच्लॆ त्रंस्प्लंत क्लिनिक (बैंगलोर)',
+                'name_hi' => 'नेऒ फ़ोल्लिच्ले त्रंस्प्लंत क्लिनिक (बैंगलोर)',
                 'type' => 'Clinic',
                 'address' => 'Bangalore, Karnataka',
                 'address_line1' => 'Main Medical Avenue',
@@ -4242,7 +4242,7 @@ class BangaloreScraperService extends BaseScraperService
             ],
             [
                 'name_en' => 'SightYears Eye Clinic',
-                'name_hi' => 'सिघ्त्यॆअर्स आई क्लिनिक (बैंगलोर)',
+                'name_hi' => 'सिघ्त्येअर्स आई क्लिनिक (बैंगलोर)',
                 'type' => 'Clinic',
                 'address' => 'Bangalore, Karnataka',
                 'address_line1' => 'Main Medical Avenue',
@@ -4262,7 +4262,7 @@ class BangaloreScraperService extends BaseScraperService
             ],
             [
                 'name_en' => 'Vedanta Gastro Centre',
-                'name_hi' => 'वॆदंत गस्त्रॊ चॆंत्रॆ (बैंगलोर)',
+                'name_hi' => 'वेदंत गस्त्रो चेंत्रे (बैंगलोर)',
                 'type' => 'Private Hospital',
                 'address' => 'Bangalore, Karnataka',
                 'address_line1' => 'Main Medical Avenue',
@@ -10814,7 +10814,7 @@ class BangaloreScraperService extends BaseScraperService
                 'department_name_en' => 'Cardiology',
                 'department_name_hi' => 'हृदय रोग विभाग',
                 'hospital_name_en' => 'Narayana Health City',
-                'hospital_name_hi' => 'नरयन हॆअल्�¤ सिटी अस्पताल (बैंगलोर)',
+                'hospital_name_hi' => 'नरयन हेअल्�¤ सिटी अस्पताल (बैंगलोर)',
                 'address' => null,
                 'address_line1' => '258/A, Bommasandra Industrial Area',
                 'address_line2' => 'Hosur Road',
@@ -10876,7 +10876,7 @@ class BangaloreScraperService extends BaseScraperService
                 'department_name_en' => 'Cardiology',
                 'department_name_hi' => 'हृदय रोग विभाग',
                 'hospital_name_en' => 'Fortis Hospital',
-                'hospital_name_hi' => 'फ़ॊर्तिस अस्पताल (बैंगलोर)',
+                'hospital_name_hi' => 'फ़ोर्तिस अस्पताल (बैंगलोर)',
                 'address' => null,
                 'address_line1' => '154/9, Bannerghatta Road',
                 'address_line2' => 'Opposite IIM-B',
@@ -10967,7 +10967,7 @@ class BangaloreScraperService extends BaseScraperService
                 'department_name_en' => 'Gynecology',
                 'department_name_hi' => 'स्त्री रोग विभाग',
                 'hospital_name_en' => 'Milann Fertility Centre',
-                'hospital_name_hi' => 'मिलंन फ़ॆर्तिलित्य चॆंत्रॆ (बैंगलोर)',
+                'hospital_name_hi' => 'मिलंन फ़ेर्तिलित्य चेंत्रे (बैंगलोर)',
                 'address' => null,
                 'address_line1' => '7, East Park Road',
                 'address_line2' => 'Kumara Park East',
@@ -10998,7 +10998,7 @@ class BangaloreScraperService extends BaseScraperService
                 'department_name_en' => 'Neurology',
                 'department_name_hi' => 'तंत्रिका रोग विभाग',
                 'hospital_name_en' => 'Apollo Hospitals',
-                'hospital_name_hi' => 'अपॊल्लॊ अस्पतालस (बैंगलोर)',
+                'hospital_name_hi' => 'अपोल्लो अस्पतालस (बैंगलोर)',
                 'address' => null,
                 'address_line1' => '154/11, Bannerghatta Road',
                 'address_line2' => 'Near IIM-B',
@@ -11058,7 +11058,7 @@ class BangaloreScraperService extends BaseScraperService
                 'department_name_en' => 'Ophthalmology',
                 'department_name_hi' => 'नेत्र रोग विभाग',
                 'hospital_name_en' => 'Nethradhama Super Speciality Eye Hospital',
-                'hospital_name_hi' => 'नॆथ्रधम सुपर स्पेशलिटी आई अस्पताल (बैंगलोर)',
+                'hospital_name_hi' => 'नेथ्रधम सुपर स्पेशलिटी आई अस्पताल (बैंगलोर)',
                 'address' => null,
                 'address_line1' => '256/14, Kanakapura Road',
                 'address_line2' => 'Jayanagar 7th Block',
@@ -11118,7 +11118,7 @@ class BangaloreScraperService extends BaseScraperService
                 'department_name_en' => 'Oncology',
                 'department_name_hi' => 'कैंसर रोग विभाग',
                 'hospital_name_en' => 'HCG Cancer Centre',
-                'hospital_name_hi' => 'ह्च्ग चन्चॆर चॆंत्रॆ (बैंगलोर)',
+                'hospital_name_hi' => 'ह्च्ग चन्चेर चेंत्रे (बैंगलोर)',
                 'address' => null,
                 'address_line1' => '8, P Kalinga Rao Road',
                 'address_line2' => 'Sampangiram Nagar',
@@ -11148,7 +11148,7 @@ class BangaloreScraperService extends BaseScraperService
                 'department_name_en' => 'Pediatrics',
                 'department_name_hi' => 'बाल रोग विभाग',
                 'hospital_name_en' => 'Cloudnine Hospital',
-                'hospital_name_hi' => 'च्लॊउद्निनॆ अस्पताल (बैंगलोर)',
+                'hospital_name_hi' => 'च्लोउद्निने अस्पताल (बैंगलोर)',
                 'address' => null,
                 'address_line1' => '1533, 9th Main, 3rd Block',
                 'address_line2' => 'Jayanagar',
@@ -11357,7 +11357,7 @@ class BangaloreScraperService extends BaseScraperService
                 'department_name_en' => 'Pulmonology',
                 'department_name_hi' => 'श्वसन रोग विभाग',
                 'hospital_name_en' => 'Fortis Hospital',
-                'hospital_name_hi' => 'फ़ॊर्तिस अस्पताल (बैंगलोर)',
+                'hospital_name_hi' => 'फ़ोर्तिस अस्पताल (बैंगलोर)',
                 'address' => null,
                 'address_line1' => '154/9, Bannerghatta Road',
                 'address_line2' => 'Opposite IIM-B',
@@ -11387,7 +11387,7 @@ class BangaloreScraperService extends BaseScraperService
                 'department_name_en' => 'Hematology',
                 'department_name_hi' => 'रक्त रोग विभाग',
                 'hospital_name_en' => 'Apollo Hospitals',
-                'hospital_name_hi' => 'अपॊल्लॊ अस्पतालस (बैंगलोर)',
+                'hospital_name_hi' => 'अपोल्लो अस्पतालस (बैंगलोर)',
                 'address' => null,
                 'address_line1' => '154/11, Bannerghatta Road',
                 'address_line2' => 'Near IIM-B',
@@ -11537,7 +11537,7 @@ class BangaloreScraperService extends BaseScraperService
                 'department_name_en' => 'Neurosurgery',
                 'department_name_hi' => 'तंत्रिका शल्य चिकित्सा',
                 'hospital_name_en' => 'Aster CMI Hospital',
-                'hospital_name_hi' => 'अस्तॆर च्मि अस्पताल (बैंगलोर)',
+                'hospital_name_hi' => 'अस्तेर च्मि अस्पताल (बैंगलोर)',
                 'address' => null,
                 'address_line1' => '43/2, New Airport Road',
                 'address_line2' => 'Hebbal',

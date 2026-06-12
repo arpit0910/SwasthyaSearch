@@ -21,7 +21,7 @@ class HospitalController extends Controller
 
         // Nearby-first behavior: limit to nearby hospitals first, then apply all other filters.
         if ($hasUserLocation) {
-            $nearbyHospitalIds = Hospital::where('is_verified', true)
+            $allHospitalsMapped = Hospital::where('is_verified', true)
                 ->where('city', 'LIKE', "%{$activeCity}%")
                 ->get()
                 ->map(function (Hospital $hospital) use ($userLat, $userLng) {
@@ -29,11 +29,20 @@ class HospitalController extends Controller
                         'id' => $hospital->id,
                         'distance_km' => $this->calculateDistanceKm($userLat, $userLng, $hospital->latitude, $hospital->longitude),
                     ];
-                })
+                });
+
+            $nearbyHospitalIds = $allHospitalsMapped
                 ->filter(fn(array $hospital) => $hospital['distance_km'] !== null && $hospital['distance_km'] < 50)
-                ->sortBy('distance_km')
+                ->sortBy(fn(array $hospital) => $hospital['distance_km'])
                 ->pluck('id')
                 ->values();
+
+            if ($nearbyHospitalIds->isEmpty()) {
+                $nearbyHospitalIds = $allHospitalsMapped
+                    ->sortBy(fn(array $hospital) => $hospital['distance_km'] ?? PHP_FLOAT_MAX)
+                    ->pluck('id')
+                    ->values();
+            }
 
             if ($nearbyHospitalIds->isEmpty()) {
                 $hospitals = $this->paginateCollection(collect(), $request, 30);
@@ -58,7 +67,7 @@ class HospitalController extends Controller
             $types = ($types && $types !== 'All') ? [$types] : [];
         }
         $types = array_filter($types); // Remove empty values
-        
+
         if (!empty($types)) {
             $query->whereIn('type', $types);
         }
@@ -109,7 +118,7 @@ class HospitalController extends Controller
                 ->latest()
                 ->get()
                 ->map(fn(Hospital $hospital) => $this->formatHospital($hospital, $userLat, $userLng))
-                ->sortBy('distance_km')
+                ->sortBy(fn(array $hospital) => $hospital['distance_km'] ?? PHP_FLOAT_MAX)
                 ->values();
 
             $hospitals = $this->paginateCollection($hospitals, $request, 30);
@@ -186,7 +195,7 @@ class HospitalController extends Controller
 
         $angle = 2 * asin(sqrt(
             pow(sin($latDelta / 2), 2) +
-            cos($latFrom) * cos($latTo) * pow(sin($lonDelta / 2), 2)
+                cos($latFrom) * cos($latTo) * pow(sin($lonDelta / 2), 2)
         ));
 
         return round($angle * $earthRadius, 1);
@@ -315,4 +324,3 @@ class HospitalController extends Controller
         return $stateMap[$state] ?? $this->toHindiAddress($state);
     }
 }
-

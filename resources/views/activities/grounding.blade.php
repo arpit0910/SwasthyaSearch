@@ -16,7 +16,7 @@
 @php
 
 
-    $isHindi = $locale === 'hi';
+    $isHindi = \App\Helpers\LocaleHelper::current() === 'hi';
 
 
     $steps = [
