@@ -279,7 +279,6 @@
     <aside class="admin-sidebar" id="sidebar">
         <a href="{{ route('admin.dashboard') }}" class="sidebar-brand">
             <img src="{{ asset('img/arogio-logo.png') }}" alt="Arogio">
-            <strong>Arogio</strong>
         </a>
 
         <div class="nav-group-title">Overview</div>
