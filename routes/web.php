@@ -108,6 +108,8 @@ Route::prefix('admin')->middleware('web')->group(function () {
         Route::post('/medicines', [AdminDashboardController::class, 'storeMedicine'])->name('admin.medicines.store');
         Route::put('/medicines/{medicine}', [AdminDashboardController::class, 'updateMedicine'])->name('admin.medicines.update');
         Route::delete('/medicines/{medicine}', [AdminDashboardController::class, 'destroyMedicine'])->name('admin.medicines.destroy');
+        Route::post('/medicines/import', [AdminDashboardController::class, 'importMedicines'])->name('admin.medicines.import');
+        Route::get('/medicines/export', [AdminDashboardController::class, 'exportMedicines'])->name('admin.medicines.export');
         Route::get('/medicine-reports', [AdminDashboardController::class, 'medicineReports'])->name('admin.medicine_reports');
         Route::put('/medicine-reports/{medicineReport}', [AdminDashboardController::class, 'updateMedicineReport'])->name('admin.medicine_reports.update');
 

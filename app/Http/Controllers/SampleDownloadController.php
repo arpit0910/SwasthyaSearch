@@ -31,6 +31,10 @@ class SampleDownloadController extends Controller
                 $content .= "name_en,name_hi,type,address,city,emergency_phone,latitude,longitude\n";
                 $content .= "Apollo Hospital,Apollo Hospital Hindi,Hospital,Greams Road,Chennai,\"+91 44 2829 0200, +91 44 2829 0300\",13.0604,80.2496\n";
                 break;
+            case 'medicines':
+                $content .= "name,slug,generic_name,brand_names_json,composition,strength,medicine_type,category,prescription_required,purpose_en,purpose_hi,overview_en,overview_hi,review_status,is_published\n";
+                $content .= "Paracetamol,paracetamol,Acetaminophen,\"[\"\"Dolo 650\"\",\"\"Crocin\"\"]\",Paracetamol IP,650 mg,Tablet,Pain relief,0,Fever reduction,बुखार कम करने के लिए,Commonly used for fever,बुखार में आमतौर पर उपयोग,published,1\n";
+                break;
             case 'doctors':
             default:
                 $content .= "first_name,last_name,department_name_en,registration_number,medical_council,education_degrees,experience_years,phone,about_en,about_hi\n";

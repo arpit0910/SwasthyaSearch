@@ -7,9 +7,17 @@
             <h1 class="h3 mb-1 fw-bold text-dark">Medicine Information Management</h1>
             <p class="text-muted mb-0">Manage medicine education pages, publish safe content, and control review workflow.</p>
         </div>
-        <a class="btn btn-primary d-flex align-items-center gap-2" href="{{ route('admin.medicines.create') }}">
-            <i class="fa-solid fa-plus"></i> Add Medicine
-        </a>
+        <div class="d-flex gap-2">
+            <a href="{{ route('admin.medicines.export') }}" class="btn btn-outline-success d-flex align-items-center gap-2">
+                <i class="fa-solid fa-file-export"></i> Export CSV
+            </a>
+            <button class="btn btn-outline-secondary d-flex align-items-center gap-2" data-bs-toggle="modal" data-bs-target="#importModal">
+                <i class="fa-solid fa-file-import"></i> Import CSV
+            </button>
+            <a class="btn btn-primary d-flex align-items-center gap-2" href="{{ route('admin.medicines.create') }}">
+                <i class="fa-solid fa-plus"></i> Add Medicine
+            </a>
+        </div>
     </div>
 
     <div class="card border-0 shadow-sm">
@@ -86,4 +94,7 @@
         </div>
     </div>
 </div>
+
+@include('admin.medicines.import')
+
 @endsection

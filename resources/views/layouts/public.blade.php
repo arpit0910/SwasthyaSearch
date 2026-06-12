@@ -278,6 +278,10 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&family=Inter:wght@300;400;500;600;700&family=Noto+Sans+Devanagari:wght@400;500;600;700&family=Hind:wght@400;500;600;700&display=swap" rel="stylesheet">
     <style>
+        html {
+            scrollbar-gutter: stable;
+        }
+
         .ss-mobile-only {
             display: none;
         }
@@ -480,9 +484,9 @@
     @yield('content')
 
     <div id="chatbot-mobile-overlay" class="hidden fixed inset-0 bg-slate-950/45 backdrop-blur-[1px] z-[70] sm:hidden" onclick="toggleChatbot()"></div>
-        <div id="lead-capture-overlay" class="hidden fixed inset-0 z-[95] bg-slate-950/60 backdrop-blur-[3px]"></div>
+        <div id="lead-capture-overlay" class="hidden fixed inset-0 z-[95] bg-slate-950/75 dark:bg-slate-950/85 backdrop-blur-[6px]"></div>
     <div id="lead-capture-modal" class="hidden fixed inset-0 z-[96] flex items-center justify-center p-4">
-        <div class="relative w-full max-w-md overflow-hidden rounded-3xl border border-cyan-100/70 bg-white shadow-2xl ring-1 ring-cyan-100/60 dark:border-slate-700 dark:bg-slate-900 dark:ring-slate-700">
+        <div class="relative w-full max-w-md overflow-hidden rounded-3xl border border-slate-200/80 dark:border-slate-800 bg-white shadow-2xl ring-1 ring-slate-100/60 dark:border-slate-700 dark:bg-slate-900 dark:ring-slate-700">
             <div class="absolute -top-16 -right-16 h-44 w-44 rounded-full bg-cyan-400/20 blur-2xl"></div>
             <div class="absolute -bottom-20 -left-10 h-52 w-52 rounded-full bg-teal-400/15 blur-2xl"></div>
 
@@ -517,9 +521,9 @@
                 </div>
             </form>
         </div>
-    </div><div id="listing-report-overlay" class="hidden fixed inset-0 z-[96] bg-slate-950/55 backdrop-blur-[2px]"></div>
+    </div><div id="listing-report-overlay" class="hidden fixed inset-0 z-[96] bg-slate-950/75 dark:bg-slate-950/85 backdrop-blur-[6px]"></div>
     <div id="listing-report-modal" class="hidden fixed inset-0 z-[97] flex items-center justify-center p-4">
-        <div class="w-full max-w-md rounded-3xl border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-900 shadow-2xl overflow-hidden">
+        <div class="w-full max-w-md rounded-3xl border border-slate-200/80 dark:border-slate-800 bg-white dark:bg-slate-900 shadow-2xl overflow-hidden">
             <div class="px-6 pt-6 pb-4 border-b border-slate-100 dark:border-slate-800">
                 <h3 class="text-xl font-extrabold text-slate-900 dark:text-slate-100">{{ $locale === 'hi' ? 'गलत जानकारी रिपोर्ट करें' : 'Report Incorrect Listing' }}</h3>
                 <p id="listing-report-subtitle" class="mt-1 text-sm text-slate-600 dark:text-slate-300"></p>

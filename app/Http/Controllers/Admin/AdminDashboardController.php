@@ -1558,7 +1558,10 @@ class AdminDashboardController extends Controller
             $query->where('review_status', $status);
         }
 
-        $medicines = $query->latest()->paginate(20)->withQueryString();
+        $medicines = $query->select(['id', 'name', 'slug', 'generic_name', 'category', 'review_status', 'is_published', 'brand_names_json'])
+            ->latest()
+            ->paginate(20)
+            ->withQueryString();
 
         return view('admin.medicines.index', compact('medicines'));
     }
@@ -1592,6 +1595,175 @@ class AdminDashboardController extends Controller
         $medicine->delete();
 
         return back()->with('success', 'Medicine deleted successfully.');
+    }
+
+    public function exportMedicines()
+    {
+        $medicines = Medicine::all();
+        $headers = [
+            'Content-type' => 'text/csv',
+            'Content-Disposition' => 'attachment; filename=medicines_export.csv',
+            'Pragma' => 'no-cache',
+            'Cache-Control' => 'must-revalidate, post-check=0, pre-check=0',
+            'Expires' => '0',
+        ];
+
+        $columns = [
+            'id', 'name', 'slug', 'generic_name', 'brand_names_json', 'composition', 'strength',
+            'medicine_type', 'category', 'prescription_required', 'purpose_en', 'purpose_hi',
+            'overview_en', 'overview_hi', 'uses_en', 'uses_hi', 'benefits_en', 'benefits_hi',
+            'dosage_information_en', 'dosage_information_hi', 'mechanism_en', 'mechanism_hi',
+            'common_side_effects_en', 'common_side_effects_hi', 'serious_side_effects_en', 'serious_side_effects_hi',
+            'drug_interactions_en', 'drug_interactions_hi', 'food_interactions_en', 'food_interactions_hi',
+            'alcohol_warning_en', 'alcohol_warning_hi', 'pregnancy_warning_en', 'pregnancy_warning_hi',
+            'breastfeeding_warning_en', 'breastfeeding_warning_hi', 'kidney_warning_en', 'kidney_warning_hi',
+            'liver_warning_en', 'liver_warning_hi', 'driving_warning_en', 'driving_warning_hi',
+            'allergy_warning_en', 'allergy_warning_hi', 'precautions_en', 'precautions_hi',
+            'contraindications_en', 'contraindications_hi', 'avoid_if_en', 'avoid_if_hi',
+            'missed_dose_en', 'missed_dose_hi', 'overdose_en', 'overdose_hi', 'storage_en', 'storage_hi',
+            'expert_advice_en', 'expert_advice_hi', 'when_to_contact_doctor_en', 'when_to_contact_doctor_hi',
+            'faqs_json', 'source_references_json', 'meta_title_en', 'meta_title_hi', 'meta_description_en',
+            'meta_description_hi', 'reviewed_by', 'last_reviewed_at', 'ai_generated', 'medically_reviewed',
+            'review_status', 'is_published'
+        ];
+
+        $callback = function () use ($medicines, $columns) {
+            $file = fopen('php://output', 'w');
+            fputcsv($file, $columns);
+
+            foreach ($medicines as $medicine) {
+                $row = [];
+                foreach ($columns as $column) {
+                    $val = $medicine->{$column};
+                    if (in_array($column, ['brand_names_json', 'faqs_json', 'source_references_json'])) {
+                        $val = is_array($val) ? json_encode($val, JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES) : $val;
+                    } elseif ($val instanceof \DateTimeInterface) {
+                        $val = $val->format('Y-m-d H:i:s');
+                    } elseif (is_bool($val)) {
+                        $val = $val ? 1 : 0;
+                    }
+                    $row[] = $val;
+                }
+                fputcsv($file, $row);
+            }
+            fclose($file);
+        };
+
+        return response()->stream($callback, 200, $headers);
+    }
+
+    public function importMedicines(Request $request)
+    {
+        $request->validate(['file' => 'required|mimes:csv,txt']);
+        $path = $request->file('file')->getRealPath();
+        $file = fopen($path, 'r');
+        $header = fgetcsv($file);
+
+        while ($row = fgetcsv($file)) {
+            if (count($header) !== count($row)) continue;
+            $data = array_combine($header, $row);
+            if (empty($data['name'])) continue;
+
+            $medicine = !empty($data['id']) ? Medicine::find($data['id']) : Medicine::where('name', $data['name'])->first();
+
+            $brandNames = [];
+            if (!empty($data['brand_names_json'])) {
+                $decoded = json_decode($data['brand_names_json'], true);
+                $brandNames = is_array($decoded) ? $decoded : array_map('trim', explode(';', $data['brand_names_json']));
+            }
+            $sourceRefs = [];
+            if (!empty($data['source_references_json'])) {
+                $decoded = json_decode($data['source_references_json'], true);
+                $sourceRefs = is_array($decoded) ? $decoded : array_map('trim', explode(';', $data['source_references_json']));
+            }
+            $faqs = [];
+            if (!empty($data['faqs_json'])) {
+                $decoded = json_decode($data['faqs_json'], true);
+                $faqs = is_array($decoded) ? $decoded : [];
+            }
+
+            $updateData = [
+                'name' => $data['name'],
+                'slug' => !empty($data['slug']) ? $data['slug'] : Str::slug($data['name']),
+                'generic_name' => $data['generic_name'] ?? null,
+                'brand_names_json' => $brandNames,
+                'composition' => $data['composition'] ?? null,
+                'strength' => $data['strength'] ?? null,
+                'medicine_type' => $data['medicine_type'] ?? null,
+                'category' => $data['category'] ?? null,
+                'prescription_required' => isset($data['prescription_required']) ? filter_var($data['prescription_required'], FILTER_VALIDATE_BOOLEAN) : false,
+                'purpose_en' => $data['purpose_en'] ?? null,
+                'purpose_hi' => $data['purpose_hi'] ?? null,
+                'overview_en' => $data['overview_en'] ?? null,
+                'overview_hi' => $data['overview_hi'] ?? null,
+                'uses_en' => $data['uses_en'] ?? null,
+                'uses_hi' => $data['uses_hi'] ?? null,
+                'benefits_en' => $data['benefits_en'] ?? null,
+                'benefits_hi' => $data['benefits_hi'] ?? null,
+                'dosage_information_en' => $data['dosage_information_en'] ?? null,
+                'dosage_information_hi' => $data['dosage_information_hi'] ?? null,
+                'mechanism_en' => $data['mechanism_en'] ?? null,
+                'mechanism_hi' => $data['mechanism_hi'] ?? null,
+                'common_side_effects_en' => $data['common_side_effects_en'] ?? null,
+                'common_side_effects_hi' => $data['common_side_effects_hi'] ?? null,
+                'serious_side_effects_en' => $data['serious_side_effects_en'] ?? null,
+                'serious_side_effects_hi' => $data['serious_side_effects_hi'] ?? null,
+                'drug_interactions_en' => $data['drug_interactions_en'] ?? null,
+                'drug_interactions_hi' => $data['drug_interactions_hi'] ?? null,
+                'food_interactions_en' => $data['food_interactions_en'] ?? null,
+                'food_interactions_hi' => $data['food_interactions_hi'] ?? null,
+                'alcohol_warning_en' => $data['alcohol_warning_en'] ?? null,
+                'alcohol_warning_hi' => $data['alcohol_warning_hi'] ?? null,
+                'pregnancy_warning_en' => $data['pregnancy_warning_en'] ?? null,
+                'pregnancy_warning_hi' => $data['pregnancy_warning_hi'] ?? null,
+                'breastfeeding_warning_en' => $data['breastfeeding_warning_en'] ?? null,
+                'breastfeeding_warning_hi' => $data['breastfeeding_warning_hi'] ?? null,
+                'kidney_warning_en' => $data['kidney_warning_en'] ?? null,
+                'kidney_warning_hi' => $data['kidney_warning_hi'] ?? null,
+                'liver_warning_en' => $data['liver_warning_en'] ?? null,
+                'liver_warning_hi' => $data['liver_warning_hi'] ?? null,
+                'driving_warning_en' => $data['driving_warning_en'] ?? null,
+                'driving_warning_hi' => $data['driving_warning_hi'] ?? null,
+                'allergy_warning_en' => $data['allergy_warning_en'] ?? null,
+                'allergy_warning_hi' => $data['allergy_warning_hi'] ?? null,
+                'precautions_en' => $data['precautions_en'] ?? null,
+                'precautions_hi' => $data['precautions_hi'] ?? null,
+                'contraindications_en' => $data['contraindications_en'] ?? null,
+                'contraindications_hi' => $data['contraindications_hi'] ?? null,
+                'avoid_if_en' => $data['avoid_if_en'] ?? null,
+                'avoid_if_hi' => $data['avoid_if_hi'] ?? null,
+                'missed_dose_en' => $data['missed_dose_en'] ?? null,
+                'missed_dose_hi' => $data['missed_dose_hi'] ?? null,
+                'overdose_en' => $data['overdose_en'] ?? null,
+                'overdose_hi' => $data['overdose_hi'] ?? null,
+                'storage_en' => $data['storage_en'] ?? null,
+                'storage_hi' => $data['storage_hi'] ?? null,
+                'expert_advice_en' => $data['expert_advice_en'] ?? null,
+                'expert_advice_hi' => $data['expert_advice_hi'] ?? null,
+                'when_to_contact_doctor_en' => $data['when_to_contact_doctor_en'] ?? null,
+                'when_to_contact_doctor_hi' => $data['when_to_contact_doctor_hi'] ?? null,
+                'faqs_json' => $faqs,
+                'source_references_json' => $sourceRefs,
+                'meta_title_en' => $data['meta_title_en'] ?? null,
+                'meta_title_hi' => $data['meta_title_hi'] ?? null,
+                'meta_description_en' => $data['meta_description_en'] ?? null,
+                'meta_description_hi' => $data['meta_description_hi'] ?? null,
+                'reviewed_by' => $data['reviewed_by'] ?? null,
+                'last_reviewed_at' => !empty($data['last_reviewed_at']) ? $data['last_reviewed_at'] : null,
+                'ai_generated' => isset($data['ai_generated']) ? filter_var($data['ai_generated'], FILTER_VALIDATE_BOOLEAN) : false,
+                'medically_reviewed' => isset($data['medically_reviewed']) ? filter_var($data['medically_reviewed'], FILTER_VALIDATE_BOOLEAN) : false,
+                'review_status' => !empty($data['review_status']) ? $data['review_status'] : 'draft',
+                'is_published' => isset($data['is_published']) ? filter_var($data['is_published'], FILTER_VALIDATE_BOOLEAN) : false,
+            ];
+
+            if ($medicine) {
+                $medicine->update($updateData);
+            } else {
+                Medicine::create($updateData);
+            }
+        }
+        fclose($file);
+        return back()->with('success', 'Medicines imported & updated successfully.');
     }
 
     public function medicineReports(Request $request)

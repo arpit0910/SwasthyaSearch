@@ -105,4 +105,59 @@ class MedicineFeatureTest extends TestCase
             ->assertSee('Medicine Reports', false)
             ->assertSee('Wrong use', false);
     }
+
+    public function test_admin_can_export_medicines(): void
+    {
+        $admin = Admin::create([
+            'name' => 'Admin User',
+            'email' => 'admin@example.com',
+            'password' => Hash::make('password'),
+        ]);
+
+        Medicine::create([
+            'name' => 'Paracetamol Test',
+            'slug' => 'paracetamol-test',
+            'review_status' => 'published',
+            'is_published' => true,
+        ]);
+
+        $response = $this->actingAs($admin, 'admin')
+            ->get(route('admin.medicines.export'));
+
+        $response->assertOk();
+        $response->assertHeader('Content-Type', 'text/csv; charset=UTF-8');
+        
+        ob_start();
+        $response->sendContent();
+        $content = ob_get_clean();
+
+        $this->assertStringContainsString('Paracetamol Test', $content);
+    }
+
+    public function test_admin_can_import_medicines(): void
+    {
+        $admin = Admin::create([
+            'name' => 'Admin User',
+            'email' => 'admin@example.com',
+            'password' => Hash::make('password'),
+        ]);
+
+        $csvContent = "name,slug,generic_name,review_status,is_published\n" .
+                      "New Medicine,new-medicine,Some Generic,published,1\n";
+
+        $file = \Illuminate\Http\UploadedFile::fake()->createWithContent('medicines.csv', $csvContent);
+
+        $response = $this->actingAs($admin, 'admin')
+            ->post(route('admin.medicines.import'), [
+                'file' => $file,
+            ]);
+
+        $response->assertRedirect();
+        $this->assertDatabaseHas('medicines', [
+            'name' => 'New Medicine',
+            'slug' => 'new-medicine',
+            'generic_name' => 'Some Generic',
+            'is_published' => true,
+        ]);
+    }
 }
