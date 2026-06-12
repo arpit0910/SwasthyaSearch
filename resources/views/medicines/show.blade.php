@@ -62,11 +62,71 @@
                 </div>
             </div>
 
+            @php
+            $sectionTitles = [
+                'en' => [
+                    'overview' => 'General Overview',
+                    'uses' => 'Reported Uses',
+                    'benefits' => 'General Characteristics',
+                    'dosage_information' => 'General Dosing Information (Non-Prescriptive)',
+                    'mechanism' => 'General Mechanism of Action',
+                    'common_side_effects' => 'Reported Common Side Effects',
+                    'serious_side_effects' => 'Reported Serious Side Effects (Seek Medical Care)',
+                    'drug_interactions' => 'General Drug Interactions',
+                    'food_interactions' => 'General Food Interactions',
+                    'alcohol_warning' => 'Alcohol Interaction Information',
+                    'pregnancy_warning' => 'Pregnancy Warnings',
+                    'breastfeeding_warning' => 'Breastfeeding Warnings',
+                    'kidney_warning' => 'Kidney Health Warnings',
+                    'liver_warning' => 'Liver Health Warnings',
+                    'driving_warning' => 'Driving Safety Warnings',
+                    'allergy_warning' => 'Allergy Warnings',
+                    'precautions' => 'General Precautions',
+                    'contraindications' => 'General Contraindications',
+                    'avoid_if' => 'Conditions to Avoid',
+                    'missed_dose' => 'General Missed Dose Guidelines',
+                    'overdose' => 'Emergency Overdose Guidelines',
+                    'storage' => 'Storage Guidelines',
+                    'expert_advice' => 'General Educational Notes',
+                    'when_to_contact_doctor' => 'When to Consult a Medical Professional',
+                ],
+                'hi' => [
+                    'overview' => 'सामान्य अवलोकन',
+                    'uses' => 'संभावित उपयोग',
+                    'benefits' => 'सामान्य विशेषताएं',
+                    'dosage_information' => 'सामान्य खुराक जानकारी (गैर-पर्चे वाली)',
+                    'mechanism' => 'काम करने की सामान्य प्रणाली',
+                    'common_side_effects' => 'संभावित सामान्य दुष्प्रभाव',
+                    'serious_side_effects' => 'संभावित गंभीर दुष्प्रभाव (चिकित्सीय सहायता लें)',
+                    'drug_interactions' => 'दवाओं के साथ सामान्य परस्पर क्रिया',
+                    'food_interactions' => 'भोजन के साथ सामान्य परस्पर क्रिया',
+                    'alcohol_warning' => 'शराब के साथ सामान्य चेतावनी',
+                    'pregnancy_warning' => 'गर्भावस्था के दौरान चेतावनी',
+                    'breastfeeding_warning' => 'स्तनपान के दौरान चेतावनी',
+                    'kidney_warning' => 'किडनी से जुड़ी सामान्य चेतावनी',
+                    'liver_warning' => 'लिवर से जुड़ी सामान्य चेतावनी',
+                    'driving_warning' => 'वाहन चलाने के संबंध में चेतावनी',
+                    'allergy_warning' => 'एलर्जी की चेतावनी',
+                    'precautions' => 'सामान्य सावधानियां',
+                    'contraindications' => 'संभावित निषेध (Contraindications)',
+                    'avoid_if' => 'किन स्थितियों में सेवन से बचें',
+                    'missed_dose' => 'खुराक छूटने पर सामान्य दिशा-निर्देश',
+                    'overdose' => 'आपातकालीन ओवरडोज जानकारी',
+                    'storage' => 'भंडारण के सामान्य नियम',
+                    'expert_advice' => 'सामान्य शैक्षणिक टिप्पणी',
+                    'when_to_contact_doctor' => 'डॉक्टर से कब संपर्क करें',
+                ]
+            ];
+            @endphp
+
             @foreach($sections as $key => $content)
                 <section class="rounded-[1.75rem] border border-slate-200/80 dark:border-slate-800 bg-white/90 dark:bg-slate-900/90 shadow-sm p-6">
-                    <h2 class="text-xl font-bold text-slate-950 dark:text-white">
-                        {{ str($key)->replace('_', ' ')->title() }}
-                    </h2>
+                    <div class="flex items-center gap-2 mb-3">
+                        <span class="inline-block w-2 h-2 rounded-full bg-cyan-500"></span>
+                        <h2 class="text-xl font-bold text-slate-950 dark:text-white">
+                            {{ $sectionTitles[$locale][$key] ?? str($key)->replace('_', ' ')->title() }}
+                        </h2>
+                    </div>
                     <p class="mt-3 text-sm leading-7 text-slate-600 dark:text-slate-300 whitespace-pre-line">{{ $content }}</p>
                     @if($key === 'dosage_information')
                         <div class="mt-4 rounded-2xl border border-rose-200 dark:border-rose-900/50 bg-rose-50/90 dark:bg-rose-950/30 p-4 text-sm text-rose-900 dark:text-rose-100">
