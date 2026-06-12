@@ -88,8 +88,13 @@
                 </table>
             </div>
 
-            <div class="mt-3">
-                {{ $medicines->links() }}
+            <div class="d-flex flex-column flex-md-row justify-content-between align-items-center gap-3 mt-4">
+                <div class="text-muted small">
+                    Showing {{ $medicines->firstItem() ?? 0 }} to {{ $medicines->lastItem() ?? 0 }} of {{ $medicines->total() ?? 0 }} entries
+                </div>
+                <div>
+                    {{ $medicines->links() }}
+                </div>
             </div>
         </div>
     </div>
