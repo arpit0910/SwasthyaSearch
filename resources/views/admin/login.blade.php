@@ -9,7 +9,9 @@
     <link rel="icon" type="image/png" href="{{ asset('img/fav-icon.png') }}">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700;800&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link
+        href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700;800&family=Inter:wght@400;500;600;700&display=swap"
+        rel="stylesheet">
     <script src="https://cdn.tailwindcss.com"></script>
     <script>
         tailwind.config = {
@@ -75,7 +77,7 @@
             position: absolute;
             inset: 36%;
             border-radius: 9999px;
-            background: radial-gradient(circle at 30% 30%, rgba(255,255,255,0.95), rgba(255,255,255,0.18) 34%, transparent 68%), linear-gradient(135deg, rgba(45,212,191,0.46), rgba(59,130,246,0.34));
+            background: radial-gradient(circle at 30% 30%, rgba(255, 255, 255, 0.95), rgba(255, 255, 255, 0.18) 34%, transparent 68%), linear-gradient(135deg, rgba(45, 212, 191, 0.46), rgba(59, 130, 246, 0.34));
             box-shadow: 0 0 40px rgba(45, 212, 191, 0.22);
             animation: pulseSoft 5s ease-in-out infinite;
         }
@@ -90,32 +92,80 @@
             animation: floatSoft 6s ease-in-out infinite;
         }
 
-        .brand-dot.dot-1 { left: 18%; top: 20%; animation-delay: 0s; }
-        .brand-dot.dot-2 { right: 16%; top: 30%; animation-delay: 1s; }
-        .brand-dot.dot-3 { left: 22%; bottom: 18%; animation-delay: 2s; }
-        .brand-dot.dot-4 { right: 20%; bottom: 16%; animation-delay: 3s; }
+        .brand-dot.dot-1 {
+            left: 18%;
+            top: 20%;
+            animation-delay: 0s;
+        }
+
+        .brand-dot.dot-2 {
+            right: 16%;
+            top: 30%;
+            animation-delay: 1s;
+        }
+
+        .brand-dot.dot-3 {
+            left: 22%;
+            bottom: 18%;
+            animation-delay: 2s;
+        }
+
+        .brand-dot.dot-4 {
+            right: 20%;
+            bottom: 16%;
+            animation-delay: 3s;
+        }
 
         @keyframes spinSlow {
-            from { transform: rotate(0deg); }
-            to { transform: rotate(360deg); }
+            from {
+                transform: rotate(0deg);
+            }
+
+            to {
+                transform: rotate(360deg);
+            }
         }
 
         @keyframes spinReverse {
-            from { transform: rotate(360deg); }
-            to { transform: rotate(0deg); }
+            from {
+                transform: rotate(360deg);
+            }
+
+            to {
+                transform: rotate(0deg);
+            }
         }
 
         @keyframes pulseSoft {
-            0%, 100% { transform: scale(0.96); opacity: .78; }
-            50% { transform: scale(1.04); opacity: 1; }
+
+            0%,
+            100% {
+                transform: scale(0.96);
+                opacity: .78;
+            }
+
+            50% {
+                transform: scale(1.04);
+                opacity: 1;
+            }
         }
 
         @keyframes floatSoft {
-            0%, 100% { transform: translateY(0) scale(1); opacity: .74; }
-            50% { transform: translateY(-10px) scale(1.14); opacity: 1; }
+
+            0%,
+            100% {
+                transform: translateY(0) scale(1);
+                opacity: .74;
+            }
+
+            50% {
+                transform: translateY(-10px) scale(1.14);
+                opacity: 1;
+            }
         }
 
         @media (prefers-reduced-motion: reduce) {
+
             .brand-orbit,
             .brand-orbit::before,
             .brand-orbit::after,
@@ -136,15 +186,20 @@
 
     <main class="relative z-10 min-h-screen px-4 py-8 sm:px-6 lg:px-8">
         <div class="mx-auto flex min-h-[calc(100vh-4rem)] max-w-6xl items-center justify-center">
-            <div class="grid w-full gap-6 overflow-hidden rounded-[2rem] border border-white/10 bg-white/5 shadow-soft lg:grid-cols-[1.05fr_.95fr]">
-                <section class="relative hidden overflow-hidden bg-gradient-to-br from-cyan-700 via-sky-700 to-blue-900 p-10 lg:flex lg:flex-col lg:justify-between">
-                    <div class="absolute inset-0 bg-[radial-gradient(circle_at_top_right,rgba(255,255,255,0.14),transparent_32%)]"></div>
+            <div
+                class="grid w-full gap-6 overflow-hidden rounded-[2rem] border border-white/10 bg-white/5 shadow-soft lg:grid-cols-[1.05fr_.95fr]">
+                <section
+                    class="relative hidden overflow-hidden bg-gradient-to-br from-cyan-700 via-sky-700 to-blue-900 p-10 lg:flex lg:flex-col lg:justify-between">
+                    <div
+                        class="absolute inset-0 bg-[radial-gradient(circle_at_top_right,rgba(255,255,255,0.14),transparent_32%)]">
+                    </div>
                     <div class="relative z-10">
                         <h1 class="mt-6 max-w-md text-4xl font-extrabold leading-tight text-white">
                             Manage healthcare discovery with the same calm, modern Arogio feel.
                         </h1>
                         <p class="mt-5 max-w-lg text-base leading-7 text-slate-200/90">
-                            Access doctors, hospitals, blood banks, articles, and platform tools from one trusted operations space.
+                            Access doctors, hospitals, blood banks, articles, and platform tools from one trusted
+                            operations space.
                         </p>
                     </div>
 
@@ -160,7 +215,8 @@
                         <div class="space-y-3 pb-2">
                             <div class="rounded-3xl border border-white/10 bg-white/10 px-5 py-4 backdrop-blur-md">
                                 <div class="text-sm leading-6 text-white">
-                                    Verified directory operations, calmer workflows, and a dashboard aligned with the public Arogio experience.
+                                    Verified directory operations, calmer workflows, and a dashboard aligned with the
+                                    public Arogio experience.
                                 </div>
                             </div>
                         </div>
@@ -170,7 +226,8 @@
                 <section class="glass-card flex items-center p-5 sm:p-8 lg:p-10">
                     <div class="mx-auto w-full max-w-md">
                         <div class="mb-8 text-center lg:text-left">
-                            <img src="{{ asset('img/arogio-logo.png') }}" alt="Arogio" class="mx-auto h-14 w-auto lg:mx-0">
+                            <img src="{{ asset('img/arogio-logo.png') }}" alt="Arogio"
+                                class="mx-auto h-14 w-auto lg:mx-0">
                             <h2 class="mt-4 text-3xl font-bold tracking-tight text-slate-900">
                                 Welcome back
                             </h2>
@@ -180,9 +237,11 @@
                         </div>
 
                         @if ($errors->any())
-                            <div class="mb-5 rounded-2xl border border-rose-200 bg-rose-50 px-4 py-3 text-sm text-rose-700 shadow-sm">
+                            <div
+                                class="mb-5 rounded-2xl border border-rose-200 bg-rose-50 px-4 py-3 text-sm text-rose-700 shadow-sm">
                                 <div class="flex items-start gap-3">
-                                    <span class="mt-0.5 inline-flex h-7 w-7 shrink-0 items-center justify-center rounded-full bg-rose-100 text-rose-600">
+                                    <span
+                                        class="mt-0.5 inline-flex h-7 w-7 shrink-0 items-center justify-center rounded-full bg-rose-100 text-rose-600">
                                         <i class="fa-solid fa-triangle-exclamation text-xs"></i>
                                     </span>
                                     <div>
@@ -197,44 +256,44 @@
                             @csrf
 
                             <div>
-                                <label for="email" class="mb-2 block text-sm font-semibold text-slate-700">Email Address</label>
-                                <div class="group flex h-14 items-center rounded-2xl border border-slate-200 bg-white px-4 shadow-sm transition-all duration-200 focus-within:border-teal-400 focus-within:ring-4 focus-within:ring-teal-500/10">
-                                    <i class="fa-solid fa-envelope text-slate-400 transition-colors duration-200 group-focus-within:text-teal-600"></i>
-                                    <input
-                                        id="email"
-                                        type="email"
-                                        name="email"
-                                        value="{{ old('email') }}"
-                                        required
-                                        autofocus
-                                        placeholder="admin@arogio.com"
+                                <label for="email" class="mb-2 block text-sm font-semibold text-slate-700">Email
+                                    Address</label>
+                                <div
+                                    class="group flex h-14 items-center rounded-2xl border border-slate-200 bg-white px-4 shadow-sm transition-all duration-200 focus-within:border-teal-400 focus-within:ring-4 focus-within:ring-teal-500/10">
+                                    <i
+                                        class="fa-solid fa-envelope text-slate-400 transition-colors duration-200 group-focus-within:text-teal-600"></i>
+                                    <input id="email" type="email" name="email" value="{{ old('email') }}"
+                                        required autofocus placeholder="Enter Email ID"
                                         class="h-full w-full border-0 bg-transparent px-3 text-sm font-medium text-slate-900 outline-none placeholder:text-slate-400">
                                 </div>
                             </div>
 
                             <div>
-                                <label for="password" class="mb-2 block text-sm font-semibold text-slate-700">Password</label>
-                                <div class="group flex h-14 items-center rounded-2xl border border-slate-200 bg-white px-4 shadow-sm transition-all duration-200 focus-within:border-teal-400 focus-within:ring-4 focus-within:ring-teal-500/10">
-                                    <i class="fa-solid fa-lock text-slate-400 transition-colors duration-200 group-focus-within:text-teal-600"></i>
-                                    <input
-                                        id="password"
-                                        type="password"
-                                        name="password"
-                                        required
-                                        placeholder="••••••••"
+                                <label for="password"
+                                    class="mb-2 block text-sm font-semibold text-slate-700">Password</label>
+                                <div
+                                    class="group flex h-14 items-center rounded-2xl border border-slate-200 bg-white px-4 shadow-sm transition-all duration-200 focus-within:border-teal-400 focus-within:ring-4 focus-within:ring-teal-500/10">
+                                    <i
+                                        class="fa-solid fa-lock text-slate-400 transition-colors duration-200 group-focus-within:text-teal-600"></i>
+                                    <input id="password" type="password" name="password" required
+                                        placeholder="Enter Password"
                                         class="h-full w-full border-0 bg-transparent px-3 text-sm font-medium text-slate-900 outline-none placeholder:text-slate-400">
                                 </div>
                             </div>
 
                             <div class="flex items-center justify-between gap-3">
-                                <label for="remember" class="inline-flex cursor-pointer items-center gap-3 text-sm text-slate-600">
-                                    <input id="remember" type="checkbox" name="remember" class="h-4 w-4 rounded border-slate-300 text-teal-600 focus:ring-teal-500">
+                                <label for="remember"
+                                    class="inline-flex cursor-pointer items-center gap-3 text-sm text-slate-600">
+                                    <input id="remember" type="checkbox" name="remember"
+                                        class="h-4 w-4 rounded border-slate-300 text-teal-600 focus:ring-teal-500">
                                     <span class="font-medium">Keep me signed in</span>
                                 </label>
                             </div>
 
-                            <button type="submit" class="group inline-flex h-14 w-full items-center justify-center gap-2 rounded-2xl bg-gradient-to-r from-teal-500 via-cyan-500 to-sky-600 px-5 text-sm font-semibold text-white shadow-lg shadow-cyan-600/20 transition-all duration-200 hover:-translate-y-0.5 hover:shadow-cyan-600/30 active:translate-y-0">
-                                <i class="fa-solid fa-right-to-bracket text-sm transition-transform duration-200 group-hover:translate-x-0.5"></i>
+                            <button type="submit"
+                                class="group inline-flex h-14 w-full items-center justify-center gap-2 rounded-2xl bg-gradient-to-r from-teal-500 via-cyan-500 to-sky-600 px-5 text-sm font-semibold text-white shadow-lg shadow-cyan-600/20 transition-all duration-200 hover:-translate-y-0.5 hover:shadow-cyan-600/30 active:translate-y-0">
+                                <i
+                                    class="fa-solid fa-right-to-bracket text-sm transition-transform duration-200 group-hover:translate-x-0.5"></i>
                                 <span>Sign In to Dashboard</span>
                             </button>
                         </form>

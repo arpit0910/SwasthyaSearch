@@ -70,8 +70,9 @@
             border-bottom: 1px solid rgba(255, 255, 255, 0.08);
         }
         .admin-sidebar .sidebar-brand img {
-            width: 46px;
-            height: 46px;
+            height: 40px;
+            width: auto;
+            max-width: 100%;
             object-fit: contain;
             flex-shrink: 0;
         }
@@ -278,7 +279,7 @@
     <!-- Sidebar -->
     <aside class="admin-sidebar" id="sidebar">
         <a href="{{ route('admin.dashboard') }}" class="sidebar-brand">
-            <img src="{{ asset('img/arogio-logo.png') }}" alt="Arogio">
+            <img src="{{ asset('img/arogio-logo-dark.png') }}" alt="Arogio">
         </a>
 
         <div class="nav-group-title">Overview</div>
