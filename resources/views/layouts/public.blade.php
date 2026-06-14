@@ -83,6 +83,14 @@
     'title' => $isHindi ? 'स्वास्थ्य लेख | Arogio' : 'Health Articles | Arogio',
     'description' => $isHindi ? 'स्वास्थ्य, पोषण और वेलनेस पर उपयोगी लेख पढ़ें।' : 'Read useful health, wellness, and medical awareness articles.',
     ],
+    'consultations.index' => [
+    'title' => $isHindi ? 'Video Consulting | Arogio' : 'Video Consulting | Arogio',
+    'description' => $isHindi ? 'अपने ब्राउज़र से तुरंत निजी वीडियो परामर्श शुरू करें।' : 'Start a private browser-based video consultation instantly.',
+    ],
+    'consultations.room' => [
+    'title' => $isHindi ? 'परामर्श कक्ष | Arogio' : 'Consultation Room | Arogio',
+    'description' => $isHindi ? 'निजी वीडियो परामर्श कक्ष में जुड़े रहें।' : 'Stay connected inside the private consultation room.',
+    ],
     'medicines.index' => [
     'title' => $isHindi ? 'दवा जानकारी | Arogio' : 'Medicine Information | Arogio',
     'description' => $isHindi ? 'दवाओं के उपयोग, दुष्प्रभाव, सावधानियां और चेतावनियों की सामान्य जानकारी खोजें।' : 'Search medicine uses, side effects, precautions, and warnings.',
@@ -232,6 +240,7 @@
     'hospitals.index' => $isHindi ? 'अस्पताल' : 'Hospitals',
     'blood_banks.index' => $isHindi ? 'ब्लड बैंक' : 'Blood Banks',
     'articles.index' => $isHindi ? 'लेख' : 'Articles',
+    'consultations.room' => $isHindi ? 'परामर्श कक्ष' : 'Consultation Room',
     'articles.show' => $isHindi ? 'लेख विवरण' : 'Article',
 
     'medicines.show' => $isHindi ? 'दवा विवरण' : 'Medicine Details',
@@ -466,6 +475,7 @@
                     <a href="{{ route('articles.index') }}" class="mobile-nav-item {{ request()->routeIs('articles.*') ? 'active' : '' }}">
                         <i data-lucide="book-open" class="w-4 h-4"></i>
                         <span>{{ $locale === 'hi' ? 'स्वास्थ्य लेख' : 'Articles' }}</span>
+                    </a>
                     </a>
                     <a href="{{ route('about') }}" class="mobile-nav-item {{ request()->routeIs('about') ? 'active' : '' }}">
                         <i data-lucide="info" class="w-4 h-4"></i>
@@ -4238,8 +4248,3 @@
 </body>
 
 </html>
-
-
-
-
-

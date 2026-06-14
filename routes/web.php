@@ -7,6 +7,7 @@ use App\Http\Controllers\ArticleCommentController;
 use App\Http\Controllers\ArticleController;
 use App\Http\Controllers\BloodBankController;
 use App\Http\Controllers\Api\ChatbotController;
+use App\Http\Controllers\ConsultationController;
 use App\Http\Controllers\DoctorController;
 use App\Http\Controllers\HospitalController;
 use App\Http\Controllers\LegalController;
@@ -148,6 +149,8 @@ Route::prefix('admin')->middleware('web')->group(function () {
 
         // Symptom Test Analytics
         Route::get('/symptom-test-reports', [AdminDashboardController::class, 'symptomTestReports'])->name('admin.symptom_tests');
+        Route::get('/consultations', [AdminDashboardController::class, 'consultations'])->name('admin.consultations');
+        Route::get('/consultations/{uuid}', [AdminDashboardController::class, 'joinConsultation'])->name('admin.consultations.join');
     });
 });
 
@@ -176,6 +179,12 @@ Route::get('/quizzes', [QuizController::class, 'index'])->name('quizzes.index');
 Route::get('/quizzes/{quiz:slug}', [QuizController::class, 'show'])->name('quizzes.show');
 Route::post('/quizzes/{quiz:slug}/result', [QuizController::class, 'result'])->name('quizzes.result');
 Route::post('/switch-locale', [SearchController::class, 'switchLocale'])->name('switch.locale');
+Route::get('/consultations', [ConsultationController::class, 'index'])->name('consultations.index');
+Route::post('/consultations', [ConsultationController::class, 'store'])->name('consultations.store');
+Route::get('/consultations/{uuid}', [ConsultationController::class, 'room'])->name('consultations.room');
+Route::get('/consultations/{uuid}/poll', [ConsultationController::class, 'poll'])->name('consultations.poll');
+Route::post('/consultations/{uuid}/signal', [ConsultationController::class, 'signal'])->name('consultations.signal');
+Route::post('/consultations/{uuid}/end', [ConsultationController::class, 'end'])->name('consultations.end');
 
 Route::get('/sitemap.xml', function () {
     $base = rtrim(config('app.url', url('/')), '/');

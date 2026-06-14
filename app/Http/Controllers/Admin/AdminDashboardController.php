@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Models\Article;
 use App\Models\BloodBank;
 use App\Models\CachedMedicalQuestion;
+use App\Models\Consultation;
 use App\Models\Department;
 use App\Models\DirectorySyncHistory;
 use App\Models\Disease;
@@ -141,6 +142,47 @@ class AdminDashboardController extends Controller
             'topSymptoms',
             'recentSubmissions'
         ));
+    }
+
+    public function consultations()
+    {
+        $pendingConsultations = Consultation::query()
+            ->where('status', Consultation::STATUS_PENDING)
+            ->latest()
+            ->get();
+
+        $activeConsultations = Consultation::query()
+            ->where('status', Consultation::STATUS_ACTIVE)
+            ->latest('updated_at')
+            ->get();
+
+        $completedConsultations = Consultation::query()
+            ->where('status', Consultation::STATUS_COMPLETED)
+            ->latest('updated_at')
+            ->limit(10)
+            ->get();
+
+        return view('admin.consultations.index', compact(
+            'pendingConsultations',
+            'activeConsultations',
+            'completedConsultations'
+        ));
+    }
+
+    public function joinConsultation(string $uuid)
+    {
+        $consultation = Consultation::query()
+            ->where('uuid', $uuid)
+            ->firstOrFail();
+
+        if ($consultation->status === Consultation::STATUS_PENDING) {
+            $consultation->update([
+                'status' => Consultation::STATUS_ACTIVE,
+            ]);
+            $consultation->refresh();
+        }
+
+        return view('admin.consultations.room', compact('consultation'));
     }
 
     private function buildTopSymptomsReport(): array

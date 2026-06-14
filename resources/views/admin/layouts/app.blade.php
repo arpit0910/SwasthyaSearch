@@ -297,6 +297,9 @@
         <a href="{{ route('admin.blood_banks') }}" class="nav-link {{ request()->routeIs('admin.blood_banks') ? 'active' : '' }}">
             <i class="fa-solid fa-droplet"></i> Blood Banks
         </a>
+        <a href="{{ route('admin.consultations') }}" class="nav-link {{ request()->routeIs('admin.consultations*') ? 'active' : '' }}">
+            <i class="fa-solid fa-video"></i> Video Consultations
+        </a>
 
         <div class="nav-group-title">Taxonomy & AI Matching</div>
         <a href="{{ route('admin.departments') }}" class="nav-link {{ request()->routeIs('admin.departments') ? 'active' : '' }}">
