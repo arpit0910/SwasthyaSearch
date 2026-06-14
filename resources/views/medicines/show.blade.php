@@ -1,8 +1,65 @@
 @extends('layouts.public')
 
+@php
+    $metaTitle = $locale === 'hi'
+        ? ($medicine->meta_title_hi ?: ($medicine->name . ' की जानकारी, उपयोग, सावधानियां और दुष्प्रभाव | Arogio'))
+        : ($medicine->meta_title_en ?: ($medicine->name . ': Uses, Side Effects, Dosage Info & Precautions | Arogio'));
+    $metaDescription = $locale === 'hi'
+        ? ($medicine->meta_description_hi ?: ($medicine->name . ' के उपयोग, सामान्य सावधानियां, दुष्प्रभाव और शैक्षणिक दवा जानकारी देखें।'))
+        : ($medicine->meta_description_en ?: ('Read educational information about ' . $medicine->name . ', including uses, side effects, precautions, and safety guidance.'));
+    $medicineDescription = \App\Support\Seo::cleanText($metaDescription, 160);
+@endphp
+
 @section('title', $medicine->name . ' - Arogio')
-@section('meta_title', $medicine->meta_title_en ?: ($medicine->name . ': Uses, Side Effects, Dosage Info & Precautions'))
-@section('meta_description', $medicine->meta_description_en ?: ('General educational information for ' . $medicine->name . '.'))
+@section('meta_title', $metaTitle)
+@section('meta_description', $medicineDescription)
+@section('structured_data')
+<script type="application/ld+json">
+{!! json_encode([
+    '@context' => 'https://schema.org',
+    '@type' => 'MedicalWebPage',
+    'name' => $medicine->name,
+    'headline' => $metaTitle,
+    'description' => $medicineDescription,
+    'url' => route('medicines.show', $medicine->slug),
+    'inLanguage' => $locale === 'hi' ? 'hi-IN' : 'en-IN',
+    'about' => [
+        '@type' => 'Drug',
+        'name' => $medicine->name,
+        'alternateName' => $medicine->generic_name,
+        'activeIngredient' => $medicine->composition,
+        'isAvailableGenerically' => filled($medicine->generic_name),
+    ],
+    'mainEntity' => [
+        '@type' => 'Drug',
+        'name' => $medicine->name,
+        'alternateName' => $medicine->generic_name,
+        'activeIngredient' => $medicine->composition,
+        'description' => $medicineDescription,
+    ],
+], JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE) !!}
+</script>
+@if(!empty($medicine->faqs_json))
+<script type="application/ld+json">
+{!! json_encode([
+    '@context' => 'https://schema.org',
+    '@type' => 'FAQPage',
+    'mainEntity' => collect($medicine->faqs_json)
+        ->filter(fn ($faq) => filled($faq['question'] ?? null) && filled($faq['answer'] ?? null))
+        ->map(fn ($faq) => [
+            '@type' => 'Question',
+            'name' => $faq['question'],
+            'acceptedAnswer' => [
+                '@type' => 'Answer',
+                'text' => \App\Support\Seo::cleanText($faq['answer'], 0),
+            ],
+        ])
+        ->values()
+        ->all(),
+], JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE) !!}
+</script>
+@endif
+@endsection
 
 @section('content')
 <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 sm:py-12">

@@ -9,8 +9,38 @@
 @endphp
 
 @section('title', ($locale === 'hi' ? 'अस्पताल के डॉक्टर' : 'Hospital Doctors') . ' - Arogio')
-@section('meta_title', "{$hospitalName} Doctors | Arogio")
-@section('meta_description', "View doctors associated with {$hospital['name_en']} in {$hospital['city']}. Check specialty, experience, and contact details before visiting.")
+@section('meta_title', $locale === 'hi' ? ($hospitalName . ' के डॉक्टर | Arogio') : ($hospitalName . ' Doctors | Arogio'))
+@section('meta_description', $locale === 'hi'
+    ? \App\Support\Seo::cleanText("{$hospitalName}, {$hospitalCity} में उपलब्ध डॉक्टर, विभाग, अनुभव और संपर्क जानकारी देखें।", 160)
+    : \App\Support\Seo::cleanText("View doctors associated with {$hospital['name_en']} in {$hospital['city']}. Check specialty, experience, and contact details before visiting.", 160))
+@section('structured_data')
+<script type="application/ld+json">
+{!! json_encode([
+    '@context' => 'https://schema.org',
+    '@type' => 'Hospital',
+    'name' => $hospital['name_en'],
+    'url' => route('hospitals.doctors', $hospital['id']),
+    'address' => [
+        '@type' => 'PostalAddress',
+        'streetAddress' => trim(($hospital['address_line1'] ?? '') . (!empty($hospital['address_line2']) ? ', ' . $hospital['address_line2'] : '')),
+        'addressLocality' => $hospital['city'] ?? null,
+        'addressRegion' => $hospital['state'] ?? null,
+        'postalCode' => $hospital['pincode'] ?? null,
+        'addressCountry' => 'IN',
+    ],
+    'department' => collect($doctors)
+        ->map(fn ($doctor) => $doctor['department']['name_en'] ?? null)
+        ->filter()
+        ->unique()
+        ->values()
+        ->map(fn ($departmentName) => [
+            '@type' => 'MedicalSpecialty',
+            'name' => $departmentName,
+        ])
+        ->all(),
+], JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE) !!}
+</script>
+@endsection
 
 @section('content')
 <header class="bg-gradient-to-r from-cyan-700 via-teal-700 to-sky-700 dark:from-slate-900 dark:via-cyan-900 dark:to-slate-900 text-white py-14 px-4 sm:px-6 lg:px-8 border-b border-cyan-800 dark:border-slate-700 ring-1 ring-black/10 dark:ring-white/15 shadow-xl dark:shadow-black/50 relative overflow-hidden">

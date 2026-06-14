@@ -34,9 +34,58 @@
     $selectedCity = request('city');
     $selectedCity = is_array($selectedCity) ? $selectedCity[0] ?? null : $selectedCity;
     $selectedCity = filled($selectedCity) ? trim((string) $selectedCity) : $cityOptions->first() ?? $seoCity;
+    $selectedBloodGroups = collect((array) request('blood_group', []))
+        ->filter(fn ($value) => filled($value) && $value !== 'All')
+        ->values()
+        ->all();
+    $selectedFacilities = collect((array) request('facility', []))
+        ->filter(fn ($value) => filled($value) && $value !== 'All')
+        ->values()
+        ->all();
+    $searchTerm = trim((string) request('search', ''));
+    $bloodGroupPhrase = \App\Support\Seo::toPhrase(array_slice($selectedBloodGroups, 0, 3));
+    $facilityPhrase = \App\Support\Seo::toPhrase(array_slice($selectedFacilities, 0, 3));
+    $pageTitle = filled($searchTerm)
+        ? "Blood Banks for {$searchTerm} in {$selectedCity} | Arogio"
+        : (!empty($selectedBloodGroups)
+            ? "{$bloodGroupPhrase} Blood Banks in {$selectedCity} | Arogio"
+            : "Blood Banks in {$selectedCity} | Emergency Contacts | Arogio");
+    $pageDescription = filled($searchTerm)
+        ? "Find blood banks in {$selectedCity} related to {$searchTerm}. Confirm blood availability, directions, and contact numbers before visiting."
+        : (!empty($selectedFacilities)
+            ? "Browse {$facilityPhrase} blood banks in {$selectedCity}. Check verified contacts and confirm current blood availability before visiting."
+            : "Find verified blood banks in {$selectedCity}. Check emergency contacts, directions, and current blood group availability before visiting.");
 @endphp
 @section('meta_title', $pageTitle)
 @section('meta_description', $pageDescription)
+@section('structured_data')
+<script type="application/ld+json">
+{!! json_encode([
+    '@context' => 'https://schema.org',
+    '@type' => 'CollectionPage',
+    'name' => $pageTitle,
+    'description' => \App\Support\Seo::cleanText($pageDescription, 160),
+    'url' => route('blood_banks.index'),
+    'mainEntity' => [
+        '@type' => 'ItemList',
+        'itemListElement' => collect($bloodBanks instanceof \Illuminate\Pagination\AbstractPaginator ? $bloodBanks->items() : $bloodBanks)
+            ->take(10)
+            ->values()
+            ->map(fn ($bank, $index) => [
+                '@type' => 'ListItem',
+                'position' => $index + 1,
+                'item' => [
+                    '@type' => 'MedicalBusiness',
+                    'name' => $bank['name']['en'] ?? null,
+                    'address' => $bank['address']['en'] ?? null,
+                    'areaServed' => $selectedCity,
+                ],
+            ])
+            ->all(),
+    ],
+], JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE) !!}
+</script>
+@endsection
 @section('content')
     <!-- Hero Section -->
     <header

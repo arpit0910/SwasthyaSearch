@@ -33,9 +33,67 @@ if ($cityOptions->isEmpty() && filled($seoCity)) {
 $selectedCity = request('city');
 $selectedCity = is_array($selectedCity) ? ($selectedCity[0] ?? null) : $selectedCity;
 $selectedCity = filled($selectedCity) ? trim((string) $selectedCity) : ($cityOptions->first() ?? $seoCity);
+$selectedTypes = collect((array) request('type', []))
+    ->filter(fn ($value) => filled($value) && $value !== 'All')
+    ->values()
+    ->all();
+$selectedBenefits = collect((array) request('benefit', []))
+    ->filter(fn ($value) => filled($value) && $value !== 'All')
+    ->map(function ($value) use ($locale) {
+        return match ($value) {
+            'ayushman' => $locale === 'hi' ? 'आयुष्मान' : 'Ayushman',
+            'janaadhaar' => $locale === 'hi' ? 'जन आधार' : 'Jan Aadhaar',
+            'cghs' => 'CGHS',
+            'cashless' => $locale === 'hi' ? 'कैशलेस' : 'Cashless',
+            default => $value,
+        };
+    })
+    ->values()
+    ->all();
+$searchTerm = trim((string) request('search', ''));
+$typePhrase = \App\Support\Seo::toPhrase(array_slice($selectedTypes, 0, 3));
+$benefitPhrase = \App\Support\Seo::toPhrase(array_slice($selectedBenefits, 0, 3));
+$pageTitle = filled($searchTerm)
+    ? "Hospitals for {$searchTerm} in {$selectedCity} | Arogio"
+    : (!empty($selectedTypes)
+        ? "{$typePhrase} in {$selectedCity} | Arogio"
+        : "Hospitals and Clinics in {$selectedCity} | Arogio");
+$pageDescription = filled($searchTerm)
+    ? "Find hospitals and clinics in {$selectedCity} related to {$searchTerm}. Review services, addresses, and direct contact numbers before visiting."
+    : (!empty($selectedBenefits)
+        ? "Browse {$benefitPhrase} hospitals and clinics in {$selectedCity}. Compare verified healthcare facilities, schemes, and direct contact details."
+        : "Find verified hospitals and clinics in {$selectedCity}. Check facility type, accepted schemes, location details, and direct phone numbers on Arogio.");
 @endphp
 @section('meta_title', $pageTitle)
 @section('meta_description', $pageDescription)
+@section('structured_data')
+<script type="application/ld+json">
+{!! json_encode([
+    '@context' => 'https://schema.org',
+    '@type' => 'CollectionPage',
+    'name' => $pageTitle,
+    'description' => \App\Support\Seo::cleanText($pageDescription, 160),
+    'url' => route('hospitals.index'),
+    'mainEntity' => [
+        '@type' => 'ItemList',
+        'itemListElement' => collect($hospitals instanceof \Illuminate\Pagination\AbstractPaginator ? $hospitals->items() : $hospitals)
+            ->take(10)
+            ->values()
+            ->map(fn ($hospital, $index) => [
+                '@type' => 'ListItem',
+                'position' => $index + 1,
+                'item' => [
+                    '@type' => 'Hospital',
+                    'name' => $hospital['name_en'] ?? ($hospital['name']['en'] ?? null),
+                    'address' => $hospital['address'] ?? null,
+                    'areaServed' => $selectedCity,
+                ],
+            ])
+            ->all(),
+    ],
+], JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE) !!}
+</script>
+@endsection
 @section('content')
 <!-- Hero Section -->
 <header

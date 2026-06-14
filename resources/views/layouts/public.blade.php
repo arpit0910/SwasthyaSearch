@@ -48,7 +48,13 @@
     $appName = config('app.name', 'Arogio');
     $siteUrl = rtrim(config('app.url', url('/')), '/');
     $currentUrl = url()->current();
-    $hasQuery = request()->getQueryString() !== null;
+    $queryParameters = request()->query();
+    $trackingQueryKeys = ['utm_source', 'utm_medium', 'utm_campaign', 'utm_term', 'utm_content', 'gclid', 'fbclid'];
+    $canonicalQuery = collect($queryParameters)
+        ->except($trackingQueryKeys)
+        ->filter(fn ($value) => $value !== null && $value !== '')
+        ->toArray();
+    $hasQuery = !empty($queryParameters);
     $locale = session('locale', app()->getLocale());
     $isHindi = \App\Helpers\LocaleHelper::current() === 'hi';
     $activeCity = config('healthcare.active_city', 'Jaipur');
@@ -138,28 +144,34 @@
     ];
     $computedTitle = $routeSeo[$routeName]['title'] ?? $defaultTitle;
     $computedDescription = $routeSeo[$routeName]['description'] ?? $defaultDescription;
-    $metaTitle = trim($__env->yieldContent('meta_title', $__env->yieldContent('title', $computedTitle)));
-    $metaDescription = trim($__env->yieldContent('meta_description', $computedDescription));
-    $defaultCanonical = $currentUrl;
+    $metaTitle = \App\Support\Seo::cleanText(trim($__env->yieldContent('meta_title', $__env->yieldContent('title', $computedTitle))), 70);
+    $metaDescription = \App\Support\Seo::cleanText(trim($__env->yieldContent('meta_description', $computedDescription)), 160);
+    $defaultCanonical = $currentUrl . (!empty($canonicalQuery) ? '?' . http_build_query($canonicalQuery) : '');
     $filterableRoutes = ['doctors.index', 'hospitals.index', 'blood_banks.index', 'articles.index'];
     $isFilterRoute = in_array($routeName, $filterableRoutes, true);
-    $canonicalUrl = trim($__env->yieldContent('canonical_url', ($isFilterRoute && $hasQuery) ? route($routeName) : $defaultCanonical));
-    $defaultRobots = ($isFilterRoute && $hasQuery)
+    $hasMeaningfulFilterQuery = !empty(array_diff(array_keys($canonicalQuery), ['page']));
+    $canonicalUrl = trim($__env->yieldContent('canonical_url', ($isFilterRoute && $hasMeaningfulFilterQuery) ? route($routeName) : $defaultCanonical));
+    $defaultRobots = (($isFilterRoute && $hasMeaningfulFilterQuery) || in_array($routeName, ['consultations.room'], true))
     ? 'noindex,follow,max-image-preview:large,max-snippet:-1,max-video-preview:-1'
     : 'index,follow,max-image-preview:large,max-snippet:-1,max-video-preview:-1';
     $metaRobots = trim($__env->yieldContent('meta_robots', $defaultRobots));
-    $metaKeywords = trim($__env->yieldContent('meta_keywords', 'doctors, hospitals, blood banks, healthcare, medical specialists'));
     $brandLogoUrl = asset('img/arogio-logo.png');
     $brandLogoDarkUrl = asset('img/arogio-logo-dark.png');
     $brandFaviconUrl = asset('img/fav-icon.png');
     $ogImage = trim($__env->yieldContent('og_image', $brandLogoUrl));
+    $ogImageAlt = trim($__env->yieldContent('og_image_alt', $appName . ' healthcare discovery platform'));
     $ogType = trim($__env->yieldContent('og_type', request()->routeIs('articles.show') ? 'article' : 'website'));
+    $themeColor = trim($__env->yieldContent('theme_color', '#0f766e'));
     @endphp
 
     <title>{{ $metaTitle }}</title>
     <meta name="description" content="{{ $metaDescription }}">
-    <meta name="keywords" content="{{ $metaKeywords }}">
+    <meta name="author" content="Arogio">
     <meta name="robots" content="{{ $metaRobots }}">
+    <meta name="googlebot" content="{{ $metaRobots }}">
+    <meta name="theme-color" content="{{ $themeColor }}">
+    <meta name="apple-mobile-web-app-title" content="{{ $appName }}">
+    <meta name="format-detection" content="telephone=no">
     <link rel="canonical" href="{{ $canonicalUrl }}">
 
     <meta property="og:type" content="{{ $ogType }}">
@@ -168,68 +180,58 @@
     <meta property="og:description" content="{{ $metaDescription }}">
     <meta property="og:url" content="{{ $canonicalUrl }}">
     <meta property="og:image" content="{{ $ogImage }}">
+    <meta property="og:image:alt" content="{{ $ogImageAlt }}">
     <meta property="og:locale" content="{{ $isHindi ? 'hi_IN' : 'en_US' }}">
 
     <meta name="twitter:card" content="summary_large_image">
     <meta name="twitter:title" content="{{ $metaTitle }}">
     <meta name="twitter:description" content="{{ $metaDescription }}">
     <meta name="twitter:image" content="{{ $ogImage }}">
+    <meta name="twitter:image:alt" content="{{ $ogImageAlt }}">
     <link rel="icon" type="image/png" sizes="32x32" href="{{ $brandFaviconUrl }}">
     <link rel="icon" type="image/png" sizes="192x192" href="{{ $brandFaviconUrl }}">
     <link rel="apple-touch-icon" href="{{ $brandFaviconUrl }}">
 
-    <link rel="alternate" hreflang="en" href="{{ $canonicalUrl }}">
-    <link rel="alternate" hreflang="hi" href="{{ $canonicalUrl }}">
     <link rel="alternate" hreflang="x-default" href="{{ $canonicalUrl }}">
 
     <script type="application/ld+json">
-        {
-            !!json_encode([
-                '@'.
-                'context' => 'https://schema.org',
-                '@type' => 'Organization',
-                'name' => $appName,
-                'url' => $siteUrl,
-                'logo' => $brandLogoUrl,
-                'sameAs' => [],
-            ], JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE) !!
-        }
+        {!! json_encode([
+            '@context' => 'https://schema.org',
+            '@type' => 'Organization',
+            'name' => $appName,
+            'url' => $siteUrl,
+            'logo' => $brandLogoUrl,
+            'sameAs' => [],
+        ], JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE) !!}
     </script>
     <script type="application/ld+json">
-        {
-            !!json_encode([
-                '@'.
-                'context' => 'https://schema.org',
+        {!! json_encode([
+            '@context' => 'https://schema.org',
+            '@type' => 'WebSite',
+            'name' => $appName,
+            'url' => $siteUrl,
+            'inLanguage' => $isHindi ? 'hi-IN' : 'en-IN',
+            'potentialAction' => [
+                '@type' => 'SearchAction',
+                'target' => $siteUrl . '/doctors?search={search_term_string}',
+                'query-input' => 'required name=search_term_string',
+            ],
+        ], JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE) !!}
+    </script>
+    <script type="application/ld+json">
+        {!! json_encode([
+            '@context' => 'https://schema.org',
+            '@type' => 'WebPage',
+            'name' => $metaTitle,
+            'description' => $metaDescription,
+            'url' => $canonicalUrl,
+            'inLanguage' => $isHindi ? 'hi-IN' : 'en-IN',
+            'isPartOf' => [
                 '@type' => 'WebSite',
                 'name' => $appName,
                 'url' => $siteUrl,
-                'inLanguage' => [$isHindi ? 'hi-IN' : 'en-IN', $isHindi ? 'en-IN' : 'hi-IN'],
-                'potentialAction' => [
-                    '@type' => 'SearchAction',
-                    'target' => $siteUrl.
-                    '/doctors?search={search_term_string}',
-                    'query-input' => 'required name=search_term_string',
-                ],
-            ], JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE) !!
-        }
-    </script>
-    <script type="application/ld+json">
-        {
-            !!json_encode([
-                '@'.
-                'context' => 'https://schema.org',
-                '@type' => 'WebPage',
-                'name' => $metaTitle,
-                'description' => $metaDescription,
-                'url' => $canonicalUrl,
-                'inLanguage' => $isHindi ? 'hi-IN' : 'en-IN',
-                'isPartOf' => [
-                    '@type' => 'WebSite',
-                    'name' => $appName,
-                    'url' => $siteUrl,
-                ],
-            ], JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE) !!
-        }
+            ],
+        ], JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE) !!}
     </script>
     @php
     $breadcrumbItems = [
@@ -276,9 +278,7 @@
     ];
     @endphp
     <script type="application/ld+json">
-        {
-            !!json_encode($breadcrumbSchema, JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE) !!
-        }
+        {!! json_encode($breadcrumbSchema, JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE) !!}
     </script>
     @yield('structured_data')
 

@@ -1,8 +1,27 @@
 @extends('layouts.public')
 
+@php
+    $isHindi = \App\Helpers\LocaleHelper::current() === 'hi';
+    $quizTitle = $isHindi ? ($quiz->title_hi ?: $quiz->title_en) : ($quiz->title_en ?: $quiz->title_hi);
+    $quizDescription = $isHindi ? ($quiz->description_hi ?: $quiz->intro_hi ?: $quiz->description_en ?: $quiz->intro_en) : ($quiz->description_en ?: $quiz->intro_en ?: $quiz->description_hi ?: $quiz->intro_hi);
+@endphp
 
-
-@section('title', (($locale === 'hi' ? $quiz->title_hi : $quiz->title_en) ?: $quiz->title_en) . ' - Arogio')
+@section('title', $quizTitle . ' - Arogio')
+@section('meta_title', ($isHindi ? ($quiz->meta_title_hi ?: ($quizTitle . ' | Arogio')) : ($quiz->meta_title_en ?: ($quizTitle . ' | Arogio'))))
+@section('meta_description', \App\Support\Seo::cleanText($isHindi ? ($quiz->meta_description_hi ?: $quizDescription) : ($quiz->meta_description_en ?: $quizDescription), 160))
+@section('structured_data')
+<script type="application/ld+json">
+{!! json_encode([
+    '@context' => 'https://schema.org',
+    '@type' => 'Quiz',
+    'name' => $quizTitle,
+    'description' => \App\Support\Seo::cleanText($quizDescription, 160),
+    'url' => route('quizzes.show', $quiz->slug),
+    'educationalUse' => 'self-assessment',
+    'inLanguage' => $isHindi ? 'hi-IN' : 'en-IN',
+], JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE) !!}
+</script>
+@endsection
 
 
 
@@ -11,8 +30,6 @@
 @php
 
     $questionCount = count($quiz->questions_json ?? []);
-
-    $isHindi = \App\Helpers\LocaleHelper::current() === 'hi';
 
 @endphp
 
