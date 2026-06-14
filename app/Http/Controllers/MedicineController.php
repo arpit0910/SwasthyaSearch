@@ -15,6 +15,7 @@ class MedicineController extends Controller
         $search = trim((string) $request->query('search', ''));
 
         $medicines = Medicine::query()
+            ->select(['id', 'name', 'slug', 'generic_name', 'prescription_required', 'composition', 'category', 'purpose_en', 'purpose_hi', 'brand_names_json', 'is_published', 'review_status'])
             ->published()
             ->search($search)
             ->orderBy('name')
@@ -34,6 +35,7 @@ class MedicineController extends Controller
 
         $locale = app()->getLocale();
         $relatedMedicines = Medicine::query()
+            ->select(['id', 'name', 'slug', 'generic_name', 'category', 'is_published', 'review_status'])
             ->published()
             ->whereKeyNot($medicine->id)
             ->when($medicine->category, fn ($query) => $query->where('category', $medicine->category))
@@ -41,12 +43,13 @@ class MedicineController extends Controller
             ->get();
 
         $relatedArticles = Article::query()
+            ->select(['id', 'title_en', 'title_hi', 'excerpt_en', 'excerpt_hi', 'is_published'])
             ->where('is_published', true)
             ->where(function ($query) use ($medicine) {
                 $query->where('title_en', 'like', '%' . $medicine->name . '%')
                     ->orWhere('title_hi', 'like', '%' . $medicine->name . '%')
-                    ->orWhere('content_en', 'like', '%' . ($medicine->generic_name ?: $medicine->name) . '%')
-                    ->orWhere('content_hi', 'like', '%' . ($medicine->generic_name ?: $medicine->name) . '%');
+                    ->orWhere('excerpt_en', 'like', '%' . ($medicine->generic_name ?: $medicine->name) . '%')
+                    ->orWhere('excerpt_hi', 'like', '%' . ($medicine->generic_name ?: $medicine->name) . '%');
             })
             ->limit(3)
             ->get();

@@ -443,7 +443,7 @@ $selectedCity = filled($selectedCity) ? trim((string) $selectedCity) : ($cityOpt
                     target="_blank"
                     class="w-full sm:flex-1 bg-slate-900 dark:bg-slate-850 hover:bg-slate-800 dark:hover:bg-slate-750 text-white font-bold py-3 px-4 rounded-xl shadow-md hover:shadow-lg transition-all duration-200 text-xs uppercase tracking-wider flex items-center justify-center space-x-2">
                     <i data-lucide="globe" class="w-4 h-4 text-red-400"></i>
-                    <span>{{ $locale === 'hi' ? 'वेबसाइट देखें' : 'Visit Website' }}</span>
+                    <span>{{ $locale === 'hi' ? 'वेबसाइट देखें' : 'View Website' }}</span>
                 </a>
                 @endif
             </div>

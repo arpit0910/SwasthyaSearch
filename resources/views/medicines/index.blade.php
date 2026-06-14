@@ -32,45 +32,41 @@
         @if($medicines->count())
             <div class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6">
                 @foreach($medicines as $medicine)
-                    <article class="rounded-[1.75rem] border border-slate-200/80 dark:border-slate-800 bg-white/90 dark:bg-slate-900/90 shadow-sm p-5 flex flex-col h-full">
-                        <div class="flex items-start justify-between gap-3">
-                            <div>
-                                <h2 class="text-xl font-bold text-slate-950 dark:text-white">
-                                    <a href="{{ route('medicines.show', $medicine->slug) }}" class="hover:text-teal-600 dark:hover:text-teal-300">{{ $medicine->name }}</a>
-                                </h2>
-                                <p class="mt-1 text-sm text-slate-500 dark:text-slate-400">{{ $medicine->generic_name ?: ($locale === 'hi' ? 'जेनेरिक नाम उपलब्ध नहीं' : 'Generic name not available') }}</p>
+                    <a href="{{ route('medicines.show', $medicine->slug) }}" class="block group h-full">
+                        <article class="rounded-[1.75rem] border border-slate-200/80 dark:border-slate-800 bg-white/90 dark:bg-slate-900/90 shadow-sm p-5 flex flex-col h-full hover:border-teal-400 dark:hover:border-teal-500 hover:shadow-md transition-all duration-300 cursor-pointer">
+                            <div class="flex items-start justify-between gap-3">
+                                <div>
+                                    <h2 class="text-xl font-bold text-slate-950 dark:text-white group-hover:text-teal-600 dark:group-hover:text-teal-300 transition-colors">
+                                        {{ $medicine->name }}
+                                    </h2>
+                                    <p class="mt-1 text-sm text-slate-500 dark:text-slate-400">{{ $medicine->generic_name ?: ($locale === 'hi' ? 'जेनेरिक नाम उपलब्ध नहीं' : 'Generic name not available') }}</p>
+                                </div>
+                                <span class="inline-flex rounded-full px-3 py-1 text-[11px] font-bold {{ $medicine->prescription_required ? 'bg-rose-100 text-rose-700 dark:bg-rose-950/40 dark:text-rose-200' : 'bg-emerald-100 text-emerald-700 dark:bg-emerald-950/40 dark:text-emerald-200' }}">
+                                    {{ $medicine->prescription_required ? ($locale === 'hi' ? 'प्रिस्क्रिप्शन' : 'Prescription') : ($locale === 'hi' ? 'सामान्य जानकारी' : 'General Info') }}
+                                </span>
                             </div>
-                            <span class="inline-flex rounded-full px-3 py-1 text-[11px] font-bold {{ $medicine->prescription_required ? 'bg-rose-100 text-rose-700 dark:bg-rose-950/40 dark:text-rose-200' : 'bg-emerald-100 text-emerald-700 dark:bg-emerald-950/40 dark:text-emerald-200' }}">
-                                {{ $medicine->prescription_required ? ($locale === 'hi' ? 'प्रिस्क्रिप्शन' : 'Prescription') : ($locale === 'hi' ? 'सामान्य जानकारी' : 'General Info') }}
-                            </span>
-                        </div>
 
-                        <div class="mt-4 space-y-2 text-sm text-slate-600 dark:text-slate-300">
-                            @if($medicine->composition)
-                                <p><span class="font-semibold text-slate-900 dark:text-slate-100">{{ $locale === 'hi' ? 'कंपोजिशन:' : 'Composition:' }}</span> {{ $medicine->composition }}</p>
-                            @endif
-                            @if($medicine->category)
-                                <p><span class="font-semibold text-slate-900 dark:text-slate-100">{{ $locale === 'hi' ? 'उपयोग:' : 'Purpose:' }}</span> {{ $medicine->category }}</p>
-                            @endif
-                            @if(filled($medicine->getTranslation('purpose', $locale)))
-                                <p class="line-clamp-3">{{ $medicine->getTranslation('purpose', $locale) }}</p>
-                            @endif
-                        </div>
-
-                        @if(!empty($medicine->brand_names))
-                            <div class="mt-4 flex flex-wrap gap-2">
-                                @foreach(array_slice($medicine->brand_names, 0, 4) as $brand)
-                                    <span class="rounded-full border border-cyan-200 dark:border-cyan-900/60 bg-cyan-50 dark:bg-cyan-950/40 px-3 py-1 text-xs font-semibold text-cyan-700 dark:text-cyan-200">{{ $brand }}</span>
-                                @endforeach
+                            <div class="mt-4 flex-1 space-y-2 text-sm text-slate-600 dark:text-slate-300">
+                                @if($medicine->composition)
+                                    <p><span class="font-semibold text-slate-900 dark:text-slate-100">{{ $locale === 'hi' ? 'कंपोजिशन:' : 'Composition:' }}</span> {{ $medicine->composition }}</p>
+                                @endif
+                                @if($medicine->category)
+                                    <p><span class="font-semibold text-slate-900 dark:text-slate-100">{{ $locale === 'hi' ? 'उपयोग:' : 'Purpose:' }}</span> {{ $medicine->category }}</p>
+                                @endif
+                                @if(filled($medicine->getTranslation('purpose', $locale)))
+                                    <p class="line-clamp-3">{{ $medicine->getTranslation('purpose', $locale) }}</p>
+                                @endif
                             </div>
-                        @endif
 
-                        <div class="mt-auto pt-4 border-t border-slate-200 dark:border-slate-800">
-                            <a href="{{ route('medicines.show', $medicine->slug) }}" class="inline-flex items-center justify-center rounded-2xl bg-slate-950 dark:bg-teal-600 px-4 py-3 text-sm font-bold text-white hover:bg-slate-800 dark:hover:bg-teal-500">
-                                {{ $locale === 'hi' ? 'विवरण देखें' : 'View Details' }}
-                            </a>
-                        </div>
-                    </article>
+                            @if(!empty($medicine->brand_names))
+                                <div class="mt-4 pt-4 border-t border-slate-200 dark:border-slate-800 flex flex-wrap gap-2">
+                                    @foreach(array_slice($medicine->brand_names, 0, 4) as $brand)
+                                        <span class="rounded-full border border-cyan-200 dark:border-cyan-900/60 bg-cyan-50 dark:bg-cyan-950/40 px-3 py-1 text-xs font-semibold text-cyan-700 dark:text-cyan-200">{{ $brand }}</span>
+                                    @endforeach
+                                </div>
+                            @endif
+                        </article>
+                    </a>
                 @endforeach
             </div>
 
