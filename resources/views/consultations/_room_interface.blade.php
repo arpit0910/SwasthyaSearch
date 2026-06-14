@@ -270,6 +270,9 @@
         const signalUrl = @json(route('consultations.signal', $consultation->uuid));
         const endUrl = @json(route('consultations.end', $consultation->uuid));
         const csrfToken = document.querySelector('meta[name="csrf-token"]')?.getAttribute('content') || '';
+        const peerConfig = {
+            iceServers: @json(config('services.webrtc.ice_servers', [['urls' => ['stun:stun.l.google.com:19302']]])),
+        };
 
         const localVideo = document.getElementById('local-video');
         const remoteVideo = document.getElementById('remote-video');
@@ -293,8 +296,7 @@
         let bootstrapping = false;
         let offered = false;
         const appliedCandidates = new Set();
-
-        const peerConfig = { iceServers: [] };
+        const queuedRemoteCandidates = [];
 
         function setStatus(label, tone = 'secondary') {
             const tones = {
@@ -486,13 +488,38 @@
                 if (appliedCandidates.has(key)) {
                     continue;
                 }
-
-                appliedCandidates.add(key);
+                if (!remoteDescriptionApplied) {
+                    queuedRemoteCandidates.push(candidate);
+                    continue;
+                }
 
                 try {
                     await peerConnection.addIceCandidate(candidate);
+                    appliedCandidates.add(key);
                 } catch (error) {
                     console.error('ICE candidate apply failed', error);
+                }
+            }
+        }
+
+        async function flushQueuedRemoteCandidates() {
+            if (!peerConnection || !remoteDescriptionApplied || !queuedRemoteCandidates.length) {
+                return;
+            }
+
+            while (queuedRemoteCandidates.length > 0) {
+                const candidate = queuedRemoteCandidates.shift();
+                const key = JSON.stringify(candidate);
+
+                if (appliedCandidates.has(key)) {
+                    continue;
+                }
+
+                try {
+                    await peerConnection.addIceCandidate(candidate);
+                    appliedCandidates.add(key);
+                } catch (error) {
+                    console.error('Queued ICE candidate apply failed', error);
                 }
             }
         }
@@ -507,11 +534,24 @@
                 return;
             }
 
+            if (state.status === 'rejected') {
+                finishCall('Call rejected', 'danger');
+                showDeviceAlert(role === 'patient'
+                    ? 'The consultation request was rejected by the admin.'
+                    : 'This consultation has been rejected.');
+                return;
+            }
+
+            if (role === 'patient' && state.status === 'accepted' && !state.sdp_answer) {
+                setStatus('Doctor accepted. Joining shortly...', 'info');
+            }
+
             if (role === 'patient') {
                 if (state.sdp_answer && !remoteDescriptionApplied) {
                     await peerConnection.setRemoteDescription(new RTCSessionDescription(state.sdp_answer));
                     remoteDescriptionApplied = true;
                     setStatus('Doctor connected', 'success');
+                    await flushQueuedRemoteCandidates();
                 }
 
                 await applyRemoteCandidates(state.ice_candidates_doctor || []);
@@ -522,6 +562,7 @@
                 await peerConnection.setRemoteDescription(new RTCSessionDescription(state.sdp_offer));
                 remoteDescriptionApplied = true;
                 setStatus('Offer received', 'info');
+                await flushQueuedRemoteCandidates();
             }
 
             if (remoteDescriptionApplied && !answerCreated) {
@@ -613,7 +654,8 @@
                 } else if (state === 'disconnected') {
                     setStatus('Connection interrupted. Reconnecting...', 'warning');
                 } else if (state === 'failed') {
-                    setStatus('Connection interrupted. Retry device access if needed.', 'warning');
+                    setStatus('Connection failed. Check network and retry.', 'danger');
+                    showDeviceAlert('The peers could not establish a direct media path. If this keeps happening across different networks, configure TURN credentials in the environment.');
                 } else if (state === 'closed') {
                     setStatus('Call closed', 'dark');
                 }

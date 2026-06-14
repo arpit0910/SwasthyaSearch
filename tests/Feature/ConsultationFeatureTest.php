@@ -85,4 +85,39 @@ class ConsultationFeatureTest extends TestCase
             ->assertOk()
             ->assertSee('Join patient consultation');
     }
+
+    public function test_admin_can_accept_and_reject_consultations(): void
+    {
+        $pendingConsultation = Consultation::create([
+            'patient_name' => 'Kiran',
+        ]);
+
+        $rejectableConsultation = Consultation::create([
+            'patient_name' => 'Maya',
+        ]);
+
+        $admin = Admin::create([
+            'name' => 'Admin User',
+            'email' => 'admin2@example.com',
+            'password' => bcrypt('secret123'),
+        ]);
+
+        $this->actingAs($admin, 'admin')
+            ->post(route('admin.consultations.accept', $pendingConsultation->uuid))
+            ->assertRedirect();
+
+        $this->assertSame(
+            Consultation::STATUS_ACCEPTED,
+            $pendingConsultation->fresh()->status
+        );
+
+        $this->actingAs($admin, 'admin')
+            ->post(route('admin.consultations.reject', $rejectableConsultation->uuid))
+            ->assertRedirect();
+
+        $this->assertSame(
+            Consultation::STATUS_REJECTED,
+            $rejectableConsultation->fresh()->status
+        );
+    }
 }

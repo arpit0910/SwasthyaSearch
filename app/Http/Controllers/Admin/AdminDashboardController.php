@@ -151,9 +151,20 @@ class AdminDashboardController extends Controller
             ->latest()
             ->get();
 
+        $acceptedConsultations = Consultation::query()
+            ->where('status', Consultation::STATUS_ACCEPTED)
+            ->latest('updated_at')
+            ->get();
+
         $activeConsultations = Consultation::query()
             ->where('status', Consultation::STATUS_ACTIVE)
             ->latest('updated_at')
+            ->get();
+
+        $rejectedConsultations = Consultation::query()
+            ->where('status', Consultation::STATUS_REJECTED)
+            ->latest('updated_at')
+            ->limit(10)
             ->get();
 
         $completedConsultations = Consultation::query()
@@ -164,9 +175,41 @@ class AdminDashboardController extends Controller
 
         return view('admin.consultations.index', compact(
             'pendingConsultations',
+            'acceptedConsultations',
             'activeConsultations',
+            'rejectedConsultations',
             'completedConsultations'
         ));
+    }
+
+    public function acceptConsultation(string $uuid)
+    {
+        $consultation = Consultation::query()
+            ->where('uuid', $uuid)
+            ->firstOrFail();
+
+        $consultation->update([
+            'doctor_id' => auth()->guard('admin')->id(),
+            'status' => Consultation::STATUS_ACCEPTED,
+        ]);
+
+        return back()->with('success', 'Consultation accepted. You can join the call now.');
+    }
+
+    public function rejectConsultation(string $uuid)
+    {
+        $consultation = Consultation::query()
+            ->where('uuid', $uuid)
+            ->firstOrFail();
+
+        $consultation->update([
+            'doctor_id' => auth()->guard('admin')->id(),
+            'status' => Consultation::STATUS_REJECTED,
+            'sdp_answer' => null,
+            'ice_candidates_doctor' => [],
+        ]);
+
+        return back()->with('success', 'Consultation rejected.');
     }
 
     public function joinConsultation(string $uuid)
@@ -175,8 +218,14 @@ class AdminDashboardController extends Controller
             ->where('uuid', $uuid)
             ->firstOrFail();
 
-        if ($consultation->status === Consultation::STATUS_PENDING) {
+        if ($consultation->status === Consultation::STATUS_REJECTED) {
+            return redirect()->route('admin.consultations')
+                ->with('error', 'Rejected consultations cannot be joined.');
+        }
+
+        if (in_array($consultation->status, [Consultation::STATUS_PENDING, Consultation::STATUS_ACCEPTED], true)) {
             $consultation->update([
+                'doctor_id' => auth()->guard('admin')->id(),
                 'status' => Consultation::STATUS_ACTIVE,
             ]);
             $consultation->refresh();

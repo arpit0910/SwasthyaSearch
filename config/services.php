@@ -43,4 +43,15 @@ return [
         'disable_ssl_verify' => env('FREE_GEO_DISABLE_SSL_VERIFY', false),
     ],
 
+    'webrtc' => [
+        'ice_servers' => array_values(array_filter([
+            ['urls' => ['stun:stun.l.google.com:19302', 'stun:stun1.l.google.com:19302']],
+            env('WEBRTC_TURN_URL') ? [
+                'urls' => [env('WEBRTC_TURN_URL')],
+                'username' => env('WEBRTC_TURN_USERNAME'),
+                'credential' => env('WEBRTC_TURN_CREDENTIAL'),
+            ] : null,
+        ])),
+    ],
+
 ];

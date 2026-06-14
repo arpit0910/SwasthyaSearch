@@ -150,6 +150,8 @@ Route::prefix('admin')->middleware('web')->group(function () {
         // Symptom Test Analytics
         Route::get('/symptom-test-reports', [AdminDashboardController::class, 'symptomTestReports'])->name('admin.symptom_tests');
         Route::get('/consultations', [AdminDashboardController::class, 'consultations'])->name('admin.consultations');
+        Route::post('/consultations/{uuid}/accept', [AdminDashboardController::class, 'acceptConsultation'])->name('admin.consultations.accept');
+        Route::post('/consultations/{uuid}/reject', [AdminDashboardController::class, 'rejectConsultation'])->name('admin.consultations.reject');
         Route::get('/consultations/{uuid}', [AdminDashboardController::class, 'joinConsultation'])->name('admin.consultations.join');
     });
 });

@@ -53,7 +53,7 @@ class ConsultationController extends Controller
             'sdp_offer' => ['nullable', 'array'],
             'sdp_answer' => ['nullable', 'array'],
             'ice_candidates' => ['nullable', 'array'],
-            'status' => ['nullable', 'in:pending,active,completed'],
+            'status' => ['nullable', 'in:pending,accepted,active,rejected,completed'],
         ]);
 
         $consultation = DB::transaction(function () use ($data, $uuid) {
@@ -64,7 +64,11 @@ class ConsultationController extends Controller
 
             if (isset($data['sdp_offer']) && $data['role'] === 'patient') {
                 $consultation->sdp_offer = json_encode($data['sdp_offer'], JSON_UNESCAPED_SLASHES);
-                if ($consultation->status === Consultation::STATUS_COMPLETED) {
+                $consultation->sdp_answer = null;
+                $consultation->ice_candidates_doctor = [];
+                $consultation->ice_candidates_patient = [];
+
+                if (in_array($consultation->status, [Consultation::STATUS_COMPLETED, Consultation::STATUS_REJECTED], true)) {
                     $consultation->status = Consultation::STATUS_PENDING;
                 }
             }
