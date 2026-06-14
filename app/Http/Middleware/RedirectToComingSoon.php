@@ -10,15 +10,16 @@ class RedirectToComingSoon
 {
     public function handle(Request $request, Closure $next): Response
     {
-        if (
-            app()->environment('live')
-            && ! auth('admin')->check()
-            && ! $request->is('admin/login')
-            && ! $request->routeIs('coming-soon')
-            && ! $request->is('coming-soon')
-        ) {
-            return redirect()->route('coming-soon');
-        }
+// Disabled coming soon redirect for live site
+        // if (
+        //     app()->environment('live')
+        //     && ! auth('admin')->check()
+        //     && ! $request->is('admin/login')
+        //     && ! $request->routeIs('coming-soon')
+        //     && ! $request->is('coming-soon')
+        // ) {
+        //     return redirect()->route('coming-soon');
+        // }
 
         return $next($request);
     }

@@ -20,6 +20,8 @@ class DatabaseSeeder extends Seeder
             QuizSeeder::class,
             FaqSeeder::class,
             GeneralQuestionSeeder::class,
+            GeneralMedicalQaBulkSeeder::class,
+            DiseaseFaqSeeder::class,
             ArticleSeeder::class,
         ]);
     }

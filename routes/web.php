@@ -21,7 +21,7 @@ use App\Http\Controllers\Api\ReliableDirectoryController;
 use Illuminate\Foundation\Http\Middleware\ValidateCsrfToken;
 use Illuminate\Support\Facades\Route;
 
-Route::view('/coming-soon', 'coming-soon')->name('coming-soon');
+// Route::view('/coming-soon', 'coming-soon')->name('coming-soon');
 
 // --- CUSTOM ADMIN DASHBOARD ROUTES (Blade + Bootstrap 5) ---
 Route::prefix('admin')->middleware('web')->group(function () {
