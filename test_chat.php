@@ -5,7 +5,7 @@ $app = require_once __DIR__ . '/bootstrap/app.php';
 $kernel = $app->make(Illuminate\Contracts\Console\Kernel::class);
 $kernel->bootstrap();
 
-use App\Http\Controllers\ChatbotController;
+use App\Http\Controllers\Api\ChatbotController;
 use Illuminate\Http\Request;
 
 $req = new Request();

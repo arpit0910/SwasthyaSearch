@@ -15,8 +15,9 @@ class MedicalQaService
     /**
      * @return array{question:string,answer:string,category:string,source:string,source_id:int|null,source_table:string|null,confidence:float,detailed_answer_en:?string,detailed_answer_hi:?string,detailed_answer:?string}|null
      */
-    public function findBestAnswer(string $message, string $locale = LocaleHelper::current()): ?array
+    public function findBestAnswer(string $message, ?string $locale = null): ?array
     {
+        $locale = $locale ?? LocaleHelper::current();
         $normalizedMessage = $this->normalize($message);
         if ($normalizedMessage === '') {
             return null;
@@ -229,8 +230,9 @@ class MedicalQaService
      *
      * @return array{question:string,answer:string,category:string,source:string,confidence:float}|null
      */
-    public function generateFallbackAnswer(string $message, string $locale = LocaleHelper::current()): ?array
+    public function generateFallbackAnswer(string $message, ?string $locale = null): ?array
     {
+        $locale = $locale ?? LocaleHelper::current();
         $normalizedMessage = $this->normalize($message);
         if ($normalizedMessage === '') {
             return null;
@@ -496,8 +498,9 @@ class MedicalQaService
     /**
      * Retrieve relevant database FAQs, disease info, and medicine info for RAG context.
      */
-    public function retrieveRelevantContext(string $message, string $locale = LocaleHelper::current()): string
+    public function retrieveRelevantContext(string $message, ?string $locale = null): string
     {
+        $locale = $locale ?? LocaleHelper::current();
         $normalizedMessage = $this->normalize($message);
         if ($normalizedMessage === '') {
             return '';

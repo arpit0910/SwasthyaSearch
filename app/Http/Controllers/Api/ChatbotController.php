@@ -111,13 +111,14 @@ class ChatbotController extends Controller
                     'timestamp' => now()->toIso8601String(),
                 ];
 
-                $messages[] = [
+                 $messages[] = [
                     'sender' => 'bot',
                     'text' => $medicinePayload['text'],
                     'city' => $selectedCity !== '' ? $selectedCity : null,
                     'locale' => $locale,
                     'show_options' => false,
                     'response_mode' => 'medicine_help',
+                    'medicine_info' => $medicinePayload['medicine_info'],
                     'timestamp' => now()->toIso8601String(),
                 ];
 
@@ -126,6 +127,7 @@ class ChatbotController extends Controller
                 return response()->json([
                     'session_token' => $sessionToken,
                     'reply' => $medicinePayload['text'],
+                    'medicine_info' => $medicinePayload['medicine_info'],
                     'city' => $selectedCity,
                     'city_options' => $cityOptions,
                     'locale' => $locale,
@@ -1422,9 +1424,20 @@ class ChatbotController extends Controller
         $explicitKeywords = ['medicine', 'tablet', 'capsule', 'dose', 'dosage', 'dolo', 'paracetamol', 'cetirizine', 'azithromycin', 'metformin', 'pantoprazole', 'दवा', 'टैबलेट'];
         $hasMedicineIntent = collect($explicitKeywords)->contains(fn ($keyword) => mb_stripos($normalized, $keyword) !== false);
 
+        // Strip common helper words for cleaner database search matching
+        $searchQuery = $normalized;
+        $helperWords = ['medicine', 'tablet', 'capsule', 'dose', 'dosage', 'tablets', 'capsules', 'doses', 'दवा', 'टैबलेट', 'दवाइयाँ', 'दवाई'];
+        foreach ($helperWords as $word) {
+            $searchQuery = preg_replace('/\b' . preg_quote($word, '/') . '\b/iu', '', $searchQuery) ?? $searchQuery;
+            if (in_array($word, ['दवा', 'टैबलेट', 'दवाइयाँ', 'दवाई'], true)) {
+                $searchQuery = str_replace($word, '', $searchQuery);
+            }
+        }
+        $searchQuery = trim(preg_replace('/\s+/', ' ', $searchQuery));
+
         $medicine = Medicine::query()
             ->published()
-            ->search($normalized)
+            ->search($searchQuery !== '' ? $searchQuery : $normalized)
             ->first();
 
         if (! $medicine || ! $hasMedicineIntent) {
@@ -1436,8 +1449,12 @@ class ChatbotController extends Controller
 
         return [
             'text' => $locale === 'hi'
-                ? "मुझे {$medicine->name} के लिए सामान्य जानकारी मिली है। {$purpose}। मैं यह पुष्टि नहीं कर सकता कि यह आपके लिए व्यक्तिगत रूप से सुरक्षित है। कृपया डॉक्टर या फार्मासिस्ट से सलाह लें। विवरण देखें: {$url}"
-                : "I found general information for {$medicine->name}. {$purpose}. I cannot confirm whether it is personally safe for you, so please consult a doctor or pharmacist. View details: {$url}",
+                ? "मुझे {$medicine->name} के लिए सामान्य जानकारी मिली है। {$purpose}। मैं यह पुष्टि नहीं कर सकता कि यह आपके लिए व्यक्तिगत रूप से सुरक्षित है। कृपया डॉक्टर या फार्मासिस्ट से सलाह लें।"
+                : "I found general information for {$medicine->name}. {$purpose}. I cannot confirm whether it is personally safe for you, so please consult a doctor or pharmacist.",
+            'medicine_info' => [
+                'name' => $medicine->name,
+                'url' => $url,
+            ],
         ];
     }
 }

@@ -555,14 +555,14 @@
         </div>
     </div>
     <!-- Floating Chatbot Widget -->
-    <div class="fixed bottom-5 right-4 sm:bottom-6 sm:right-6 z-[95]" id="chatbot-container">
+    <div class="fixed bottom-[17px] right-[17px] sm:bottom-[29px] sm:right-[29px] z-[95]" id="chatbot-container">
         <!-- Chat Button -->
         <button id="chatbot-toggle-btn" aria-label="Open Jeeva assistant" onclick="toggleChatbot()" class="chatbot-fab fab-contracted relative isolate overflow-visible flex items-center gap-3 text-white px-7 py-4 rounded-full transition-all duration-300 transform group">
             <span class="chatbot-fab-presence" aria-hidden="true"></span>
             <div class="chatbot-fab-icon w-6 h-6 flex items-center justify-center shrink-0">
                 <i data-lucide="sparkles" class="w-5 h-5 text-white"></i>
             </div>
-            <span id="chatbot-fab-label" class="chatbot-fab-label whitespace-nowrap leading-none">
+            <span id="chatbot-fab-label" class="chatbot-fab-label hidden sm:inline-flex whitespace-nowrap leading-none">
                 <span class="chatbot-fab-title">{{ $locale === 'hi' ? 'Talk to Jeeva' : 'Talk to Jeeva' }}</span>
             </span>
         </button>
@@ -1338,8 +1338,11 @@
             if (!btn) return;
 
             clearFabCycles();
-            // Keep CTA compact as a circular button.
-            btn.classList.add('fab-contracted');
+            if (window.innerWidth < 640) {
+                btn.classList.add('fab-contracted');
+            } else {
+                btn.classList.remove('fab-contracted');
+            }
         }
 
         function toggleMobileMenu() {
@@ -2521,6 +2524,21 @@
                         `;
                     }
                     html += `</div>`;
+                }
+
+                // Render Medicine Info action button if present
+                if (msg.medicine_info) {
+                    html += `
+                        <div class="pt-3 border-t border-slate-100/50 dark:border-slate-800 mt-3">
+                            <div class="flex justify-start">
+                                <a href="${msg.medicine_info.url}" target="_blank" class="inline-flex items-center space-x-1.5 text-xs bg-indigo-600 hover:bg-indigo-700 text-white font-bold px-4 py-2 rounded-xl shadow-xs transition-all duration-200">
+                                    <i data-lucide="pill" class="w-4 h-4 text-white"></i>
+                                    <span>${currentLocale === 'hi' ? msg.medicine_info.name + ' का विवरण देखें' : 'View ' + msg.medicine_info.name + ' Details'}</span>
+                                    <i data-lucide="external-link" class="w-3.5 h-3.5"></i>
+                                </a>
+                            </div>
+                        </div>
+                    `;
                 }
             }
 
@@ -3841,6 +3859,17 @@
         }
 
         /* Chatbot FAB premium expand/contract transitions (Global) */
+        @keyframes chatbotPremiumPulse {
+            0%, 100% {
+                transform: scale(1);
+                box-shadow: 0 22px 44px rgba(8, 145, 178, 0.34), 0 6px 16px rgba(79, 70, 229, 0.18);
+            }
+            50% {
+                transform: scale(1.05);
+                box-shadow: 0 28px 56px rgba(8, 145, 178, 0.44), 0 10px 24px rgba(79, 70, 229, 0.26), 0 0 0 6px rgba(14, 165, 233, 0.2);
+            }
+        }
+
         .chatbot-fab {
             display: inline-flex !important;
             align-items: center;
@@ -3858,6 +3887,7 @@
             background: linear-gradient(135deg, #14b8a6 0%, #0891b2 48%, #4f46e5 100%);
             border: 1px solid rgba(167, 243, 208, 0.32);
             box-shadow: 0 22px 44px rgba(8, 145, 178, 0.34), 0 6px 16px rgba(79, 70, 229, 0.18);
+            animation: chatbotPremiumPulse 3s infinite ease-in-out;
             transition: width 460ms cubic-bezier(0.22, 0.65, 0.22, 1),
                 padding 460ms cubic-bezier(0.22, 0.65, 0.22, 1),
                 transform 460ms cubic-bezier(0.22, 0.65, 0.22, 1),
@@ -3878,15 +3908,52 @@
             animation: chatbotPresencePulse 2.4s ease-in-out infinite;
         }
 
+        @keyframes chatbotRadar {
+            0% {
+                transform: scale(0.95);
+                opacity: 0.85;
+                box-shadow: 0 0 0 0 rgba(20, 184, 166, 0.6), 0 0 0 0 rgba(79, 70, 229, 0.4);
+            }
+            100% {
+                transform: scale(1.4);
+                opacity: 0;
+                box-shadow: 0 0 0 16px rgba(20, 184, 166, 0), 0 0 0 32px rgba(79, 70, 229, 0);
+            }
+        }
+
         .chatbot-fab::before,
         .chatbot-fab::after {
-            content: '';
+            content: '' !important;
             position: absolute;
-            inset: -8px;
+            inset: 0;
             border-radius: 9999px;
             pointer-events: none;
+            z-index: -1;
             opacity: 0;
-            transition: opacity 240ms ease, transform 320ms ease;
+            border: 2px solid rgba(20, 184, 166, 0.3);
+            background: transparent;
+        }
+
+        .chatbot-fab::before {
+            animation: chatbotRadar 2.4s infinite cubic-bezier(0.25, 0, 0, 1);
+        }
+
+        .chatbot-fab::after {
+            animation: chatbotRadar 2.4s infinite cubic-bezier(0.25, 0, 0, 1);
+            animation-delay: 1.2s;
+        }
+
+        @media (max-width: 639px) {
+            .chatbot-fab {
+                width: 52px !important;
+                height: 52px !important;
+                padding: 0 !important;
+                justify-content: center !important;
+            }
+            .chatbot-fab-label,
+            #chatbot-fab-label {
+                display: none !important;
+            }
         }
 
         .chatbot-fab::before {
@@ -3962,15 +4029,7 @@
 
         .chatbot-fab.fab-contracted::before,
         .chatbot-fab.fab-contracted::after {
-            opacity: 1;
-        }
-
-        .chatbot-fab.fab-contracted::before {
-            animation: chatbotWhirlpoolSpin 5.8s linear infinite;
-        }
-
-        .chatbot-fab.fab-contracted::after {
-            animation: chatbotWhirlpoolPulse 3.2s ease-in-out infinite;
+            /* Handled automatically by chatbotRadar ripple animation */
         }
 
         .chatbot-fab.fab-contracted .chatbot-fab-label {
@@ -4069,8 +4128,8 @@
 
         @media (max-width: 639px) {
             #chatbot-container {
-                right: 0.75rem;
-                bottom: calc(0.75rem + env(safe-area-inset-bottom));
+                right: 17px !important;
+                bottom: calc(17px + env(safe-area-inset-bottom)) !important;
             }
 
             #chatbot-window {

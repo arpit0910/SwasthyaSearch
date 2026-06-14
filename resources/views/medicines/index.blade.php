@@ -32,7 +32,7 @@
         @if($medicines->count())
             <div class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6">
                 @foreach($medicines as $medicine)
-                    <article class="rounded-[1.75rem] border border-slate-200/80 dark:border-slate-800 bg-white/90 dark:bg-slate-900/90 shadow-sm p-5 flex flex-col">
+                    <article class="rounded-[1.75rem] border border-slate-200/80 dark:border-slate-800 bg-white/90 dark:bg-slate-900/90 shadow-sm p-5 flex flex-col h-full">
                         <div class="flex items-start justify-between gap-3">
                             <div>
                                 <h2 class="text-xl font-bold text-slate-950 dark:text-white">
@@ -65,7 +65,7 @@
                             </div>
                         @endif
 
-                        <div class="mt-5 pt-4 border-t border-slate-200 dark:border-slate-800">
+                        <div class="mt-auto pt-4 border-t border-slate-200 dark:border-slate-800">
                             <a href="{{ route('medicines.show', $medicine->slug) }}" class="inline-flex items-center justify-center rounded-2xl bg-slate-950 dark:bg-teal-600 px-4 py-3 text-sm font-bold text-white hover:bg-slate-800 dark:hover:bg-teal-500">
                                 {{ $locale === 'hi' ? 'विवरण देखें' : 'View Details' }}
                             </a>
@@ -75,7 +75,7 @@
             </div>
 
             <div class="mt-8">
-                {{ $medicines->links() }}
+                {{ $medicines->links('pagination::tailwind') }}
             </div>
         @else
             <div class="rounded-[1.75rem] border border-slate-200/80 dark:border-slate-800 bg-white/90 dark:bg-slate-900/90 shadow-sm p-8 text-center">

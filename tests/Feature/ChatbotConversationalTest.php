@@ -102,4 +102,27 @@ class ChatbotConversationalTest extends TestCase
             ->assertJsonPath('symptom_match', true)
             ->assertJsonPath('suggest_details', true);
     }
+
+    public function test_chatbot_can_search_for_medicine(): void
+    {
+        \App\Models\Medicine::create([
+            'name' => 'Paracetamol',
+            'slug' => 'paracetamol',
+            'generic_name' => 'Acetaminophen',
+            'review_status' => 'published',
+            'is_published' => true,
+            'purpose_en' => 'Used to treat mild to moderate pain and reduce fever.',
+        ]);
+
+        $response = $this->postJson('/api/chatbot', [
+            'message' => 'paracetamol tablet',
+            'locale' => 'en',
+        ]);
+
+        $response->assertOk()
+            ->assertJsonStructure(['reply', 'medicine_info']);
+        $this->assertStringContainsStringIgnoringCase('Paracetamol', $response->json('reply'));
+        $this->assertEquals('Paracetamol', $response->json('medicine_info.name'));
+        $this->assertStringContainsString('/medicines/paracetamol', $response->json('medicine_info.url'));
+    }
 }

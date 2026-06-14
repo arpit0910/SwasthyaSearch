@@ -359,7 +359,7 @@ $selectedCity = filled($selectedCity) ? trim((string) $selectedCity) : ($cityOpt
                 <button type="button" onclick="toggleMobileAccordion('bank-{{ $bank->id }}')" class="md:hidden w-full flex items-center justify-between p-3 bg-slate-50 dark:bg-slate-800 hover:bg-slate-100 dark:hover:bg-slate-700 border border-slate-200 dark:border-slate-700 rounded-xl text-xs font-bold text-slate-700 dark:text-slate-300 transition-all duration-200">
                     <span class="flex items-center space-x-2">
                         <i data-lucide="info" class="w-4 h-4 text-red-600"></i>
-                        <span id="bank-{{ $bank->id }}-text">{{ $locale === 'hi' ? 'सुविधाएं व विवरण देखें' : 'View Facilities & Details' }}</span>
+                        <span id="bank-{{ $bank->id }}-text">{{ $locale === 'hi' ? 'पता और सुविधाएं देखें' : 'View Address & Facilities' }}</span>
                     </span>
                     <i data-lucide="chevron-down" id="bank-{{ $bank->id }}-icon" class="w-4 h-4 text-slate-500 transition-transform duration-300"></i>
                 </button>
@@ -401,7 +401,7 @@ $selectedCity = filled($selectedCity) ? trim((string) $selectedCity) : ($cityOpt
                             <a href="{{ $mapDirectionsUrl }}"
                                 target="_blank"
                                 rel="noopener noreferrer"
-                                class="inline-flex items-center space-x-1 text-teal-600 dark:text-teal-400 hover:text-teal-700 dark:hover:text-teal-300 font-bold mt-1 bg-teal-50/80 dark:bg-teal-950/40 px-2.5 py-1 rounded-lg border border-teal-100 dark:border-teal-900 transition-colors">
+                                class="hidden md:inline-flex items-center space-x-1 text-teal-600 dark:text-teal-400 hover:text-teal-700 dark:hover:text-teal-300 font-bold mt-1 bg-teal-50/80 dark:bg-teal-950/40 px-2.5 py-1 rounded-lg border border-teal-100 dark:border-teal-900 transition-colors">
                                 <i data-lucide="navigation" class="w-3 h-3"></i>
                                 <span>{{ $locale === 'hi' ? 'नक्शा व दिशा-निर्देश' : 'Get Directions' }}</span>
                             </a>
@@ -421,6 +421,16 @@ $selectedCity = filled($selectedCity) ? trim((string) $selectedCity) : ($cityOpt
 
             <!-- Card Footer -->
             <div class="p-6 pt-0 flex flex-col sm:flex-row gap-2.5 sm:gap-3">
+                @if (!empty($mapDirectionsUrl))
+                <a
+                    href="{{ $mapDirectionsUrl }}"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    class="md:hidden w-full sm:flex-1 bg-teal-600 hover:bg-teal-700 text-white font-bold py-3 px-4 rounded-xl shadow-md hover:shadow-lg transition-all duration-200 text-xs uppercase tracking-wider flex items-center justify-center space-x-2">
+                    <i data-lucide="navigation" class="w-4 h-4 text-teal-100"></i>
+                    <span>{{ $locale === 'hi' ? 'नक्शा व दिशा-निर्देश' : 'Get Directions' }}</span>
+                </a>
+                @endif
                 <a
                     href="{{ !empty($bank->phone) ? 'tel:' . (($bank->country_code ?? '') . $bank->phone) : '#' }}"
                     class="w-full sm:flex-1 bg-red-600 hover:bg-red-700 text-white font-bold py-3 px-4 rounded-xl shadow-md hover:shadow-lg transition-all duration-200 text-xs uppercase tracking-wider flex items-center justify-center space-x-2">
@@ -712,12 +722,12 @@ $selectedCity = filled($selectedCity) ? trim((string) $selectedCity) : ($cityOpt
             content.classList.remove('hidden');
             content.classList.add('flex');
             icon.classList.add('rotate-180');
-            text.innerText = isHi ? 'विवरण छुपाएं' : 'Hide Details';
+            text.innerText = isHi ? 'विवरण छुपाएं' : 'Hide Address & Facilities';
         } else {
             content.classList.add('hidden');
             content.classList.remove('flex');
             icon.classList.remove('rotate-180');
-            text.innerText = isHi ? 'सुविधाएं व विवरण देखें' : 'View Facilities & Details';
+            text.innerText = isHi ? 'पता और सुविधाएं देखें' : 'View Address & Facilities';
         }
     }
 
