@@ -1282,7 +1282,7 @@ class BangaloreScraperService extends BaseScraperService
             ],
             [
                 'name_en' => 'Narayana Health City',
-                'name_hi' => 'नरयन हेअल्�¤ सिटी अस्पताल (बैंगलोर)',
+                'name_hi' => 'नरयन हेल्थ सिटी अस्पताल (बैंगलोर)',
                 'type' => 'Clinic',
                 'address' => '258/A, Bommasandra Industrial Area, Hosur Road, Bangalore, Karnataka - 560099',
                 'address_line1' => '258/A, Bommasandra Industrial Area',
@@ -1762,7 +1762,7 @@ class BangaloreScraperService extends BaseScraperService
             ],
             [
                 'name_en' => 'Dr. Partha Sarathi\'s Asian Hair And Skin Hospitals',
-                'name_hi' => 'द्र्। पर्�¤ सरथिस असिअन हैर अंद स्किन अस्पतालस अस्पताल (बैंगलोर)',
+                'name_hi' => 'द्र्। पार्थ सरथिस असिअन हैर अंद स्किन अस्पतालस अस्पताल (बैंगलोर)',
                 'type' => 'Private Hospital',
                 'address' => 'Bangalore, Karnataka',
                 'address_line1' => 'Main Medical Avenue',
@@ -2182,7 +2182,7 @@ class BangaloreScraperService extends BaseScraperService
             ],
             [
                 'name_en' => 'Swastha Health Care',
-                'name_hi' => 'स्वस्�¤ हेल्थकेयर अस्पताल (बैंगलोर)',
+                'name_hi' => 'स्वास्थ्य हेल्थकेयर अस्पताल (बैंगलोर)',
                 'type' => 'Private Hospital',
                 'address' => 'Bangalore, Karnataka',
                 'address_line1' => 'Main Medical Avenue',
@@ -2262,7 +2262,7 @@ class BangaloreScraperService extends BaseScraperService
             ],
             [
                 'name_en' => 'Kurias Earth Ayurveda Multispeciality Hospital',
-                'name_hi' => 'कुरिअस ऎअर्�¤ अयुर्वेद मल्टीस्पेशलिटी अस्पताल अस्पताल (बैंगलोर)',
+                'name_hi' => 'कुरिअस इयर अयुर्वेद मल्टीस्पेशलिटी अस्पताल अस्पताल (बैंगलोर)',
                 'type' => 'Private Hospital',
                 'address' => 'Bangalore, Karnataka',
                 'address_line1' => 'Main Medical Avenue',
@@ -2342,7 +2342,7 @@ class BangaloreScraperService extends BaseScraperService
             ],
             [
                 'name_en' => 'Arth Ayurveda Hospitals',
-                'name_hi' => 'अर्�¤ अयुर्वेद अस्पतालस अस्पताल (बैंगलोर)',
+                'name_hi' => 'अर्थ अयुर्वेद अस्पतालस अस्पताल (बैंगलोर)',
                 'type' => 'Private Hospital',
                 'address' => 'Bangalore, Karnataka',
                 'address_line1' => 'Main Medical Avenue',
@@ -3142,7 +3142,7 @@ class BangaloreScraperService extends BaseScraperService
             ],
             [
                 'name_en' => 'Care Health',
-                'name_hi' => 'चरे हेअल्�¤ अस्पताल (बैंगलोर)',
+                'name_hi' => 'चरे हेल्थ अस्पताल (बैंगलोर)',
                 'type' => 'Private Hospital',
                 'address' => 'Bangalore, Karnataka',
                 'address_line1' => 'Main Medical Avenue',
@@ -4002,7 +4002,7 @@ class BangaloreScraperService extends BaseScraperService
             ],
             [
                 'name_en' => 'Milana Fertility Health Care Center',
-                'name_hi' => 'मिलन फ़ेर्तिलित्य हेअल्�¤ केयर सेंटर अस्पताल (बैंगलोर)',
+                'name_hi' => 'मिलन फ़ेर्तिलित्य हेल्थ केयर सेंटर अस्पताल (बैंगलोर)',
                 'type' => 'Private Hospital',
                 'address' => 'Bangalore, Karnataka',
                 'address_line1' => 'Main Medical Avenue',
@@ -4142,7 +4142,7 @@ class BangaloreScraperService extends BaseScraperService
             ],
             [
                 'name_en' => 'Health Today Clinic',
-                'name_hi' => 'हेअल्�¤ तोदय क्लिनिक अस्पताल (बैंगलोर)',
+                'name_hi' => 'हेल्थ तोदय क्लिनिक अस्पताल (बैंगलोर)',
                 'type' => 'Clinic',
                 'address' => 'Bangalore, Karnataka',
                 'address_line1' => 'Main Medical Avenue',
@@ -10814,7 +10814,7 @@ class BangaloreScraperService extends BaseScraperService
                 'department_name_en' => 'Cardiology',
                 'department_name_hi' => 'हृदय रोग विभाग',
                 'hospital_name_en' => 'Narayana Health City',
-                'hospital_name_hi' => 'नरयन हेअल्�¤ सिटी अस्पताल (बैंगलोर)',
+                'hospital_name_hi' => 'नरयन हेल्थ सिटी अस्पताल (बैंगलोर)',
                 'address' => null,
                 'address_line1' => '258/A, Bommasandra Industrial Area',
                 'address_line2' => 'Hosur Road',
@@ -11567,7 +11567,7 @@ class BangaloreScraperService extends BaseScraperService
                 'department_name_en' => 'Dermatologist',
                 'department_name_hi' => 'Dermatologist',
                 'hospital_name_en' => 'Dr. Partha Sarathi\'s Asian Hair And Skin Hospitals',
-                'hospital_name_hi' => 'द्र्। पर्�¤ सरथिस असिअन हैर अंद स्किन अस्पतालस अस्पताल (बैंगलोर)',
+                'hospital_name_hi' => 'द्र्। पार्थ सरथिस असिअन हैर अंद स्किन अस्पतालस अस्पताल (बैंगलोर)',
                 'address' => null,
                 'address_line1' => 'Main Medical Avenue',
                 'address_line2' => 'Bangalore',

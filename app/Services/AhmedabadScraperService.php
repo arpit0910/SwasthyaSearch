@@ -1845,7 +1845,7 @@ class AhmedabadScraperService extends BaseScraperService
             ],
             [
                 'name_en' => 'Parth Hospital',
-                'name_hi' => 'पर्�¤ अस्पताल अस्पताल (अहमदाबाद)',
+                'name_hi' => 'पार्थ अस्पताल अस्पताल (अहमदाबाद)',
                 'type' => 'Private Hospital',
                 'address' => 'Main Medical Avenue, Ahmedabad, Ahmedabad, Gujarat',
                 'address_line1' => 'Main Medical Avenue',
@@ -2085,7 +2085,7 @@ class AhmedabadScraperService extends BaseScraperService
             ],
             [
                 'name_en' => 'Dr. Jivraj Mehta Smarak Health Foundation',
-                'name_hi' => 'द्र्। जिव्रज मेह्त स्मरक हेअल्�¤ फ़ोउंदतिऒन अस्पताल (अहमदाबाद)',
+                'name_hi' => 'द्र्। जिव्रज मेह्त स्मरक हेल्थ फ़ोउंदतिऒन अस्पताल (अहमदाबाद)',
                 'type' => 'Semi-Private Hospital',
                 'address' => 'Main Medical Avenue, Ahmedabad, Ahmedabad, Gujarat',
                 'address_line1' => 'Main Medical Avenue',
@@ -2825,7 +2825,7 @@ class AhmedabadScraperService extends BaseScraperService
             ],
             [
                 'name_en' => 'Aastha Hospital',
-                'name_hi' => 'अअस्�¤ अस्पताल अस्पताल (अहमदाबाद)',
+                'name_hi' => 'आस्था अस्पताल अस्पताल (अहमदाबाद)',
                 'type' => 'Private Hospital',
                 'address' => 'Main Medical Avenue, Ahmedabad, Ahmedabad, Gujarat',
                 'address_line1' => 'Main Medical Avenue',
@@ -3605,7 +3605,7 @@ class AhmedabadScraperService extends BaseScraperService
             ],
             [
                 'name_en' => 'Dr Batra\'s Positive Health Clinic Pvt Ltd',
-                'name_hi' => 'द्र बत्रस पोसितिवे हेअल्�¤ क्लिनिक प्व्त ल्त्द अस्पताल (अहमदाबाद)',
+                'name_hi' => 'द्र बत्रस पोसितिवे हेल्थ क्लिनिक प्व्त ल्त्द अस्पताल (अहमदाबाद)',
                 'type' => 'Clinic',
                 'address' => 'Main Medical Avenue, Ahmedabad, Ahmedabad, Gujarat',
                 'address_line1' => 'Main Medical Avenue',
@@ -3765,7 +3765,7 @@ class AhmedabadScraperService extends BaseScraperService
             ],
             [
                 'name_en' => 'Sheth Dental Clinic And Implant Center',
-                'name_hi' => 'शे�¤ डेंटल क्लिनिक अंद इंप्लंत चेंतेर अस्पताल (अहमदाबाद)',
+                'name_hi' => 'शेठ डेंटल क्लिनिक अंद इंप्लंत चेंतेर अस्पताल (अहमदाबाद)',
                 'type' => 'Clinic',
                 'address' => 'Main Medical Avenue, Ahmedabad, Ahmedabad, Gujarat',
                 'address_line1' => 'Main Medical Avenue',
@@ -4425,7 +4425,7 @@ class AhmedabadScraperService extends BaseScraperService
             ],
             [
                 'name_en' => 'Allo Sexual Health Clinic',
-                'name_hi' => 'अल्लो सेक्सुअल हेअल्�¤ क्लिनिक अस्पताल (अहमदाबाद)',
+                'name_hi' => 'अल्लो सेक्सुअल हेल्थ क्लिनिक अस्पताल (अहमदाबाद)',
                 'type' => 'Clinic',
                 'address' => 'Main Medical Avenue, Ahmedabad, Ahmedabad, Gujarat',
                 'address_line1' => 'Main Medical Avenue',
@@ -4665,7 +4665,7 @@ class AhmedabadScraperService extends BaseScraperService
             ],
             [
                 'name_en' => 'Health Through Homoeopathy',
-                'name_hi' => 'हेअल्�¤ थ्रोउघ होमोऎऒपथ्य अस्पताल (अहमदाबाद)',
+                'name_hi' => 'हेल्थ थ्रोउघ होमोऎऒपथ्य अस्पताल (अहमदाबाद)',
                 'type' => 'Private Hospital',
                 'address' => 'Main Medical Avenue, Ahmedabad, Ahmedabad, Gujarat',
                 'address_line1' => 'Main Medical Avenue',
@@ -11540,7 +11540,7 @@ class AhmedabadScraperService extends BaseScraperService
                 'medical_council' => 'Medical Council of India',
                 'registration_number' => 'REG-3AEA0626B1',
                 'about_en' => 'Highly experienced specialist in Gynecologist/Obstetrician practicing in Ahmedabad.',
-                'about_hi' => 'अहमदाबाद में अभ्यास करने वाले Gynecologist/Obstetrician के अत्यधिक अनुभवी विशेषज्ञ डॉक्टर डॉ. पर्�¤ जोशि।',
+                'about_hi' => 'अहमदाबाद में अभ्यास करने वाले Gynecologist/Obstetrician के अत्यधिक अनुभवी विशेषज्ञ डॉक्टर डॉ. पार्थ जोशि।',
                 'gender' => 'Unspecified',
                 'phone' => null,
                 'is_verified' => true,
@@ -12112,7 +12112,7 @@ class AhmedabadScraperService extends BaseScraperService
                 'medical_council' => 'Medical Council of India',
                 'registration_number' => 'REG-5B49065D28',
                 'about_en' => 'Highly experienced specialist in Gynecologist/Obstetrician practicing in Ahmedabad.',
-                'about_hi' => 'अहमदाबाद में अभ्यास करने वाले Gynecologist/Obstetrician के अत्यधिक अनुभवी विशेषज्ञ डॉक्टर डॉ. अस्�¤ दुधत मुलनि।',
+                'about_hi' => 'अहमदाबाद में अभ्यास करने वाले Gynecologist/Obstetrician के अत्यधिक अनुभवी विशेषज्ञ डॉक्टर डॉ. आस्था दुधत मुलनि।',
                 'gender' => 'Unspecified',
                 'phone' => null,
                 'is_verified' => true,

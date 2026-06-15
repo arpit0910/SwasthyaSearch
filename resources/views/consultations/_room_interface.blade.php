@@ -1391,11 +1391,12 @@
 
                 ensurePeerConnection();
 
-                const senders = peerConnection.getSenders();
+                const transceivers = peerConnection.getTransceivers();
                 localStream.getTracks().forEach((track) => {
-                    const sender = senders.find((item) => item.track && item.track.kind === track.kind);
-                    if (sender) {
-                        sender.replaceTrack(track);
+                    const transceiver = transceivers.find((t) => t.receiver.track.kind === track.kind);
+                    if (transceiver) {
+                        transceiver.sender.replaceTrack(track);
+                        transceiver.direction = 'sendrecv';
                     } else {
                         peerConnection.addTrack(track, localStream);
                     }

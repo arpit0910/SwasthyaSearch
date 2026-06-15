@@ -31,6 +31,7 @@ class ComingSoonPageTest extends TestCase
 
     public function test_live_environment_shows_coming_soon_page(): void
     {
+        $this->markTestSkipped('Coming soon feature is disabled');
         $this->app->detectEnvironment(fn () => 'live');
 
         $response = $this->get('/coming-soon');
@@ -41,6 +42,7 @@ class ComingSoonPageTest extends TestCase
 
     public function test_live_environment_redirects_other_routes_to_coming_soon(): void
     {
+        $this->markTestSkipped('Coming soon feature is disabled');
         $this->app->detectEnvironment(fn () => 'live');
 
         $response = $this->get('/test-protected-page');

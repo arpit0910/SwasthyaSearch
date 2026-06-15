@@ -1000,7 +1000,7 @@
         supportDefault: isHindi ? 'यदि आपको चक्कर आ रहा है, घबराहट हो रही है, या असहजता महसूस हो रही है, तो अपनी सामान्य श्वास पर लौट आएं।' : 'If you feel dizzy, panicky, or uncomfortable, return to your normal breathing.',
 
 
-        supportComplete: isHindi ? 'यदि आप चाहें, तो आप एक और दौर कर सकते हैं - बिना दबाव के।' : 'If you want, you can do another round â€” without pressure.',
+        supportComplete: isHindi ? 'यदि आप चाहें, तो आप एक और दौर कर सकते हैं - बिना दबाव के।' : 'If you want, you can do another round — without pressure.',
 
 
         roundLabel: 'Round',

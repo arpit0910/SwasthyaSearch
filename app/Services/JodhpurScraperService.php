@@ -1541,7 +1541,7 @@ class JodhpurScraperService extends BaseScraperService
             ],
             [
                 'name_en' => 'Sainath Hospital',
-                'name_hi' => 'सैन� अस्पताल अस्पताल (जोधपुर)',
+                'name_hi' => 'सैन्य अस्पताल अस्पताल (जोधपुर)',
                 'type' => 'Private Hospital',
                 'address' => 'Main Medical Avenue, Jodhpur, Jodhpur, Rajasthan',
                 'address_line1' => 'Main Medical Avenue',
@@ -1861,7 +1861,7 @@ class JodhpurScraperService extends BaseScraperService
             ],
             [
                 'name_en' => 'Shree IG Hospital & Active Health Centre',
-                'name_hi' => 'श्रेऎ इग अस्पताल & अच्तिवे हेअल्� चेंत्रे अस्पताल (जोधपुर)',
+                'name_hi' => 'श्रेऎ इग अस्पताल & अच्तिवे हेल्थ चेंत्रे अस्पताल (जोधपुर)',
                 'type' => 'Private Hospital',
                 'address' => 'Main Medical Avenue, Jodhpur, Jodhpur, Rajasthan',
                 'address_line1' => 'Main Medical Avenue',
@@ -1901,7 +1901,7 @@ class JodhpurScraperService extends BaseScraperService
             ],
             [
                 'name_en' => 'Teeth and Face clinic - Facial Skin, Hair and Dental Center',
-                'name_hi' => 'तेऎ� अंद फ़चे क्लिनिक - फ़चिअल स्किन्, हैर अंद डेंटल चेंतेर अस्पताल (जोधपुर)',
+                'name_hi' => 'टीथ अंद फ़चे क्लिनिक - फ़चिअल स्किन्, हैर अंद डेंटल चेंतेर अस्पताल (जोधपुर)',
                 'type' => 'Clinic',
                 'address' => 'Main Medical Avenue, Jodhpur, Jodhpur, Rajasthan',
                 'address_line1' => 'Main Medical Avenue',

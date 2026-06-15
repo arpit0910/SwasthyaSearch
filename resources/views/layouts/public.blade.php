@@ -456,7 +456,7 @@
                             <input type="hidden" name="locale" value="hi">
                             <button type="submit" class="w-full flex items-center justify-center gap-1 px-3 py-2 rounded-xl text-xs font-semibold {{ $locale === 'hi' ? 'bg-white dark:bg-slate-700 text-indigo-900 dark:text-indigo-200 shadow-sm' : 'bg-transparent text-slate-600 dark:text-slate-300' }}">
                                 <i data-lucide="globe" class="w-3.5 h-3.5 text-teal-600 shrink-0"></i>
-                                <span>à¤¹à¤¿à¤¨à¥à¤¦à¥€</span>
+                                <span>हिन्दी</span>
                             </button>
                         </form>
                     </div>

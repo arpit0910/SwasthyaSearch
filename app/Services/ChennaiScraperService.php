@@ -1152,7 +1152,7 @@ class ChennaiScraperService extends BaseScraperService
             ],
             [
                 'name_en' => 'Billroth Hospitals',
-                'name_hi' => 'बिल्ल्रो�¤ अस्पतालस अस्पताल (चेन्नई)',
+                'name_hi' => 'बिल्ल्रोथ अस्पतालस अस्पताल (चेन्नई)',
                 'type' => 'Private Hospital',
                 'address' => 'Chennai, Tamil Nadu',
                 'address_line1' => 'Main Medical Avenue',
@@ -2261,7 +2261,7 @@ class ChennaiScraperService extends BaseScraperService
             ],
             [
                 'name_en' => 'SIXTH SENSE WELLNESS INSTITUTE',
-                'name_hi' => 'सिक्स�¤ सेंसे वेल्ल्नेष संस्थान अस्पताल (चेन्नई)',
+                'name_hi' => 'शिखा सेंसे वेल्ल्नेष संस्थान अस्पताल (चेन्नई)',
                 'type' => 'Private Hospital',
                 'address' => 'Chennai, Tamil Nadu',
                 'address_line1' => 'Main Medical Avenue',
@@ -2521,7 +2521,7 @@ class ChennaiScraperService extends BaseScraperService
             ],
             [
                 'name_en' => 'Mr. & Mrs. Tooth Dental Clinic',
-                'name_hi' => 'म्र्। & म्र्स्। तोऒ�¤ डेंटल क्लिनिक अस्पताल (चेन्नई)',
+                'name_hi' => 'म्र्। & म्र्स्। टीथ डेंटल क्लिनिक अस्पताल (चेन्नई)',
                 'type' => 'Clinic',
                 'address' => 'Chennai, Tamil Nadu',
                 'address_line1' => 'Main Medical Avenue',
@@ -2621,7 +2621,7 @@ class ChennaiScraperService extends BaseScraperService
             ],
             [
                 'name_en' => 'Bharath Super Speciality Hospital',
-                'name_hi' => 'भर�¤ सुपर स्पेशलिटी अस्पताल अस्पताल (चेन्नई)',
+                'name_hi' => 'भारत सुपर स्पेशलिटी अस्पताल अस्पताल (चेन्नई)',
                 'type' => 'Private Hospital',
                 'address' => 'Chennai, Tamil Nadu',
                 'address_line1' => 'Main Medical Avenue',
@@ -3101,7 +3101,7 @@ class ChennaiScraperService extends BaseScraperService
             ],
             [
                 'name_en' => 'Billroth Hospital',
-                'name_hi' => 'बिल्ल्रो�¤ अस्पताल अस्पताल (चेन्नई)',
+                'name_hi' => 'बिल्ल्रोथ अस्पताल अस्पताल (चेन्नई)',
                 'type' => 'Private Hospital',
                 'address' => 'Chennai, Tamil Nadu',
                 'address_line1' => 'Main Medical Avenue',
@@ -3461,7 +3461,7 @@ class ChennaiScraperService extends BaseScraperService
             ],
             [
                 'name_en' => 'Mental Health Clinic',
-                'name_hi' => 'मेंतल हेअल्�¤ क्लिनिक अस्पताल (चेन्नई)',
+                'name_hi' => 'मेंतल हेल्थ क्लिनिक अस्पताल (चेन्नई)',
                 'type' => 'Clinic',
                 'address' => 'Chennai, Tamil Nadu',
                 'address_line1' => 'Main Medical Avenue',
@@ -3541,7 +3541,7 @@ class ChennaiScraperService extends BaseScraperService
             ],
             [
                 'name_en' => 'Ojas Health',
-                'name_hi' => 'ऒजस हेअल्�¤ अस्पताल (चेन्नई)',
+                'name_hi' => 'ऒजस हेल्थ अस्पताल (चेन्नई)',
                 'type' => 'Private Hospital',
                 'address' => 'Chennai, Tamil Nadu',
                 'address_line1' => 'Main Medical Avenue',
@@ -3641,7 +3641,7 @@ class ChennaiScraperService extends BaseScraperService
             ],
             [
                 'name_en' => 'Assana Gut Health And Wellness LLP',
-                'name_hi' => 'अषन गुत हेअल्�¤ अंद वेल्ल्नेष ल्ल्प अस्पताल (चेन्नई)',
+                'name_hi' => 'अषन गुत हेल्थ अंद वेल्ल्नेष ल्ल्प अस्पताल (चेन्नई)',
                 'type' => 'Private Hospital',
                 'address' => 'Chennai, Tamil Nadu',
                 'address_line1' => 'Main Medical Avenue',
@@ -3761,7 +3761,7 @@ class ChennaiScraperService extends BaseScraperService
             ],
             [
                 'name_en' => 'Porur Child Health Clinic',
-                'name_hi' => 'पोरुर छिल्द हेअल्�¤ क्लिनिक अस्पताल (चेन्नई)',
+                'name_hi' => 'पोरुर छिल्द हेल्थ क्लिनिक अस्पताल (चेन्नई)',
                 'type' => 'Clinic',
                 'address' => 'Chennai, Tamil Nadu',
                 'address_line1' => 'Main Medical Avenue',
@@ -4061,7 +4061,7 @@ class ChennaiScraperService extends BaseScraperService
             ],
             [
                 'name_en' => 'Pearl Health',
-                'name_hi' => 'पेअर्ल हेअल्�¤ अस्पताल (चेन्नई)',
+                'name_hi' => 'पेअर्ल हेल्थ अस्पताल (चेन्नई)',
                 'type' => 'Private Hospital',
                 'address' => 'Chennai, Tamil Nadu',
                 'address_line1' => 'Main Medical Avenue',
@@ -4081,7 +4081,7 @@ class ChennaiScraperService extends BaseScraperService
             ],
             [
                 'name_en' => 'Sarath Dental Clinic',
-                'name_hi' => 'सर�¤ डेंटल क्लिनिक अस्पताल (चेन्नई)',
+                'name_hi' => 'शरथ डेंटल क्लिनिक अस्पताल (चेन्नई)',
                 'type' => 'Clinic',
                 'address' => 'Chennai, Tamil Nadu',
                 'address_line1' => 'Main Medical Avenue',
@@ -4101,7 +4101,7 @@ class ChennaiScraperService extends BaseScraperService
             ],
             [
                 'name_en' => 'DakshinPanacea Health Llp',
-                'name_hi' => 'दक्शिन्पनचेअ हेअल्�¤ ल्ल्प अस्पताल (चेन्नई)',
+                'name_hi' => 'दक्शिन्पनचेअ हेल्थ ल्ल्प अस्पताल (चेन्नई)',
                 'type' => 'Private Hospital',
                 'address' => 'Chennai, Tamil Nadu',
                 'address_line1' => 'Main Medical Avenue',
@@ -4121,7 +4121,7 @@ class ChennaiScraperService extends BaseScraperService
             ],
             [
                 'name_en' => 'The Mind Care Center For Mental Health',
-                'name_hi' => 'थे मिंद केयर सेंटर फ़ोर मेंतल हेअल्�¤ अस्पताल (चेन्नई)',
+                'name_hi' => 'थे मिंद केयर सेंटर फ़ोर मेंतल हेल्थ अस्पताल (चेन्नई)',
                 'type' => 'Private Hospital',
                 'address' => 'Chennai, Tamil Nadu',
                 'address_line1' => 'Main Medical Avenue',
@@ -4301,7 +4301,7 @@ class ChennaiScraperService extends BaseScraperService
             ],
             [
                 'name_en' => 'BEE Health Studio',
-                'name_hi' => 'बेऎ हेअल्�¤ स्तुदिऒ अस्पताल (चेन्नई)',
+                'name_hi' => 'बेऎ हेल्थ स्तुदिऒ अस्पताल (चेन्नई)',
                 'type' => 'Private Hospital',
                 'address' => 'Chennai, Tamil Nadu',
                 'address_line1' => 'Main Medical Avenue',
@@ -4661,7 +4661,7 @@ class ChennaiScraperService extends BaseScraperService
             ],
             [
                 'name_en' => 'Dr Batra\'s Positive Health Clinic Pvt Ltd',
-                'name_hi' => 'द्र बत्रस पोसितिवे हेअल्�¤ क्लिनिक प्व्त ल्त्द अस्पताल (चेन्नई)',
+                'name_hi' => 'द्र बत्रस पोसितिवे हेल्थ क्लिनिक प्व्त ल्त्द अस्पताल (चेन्नई)',
                 'type' => 'Clinic',
                 'address' => 'Chennai, Tamil Nadu',
                 'address_line1' => 'Main Medical Avenue',
@@ -11872,7 +11872,7 @@ class ChennaiScraperService extends BaseScraperService
                 'department_name_en' => 'General Surgery',
                 'department_name_hi' => 'सामान्य शल्य चिकित्सा',
                 'hospital_name_en' => 'Billroth Hospitals',
-                'hospital_name_hi' => 'बिल्ल्रो�¤ अस्पतालस अस्पताल (चेन्नई)',
+                'hospital_name_hi' => 'बिल्ल्रोथ अस्पतालस अस्पताल (चेन्नई)',
                 'address' => null,
                 'address_line1' => '43, Lakshmi Talkies Road',
                 'address_line2' => 'Shenoy Nagar',
@@ -12548,7 +12548,7 @@ class ChennaiScraperService extends BaseScraperService
                 'department_name_en' => 'General Medicine',
                 'department_name_hi' => 'सामान्य चिकित्सा',
                 'hospital_name_en' => 'Billroth Hospitals',
-                'hospital_name_hi' => 'बिल्ल्रो�¤ अस्पतालस अस्पताल (चेन्नई)',
+                'hospital_name_hi' => 'बिल्ल्रोथ अस्पतालस अस्पताल (चेन्नई)',
                 'address' => null,
                 'address_line1' => 'Main Medical Avenue',
                 'address_line2' => 'Chennai',
