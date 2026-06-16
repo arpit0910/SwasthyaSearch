@@ -542,35 +542,53 @@ class ChatbotController extends Controller
                         $jsonContent = $response->json('choices.0.message.content');
                         $decoded = json_decode($jsonContent, true);
                         if (is_array($decoded) && isset($decoded['reply'])) {
-                            // Optionally cache it to DB for admin visibility or logs
-                            CachedMedicalQuestion::updateOrCreate(
-                                ['question_en' => trim($locale === 'en' ? $originalMessage : ($decoded['question_en'] ?? $originalMessage))],
-                                [
-                                    'question_hi' => trim($locale === 'hi' ? $originalMessage : ($decoded['question_hi'] ?? $originalMessage)),
-                                    'answer_en' => $locale === 'en' ? trim($decoded['reply']) : '',
-                                    'answer_hi' => $locale === 'hi' ? trim($decoded['reply']) : '',
-                                    'detailed_answer_en' => $locale === 'en' ? ($decoded['detailed_reply'] ?? null) : null,
-                                    'detailed_answer_hi' => $locale === 'hi' ? ($decoded['detailed_reply'] ?? null) : null,
-                                    'category' => $decoded['department'] ?? 'General Medical',
-                                ]
-                            );
+                            $replyText = $this->normalizeAiText($decoded['reply'] ?? null);
+                            $detailedReply = $this->normalizeAiText($decoded['detailed_reply'] ?? null);
+                            $department = $this->normalizeAiText($decoded['department'] ?? null, 'General Medical');
+                            $questionEn = trim($locale === 'en'
+                                ? $originalMessage
+                                : $this->normalizeAiText($decoded['question_en'] ?? null, $originalMessage));
+                            $questionHi = trim($locale === 'hi'
+                                ? $originalMessage
+                                : $this->normalizeAiText($decoded['question_hi'] ?? null, $originalMessage));
+
+                            if ($replyText === '') {
+                                throw new Exception('Groq response missing usable reply text.');
+                            }
+
+                            // Cache failures should not block the live answer.
+                            try {
+                                CachedMedicalQuestion::updateOrCreate(
+                                    ['question_en' => $questionEn !== '' ? $questionEn : $originalMessage],
+                                    [
+                                        'question_hi' => $questionHi !== '' ? $questionHi : $originalMessage,
+                                        'answer_en' => $locale === 'en' ? $replyText : '',
+                                        'answer_hi' => $locale === 'hi' ? $replyText : '',
+                                        'detailed_answer_en' => $locale === 'en' ? ($detailedReply !== '' ? $detailedReply : null) : null,
+                                        'detailed_answer_hi' => $locale === 'hi' ? ($detailedReply !== '' ? $detailedReply : null) : null,
+                                        'category' => $department !== '' ? $department : 'General Medical',
+                                    ]
+                                );
+                            } catch (Throwable $cacheException) {
+                                logger()->warning('Unable to cache chatbot AI answer: ' . $cacheException->getMessage());
+                            }
 
                             $qaAnswer = [
                                 'question' => $originalMessage,
-                                'answer' => $decoded['reply'],
-                                'category' => $decoded['department'] ?? 'General Medical',
+                                'answer' => $replyText,
+                                'category' => $department !== '' ? $department : 'General Medical',
                                 'source' => 'jeeva_ai',
                                 'source_id' => null,
                                 'source_table' => null,
                                 'confidence' => 100.0,
-                                'detailed_answer_en' => $locale === 'en' ? ($decoded['detailed_reply'] ?? null) : null,
-                                'detailed_answer_hi' => $locale === 'hi' ? ($decoded['detailed_reply'] ?? null) : null,
-                                'detailed_answer' => $decoded['detailed_reply'] ?? null,
+                                'detailed_answer_en' => $locale === 'en' ? ($detailedReply !== '' ? $detailedReply : null) : null,
+                                'detailed_answer_hi' => $locale === 'hi' ? ($detailedReply !== '' ? $detailedReply : null) : null,
+                                'detailed_answer' => $detailedReply !== '' ? $detailedReply : null,
                             ];
 
-                            $botReply = $decoded['reply'];
+                            $botReply = $replyText;
                             $symptomMatch = (bool) ($decoded['symptom_match'] ?? false);
-                            $grokDepartment = $decoded['department'] ?? null;
+                            $grokDepartment = $department !== '' ? $department : null;
                             $isEmergency = (bool) ($decoded['emergency'] ?? false);
 
                             if ($isEmergency) {
@@ -815,21 +833,28 @@ class ChatbotController extends Controller
             'history' => $messages,
         ]);
         } catch (Throwable $e) {
-            report($e);
-            $this->storeFailedQuery(
-                sessionToken: (string) ($request->input('session_token') ?: ''),
-                city: (string) ($request->input('city') ?: ''),
-                locale: (string) ($request->input('locale') ?: app()->getLocale()),
-                failureType: 'server_exception',
-                userMessage: (string) ($request->input('message') ?: ''),
-                errorMessage: $e->getMessage(),
-                meta: [
-                    'exception' => get_class($e),
-                ]
-            );
+            try {
+                report($e);
+            } catch (Throwable $_) {}
+
+            try {
+                $this->storeFailedQuery(
+                    sessionToken: (string) ($request->input('session_token') ?: ''),
+                    city: (string) ($request->input('city') ?: ''),
+                    locale: (string) ($request->input('locale') ?: app()->getLocale()),
+                    failureType: 'server_exception',
+                    userMessage: (string) ($request->input('message') ?: ''),
+                    errorMessage: $e->getMessage(),
+                    meta: [
+                        'exception' => get_class($e),
+                    ]
+                );
+            } catch (Throwable $_) {}
 
             $locale = (string) ($request->input('locale') ?: app()->getLocale());
-            $fallbackReply = 'A technical issue occurred. Please resend your message in a moment.';
+            $fallbackReply = $locale === 'hi'
+                ? 'एक तकनीकी समस्या आई है। कृपया एक क्षण में अपना संदेश पुनः भेजें।'
+                : 'A technical issue occurred. Please resend your message in a moment.';
 
             return response()->json([
                 'session_token' => (string) ($request->input('session_token') ?: Str::random(32)),
@@ -1414,6 +1439,43 @@ class ChatbotController extends Controller
         return trim($text);
     }
 
+    private function normalizeAiText(mixed $value, string $fallback = ''): string
+    {
+        if (is_string($value)) {
+            return trim($value);
+        }
+
+        if (is_numeric($value) || is_bool($value)) {
+            return trim((string) $value);
+        }
+
+        if (is_array($value)) {
+            $flattened = $this->flattenAiValue($value);
+
+            return $flattened !== '' ? $flattened : trim($fallback);
+        }
+
+        return trim($fallback);
+    }
+
+    private function flattenAiValue(array $value): string
+    {
+        $parts = [];
+
+        array_walk_recursive($value, function (mixed $item) use (&$parts): void {
+            if (is_string($item)) {
+                $item = trim($item);
+                if ($item !== '') {
+                    $parts[] = $item;
+                }
+            } elseif (is_numeric($item) || is_bool($item)) {
+                $parts[] = (string) $item;
+            }
+        });
+
+        return trim(implode("\n", $parts));
+    }
+
     private function findMedicineResponse(string $message, string $locale): ?array
     {
         $normalized = trim($message);
@@ -1458,4 +1520,3 @@ class ChatbotController extends Controller
         ];
     }
 }
-

@@ -74,12 +74,12 @@ class MedicalQaService
         }
 
         $answer = $locale === 'hi'
-            ? ($best['answer_hi'] ?: $best['answer_en'])
-            : ($best['answer_en'] ?: $best['answer_hi']);
+            ? (($best['answer_hi'] ?? null) ?: ($best['answer_en'] ?? ''))
+            : (($best['answer_en'] ?? null) ?: ($best['answer_hi'] ?? ''));
 
         $question = $locale === 'hi'
-            ? ($best['question_hi'] ?: $best['question_en'])
-            : ($best['question_en'] ?: $best['question_hi']);
+            ? (($best['question_hi'] ?? null) ?: ($best['question_en'] ?? ''))
+            : (($best['question_en'] ?? null) ?: ($best['question_hi'] ?? ''));
 
         $detailedAnswerEn = isset($best['detailed_answer_en']) ? trim((string) $best['detailed_answer_en']) : '';
         $detailedAnswerHi = isset($best['detailed_answer_hi']) ? trim((string) $best['detailed_answer_hi']) : '';
@@ -371,10 +371,19 @@ class MedicalQaService
 
         $configured = collect(config('medical_qa.entries', []))
             ->map(function (array $entry) {
-                $entry['source'] = 'medical_qa_config';
-                $entry['source_id'] = null;
-                $entry['source_table'] = null;
-                return $entry;
+                return [
+                    'source' => 'medical_qa_config',
+                    'source_id' => null,
+                    'source_table' => null,
+                    'question_en' => $entry['question_en'] ?? '',
+                    'question_hi' => $entry['question_hi'] ?? '',
+                    'answer_en' => $entry['answer_en'] ?? '',
+                    'answer_hi' => $entry['answer_hi'] ?? '',
+                    'detailed_answer_en' => $entry['detailed_answer_en'] ?? null,
+                    'detailed_answer_hi' => $entry['detailed_answer_hi'] ?? null,
+                    'category' => $entry['category'] ?? 'General Medical',
+                    'keywords' => $entry['keywords'] ?? [],
+                ];
             });
 
         return $dbFaqs

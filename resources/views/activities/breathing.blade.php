@@ -1270,7 +1270,7 @@
         const utterance = new SpeechSynthesisUtterance(text);
 
 
-        utterance.lang = isHindi ? 'एन-IN' : 'en-IN';
+        utterance.lang = isHindi ? 'hi-IN' : 'en-IN';
 
 
         utterance.rate = 0.92;

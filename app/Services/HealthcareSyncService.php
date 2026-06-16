@@ -205,8 +205,11 @@ class HealthcareSyncService
             }
         }
 
-        $rawPhone = $sourceData['emergency_phone'] ?? ($existingHospital?->emergency_phone ?: null);
-        $phoneParts = self::splitPhone($rawPhone);
+        $rawPhone1 = $sourceData['phone_1'] ?? $sourceData['emergency_phone'] ?? $sourceData['phone'] ?? ($existingHospital?->phone_1 ?: null);
+        $phoneParts1 = self::splitPhone($rawPhone1);
+
+        $rawPhone2 = $sourceData['phone_2'] ?? ($existingHospital?->phone_2 ?: null);
+        $phoneParts2 = $rawPhone2 ? self::splitPhone($rawPhone2) : ['country_code' => null, 'phone' => null];
 
         return Hospital::updateOrCreate(
             ['name_en' => $nameEn, 'city' => $cityName],
@@ -222,8 +225,10 @@ class HealthcareSyncService
                 'pincode' => $addressData['pincode'],
                 'latitude' => $coords['latitude'],
                 'longitude' => $coords['longitude'],
-                'emergency_country_code' => $sourceData['emergency_country_code'] ?? $phoneParts['country_code'],
-                'emergency_phone' => $phoneParts['phone'],
+                'country_code_1' => $sourceData['country_code_1'] ?? $sourceData['emergency_country_code'] ?? $phoneParts1['country_code'] ?? '+91',
+                'phone_1' => $phoneParts1['phone'],
+                'country_code_2' => $sourceData['country_code_2'] ?? $phoneParts2['country_code'] ?? null,
+                'phone_2' => $phoneParts2['phone'],
                 'is_verified' => true,
                 'accepts_ayushman' => $schemes['accepts_ayushman_card'],
                 'accepts_janaadhaar' => $schemes['accepts_jan_aadhaar'],
@@ -341,8 +346,12 @@ class HealthcareSyncService
         } elseif ($existingFee !== null && $existingFee > 0) {
             $fee = $existingFee;
         }
-        $rawPhone = $sourceData['phone'] ?? ($existingDoctor?->phone ?: null);
-        $phoneParts = self::splitPhone($rawPhone);
+        $rawPhone1 = $sourceData['phone_1'] ?? $sourceData['phone'] ?? ($existingDoctor?->phone_1 ?: null);
+        $phoneParts1 = self::splitPhone($rawPhone1);
+
+        $rawPhone2 = $sourceData['phone_2'] ?? ($existingDoctor?->phone_2 ?: null);
+        $phoneParts2 = $rawPhone2 ? self::splitPhone($rawPhone2) : ['country_code' => null, 'phone' => null];
+
         $website = $sourceData['website'] ?? ($existingDoctor?->website && !str_contains($existingDoctor->website, 'arogio.com') ? $existingDoctor->website : null);
 
         $doctor = Doctor::updateOrCreate(
@@ -360,8 +369,10 @@ class HealthcareSyncService
                 'about_hi' => "{$cityNameHi} में अभ्यास करने वाले {$deptNameHi} के अत्यधिक अनुभवी विशेषज्ञ डॉक्टर डॉ. " . self::getHindiDoctorName($firstName) . " " . self::getHindiDoctorName($lastName) . "।",
                 'is_verified' => true,
                 'consultation_fee' => $fee,
-                'country_code' => $sourceData['country_code'] ?? $phoneParts['country_code'],
-                'phone' => $phoneParts['phone'],
+                'country_code_1' => $sourceData['country_code_1'] ?? $sourceData['country_code'] ?? $phoneParts1['country_code'] ?? '+91',
+                'phone_1' => $phoneParts1['phone'],
+                'country_code_2' => $sourceData['country_code_2'] ?? $phoneParts2['country_code'] ?? null,
+                'phone_2' => $phoneParts2['phone'],
                 'address_line1' => $addressData['address_line1'],
                 'address_line2' => $addressData['address_line2'],
                 'city' => $addressData['city'],

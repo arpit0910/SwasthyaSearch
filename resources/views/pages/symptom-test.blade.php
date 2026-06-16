@@ -311,10 +311,10 @@
                         @foreach([1, 2, 3] as $stepNumber)
 
 
-                            <div class="step-indicator min-w-[220px] md:min-w-0 flex items-center gap-3 rounded-2xl border px-4 py-3 text-sm font-semibold transition-all {{ $stepNumber === 1 ? 'बॉर्डर-स्लेट-200 बीजी-सफ़ेद टेक्स्ट-स्लेट-500 डार्क: बॉर्डर-स्लेट-800 डार्क: बीजी-स्लेट-900 डार्क: टेक्स्ट-स्लेट-400' : 'border-slate-200 bg-white text-slate-500 dark:border-slate-800 dark:bg-slate-900 dark:text-slate-400' }}" data-step-indicator="{{ $stepNumber }}">
+                            <div class="step-indicator min-w-[220px] md:min-w-0 flex items-center gap-3 rounded-2xl border px-4 py-3 text-sm font-semibold transition-all border-slate-200 bg-white text-slate-500 dark:border-slate-800 dark:bg-slate-900 dark:text-slate-400" data-step-indicator="{{ $stepNumber }}">
 
 
-                                <span class="flex h-8 w-8 shrink-0 items-center justify-center rounded-full text-xs font-extrabold {{ $stepNumber === 1 ? 'बीजी-स्लेट-100 टेक्स्ट-स्लेट-500 डार्क: बीजी-स्लेट-800 डार्क: टेक्स्ट-स्लेट-300' : 'bg-slate-100 text-slate-500 dark:bg-slate-800 dark:text-slate-300' }}">{{ $stepNumber }}</span>
+                                <span class="flex h-8 w-8 shrink-0 items-center justify-center rounded-full text-xs font-extrabold bg-slate-100 text-slate-500 dark:bg-slate-800 dark:text-slate-300">{{ $stepNumber }}</span>
 
 
                                 <span class="leading-tight">{{ $stepLabels[$stepNumber] }}</span>
@@ -1889,7 +1889,7 @@
                         <p class="text-[11px] font-bold uppercase tracking-[0.2em] text-teal-700 dark:text-teal-300">${translate('Top diagnosis', 'शीर्ष संभावना')}</p>
 
 
-                        <h3 class="mt-1 text-xl font-extrabold text-slate-950 dark:text-white">${topCondition?.name?.[isHindi ? 'एन' : 'en'] || topCondition?.name?.en || ''}</h3>
+                        <h3 class="mt-1 text-xl font-extrabold text-slate-950 dark:text-white">${topCondition?.name?.[isHindi ? 'hi' : 'en'] || topCondition?.name?.en || ''}</h3>
 
 
                         <p class="mt-2 text-sm text-slate-600 dark:text-slate-300">${data.message || translate('Analysis complete', 'विश्लेषण पूरा हुआ')}</p>
@@ -1913,40 +1913,46 @@
                 </div>
 
 
-                <div class="mt-4 grid grid-cols-1 gap-3 sm:grid-cols-3">
+                <div class="mt-4 space-y-3">
 
 
-                    <div class="rounded-2xl bg-white/80 px-4 py-3 dark:bg-slate-950/70">
+                    <div class="rounded-2xl bg-white/80 px-4 py-3 dark:bg-slate-950/70 flex justify-between items-center gap-3">
 
 
-                        <p class="text-[11px] font-bold uppercase tracking-[0.2em] text-slate-400">${translate('Department', 'विभाग')}</p>
+                        <p class="text-[11px] font-bold uppercase tracking-[0.2em] text-slate-400 shrink-0">${translate('Department', 'विभाग')}</p>
 
 
-                        <p class="mt-1 text-sm font-bold text-slate-950 dark:text-white">${recommendedDepartment ? (recommendedDepartment.name?.[isHindi ? 'एन' : 'en'] || recommendedDepartment.name?.en || '') : translate('General evaluation', 'सामान्य जांच')}</p>
-
-
-                    </div>
-
-
-                    <div class="rounded-2xl bg-white/80 px-4 py-3 dark:bg-slate-950/70">
-
-
-                        <p class="text-[11px] font-bold uppercase tracking-[0.2em] text-slate-400">${translate('Matched symptoms', 'मिलते लक्षण')}</p>
-
-
-                        <p class="mt-1 text-sm font-bold text-slate-950 dark:text-white">${(topCondition?.matched_symptoms || []).length}</p>
+                        <p class="text-sm font-bold text-slate-950 dark:text-white text-right break-words">${recommendedDepartment ? (recommendedDepartment.name?.[isHindi ? 'hi' : 'en'] || recommendedDepartment.name?.en || '') : translate('General evaluation', 'सामान्य जांच')}</p>
 
 
                     </div>
 
 
-                    <div class="rounded-2xl bg-white/80 px-4 py-3 dark:bg-slate-950/70">
+                    <div class="grid grid-cols-2 gap-3">
 
 
-                        <p class="text-[11px] font-bold uppercase tracking-[0.2em] text-slate-400">${translate('Confidence score', 'स्कोर')}</p>
+                        <div class="rounded-2xl bg-white/80 px-4 py-3 dark:bg-slate-950/70">
 
 
-                        <p class="mt-1 text-sm font-bold text-slate-950 dark:text-white">${topCondition?.score ?? 0}</p>
+                            <p class="text-[11px] font-bold uppercase tracking-[0.2em] text-slate-400">${translate('Matched symptoms', 'मिलते लक्षण')}</p>
+
+
+                            <p class="mt-1 text-sm font-bold text-slate-950 dark:text-white">${(topCondition?.matched_symptoms || []).length}</p>
+
+
+                        </div>
+
+
+                        <div class="rounded-2xl bg-white/80 px-4 py-3 dark:bg-slate-950/70">
+
+
+                            <p class="text-[11px] font-bold uppercase tracking-[0.2em] text-slate-400">${translate('Confidence score', 'स्कोर')}</p>
+
+
+                            <p class="mt-1 text-sm font-bold text-slate-950 dark:text-white">${topCondition?.score ?? 0}</p>
+
+
+                        </div>
 
 
                     </div>
@@ -2009,7 +2015,7 @@
                         <span class="inline-flex items-center rounded-full border border-slate-200 bg-slate-50 px-3 py-1.5 text-sm font-semibold text-slate-700 dark:border-slate-700 dark:bg-slate-900 dark:text-slate-200">
 
 
-                            ${symptom.name?.[isHindi ? 'एन' : 'en'] || symptom.name?.en || ''}
+                            ${symptom.name?.[isHindi ? 'hi' : 'en'] || symptom.name?.en || ''}
 
 
                         </span>
@@ -2045,10 +2051,10 @@
                                 <p class="text-[11px] font-bold uppercase tracking-[0.2em] text-teal-600 dark:text-teal-300">${index === 0 ? translate('Most likely', 'सबसे संभावित') : translate('Other match', 'अन्य संभावना')}</p>
 
 
-                                <h4 class="mt-1 text-lg font-extrabold text-slate-950 dark:text-white">${condition.name?.[isHindi ? 'एन' : 'en'] || condition.name?.en || ''}</h4>
+                                <h4 class="mt-1 text-lg font-extrabold text-slate-950 dark:text-white">${condition.name?.[isHindi ? 'hi' : 'en'] || condition.name?.en || ''}</h4>
 
 
-                                <p class="mt-1 text-sm text-slate-500 dark:text-slate-400">${condition.department ? (condition.department.name?.[isHindi ? 'एन' : 'en'] || condition.department.name?.en || '') : translate('General evaluation', 'सामान्य जांच')}</p>
+                                <p class="mt-1 text-sm text-slate-500 dark:text-slate-400">${condition.department ? (condition.department.name?.[isHindi ? 'hi' : 'en'] || condition.department.name?.en || '') : translate('General evaluation', 'सामान्य जांच')}</p>
 
 
                             </div>
@@ -2072,40 +2078,40 @@
 
 
 
-                        <div class="mt-4 grid grid-cols-2 gap-3 sm:grid-cols-3">
+                        <div class="mt-4 grid grid-cols-3 gap-2 text-center">
 
 
-                            <div class="rounded-2xl bg-slate-50 px-3 py-3 dark:bg-slate-900">
+                            <div class="rounded-2xl bg-slate-50 px-2 py-2 dark:bg-slate-900">
 
 
-                                <p class="text-[11px] font-bold uppercase tracking-[0.2em] text-slate-400">${translate('Coverage', 'कवरेज')}</p>
+                                <p class="text-[9px] font-bold uppercase tracking-wider text-slate-400">${translate('Coverage', 'कवरेज')}</p>
 
 
-                                <p class="mt-1 text-sm font-bold text-slate-950 dark:text-white">${condition.coverage}%</p>
-
-
-                            </div>
-
-
-                            <div class="rounded-2xl bg-slate-50 px-3 py-3 dark:bg-slate-900">
-
-
-                                <p class="text-[11px] font-bold uppercase tracking-[0.2em] text-slate-400">${translate('Matched', 'मिले')}</p>
-
-
-                                <p class="mt-1 text-sm font-bold text-slate-950 dark:text-white">${(condition.matched_symptoms || []).length}</p>
+                                <p class="mt-0.5 text-xs font-bold text-slate-950 dark:text-white">${condition.coverage}%</p>
 
 
                             </div>
 
 
-                            <div class="col-span-2 rounded-2xl bg-slate-50 px-3 py-3 dark:bg-slate-900 sm:col-span-1">
+                            <div class="rounded-2xl bg-slate-50 px-2 py-2 dark:bg-slate-900">
 
 
-                                <p class="text-[11px] font-bold uppercase tracking-[0.2em] text-slate-400">${translate('Need to confirm', 'पुष्टि के लिए')}</p>
+                                <p class="text-[9px] font-bold uppercase tracking-wider text-slate-400">${translate('Matched', 'मिले')}</p>
 
 
-                                <p class="mt-1 text-sm font-bold text-slate-950 dark:text-white">${(condition.remaining_symptoms || []).length}</p>
+                                <p class="mt-0.5 text-xs font-bold text-slate-950 dark:text-white">${(condition.matched_symptoms || []).length}</p>
+
+
+                            </div>
+
+
+                            <div class="rounded-2xl bg-slate-50 px-2 py-2 dark:bg-slate-900">
+
+
+                                <p class="text-[9px] font-bold uppercase tracking-wider text-slate-400">${translate('To confirm', 'पुष्टि के लिए')}</p>
+
+
+                                <p class="mt-0.5 text-xs font-bold text-slate-950 dark:text-white">${(condition.remaining_symptoms || []).length}</p>
 
 
                             </div>
@@ -2132,7 +2138,7 @@
                                     <span class="inline-flex items-center rounded-full border border-teal-200 bg-teal-50 px-3 py-1 text-xs font-semibold text-teal-800 dark:border-teal-500/20 dark:bg-teal-500/10 dark:text-teal-200">
 
 
-                                        ${symptom.name?.[isHindi ? 'एन' : 'en'] || symptom.name?.en || ''}
+                                        ${symptom.name?.[isHindi ? 'hi' : 'en'] || symptom.name?.en || ''}
 
 
                                     </span>
@@ -2165,10 +2171,10 @@
                                     ${(condition.remaining_symptoms || []).map((symptom) => `
 
 
-                                        <button type="button" class="rounded-full border border-slate-200 bg-white px-3 py-1 text-xs font-semibold text-slate-700 transition hover:border-teal-300 hover:text-teal-700 dark:border-slate-700 dark:bg-slate-950 dark:text-slate-200" data-follow-up-symptom="${symptom.id}" data-follow-up-name="${(symptom.name?.[isHindi ? 'एन' : 'en'] || symptom.name?.en || '').replace(/"/g, '&quot;')}" data-follow-up-name-en="${(symptom.name?.en || '').replace(/"/g, '&quot;')}">
+                                        <button type="button" class="rounded-full border border-slate-200 bg-white px-3 py-1 text-xs font-semibold text-slate-700 transition hover:border-teal-300 hover:text-teal-700 dark:border-slate-700 dark:bg-slate-950 dark:text-slate-200" data-follow-up-symptom="${symptom.id}" data-follow-up-name="${(symptom.name?.[isHindi ? 'hi' : 'en'] || symptom.name?.en || '').replace(/"/g, '&quot;')}" data-follow-up-name-en="${(symptom.name?.en || '').replace(/"/g, '&quot;')}">
 
 
-                                            ${symptom.name?.[isHindi ? 'एन' : 'en'] || symptom.name?.en || ''}
+                                            ${symptom.name?.[isHindi ? 'hi' : 'en'] || symptom.name?.en || ''}
 
 
                                         </button>
@@ -2210,10 +2216,10 @@
                         ${(nextSymptoms || []).map((symptom) => `
 
 
-                            <button type="button" class="rounded-full border border-cyan-200 bg-white px-3 py-1.5 text-xs font-semibold text-cyan-800 transition hover:border-cyan-300 hover:text-cyan-900 dark:border-cyan-900/40 dark:bg-slate-950 dark:text-cyan-200" data-follow-up-symptom="${symptom.id}" data-follow-up-name="${(symptom.label || '').replace(/"/g, '&quot;')}" data-follow-up-name-en="${(symptom.name?.en || '').replace(/"/g, '&quot;')}">
+                            <button type="button" class="rounded-full border border-cyan-200 bg-white px-3 py-1.5 text-xs font-semibold text-cyan-800 transition hover:border-cyan-300 hover:text-cyan-900 dark:border-cyan-900/40 dark:bg-slate-950 dark:text-cyan-200" data-follow-up-symptom="${symptom.id}" data-follow-up-name="${(symptom.name?.[isHindi ? 'hi' : 'en'] || symptom.name?.en || '').replace(/"/g, '&quot;')}" data-follow-up-name-en="${(symptom.name?.en || '').replace(/"/g, '&quot;')}">
 
 
-                                ${symptom.label}
+                                ${symptom.name?.[isHindi ? 'hi' : 'en'] || symptom.name?.en || ''}
 
 
                             </button>

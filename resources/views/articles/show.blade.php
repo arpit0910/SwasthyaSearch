@@ -208,11 +208,11 @@
         submitBtn.innerHTML = `<span>{{ $locale === 'hi' ? 'दर्ज किया जा रहा है...' : 'Posting...' }}</span>`;
 
         try {
-            const res = await fetch(`/api/articles/{{ $article->id }}/comments`, {
+            const res = await fetch('{{ route('api.articles.comments.store', $article->id) }}', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
-                    'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').content,
+                    'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]')?.content || '',
                 },
                 body: JSON.stringify({
                     user_name: nameInput.value.trim(),

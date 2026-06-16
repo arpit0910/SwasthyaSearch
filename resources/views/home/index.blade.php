@@ -1402,7 +1402,7 @@ $locale === 'hi'
 
     async function fetchSearchResults(query) {
         try {
-            const res = await fetch(`/api/search?q=${encodeURIComponent(query)}`);
+            const res = await fetch(`{{ route('api.search') }}?q=${encodeURIComponent(query)}`);
             const data = await res.json();
 
             document.getElementById('search-loading').classList.add('hidden');
