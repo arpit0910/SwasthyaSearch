@@ -424,6 +424,90 @@
             justify-content: center;
         }
     }
+
+    /* Chat styling */
+    .consult-chat-messages {
+        height: 250px;
+        overflow-y: auto;
+        padding: 0.75rem;
+        display: flex;
+        flex-direction: column;
+        gap: 0.75rem;
+        border: 1px solid #e2e8f0;
+        border-radius: 0.75rem;
+        background: #f8fafc;
+        margin-bottom: 0.75rem;
+    }
+    .consult-chat-message {
+        display: flex;
+        flex-direction: column;
+        max-width: 85%;
+        padding: 0.55rem 0.75rem;
+        border-radius: 0.75rem;
+        font-size: 0.9rem;
+        line-height: 1.4;
+    }
+    .consult-chat-message--local {
+        align-self: flex-end;
+        background: #0f766e;
+        color: #ffffff;
+        border-bottom-right-radius: 0.15rem;
+    }
+    .consult-chat-message--remote {
+        align-self: flex-start;
+        background: #e2e8f0;
+        color: #0f172a;
+        border-bottom-left-radius: 0.15rem;
+    }
+    .consult-chat-meta {
+        font-size: 0.72rem;
+        margin-bottom: 0.15rem;
+        font-weight: 700;
+        opacity: 0.85;
+    }
+    .consult-chat-text {
+        word-break: break-word;
+    }
+    .consult-chat-input-wrapper {
+        display: flex;
+        gap: 0.5rem;
+    }
+    .consult-chat-input {
+        flex: 1;
+        min-height: 2.5rem;
+        border: 1px solid #cbd5e1;
+        border-radius: 0.5rem;
+        padding: 0.5rem 0.75rem;
+        font-size: 0.9rem;
+        color: #0f172a;
+        background: #ffffff;
+    }
+    .consult-chat-send-btn {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        width: 2.5rem;
+        height: 2.5rem;
+        border-radius: 0.5rem;
+        border: 0;
+        background: #0f766e;
+        color: #ffffff;
+        cursor: pointer;
+        transition: background 0.2s ease;
+    }
+    .consult-chat-send-btn:hover {
+        background: #0d9488;
+    }
+    .consult-chat-send-btn svg {
+        width: 1.1rem;
+        height: 1.1rem;
+    }
+    .consult-chat-disclaimer {
+        font-size: 0.75rem;
+        color: #64748b;
+        margin-top: 0.5rem;
+        text-align: center;
+    }
 </style>
 
 <div class="consult-shell">
@@ -504,7 +588,7 @@
                         <i data-lucide="phone-call" aria-hidden="true"></i>
                         <span>Join call</span>
                     </button>
-                    <div id="prejoin-status" class="consult-prejoin-status">Checking your devices...</div>
+                    <div id="prejoin-status" class="consult-prejoin-status">Camera and microphone stay off until you start preview or join the call.</div>
                 </div>
             </div>
         </div>
@@ -590,6 +674,26 @@
 
             <div class="consult-card">
                 <div class="consult-card-head">
+                    <div class="consult-card-title">In-call messages</div>
+                </div>
+                <div class="consult-card-body">
+                    <div id="chat-messages-container" class="consult-chat-messages">
+                        <!-- Messages will be dynamically rendered here -->
+                    </div>
+                    <div class="consult-chat-input-wrapper">
+                        <input type="text" id="chat-message-input" class="consult-chat-input" placeholder="Send a message to everyone" maxlength="1000">
+                        <button type="button" id="chat-send-btn" class="consult-chat-send-btn" title="Send message">
+                            <i data-lucide="send" aria-hidden="true"></i>
+                        </button>
+                    </div>
+                    <div class="consult-chat-disclaimer">
+                        Messages can only be seen by people in the call and are deleted when the call ends.
+                    </div>
+                </div>
+            </div>
+
+            <div class="consult-card">
+                <div class="consult-card-head">
                     <div class="consult-card-title">Call controls</div>
                 </div>
                 <div class="consult-card-body">
@@ -599,6 +703,8 @@
                             <li>This room uses browser-native WebRTC only.</li>
                             <li>Signaling is exchanged through app polling every 2 seconds.</li>
                             <li>Device access falls back gracefully if one input is unavailable.</li>
+                            <li>For a real end-to-end test, use two physical devices. Two tabs or profiles on one computer often compete for the same camera and microphone.</li>
+                            <li>If patient and admin are on different networks, add TURN credentials in `.env` to make the call reliable like Meet.</li>
                         </ul>
                     </div>
                 </div>
@@ -606,6 +712,19 @@
         </div>
     </div>
 </div>
+
+@php
+    $hasTurnServer = false;
+
+    foreach (config('services.webrtc.ice_servers', []) as $server) {
+        foreach ((array) ($server['urls'] ?? []) as $url) {
+            if (str_starts_with((string) $url, 'turn:') || str_starts_with((string) $url, 'turns:')) {
+                $hasTurnServer = true;
+                break 2;
+            }
+        }
+    }
+@endphp
 
 @push('scripts')
 <script>
@@ -615,6 +734,7 @@
         const signalUrl = @json(route('consultations.signal', $consultation->uuid));
         const endUrl = @json(route('consultations.end', $consultation->uuid));
         const csrfToken = document.querySelector('meta[name="csrf-token"]')?.getAttribute('content') || '';
+        const hasTurnServer = @json($hasTurnServer);
         const peerConfig = {
             iceServers: @json(config('services.webrtc.ice_servers', [['urls' => ['stun:stun.l.google.com:19302']]])),
         };
@@ -643,6 +763,10 @@
         const localAvatarPlaceholder = document.getElementById('local-avatar-placeholder');
         const remoteAvatarPlaceholder = document.getElementById('remote-avatar-placeholder');
         const prejoinAvatarPlaceholder = document.getElementById('prejoin-avatar-placeholder');
+        const chatMessagesContainer = document.getElementById('chat-messages-container');
+        const chatMessageInput = document.getElementById('chat-message-input');
+        const chatSendBtn = document.getElementById('chat-send-btn');
+        let localMessageCount = 0;
 
         let peerConnection = null;
         let localStream = null;
@@ -666,6 +790,10 @@
         };
         let timerHandle = null;
         let callStartedAt = null;
+        let localTrackSenders = {
+            audio: null,
+            video: null,
+        };
         const appliedCandidates = new Set();
         const queuedRemoteCandidates = [];
 
@@ -697,24 +825,34 @@
 
         function getFriendlyMediaError(error) {
             const name = error?.name || '';
+            const attemptedModes = Array.isArray(error?.attemptedModes) ? error.attemptedModes.join(', ') : '';
+            const details = error?.details ? ` ${error.details}` : '';
 
             if (name === 'NotAllowedError' || name === 'PermissionDeniedError') {
-                return 'Camera or microphone permission was blocked. Allow access in the browser address bar and retry.';
+                return `Camera or microphone permission was blocked. Allow access in the browser address bar and retry.${details}`.trim();
             }
 
             if (name === 'NotFoundError' || name === 'DevicesNotFoundError') {
-                return 'No usable camera or microphone was found on this device.';
+                return `No usable camera or microphone was found on this device.${details}`.trim();
             }
 
-            if (name === 'NotReadableError' || name === 'TrackStartError') {
-                return 'Your camera or microphone is already in use by another app. Close the other app and retry.';
+            if (name === 'NotReadableError' || name === 'TrackStartError' || name === 'AbortError') {
+                return `Your camera or microphone is already in use by another app, browser tab, or profile. If you are testing admin and patient on the same computer, move one side to another phone or laptop and retry.${details}`.trim();
+            }
+
+            if (name === 'OverconstrainedError') {
+                return 'The selected camera or microphone is unavailable. Re-select the default device and retry.';
             }
 
             if (name === 'SecurityError') {
                 return 'This page must be opened from localhost or HTTPS for browser media access.';
             }
 
-            return 'The browser could not start camera or microphone access. Check permissions and retry.';
+            if (attemptedModes) {
+                return `The browser could not start camera or microphone access after trying ${attemptedModes}. Check whether another tab, profile, Zoom, Meet, WhatsApp, or the camera app is already using the device.${details}`.trim();
+            }
+
+            return `The browser could not start camera or microphone access. Check permissions and retry.${details}`.trim();
         }
 
         function setPrejoinStatus(message) {
@@ -780,6 +918,35 @@
             const remoteHasVideo = !!remoteStream?.getVideoTracks().some((track) => track.readyState === 'live' && !track.muted);
             setPlaceholderVisibility(remoteAvatarPlaceholder, !remoteHasVideo);
             remotePlaceholder?.classList.toggle('hidden', remoteHasVideo);
+        }
+
+        async function syncRemotePlayback() {
+            if (!remoteVideo?.srcObject) {
+                return;
+            }
+
+            try {
+                await remoteVideo.play();
+            } catch (error) {
+                console.warn('Remote autoplay is waiting for user interaction.', error);
+            }
+        }
+
+        function clearRemoteStream() {
+            remoteStream?.getTracks().forEach((track) => {
+                try {
+                    track.stop();
+                } catch (error) {
+                    console.warn('Unable to stop remote track cleanly.', error);
+                }
+            });
+
+            remoteStream = new MediaStream();
+            if (remoteVideo) {
+                remoteVideo.srcObject = remoteStream;
+            }
+
+            updateRemoteVideoState();
         }
 
         function setDeviceState(label, tone = 'ready') {
@@ -887,6 +1054,17 @@
             }
         }
 
+        function releasePrejoinPreview() {
+            if (joinedCall || callEnded) {
+                return;
+            }
+
+            stopLocalStream();
+            setPrejoinStatus('Preview stopped to keep your camera and microphone free until you join.');
+            showDeviceAlert('');
+            updateControlAvailability();
+        }
+
         function updateToggleButton(button, options) {
             if (!button) {
                 return;
@@ -973,6 +1151,7 @@
             }
 
             let lastError = null;
+            const failures = [];
 
             for (const attempt of attempts) {
                 try {
@@ -980,7 +1159,13 @@
                     return { stream, mode: attempt.mode };
                 } catch (error) {
                     lastError = error;
+                    failures.push(`${attempt.mode}: ${error?.name || 'UnknownError'}`);
                 }
+            }
+
+            if (lastError && failures.length) {
+                lastError.attemptedModes = attempts.map((attempt) => attempt.mode);
+                lastError.details = `Attempts failed: ${failures.join('; ')}.`;
             }
 
             throw lastError;
@@ -993,9 +1178,44 @@
 
             localStream.getTracks().forEach((track) => track.stop());
             localStream = null;
+            if (peerConnection) {
+                attachLocalTracksToPeer();
+            }
             localVideo.srcObject = null;
             prejoinVideo.srcObject = null;
             updateLocalPreviewPlaceholders();
+        }
+
+        function attachLocalTracksToPeer() {
+            if (!peerConnection) {
+                return;
+            }
+
+            const tracksByKind = {
+                audio: localStream?.getAudioTracks?.()[0] ?? null,
+                video: localStream?.getVideoTracks?.()[0] ?? null,
+            };
+
+            ['audio', 'video'].forEach((kind) => {
+                const track = tracksByKind[kind];
+                let sender = localTrackSenders[kind];
+
+                if (!sender) {
+                    sender = peerConnection.getSenders().find((candidate) => candidate.track?.kind === kind) || null;
+                }
+
+                if (sender) {
+                    sender.replaceTrack(track).catch((error) => {
+                        console.error(`Unable to sync ${kind} track`, error);
+                    });
+                    localTrackSenders[kind] = sender;
+                    return;
+                }
+
+                if (track) {
+                    localTrackSenders[kind] = peerConnection.addTrack(track, localStream);
+                }
+            });
         }
 
         function updateControlAvailability() {
@@ -1107,9 +1327,15 @@
             await peerConnection.setLocalDescription(offer);
             offered = true;
 
+            const nextStatus = statusOverride || (
+                currentConsultationStatus === 'active'
+                    ? 'active'
+                    : (currentConsultationStatus === 'accepted' ? 'accepted' : 'pending')
+            );
+
             await postSignal({
                 role,
-                status: statusOverride || (currentConsultationStatus === 'active' ? 'active' : 'pending'),
+                status: nextStatus,
                 sdp_offer: offer.toJSON(),
             });
         }
@@ -1148,7 +1374,7 @@
                 }
 
                 try {
-                    await peerConnection.addIceCandidate(candidate);
+                    await peerConnection.addIceCandidate(new RTCIceCandidate(candidate));
                     appliedCandidates.add(key);
                 } catch (error) {
                     console.error('ICE candidate apply failed', error);
@@ -1170,7 +1396,7 @@
                 }
 
                 try {
-                    await peerConnection.addIceCandidate(candidate);
+                    await peerConnection.addIceCandidate(new RTCIceCandidate(candidate));
                     appliedCandidates.add(key);
                 } catch (error) {
                     console.error('Queued ICE candidate apply failed', error);
@@ -1178,9 +1404,36 @@
             }
         }
 
+        function resetPeerConnection() {
+            if (peerConnection) {
+                try {
+                    peerConnection.close();
+                } catch (e) {
+                    console.error('Error closing peer connection', e);
+                }
+                peerConnection = null;
+            }
+            remoteDescriptionApplied = false;
+            answerCreated = false;
+            pendingCandidates = [];
+            localTrackSenders = {
+                audio: null,
+                video: null,
+            };
+            appliedCandidates.clear();
+            queuedRemoteCandidates.length = 0;
+            ensurePeerConnection();
+            clearRemoteStream();
+            attachLocalTracksToPeer();
+        }
+
         async function handlePolledState(state) {
             if (!state) {
                 return;
+            }
+
+            if (state.chat_messages) {
+                renderChatMessages(state.chat_messages);
             }
 
             currentConsultationStatus = state.status;
@@ -1207,22 +1460,39 @@
             }
 
             if (role === 'patient') {
-                if (state.sdp_answer && !remoteDescriptionApplied) {
-                    await peerConnection.setRemoteDescription(new RTCSessionDescription(state.sdp_answer));
-                    remoteDescriptionApplied = true;
-                    setStatus('Doctor connected', 'success');
-                    await flushQueuedRemoteCandidates();
+                const currentRemoteDesc = peerConnection?.remoteDescription;
+                if (state.sdp_answer) {
+                    if (!currentRemoteDesc) {
+                        await peerConnection.setRemoteDescription(new RTCSessionDescription(state.sdp_answer));
+                        remoteDescriptionApplied = true;
+                        setStatus('Doctor connected', 'success');
+                        await flushQueuedRemoteCandidates();
+                    } else if (currentRemoteDesc.sdp !== state.sdp_answer.sdp) {
+                        console.log('Doctor answer changed, renegotiating...');
+                        resetPeerConnection();
+                        await sendPatientOffer('active');
+                    }
                 }
 
                 await applyRemoteCandidates(state.ice_candidates_doctor || []);
                 return;
             }
 
-            if (state.sdp_offer && !remoteDescriptionApplied) {
-                await peerConnection.setRemoteDescription(new RTCSessionDescription(state.sdp_offer));
-                remoteDescriptionApplied = true;
-                setStatus('Offer received', 'info');
-                await flushQueuedRemoteCandidates();
+            const currentRemoteDesc = peerConnection?.remoteDescription;
+            if (state.sdp_offer) {
+                if (!currentRemoteDesc) {
+                    await peerConnection.setRemoteDescription(new RTCSessionDescription(state.sdp_offer));
+                    remoteDescriptionApplied = true;
+                    setStatus('Offer received', 'info');
+                    await flushQueuedRemoteCandidates();
+                } else if (currentRemoteDesc.sdp !== state.sdp_offer.sdp) {
+                    console.log('Patient offer changed, recreating answer...');
+                    resetPeerConnection();
+                    await peerConnection.setRemoteDescription(new RTCSessionDescription(state.sdp_offer));
+                    remoteDescriptionApplied = true;
+                    setStatus('Offer received', 'info');
+                    await flushQueuedRemoteCandidates();
+                }
             }
 
             if (remoteDescriptionApplied && !answerCreated) {
@@ -1259,10 +1529,13 @@
                 peerConnection = null;
             }
 
+            pendingCandidates = [];
+            localTrackSenders = {
+                audio: null,
+                video: null,
+            };
             stopLocalStream();
-            remoteStream = null;
-            remoteVideo.srcObject = null;
-            updateRemoteVideoState();
+            clearRemoteStream();
 
             retryMediaBtn.disabled = true;
             prejoinRetryBtn.disabled = true;
@@ -1296,9 +1569,7 @@
             }
 
             peerConnection = new RTCPeerConnection(peerConfig);
-
-            peerConnection.addTransceiver('audio', { direction: 'recvonly' });
-            peerConnection.addTransceiver('video', { direction: 'recvonly' });
+            clearRemoteStream();
 
             peerConnection.addEventListener('icecandidate', (event) => {
                 if (!event.candidate) {
@@ -1310,13 +1581,20 @@
             });
 
             peerConnection.addEventListener('track', (event) => {
-                remoteStream = event.streams[0];
+                if (!remoteStream.getTracks().some((track) => track.id === event.track.id)) {
+                    remoteStream.addTrack(event.track);
+                }
                 remoteVideo.srcObject = remoteStream;
+
                 event.track.onmute = () => updateRemoteVideoState();
                 event.track.onunmute = () => updateRemoteVideoState();
-                remoteVideo.onloadedmetadata = () => updateRemoteVideoState();
+                remoteVideo.onloadedmetadata = () => {
+                    updateRemoteVideoState();
+                    syncRemotePlayback();
+                };
                 remotePlaceholder.classList.add('hidden');
                 updateRemoteVideoState();
+                syncRemotePlayback();
                 setStatus('Peer connection established', 'success');
                 startCallTimer();
             });
@@ -1333,7 +1611,9 @@
                     setStatus('Connection interrupted. Reconnecting...', 'warning');
                 } else if (state === 'failed') {
                     setStatus('Connection failed. Check network and retry.', 'danger');
-                    showDeviceAlert('The peers could not establish a direct media path. If this keeps happening across different networks, configure TURN credentials in the environment.');
+                    showDeviceAlert(hasTurnServer
+                        ? 'The peers could not establish a stable media path. Retry once and then verify both browser permissions and network or firewall rules.'
+                        : 'The peers could not establish a direct media path. Add TURN credentials in the environment so calls work reliably across different networks.');
                 } else if (state === 'closed') {
                     setStatus('Call closed', 'dark');
                     stopCallTimer();
@@ -1390,17 +1670,7 @@
                 }
 
                 ensurePeerConnection();
-
-                const transceivers = peerConnection.getTransceivers();
-                localStream.getTracks().forEach((track) => {
-                    const transceiver = transceivers.find((t) => t.receiver.track.kind === track.kind);
-                    if (transceiver) {
-                        transceiver.sender.replaceTrack(track);
-                        transceiver.direction = 'sendrecv';
-                    } else {
-                        peerConnection.addTrack(track, localStream);
-                    }
-                });
+                attachLocalTracksToPeer();
 
                 if (media.mode === 'video-only') {
                     showDeviceAlert('Microphone access is unavailable, so this call will start with video only.');
@@ -1418,7 +1688,7 @@
                 updateControlAvailability();
 
                 if (role === 'patient' && !offered) {
-                    await sendPatientOffer('pending');
+                    await sendPatientOffer();
                     setStatus('Offer sent. Waiting for doctor...', 'info');
                 } else if (role === 'doctor' && !remoteDescriptionApplied) {
                     setStatus('Waiting for patient offer...', 'info');
@@ -1435,10 +1705,11 @@
                 setDeviceState('Joining without local media', 'danger');
 
                 ensurePeerConnection();
+                attachLocalTracksToPeer();
                 startPolling();
 
                 if (role === 'patient' && !offered) {
-                    await sendPatientOffer('pending');
+                    await sendPatientOffer();
                     setStatus('Offer sent. Waiting for doctor...', 'info');
                 } else if (role === 'doctor') {
                     setStatus('Waiting for patient offer...', 'info');
@@ -1502,8 +1773,11 @@
             updateControlAvailability();
         });
 
-        retryMediaBtn.addEventListener('click', () => {
-            bootstrapPeer();
+        retryMediaBtn.addEventListener('click', async () => {
+            offered = false;
+            stopLocalStream();
+            resetPeerConnection();
+            await bootstrapPeer();
         });
 
         prejoinRetryBtn.addEventListener('click', async () => {
@@ -1532,6 +1806,70 @@
             await preparePreview(true);
         });
 
+        function renderChatMessages(messages) {
+            if (!chatMessagesContainer) {
+                return;
+            }
+
+            chatMessagesContainer.innerHTML = '';
+
+            messages.forEach((msg) => {
+                const isLocal = msg.sender === role;
+                const msgEl = document.createElement('div');
+                msgEl.className = `consult-chat-message ${isLocal ? 'consult-chat-message--local' : 'consult-chat-message--remote'}`;
+
+                const metaEl = document.createElement('div');
+                metaEl.className = 'consult-chat-meta';
+                metaEl.textContent = isLocal ? 'You' : msg.sender_name;
+
+                const textEl = document.createElement('div');
+                textEl.className = 'consult-chat-text';
+                textEl.textContent = msg.text;
+
+                msgEl.appendChild(metaEl);
+                msgEl.appendChild(textEl);
+                chatMessagesContainer.appendChild(msgEl);
+            });
+
+            if (messages.length > localMessageCount) {
+                localMessageCount = messages.length;
+                chatMessagesContainer.scrollTop = chatMessagesContainer.scrollHeight;
+            }
+        }
+
+        async function sendChatMessage() {
+            if (!chatMessageInput) {
+                return;
+            }
+
+            const text = chatMessageInput.value.trim();
+            if (!text) {
+                return;
+            }
+
+            chatMessageInput.value = '';
+
+            try {
+                const response = await postSignal({
+                    role,
+                    message: text,
+                });
+                if (response && response.consultation) {
+                    renderChatMessages(response.consultation.chat_messages || []);
+                }
+            } catch (error) {
+                console.error('Failed to send chat message', error);
+            }
+        }
+
+        chatSendBtn?.addEventListener('click', sendChatMessage);
+        chatMessageInput?.addEventListener('keydown', (event) => {
+            if (event.key === 'Enter') {
+                event.preventDefault();
+                sendChatMessage();
+            }
+        });
+
         endCallBtn.addEventListener('click', endCall);
 
         if (!navigator.mediaDevices?.getUserMedia || !window.RTCPeerConnection) {
@@ -1552,10 +1890,17 @@
         setDeviceState('Checking devices...', 'ready');
         updateControlAvailability();
         syncLucideIcons();
+        clearRemoteStream();
         navigator.mediaDevices?.addEventListener?.('devicechange', async () => {
             await populateDeviceOptions();
         });
-        preparePreview(true);
+        populateDeviceOptions();
+
+        document.addEventListener('visibilitychange', () => {
+            if (document.hidden) {
+                releasePrejoinPreview();
+            }
+        });
     });
 </script>
 @endpush

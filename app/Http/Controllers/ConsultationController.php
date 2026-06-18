@@ -54,6 +54,7 @@ class ConsultationController extends Controller
             'sdp_answer' => ['nullable', 'array'],
             'ice_candidates' => ['nullable', 'array'],
             'status' => ['nullable', 'in:pending,accepted,active,rejected,completed'],
+            'message' => ['nullable', 'string', 'max:1000'],
         ]);
 
         $consultation = DB::transaction(function () use ($data, $uuid) {
@@ -92,6 +93,17 @@ class ConsultationController extends Controller
                 }
             }
 
+            if (isset($data['message']) && trim((string) $data['message']) !== '') {
+                $messages = $consultation->chat_messages ?? [];
+                $messages[] = [
+                    'sender' => $data['role'],
+                    'sender_name' => $data['role'] === 'doctor' ? 'Doctor' : $consultation->patient_name,
+                    'text' => trim($data['message']),
+                    'timestamp' => now()->toIso8601String(),
+                ];
+                $consultation->chat_messages = $messages;
+            }
+
             if (!empty($data['status'])) {
                 $consultation->status = $data['status'];
             }
@@ -112,6 +124,11 @@ class ConsultationController extends Controller
         $consultation = $this->findConsultation($uuid);
         $consultation->update([
             'status' => Consultation::STATUS_COMPLETED,
+            'sdp_offer' => null,
+            'sdp_answer' => null,
+            'ice_candidates_patient' => [],
+            'ice_candidates_doctor' => [],
+            'chat_messages' => null,
         ]);
 
         return response()->json([
@@ -138,6 +155,7 @@ class ConsultationController extends Controller
             'sdp_answer' => $consultation->sdp_answer ? json_decode($consultation->sdp_answer, true) : null,
             'ice_candidates_patient' => $consultation->ice_candidates_patient ?? [],
             'ice_candidates_doctor' => $consultation->ice_candidates_doctor ?? [],
+            'chat_messages' => $consultation->chat_messages ?? [],
             'created_at' => optional($consultation->created_at)->toIso8601String(),
             'updated_at' => optional($consultation->updated_at)->toIso8601String(),
         ];

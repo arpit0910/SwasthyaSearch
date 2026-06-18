@@ -65,6 +65,27 @@ class ConsultationFeatureTest extends TestCase
         $this->assertSame([$doctorCandidate], $pollResponse['ice_candidates_doctor']);
     }
 
+    public function test_patient_offer_does_not_downgrade_an_accepted_consultation(): void
+    {
+        $consultation = Consultation::create([
+            'patient_name' => 'Neha',
+            'status' => Consultation::STATUS_ACCEPTED,
+            'ice_candidates_patient' => [],
+            'ice_candidates_doctor' => [],
+        ]);
+
+        $this->postJson(route('consultations.signal', $consultation->uuid), [
+            'role' => 'patient',
+            'status' => Consultation::STATUS_ACCEPTED,
+            'sdp_offer' => ['type' => 'offer', 'sdp' => 'offer-sdp'],
+        ])->assertOk();
+
+        $this->assertSame(
+            Consultation::STATUS_ACCEPTED,
+            $consultation->fresh()->status
+        );
+    }
+
     public function test_admin_must_be_authenticated_to_access_consultation_dashboard(): void
     {
         $consultation = Consultation::create([
@@ -119,5 +140,52 @@ class ConsultationFeatureTest extends TestCase
             Consultation::STATUS_REJECTED,
             $rejectableConsultation->fresh()->status
         );
+    }
+
+    public function test_chat_messages_are_stored_polled_and_cleared_on_call_end(): void
+    {
+        $consultation = Consultation::create([
+            'patient_name' => 'Arjun Sharma',
+        ]);
+
+        // 1. Send patient message
+        $this->postJson(route('consultations.signal', $consultation->uuid), [
+            'role' => 'patient',
+            'message' => 'Hello Doctor!',
+        ])->assertOk();
+
+        // 2. Send doctor message
+        $this->postJson(route('consultations.signal', $consultation->uuid), [
+            'role' => 'doctor',
+            'message' => 'Hello Arjun, how are you today?',
+        ])->assertOk();
+
+        // 3. Poll to verify messages exist
+        $pollResponse = $this->getJson(route('consultations.poll', $consultation->uuid))
+            ->assertOk()
+            ->json();
+
+        $this->assertCount(2, $pollResponse['chat_messages']);
+        $this->assertSame('patient', $pollResponse['chat_messages'][0]['sender']);
+        $this->assertSame('Arjun Sharma', $pollResponse['chat_messages'][0]['sender_name']);
+        $this->assertSame('Hello Doctor!', $pollResponse['chat_messages'][0]['text']);
+
+        $this->assertSame('doctor', $pollResponse['chat_messages'][1]['sender']);
+        $this->assertSame('Doctor', $pollResponse['chat_messages'][1]['sender_name']);
+        $this->assertSame('Hello Arjun, how are you today?', $pollResponse['chat_messages'][1]['text']);
+
+        // 4. End call
+        $this->postJson(route('consultations.end', $consultation->uuid))->assertOk();
+
+        // 5. Poll to verify messages are cleared
+        $pollResponseAfterEnd = $this->getJson(route('consultations.poll', $consultation->uuid))
+            ->assertOk()
+            ->json();
+
+        $this->assertEmpty($pollResponseAfterEnd['chat_messages']);
+        $this->assertNull($pollResponseAfterEnd['sdp_offer']);
+        $this->assertNull($pollResponseAfterEnd['sdp_answer']);
+        $this->assertSame([], $pollResponseAfterEnd['ice_candidates_patient']);
+        $this->assertSame([], $pollResponseAfterEnd['ice_candidates_doctor']);
     }
 }

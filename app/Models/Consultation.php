@@ -25,11 +25,13 @@ class Consultation extends Model
         'sdp_answer',
         'ice_candidates_patient',
         'ice_candidates_doctor',
+        'chat_messages',
     ];
 
     protected $casts = [
         'ice_candidates_patient' => 'array',
         'ice_candidates_doctor' => 'array',
+        'chat_messages' => 'array',
     ];
 
     protected static function booted(): void
