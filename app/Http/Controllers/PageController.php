@@ -139,6 +139,33 @@ class PageController extends Controller
         ]);
     }
 
+    public function submitConsultationRequest(Request $request)
+    {
+        $validated = $request->validate([
+            'name' => 'required|string|max:255',
+            'email' => 'required|email|max:255',
+            'phone' => ['required', 'string', 'regex:/^[0-9+\\-()\\s]{10,20}$/'],
+            'reason' => 'required|string|min:10|max:2000',
+            'preferred_date' => 'required|date|after_or_equal:today',
+            'preferred_time' => 'required|date_format:H:i',
+        ]);
+
+        DB::table('consultation_requests')->insert([
+            'name' => trim($validated['name']),
+            'email' => trim($validated['email']),
+            'phone' => trim($validated['phone']),
+            'reason' => trim($validated['reason']),
+            'preferred_date' => $validated['preferred_date'],
+            'preferred_time' => $validated['preferred_time'],
+            'ip_address' => (string) $request->ip(),
+            'user_agent' => substr((string) $request->userAgent(), 0, 512),
+            'created_at' => now(),
+            'updated_at' => now(),
+        ]);
+
+        return back()->with('consultation_request_success', 'Your consultation request has been received. Our team will contact you shortly.');
+    }
+
     public function submitListingReport(Request $request)
     {
         $validated = $request->validate([

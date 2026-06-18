@@ -832,6 +832,134 @@ $locale === 'hi'
             </div>
         </section>
 
+        <section id="schedule-consultation" class="relative overflow-hidden rounded-[2rem] border border-cyan-200/80 dark:border-cyan-900/40 bg-[radial-gradient(circle_at_top_left,rgba(34,211,238,0.18),transparent_30%),radial-gradient(circle_at_bottom_right,rgba(20,184,166,0.16),transparent_32%),linear-gradient(135deg,#ecfeff_0%,#ffffff_42%,#f0fdfa_100%)] dark:bg-[radial-gradient(circle_at_top_left,rgba(8,145,178,0.24),transparent_28%),radial-gradient(circle_at_bottom_right,rgba(13,148,136,0.18),transparent_34%),linear-gradient(135deg,#0f172a_0%,#111827_45%,#052e2b_100%)] p-4 sm:p-6 lg:p-8 shadow-[0_20px_50px_rgba(14,165,233,0.10)] dark:shadow-none">
+            <div class="absolute -left-10 top-10 h-36 w-36 rounded-full bg-cyan-300/20 blur-3xl"></div>
+            <div class="absolute -right-8 bottom-4 h-40 w-40 rounded-full bg-teal-300/20 blur-3xl"></div>
+            <div class="relative z-10 grid gap-6 xl:grid-cols-[0.9fr,1.1fr] xl:gap-8">
+                <div class="flex flex-col gap-4 sm:gap-5">
+                    <div>
+                        <p class="text-[11px] sm:text-xs font-bold uppercase tracking-[0.24em] text-cyan-700 dark:text-cyan-300">{{ $locale === 'hi' ? 'शेड्यूल्ड कंसल्टेशन' : 'Scheduled Consultation' }}</p>
+                        <h2 class="mt-2 text-2xl sm:text-3xl font-extrabold leading-tight text-slate-950 dark:text-white">{{ $locale === 'hi' ? 'अपनी सुविधा के समय पर डॉक्टर से बात करने की रिक्वेस्ट भेजें' : 'Request a doctor consultation for a time that works for you' }}</h2>
+                        <p class="mt-3 text-sm sm:text-base leading-7 text-slate-600 dark:text-slate-300">{{ $locale === 'hi' ? 'अपना कारण, संपर्क विवरण और पसंदीदा स्लॉट साझा करें। हमारी टीम उपलब्धता देखकर आपसे संपर्क करेगी।' : 'Share your reason, contact details, and preferred slot. Our team will review availability and get back to you.' }}</p>
+                    </div>
+
+                    <div class="grid gap-3 sm:grid-cols-2 xl:grid-cols-1">
+                        <div class="rounded-[1.4rem] border border-white/80 dark:border-slate-800/90 bg-white/85 dark:bg-slate-950/65 p-4 shadow-sm">
+                            <div class="flex items-start gap-3">
+                                <div class="flex h-10 w-10 shrink-0 items-center justify-center rounded-2xl bg-cyan-100 text-cyan-700 dark:bg-cyan-950/50 dark:text-cyan-300">
+                                    <i data-lucide="clipboard-plus" class="w-4 h-4"></i>
+                                </div>
+                                <div>
+                                    <p class="text-sm font-bold text-slate-900 dark:text-white">{{ $locale === 'hi' ? 'क्या शामिल करें' : 'What to include' }}</p>
+                                    <p class="mt-1 text-xs sm:text-sm leading-6 text-slate-600 dark:text-slate-300">{{ $locale === 'hi' ? 'लक्षण, फॉलो-अप सवाल, मेडिकल राय या दूसरी सलाह की ज़रूरत।' : 'Symptoms, follow-up questions, second opinions, or general consultation needs.' }}</p>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="rounded-[1.4rem] border border-white/80 dark:border-slate-800/90 bg-white/85 dark:bg-slate-950/65 p-4 shadow-sm">
+                            <div class="flex items-start gap-3">
+                                <div class="flex h-10 w-10 shrink-0 items-center justify-center rounded-2xl bg-teal-100 text-teal-700 dark:bg-teal-950/50 dark:text-teal-300">
+                                    <i data-lucide="calendar-check-2" class="w-4 h-4"></i>
+                                </div>
+                                <div>
+                                    <p class="text-sm font-bold text-slate-900 dark:text-white">{{ $locale === 'hi' ? 'आगे क्या होगा' : 'What happens next' }}</p>
+                                    <p class="mt-1 text-xs sm:text-sm leading-6 text-slate-600 dark:text-slate-300">{{ $locale === 'hi' ? 'उपलब्ध स्लॉट देखकर टीम ईमेल या फोन पर पुष्टि करेगी।' : 'Our team will confirm the best available slot by phone or email.' }}</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="grid gap-3 sm:grid-cols-3 xl:grid-cols-1">
+                        <div class="rounded-2xl border border-cyan-100/90 dark:border-cyan-900/60 bg-white/80 dark:bg-slate-950/55 px-4 py-3 text-center xl:text-left">
+                            <p class="text-[11px] uppercase tracking-[0.2em] text-slate-500 dark:text-slate-400">{{ $locale === 'hi' ? 'स्टेप 1' : 'Step 1' }}</p>
+                            <p class="mt-1 text-sm font-semibold text-slate-900 dark:text-white">{{ $locale === 'hi' ? 'समस्या लिखें' : 'Share your concern' }}</p>
+                        </div>
+                        <div class="rounded-2xl border border-cyan-100/90 dark:border-cyan-900/60 bg-white/80 dark:bg-slate-950/55 px-4 py-3 text-center xl:text-left">
+                            <p class="text-[11px] uppercase tracking-[0.2em] text-slate-500 dark:text-slate-400">{{ $locale === 'hi' ? 'स्टेप 2' : 'Step 2' }}</p>
+                            <p class="mt-1 text-sm font-semibold text-slate-900 dark:text-white">{{ $locale === 'hi' ? 'स्लॉट चुनें' : 'Pick date and time' }}</p>
+                        </div>
+                        <div class="rounded-2xl border border-cyan-100/90 dark:border-cyan-900/60 bg-white/80 dark:bg-slate-950/55 px-4 py-3 text-center xl:text-left">
+                            <p class="text-[11px] uppercase tracking-[0.2em] text-slate-500 dark:text-slate-400">{{ $locale === 'hi' ? 'स्टेप 3' : 'Step 3' }}</p>
+                            <p class="mt-1 text-sm font-semibold text-slate-900 dark:text-white">{{ $locale === 'hi' ? 'कन्फर्मेशन पाएं' : 'Receive confirmation' }}</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="rounded-[1.7rem] border border-white/90 dark:border-slate-800/90 bg-white/92 dark:bg-slate-950/82 p-4 sm:p-5 lg:p-6 shadow-[0_18px_40px_rgba(15,23,42,0.08)]">
+                    <div class="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
+                        <div>
+                            <p class="text-sm font-bold text-slate-900 dark:text-white">{{ $locale === 'hi' ? 'कंसल्टेशन रिक्वेस्ट फॉर्म' : 'Consultation Request Form' }}</p>
+                            <p class="mt-1 text-xs sm:text-sm text-slate-500 dark:text-slate-400">{{ $locale === 'hi' ? 'सभी फ़ील्ड भरें ताकि हम सही तरीके से संपर्क कर सकें।' : 'Fill in the details so we can coordinate the right slot.' }}</p>
+                        </div>
+                    </div>
+
+                    @if (session('consultation_request_success'))
+                        <div class="mt-4 rounded-2xl border border-emerald-200 bg-emerald-50 px-4 py-3 text-sm font-semibold text-emerald-800 dark:border-emerald-900/60 dark:bg-emerald-950/30 dark:text-emerald-200">
+                            {{ session('consultation_request_success') }}
+                        </div>
+                    @endif
+
+                    <form action="{{ route('consultation-requests.submit') }}" method="POST" class="mt-5 grid gap-4 sm:gap-5">
+                        @csrf
+                        <div class="grid gap-4 sm:grid-cols-2">
+                            <div>
+                                <label for="consultation-name" class="mb-2 block text-sm font-bold text-slate-800 dark:text-slate-100">{{ $locale === 'hi' ? 'पूरा नाम' : 'Full name' }}</label>
+                                <input id="consultation-name" name="name" type="text" value="{{ old('name') }}" class="w-full rounded-2xl border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-900 px-4 py-3 text-sm text-slate-900 dark:text-white focus:border-cyan-400 focus:outline-none focus:ring-2 focus:ring-cyan-200 dark:focus:ring-cyan-900" placeholder="{{ $locale === 'hi' ? 'अपना नाम लिखें' : 'Enter your name' }}">
+                                @error('name')
+                                    <p class="mt-1 text-xs font-semibold text-rose-600">{{ $message }}</p>
+                                @enderror
+                            </div>
+                            <div>
+                                <label for="consultation-email" class="mb-2 block text-sm font-bold text-slate-800 dark:text-slate-100">{{ $locale === 'hi' ? 'ईमेल' : 'Email' }}</label>
+                                <input id="consultation-email" name="email" type="email" value="{{ old('email') }}" class="w-full rounded-2xl border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-900 px-4 py-3 text-sm text-slate-900 dark:text-white focus:border-cyan-400 focus:outline-none focus:ring-2 focus:ring-cyan-200 dark:focus:ring-cyan-900" placeholder="name@example.com">
+                                @error('email')
+                                    <p class="mt-1 text-xs font-semibold text-rose-600">{{ $message }}</p>
+                                @enderror
+                            </div>
+                        </div>
+
+                        <div class="grid gap-4 sm:grid-cols-3">
+                            <div class="sm:col-span-1">
+                                <label for="consultation-phone" class="mb-2 block text-sm font-bold text-slate-800 dark:text-slate-100">{{ $locale === 'hi' ? 'फोन' : 'Phone' }}</label>
+                                <input id="consultation-phone" name="phone" type="text" value="{{ old('phone') }}" class="w-full rounded-2xl border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-900 px-4 py-3 text-sm text-slate-900 dark:text-white focus:border-cyan-400 focus:outline-none focus:ring-2 focus:ring-cyan-200 dark:focus:ring-cyan-900" placeholder="{{ $locale === 'hi' ? 'मोबाइल नंबर' : 'Mobile number' }}">
+                                @error('phone')
+                                    <p class="mt-1 text-xs font-semibold text-rose-600">{{ $message }}</p>
+                                @enderror
+                            </div>
+                            <div class="sm:col-span-1">
+                                <label for="consultation-date" class="mb-2 block text-sm font-bold text-slate-800 dark:text-slate-100">{{ $locale === 'hi' ? 'तारीख' : 'Preferred date' }}</label>
+                                <input id="consultation-date" name="preferred_date" type="date" value="{{ old('preferred_date') }}" min="{{ now()->toDateString() }}" class="w-full rounded-2xl border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-900 px-4 py-3 text-sm text-slate-900 dark:text-white focus:border-cyan-400 focus:outline-none focus:ring-2 focus:ring-cyan-200 dark:focus:ring-cyan-900">
+                                @error('preferred_date')
+                                    <p class="mt-1 text-xs font-semibold text-rose-600">{{ $message }}</p>
+                                @enderror
+                            </div>
+                            <div class="sm:col-span-1">
+                                <label for="consultation-time" class="mb-2 block text-sm font-bold text-slate-800 dark:text-slate-100">{{ $locale === 'hi' ? 'समय' : 'Preferred time' }}</label>
+                                <input id="consultation-time" name="preferred_time" type="time" value="{{ old('preferred_time') }}" class="w-full rounded-2xl border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-900 px-4 py-3 text-sm text-slate-900 dark:text-white focus:border-cyan-400 focus:outline-none focus:ring-2 focus:ring-cyan-200 dark:focus:ring-cyan-900">
+                                @error('preferred_time')
+                                    <p class="mt-1 text-xs font-semibold text-rose-600">{{ $message }}</p>
+                                @enderror
+                            </div>
+                        </div>
+
+                        <div>
+                            <label for="consultation-reason" class="mb-2 block text-sm font-bold text-slate-800 dark:text-slate-100">{{ $locale === 'hi' ? 'कंसल्टेशन का कारण' : 'Reason for consultation' }}</label>
+                            <textarea id="consultation-reason" name="reason" rows="5" class="w-full rounded-[1.4rem] border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-900 px-4 py-3 text-sm text-slate-900 dark:text-white focus:border-cyan-400 focus:outline-none focus:ring-2 focus:ring-cyan-200 dark:focus:ring-cyan-900" placeholder="{{ $locale === 'hi' ? 'अपनी समस्या, लक्षण या सवाल लिखें' : 'Describe your symptoms, concern, or follow-up need' }}">{{ old('reason') }}</textarea>
+                            @error('reason')
+                                <p class="mt-1 text-xs font-semibold text-rose-600">{{ $message }}</p>
+                            @enderror
+                        </div>
+
+                        <div class="gap-3 border-t border-slate-200/80 dark:border-slate-800 sm:flex-row sm:items-center sm:justify-between">
+                            <p class="max-w-xl text-xs sm:text-sm leading-6 text-slate-500 dark:text-slate-400">{{ $locale === 'hi' ? 'यह एक शेड्यूल रिक्वेस्ट है। उपलब्धता और अंतिम समय की पुष्टि हमारी टीम करेगी।' : 'This is a scheduling request. Our team will confirm final availability and timing with you.' }}</p>
+                            <button type="submit" class="inline-flex w-full items-center justify-center rounded-2xl border border-cyan-600 bg-cyan-600 px-5 py-3 mt-5 text-sm font-bold text-white shadow-lg shadow-cyan-600/20 transition-all duration-300 ease-out hover:-translate-y-0.5 hover:border-cyan-700 hover:bg-cyan-700 active:scale-[0.98] sm:w-auto">
+                                {{ $locale === 'hi' ? 'रिक्वेस्ट भेजें' : 'Request consultation' }}
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </section>
+
         <!-- Articles Section -->
         <div>
             <div class="flex justify-between items-end mb-8">

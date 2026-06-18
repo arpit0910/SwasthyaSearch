@@ -296,6 +296,7 @@ Route::get('/departments', [PageController::class, 'departments'])->name('depart
 Route::get('/diseases', [PageController::class, 'diseases'])->name('diseases.index');
 Route::get('/contact', [PageController::class, 'contact'])->name('contact');
 Route::post('/contact', [PageController::class, 'submitContact'])->name('contact.submit');
+Route::post('/consultation-requests', [PageController::class, 'submitConsultationRequest'])->name('consultation-requests.submit');
 Route::post('/feedback', [PageController::class, 'submitFeedback'])->name('feedback.submit');
 Route::post('/lead-capture', [PageController::class, 'submitLeadCapture'])->name('lead.capture.submit');
 Route::post('/listing-report', [PageController::class, 'submitListingReport'])->name('listing.report.submit');
