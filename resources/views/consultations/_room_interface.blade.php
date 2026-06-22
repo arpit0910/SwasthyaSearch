@@ -1,3 +1,19 @@
+@php
+    $isHi = \App\Helpers\LocaleHelper::current() === 'hi';
+    if ($isHi) {
+        if ($role === 'doctor') {
+            $eyebrow = 'व्यवस्थापक कक्ष';
+            $title = 'रोगी परामर्श में शामिल हों';
+            $subtitle = 'रोगी के प्रस्ताव का उत्तर दें और कॉल पूरा होने तक इस स्क्रीन पर बने रहें।';
+            $backLabel = 'सूची में वापस जाएं';
+        } else {
+            $eyebrow = 'रोगी कक्ष';
+            $title = 'आपका वीडियो परामर्श तैयार है';
+            $subtitle = 'इस पृष्ठ पर बने रहें जब तक कि डॉक्टर व्यवस्थापक डैशबोर्ड से शामिल न हो जाएं।';
+            $backLabel = 'नया परामर्श';
+        }
+    }
+@endphp
 <style>
     .consult-shell {
         display: grid;
@@ -216,6 +232,10 @@
         object-fit: cover;
         background: #020617;
     }
+    #prejoin-video,
+    #local-video {
+        transform: scaleX(-1);
+    }
     .consult-placeholder {
         position: absolute;
         inset: 0;
@@ -411,17 +431,119 @@
         .consult-grid {
             grid-template-columns: 1fr;
         }
+        /* Floating Local Preview on Mobile */
+        .consult-sidebar .consult-card:first-of-type {
+            position: fixed;
+            bottom: 5.5rem;
+            right: 1rem;
+            width: 130px;
+            height: 97px;
+            z-index: 100;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.25);
+            border-radius: 1rem;
+            overflow: hidden;
+            border: 2px solid rgba(255, 255, 255, 0.8);
+            background: #020617;
+            transition: opacity 0.3s ease;
+        }
+        .consult-sidebar .consult-card:first-of-type:active,
+        .consult-sidebar .consult-card:first-of-type:hover {
+            opacity: 0.3;
+        }
+        .consult-sidebar .consult-card:first-of-type .consult-card-head,
+        .consult-sidebar .consult-card:first-of-type .consult-preview-note {
+            display: none !important;
+        }
+        .consult-sidebar .consult-card:first-of-type .consult-card-body {
+            padding: 0 !important;
+            width: 100%;
+            height: 100%;
+        }
+        .consult-sidebar .consult-card:first-of-type .consult-video-shell--local {
+            width: 100%;
+            height: 100%;
+            border-radius: 0;
+            aspect-ratio: auto;
+        }
+        .consult-sidebar .consult-card:first-of-type .consult-video-label {
+            font-size: 0.65rem;
+            padding: 0.25rem 0.5rem;
+            left: 0.4rem;
+            bottom: 0.4rem;
+        }
+        .consult-sidebar .consult-card:first-of-type .consult-avatar-circle {
+            width: 2.5rem;
+            height: 2.5rem;
+            font-size: 0.9rem;
+        }
+        .consult-sidebar .consult-card:first-of-type .consult-avatar-name,
+        .consult-sidebar .consult-card:first-of-type .consult-avatar-note {
+            display: none !important;
+        }
     }
     @media (max-width: 767px) {
+        .consult-chat-input {
+            font-size: 16px !important;
+        }
+    }
+    @media (max-width: 576px) {
+        .consult-shell {
+            gap: 1rem;
+        }
+        .consult-title {
+            font-size: 1.5rem;
+        }
+        .consult-subtitle {
+            font-size: 0.85rem;
+        }
+        .consult-prejoin {
+            padding: 1rem;
+            border-radius: 1.25rem;
+        }
+        .consult-prejoin-title {
+            font-size: 1.15rem;
+        }
+        .consult-prejoin-text {
+            font-size: 0.88rem;
+        }
+        .consult-badge, .consult-link {
+            font-size: 0.8rem;
+            min-height: 2.2rem;
+            padding: 0.4rem 0.8rem;
+        }
         .consult-control-bar {
-            align-items: stretch;
+            padding: 0.6rem;
+            gap: 0.4rem;
+            border-radius: 1rem;
         }
         .consult-control-group {
-            justify-content: center;
+            gap: 0.4rem;
+        }
+        .consult-control-btn {
+            width: 2.7rem;
+            height: 2.7rem;
+        }
+        .consult-control-btn svg {
+            width: 0.95rem;
+            height: 0.95rem;
         }
         .consult-control-btn--danger {
-            width: 100%;
+            width: 2.7rem !important;
+            min-width: 2.7rem !important;
+            padding: 0 !important;
             justify-content: center;
+        }
+        .consult-control-btn--danger span {
+            display: none !important;
+        }
+        .consult-control-pill {
+            padding: 0.4rem 0.6rem;
+            min-height: 2.2rem;
+            font-size: 0.75rem;
+            border-radius: 999px;
+        }
+        .consult-control-text {
+            font-size: 0.75rem;
         }
     }
 
@@ -518,7 +640,7 @@
             <p class="consult-subtitle">{{ $subtitle }}</p>
         </div>
         <div class="consult-header-actions">
-            <span id="call-status-badge" class="consult-badge">Preparing devices...</span>
+            <span id="call-status-badge" class="consult-badge">{{ $isHi ? 'उपकरण तैयार किए जा रहे हैं...' : 'Preparing devices...' }}</span>
             <span id="call-timer-pill" class="consult-control-pill consult-hidden">
                 <i data-lucide="timer" aria-hidden="true"></i>
                 <span class="consult-control-text">00:00</span>
@@ -532,8 +654,8 @@
             <div class="consult-card">
                 <div class="consult-card-head">
                     <div>
-                        <div class="consult-card-title">Preview before joining</div>
-                        <div class="consult-card-meta">Check your camera, microphone, and selected devices before you enter the room.</div>
+                        <div class="consult-card-title">{{ $isHi ? 'शामिल होने से पहले पूर्वावलोकन' : 'Preview before joining' }}</div>
+                        <div class="consult-card-meta">{{ $isHi ? 'कमरे में प्रवेश करने से पहले अपने कैमरे, माइक्रोफ़ोन और चयनित उपकरणों की जाँच करें।' : 'Check your camera, microphone, and selected devices before you enter the room.' }}</div>
                     </div>
                 </div>
                 <div class="consult-card-body">
@@ -541,44 +663,44 @@
                         <video id="prejoin-video" autoplay playsinline muted class="consult-video"></video>
                         <div id="prejoin-avatar-placeholder" class="consult-avatar-placeholder hidden">
                             <div class="consult-avatar-circle">{{ strtoupper(substr($role === 'doctor' ? 'D' : ($consultation->patient_name[0] ?? 'P'), 0, 1)) }}</div>
-                            <div class="consult-avatar-name">{{ $role === 'doctor' ? 'Doctor preview' : $consultation->patient_name }}</div>
-                            <div class="consult-avatar-note">Camera is off. You can still join with audio only.</div>
+                            <div class="consult-avatar-name">{{ $role === 'doctor' ? ($isHi ? 'डॉक्टर पूर्वावलोकन' : 'Doctor preview') : $consultation->patient_name }}</div>
+                            <div class="consult-avatar-note">{{ $isHi ? 'कैमरा बंद है। आप अभी भी केवल ऑडियो के साथ शामिल हो सकते हैं।' : 'Camera is off. You can still join with audio only.' }}</div>
                         </div>
                         <div class="consult-video-label">
                             <i data-lucide="sparkles" aria-hidden="true"></i>
-                            <span>Pre-join preview</span>
+                            <span>{{ $isHi ? 'पूर्व-जॉइन पूर्वावलोकन' : 'Pre-join preview' }}</span>
                         </div>
                     </div>
                 </div>
             </div>
 
             <div class="consult-prejoin-copy">
-                <div class="consult-prejoin-title">Join when everything looks right</div>
-                <div class="consult-prejoin-text">Pick your preferred microphone and camera, then join the consultation. The in-call controls below will work like a lightweight Meet-style room.</div>
+                <div class="consult-prejoin-title">{{ $isHi ? 'जब सब कुछ ठीक लगे तो शामिल हों' : 'Join when everything looks right' }}</div>
+                <div class="consult-prejoin-text">{{ $isHi ? 'अपना पसंदीदा माइक्रोफ़ोन और कैमरा चुनें, फिर परामर्श में शामिल हों। नीचे दिए गए इन-कॉल नियंत्रण एक हल्के Meet-शैली के कमरे की तरह काम करेंगे।' : 'Pick your preferred microphone and camera, then join the consultation. The in-call controls below will work like a lightweight Meet-style room.' }}</div>
 
                 <div class="consult-device-grid">
                     <div class="consult-device-field">
-                        <label for="audio-input-select">Microphone</label>
+                        <label for="audio-input-select">{{ $isHi ? 'माइक्रोफ़ोन' : 'Microphone' }}</label>
                         <select id="audio-input-select">
-                            <option value="">Default microphone</option>
+                            <option value="">{{ $isHi ? 'डिफ़ॉल्ट माइक्रोफ़ोन' : 'Default microphone' }}</option>
                         </select>
                     </div>
                     <div class="consult-device-field">
-                        <label for="video-input-select">Camera</label>
+                        <label for="video-input-select">{{ $isHi ? 'कैमरा' : 'Camera' }}</label>
                         <select id="video-input-select">
-                            <option value="">Default camera</option>
+                            <option value="">{{ $isHi ? 'डिफ़ॉल्ट कैमरा' : 'Default camera' }}</option>
                         </select>
                     </div>
                 </div>
 
                 <div class="consult-control-group">
-                    <button type="button" id="prejoin-toggle-mic-btn" class="consult-control-btn" aria-pressed="true" title="Mute microphone">
+                    <button type="button" id="prejoin-toggle-mic-btn" class="consult-control-btn" aria-pressed="true" title="{{ $isHi ? 'माइक्रोफ़ोन बंद करें' : 'Mute microphone' }}">
                         <i data-lucide="mic" aria-hidden="true"></i>
                     </button>
-                    <button type="button" id="prejoin-toggle-camera-btn" class="consult-control-btn" aria-pressed="true" title="Turn camera off">
+                    <button type="button" id="prejoin-toggle-camera-btn" class="consult-control-btn" aria-pressed="true" title="{{ $isHi ? 'कैमरा बंद करें' : 'Turn camera off' }}">
                         <i data-lucide="video" aria-hidden="true"></i>
                     </button>
-                    <button type="button" id="prejoin-retry-btn" class="consult-control-btn" title="Retry preview devices">
+                    <button type="button" id="prejoin-retry-btn" class="consult-control-btn" title="{{ $isHi ? 'पूर्वावलोकन उपकरणों का पुनः प्रयास करें' : 'Retry preview devices' }}">
                         <i data-lucide="rotate-ccw" aria-hidden="true"></i>
                     </button>
                 </div>
@@ -586,9 +708,9 @@
                 <div class="consult-prejoin-actions">
                     <button type="button" id="join-call-btn" class="consult-join-btn">
                         <i data-lucide="phone-call" aria-hidden="true"></i>
-                        <span>Join call</span>
+                        <span>{{ $isHi ? 'कॉल में शामिल हों' : 'Join call' }}</span>
                     </button>
-                    <div id="prejoin-status" class="consult-prejoin-status">Camera and microphone stay off until you start preview or join the call.</div>
+                    <div id="prejoin-status" class="consult-prejoin-status">{{ $isHi ? 'जब तक आप पूर्वावलोकन शुरू नहीं करते या कॉल में शामिल नहीं होते, तब तक कैमरा और माइक्रोफ़ोन बंद रहेंगे।' : 'Camera and microphone stay off until you start preview or join the call.' }}</div>
                 </div>
             </div>
         </div>
@@ -598,49 +720,49 @@
         <div class="consult-card">
             <div class="consult-card-head">
                 <div>
-                    <div class="consult-card-title">Live consultation room</div>
-                    <div class="consult-card-meta">Room ID: {{ $consultation->uuid }}</div>
+                    <div class="consult-card-title">{{ $isHi ? 'लाइव परामर्श कक्ष' : 'Live consultation room' }}</div>
+                    <div class="consult-card-meta">{{ $isHi ? 'रूम आईडी' : 'Room ID' }}: {{ $consultation->uuid }}</div>
                 </div>
-                <div class="consult-card-meta">Patient: {{ $consultation->patient_name }}</div>
+                <div class="consult-card-meta">{{ $isHi ? 'मरीज' : 'Patient' }}: {{ $consultation->patient_name }}</div>
             </div>
             <div class="consult-card-body">
                 <div class="consult-room-body">
                     <div class="consult-video-shell">
                         <video id="remote-video" autoplay playsinline class="consult-video"></video>
                         <div id="remote-placeholder" class="consult-placeholder">
-                            <div style="font-size:1.1rem;font-weight:800;">Waiting for the other participant</div>
-                            <div style="margin-top:0.55rem;font-size:0.92rem;opacity:0.82;">The remote video will appear here once the peer connection is established.</div>
+                            <div style="font-size:1.1rem;font-weight:800;">{{ $isHi ? 'दूसरे प्रतिभागी की प्रतीक्षा की जा रही है' : 'Waiting for the other participant' }}</div>
+                            <div style="margin-top:0.55rem;font-size:0.92rem;opacity:0.82;">{{ $isHi ? 'पीयर कनेक्शन स्थापित होने के बाद दूसरा वीडियो यहाँ दिखाई देगा।' : 'The remote video will appear here once the peer connection is established.' }}</div>
                         </div>
                         <div id="remote-avatar-placeholder" class="consult-avatar-placeholder">
                             <div class="consult-avatar-circle">{{ strtoupper(substr($role === 'doctor' ? ($consultation->patient_name[0] ?? 'P') : 'D', 0, 1)) }}</div>
-                            <div class="consult-avatar-name">{{ $role === 'doctor' ? $consultation->patient_name : 'Doctor' }}</div>
-                            <div class="consult-avatar-note">Video is off or not available yet.</div>
+                            <div class="consult-avatar-name">{{ $role === 'doctor' ? $consultation->patient_name : ($isHi ? 'डॉक्टर' : 'Doctor') }}</div>
+                            <div class="consult-avatar-note">{{ $isHi ? 'वीडियो बंद है या अभी उपलब्ध नहीं है।' : 'Video is off or not available yet.' }}</div>
                         </div>
                         <div class="consult-video-label">
                             <i data-lucide="monitor-up" aria-hidden="true"></i>
-                            <span>Remote participant</span>
+                            <span>{{ $isHi ? 'रिमोट प्रतिभागी' : 'Remote participant' }}</span>
                         </div>
                     </div>
                     <div class="consult-control-bar">
                         <div class="consult-control-group">
-                            <button type="button" id="toggle-mic-btn" class="consult-control-btn" aria-pressed="true" title="Mute microphone">
+                            <button type="button" id="toggle-mic-btn" class="consult-control-btn" aria-pressed="true" title="{{ $isHi ? 'माइक्रोफ़ोन बंद करें' : 'Mute microphone' }}">
                                 <i data-lucide="mic" aria-hidden="true"></i>
                             </button>
-                            <button type="button" id="toggle-camera-btn" class="consult-control-btn" aria-pressed="true" title="Turn camera off">
+                            <button type="button" id="toggle-camera-btn" class="consult-control-btn" aria-pressed="true" title="{{ $isHi ? 'कैमरा बंद करें' : 'Turn camera off' }}">
                                 <i data-lucide="video" aria-hidden="true"></i>
                             </button>
-                            <button type="button" id="retry-media-btn" class="consult-control-btn" title="Retry device access">
+                            <button type="button" id="retry-media-btn" class="consult-control-btn" title="{{ $isHi ? 'डिवाइस एक्सेस का पुनः प्रयास करें' : 'Retry device access' }}">
                                 <i data-lucide="rotate-ccw" aria-hidden="true"></i>
                             </button>
                         </div>
                         <div class="consult-control-group">
                             <span id="device-state-pill" class="consult-control-pill">
                                 <i data-lucide="badge-check" aria-hidden="true"></i>
-                                <span class="consult-control-text">Checking devices...</span>
+                                <span class="consult-control-text">{{ $isHi ? 'उपकरणों की जाँच की जा रही है...' : 'Checking devices...' }}</span>
                             </span>
                             <button type="button" id="end-call-btn" class="consult-control-btn consult-control-btn--danger">
                                 <i data-lucide="phone-off" aria-hidden="true"></i>
-                                <span>Leave</span>
+                                <span>{{ $isHi ? 'छोड़ें' : 'Leave' }}</span>
                             </button>
                         </div>
                     </div>
@@ -653,58 +775,66 @@
 
             <div class="consult-card">
                 <div class="consult-card-head">
-                    <div class="consult-card-title">Your preview</div>
+                    <div class="consult-card-title">{{ $isHi ? 'आपका पूर्वावलोकन' : 'Your preview' }}</div>
                 </div>
                 <div class="consult-card-body">
                     <div class="consult-video-shell consult-video-shell--local">
                         <video id="local-video" autoplay playsinline muted class="consult-video"></video>
                         <div id="local-avatar-placeholder" class="consult-avatar-placeholder hidden">
                             <div class="consult-avatar-circle">{{ strtoupper(substr($role === 'doctor' ? 'D' : ($consultation->patient_name[0] ?? 'P'), 0, 1)) }}</div>
-                            <div class="consult-avatar-name">{{ $role === 'doctor' ? 'Doctor' : $consultation->patient_name }}</div>
-                            <div class="consult-avatar-note">Your camera is turned off.</div>
+                            <div class="consult-avatar-name">{{ $role === 'doctor' ? ($isHi ? 'डॉक्टर' : 'Doctor') : $consultation->patient_name }}</div>
+                            <div class="consult-avatar-note">{{ $isHi ? 'आपका कैमरा बंद है।' : 'Your camera is turned off.' }}</div>
                         </div>
                         <div class="consult-video-label">
                             <i data-lucide="user-round" aria-hidden="true"></i>
-                            <span>Your preview</span>
+                            <span>{{ $isHi ? 'आपका पूर्वावलोकन' : 'Your preview' }}</span>
                         </div>
                     </div>
-                    <div class="consult-preview-note">Use the round controls below the main video to mute yourself or turn your camera on and off during the consultation.</div>
+                    <div class="consult-preview-note">{{ $isHi ? 'खुद को म्यूट करने या कॉल के दौरान कैमरे को चालू/बंद करने के लिए मुख्य वीडियो के नीचे दिए गए गोल नियंत्रणों का उपयोग करें।' : 'Use the round controls below the main video to mute yourself or turn your camera on and off during the consultation.' }}</div>
                 </div>
             </div>
 
             <div class="consult-card">
                 <div class="consult-card-head">
-                    <div class="consult-card-title">In-call messages</div>
+                    <div class="consult-card-title">{{ $isHi ? 'इन-कॉल संदेश' : 'In-call messages' }}</div>
                 </div>
                 <div class="consult-card-body">
                     <div id="chat-messages-container" class="consult-chat-messages">
                         <!-- Messages will be dynamically rendered here -->
                     </div>
                     <div class="consult-chat-input-wrapper">
-                        <input type="text" id="chat-message-input" class="consult-chat-input" placeholder="Send a message to everyone" maxlength="1000">
-                        <button type="button" id="chat-send-btn" class="consult-chat-send-btn" title="Send message">
+                        <input type="text" id="chat-message-input" class="consult-chat-input" placeholder="{{ $isHi ? 'सभी को एक संदेश भेजें' : 'Send a message to everyone' }}" maxlength="1000">
+                        <button type="button" id="chat-send-btn" class="consult-chat-send-btn" title="{{ $isHi ? 'संदेश भेजें' : 'Send message' }}">
                             <i data-lucide="send" aria-hidden="true"></i>
                         </button>
                     </div>
                     <div class="consult-chat-disclaimer">
-                        Messages can only be seen by people in the call and are deleted when the call ends.
+                        {{ $isHi ? 'संदेश केवल कॉल में शामिल लोगों द्वारा ही देखे जा सकते हैं और कॉल समाप्त होने पर हटा दिए जाते हैं।' : 'Messages can only be seen by people in the call and are deleted when the call ends.' }}
                     </div>
                 </div>
             </div>
 
             <div class="consult-card">
                 <div class="consult-card-head">
-                    <div class="consult-card-title">Call controls</div>
+                    <div class="consult-card-title">{{ $isHi ? 'कॉल नियंत्रण' : 'Call controls' }}</div>
                 </div>
                 <div class="consult-card-body">
                     <div class="consult-note">
-                        <div class="consult-note-title">Connection notes</div>
+                        <div class="consult-note-title">{{ $isHi ? 'कनेक्शन नोट्स' : 'Connection notes' }}</div>
                         <ul>
-                            <li>This room uses browser-native WebRTC only.</li>
-                            <li>Signaling is exchanged through app polling every 2 seconds.</li>
-                            <li>Device access falls back gracefully if one input is unavailable.</li>
-                            <li>For a real end-to-end test, use two physical devices. Two tabs or profiles on one computer often compete for the same camera and microphone.</li>
-                            <li>If patient and admin are on different networks, add TURN credentials in `.env` to make the call reliable like Meet.</li>
+                            @if($isHi)
+                                <li>यह कमरा केवल ब्राउज़र-नेटिव WebRTC का उपयोग करता है।</li>
+                                <li>सिगनलिंग का आदान-प्रदान हर 2 सेकंड में ऐप पोलिंग के माध्यम से किया जाता है।</li>
+                                <li>यदि कोई एक इनपुट अनुपलब्ध है, तो डिवाइस एक्सेस शालीनता से वापस आ जाता है।</li>
+                                <li>एक वास्तविक एंड-टू-एंड परीक्षण के लिए, दो भौतिक उपकरणों का उपयोग करें। एक कंप्यूटर पर दो टैब अक्सर प्रतिस्पर्धा करते हैं।</li>
+                                <li>यदि रोगी और व्यवस्थापक अलग नेटवर्क पर हैं, तो Meet की तरह विश्वसनीय बनाने के लिए .env में TURN जोड़ें।</li>
+                            @else
+                                <li>This room uses browser-native WebRTC only.</li>
+                                <li>Signaling is exchanged through app polling every 2 seconds.</li>
+                                <li>Device access falls back gracefully if one input is unavailable.</li>
+                                <li>For a real end-to-end test, use two physical devices. Two tabs or profiles on one computer often compete for the same camera and microphone.</li>
+                                <li>If patient and admin are on different networks, add TURN credentials in `.env` to make the call reliable like Meet.</li>
+                            @endif
                         </ul>
                     </div>
                 </div>
@@ -727,8 +857,72 @@
 @endphp
 
 @push('scripts')
+@php
+    $translations = [
+        'preparingDevices' => $isHi ? 'उपकरण तैयार किए जा रहे हैं...' : 'Preparing devices...',
+        'checkingDevices' => $isHi ? 'उपकरणों की जाँच की जा रही है...' : 'Checking devices...',
+        'checkingYourDevices' => $isHi ? 'आपके उपकरणों की जाँच की जा रही है...' : 'Checking your devices...',
+        'joiningCameraMicOff' => $isHi ? 'कैमरा और माइक्रोफ़ोन बंद के साथ शामिल हो रहे हैं।' : 'Joining with camera and microphone off.',
+        'previewCameraOnly' => $isHi ? 'केवल कैमरे के साथ पूर्वावलोकन तैयार है।' : 'Preview ready with camera only.',
+        'previewMicOnly' => $isHi ? 'केवल माइक्रोफ़ोन के साथ पूर्वावलोकन तैयार है।' : 'Preview ready with microphone only.',
+        'previewReady' => $isHi ? 'पूर्वावलोकन तैयार है। जब आप तैयार हों तो शामिल हो सकते हैं।' : 'Preview ready. You can join when you are ready.',
+        'previewStopped' => $isHi ? 'आपके शामिल होने तक कैमरा और माइक्रोफ़ोन खाली रखने के लिए पूर्वावलोकन रोक दिया गया है।' : 'Preview stopped to keep your camera and microphone free until you join.',
+        'muteMic' => $isHi ? 'माइक्रोफ़ोन बंद करें' : 'Mute microphone',
+        'unmuteMic' => $isHi ? 'माइक्रोफ़ोन चालू करें' : 'Unmute microphone',
+        'micUnavailable' => $isHi ? 'माइक्रोफ़ोन अनुपलब्ध' : 'Microphone unavailable',
+        'turnCameraOff' => $isHi ? 'कैमरा बंद करें' : 'Turn camera off',
+        'turnCameraOn' => $isHi ? 'कैमरा चालू करें' : 'Turn camera on',
+        'cameraUnavailable' => $isHi ? 'कैमरा अनुपलब्ध' : 'Camera unavailable',
+        'callClosed' => $isHi ? 'कॉल बंद' : 'Call closed',
+        'micCameraOn' => $isHi ? 'माइक्रोफ़ोन और कैमरा चालू' : 'Mic and camera on',
+        'micOnly' => $isHi ? 'केवल माइक्रोफ़ोन' : 'Mic only',
+        'cameraOnly' => $isHi ? 'केवल कैमरा' : 'Camera only',
+        'noLocalMedia' => $isHi ? 'कोई स्थानीय मीडिया नहीं' : 'No local media',
+        'joinedWithoutLocalMedia' => $isHi ? 'बिना स्थानीय मीडिया के शामिल हुए' : 'Joined without local media',
+        'joiningWithoutLocalMedia' => $isHi ? 'बिना स्थानीय मीडिया के शामिल हो रहे हैं' : 'Joining without local media',
+        'errUpdateSignaling' => $isHi ? 'परामर्श सिगनलिंग को अपडेट करने में असमर्थ।' : 'Unable to update consultation signaling.',
+        'errPollState' => $isHi ? 'परामर्श स्थिति पोल करने में असमर्थ।' : 'Unable to poll consultation state.',
+        'callCompleted' => $isHi ? 'कॉल पूरी हुई' : 'Call completed',
+        'callRejected' => $isHi ? 'कॉल अस्वीकार की गई' : 'Call rejected',
+        'callEnded' => $isHi ? 'कॉल समाप्त' : 'Call ended',
+        'patientRejectedByAdmin' => $isHi ? 'व्यवस्थापक द्वारा परामर्श अनुरोध अस्वीकार कर दिया गया था।' : 'The consultation request was rejected by the admin.',
+        'consultationRejected' => $isHi ? 'यह परामर्श अस्वीकार कर दिया गया है।' : 'This consultation has been rejected.',
+        'doctorAccepted' => $isHi ? 'डॉक्टर ने स्वीकार कर लिया। जल्द ही शामिल हो रहे हैं...' : 'Doctor accepted. Joining shortly...',
+        'doctorConnected' => $isHi ? 'डॉक्टर जुड़े' : 'Doctor connected',
+        'answerSent' => $isHi ? 'उत्तर भेजा गया' : 'Answer sent',
+        'waitingForDoctor' => $isHi ? 'प्रस्ताव भेजा गया। डॉक्टर की प्रतीक्षा की जा रही है...' : 'Offer sent. Waiting for doctor...',
+        'waitingForPatient' => $isHi ? 'रोगी के प्रस्ताव की प्रतीक्षा की जा रही है...' : 'Waiting for patient offer...',
+        'offerReceived' => $isHi ? 'प्रस्ताव प्राप्त हुआ' : 'Offer received',
+        'peerConnectionEstablished' => $isHi ? 'पीयर कनेक्शन स्थापित' : 'Peer connection established',
+        'liveCallConnected' => $isHi ? 'लाइव कॉल कनेक्टेड' : 'Live call connected',
+        'connectingCall' => $isHi ? 'कॉल कनेक्ट की जा रही है...' : 'Connecting call...',
+        'connectionInterrupted' => $isHi ? 'कनेक्शन बाधित। पुनः कनेक्ट किया जा रहा है...' : 'Connection interrupted. Reconnecting...',
+        'connectionFailed' => $isHi ? 'कनेक्शन विफल। नेटवर्क की जाँच करें और पुनः प्रयास करें।' : 'Connection failed. Check network and retry.',
+        'peerMediaFailedWithTurn' => $isHi ? 'पीयर एक स्थिर मीडिया पथ स्थापित नहीं कर सके। एक बार पुनः प्रयास करें और फिर ब्राउज़र अनुमतियों और नेटवर्क या फ़ायरवॉल नियमों दोनों को सत्यापित करें।' : 'The peers could not establish a stable media path. Retry once and then verify both browser permissions and network or firewall rules.',
+        'peerMediaFailedWithoutTurn' => $isHi ? 'पीयर सीधा मीडिया पथ स्थापित नहीं कर सके। वातावरण में TURN क्रेडेंशियल जोड़ें ताकि कॉल विभिन्न नेटवर्क पर विश्वसनीय रूप से काम करें।' : 'The peers could not establish a direct media path. Add TURN credentials in the environment so calls work reliably across different networks.',
+        'pollingRetrying' => $isHi ? 'पोलिंग पुनः प्रयास की जा रही है...' : 'Polling retrying...',
+        'micUnavailableStartVideoOnly' => $isHi ? 'माइक्रोफ़ोन एक्सेस अनुपलब्ध है, इसलिए यह कॉल केवल वीडियो के साथ शुरू होगी।' : 'Microphone access is unavailable, so this call will start with video only.',
+        'cameraUnavailableStartAudioOnly' => $isHi ? 'कैमरा एक्सेस अनुपलब्ध है, इसलिए यह कॉल केवल ऑडियो के साथ शुरू होगी।' : 'Camera access is unavailable, so this call will start with audio only.',
+        'joinedNoMediaRetry' => $isHi ? 'आप स्थानीय कैमरे या माइक्रोफ़ोन के बिना शामिल हुए। आप किसी भी समय डिवाइस एक्सेस का पुनः प्रयास कर सकते हैं।' : 'You joined without local camera or microphone. You can retry device access anytime.',
+        'joiningConsultationRoom' => $isHi ? 'परामर्श कक्ष में शामिल हो रहे हैं...' : 'Joining the consultation room...',
+        'you' => $isHi ? 'आप' : 'You',
+        'browserNotSupported' => $isHi ? 'ब्राउज़र समर्थित नहीं है' : 'Browser not supported',
+        'webrtcNotSupported' => $isHi ? 'यह ब्राउज़र आवश्यक कैमरा, माइक्रोफ़ोन या WebRTC API का समर्थन नहीं करता है।' : 'This browser does not support the required camera, microphone, or WebRTC APIs.',
+        'defaultMicrophone' => $isHi ? 'डिफ़ॉल्ट माइक्रोफ़ोन' : 'Default microphone',
+        'defaultCamera' => $isHi ? 'डिफ़ॉल्ट कैमरा' : 'Default camera',
+        'errBlocked' => $isHi ? 'कैमरा या माइक्रोफ़ोन अनुमति अवरुद्ध कर दी गई थी। ब्राउज़र एड्रेस बार में पहुंच की अनुमति दें और पुनः प्रयास करें।' : 'Camera or microphone permission was blocked. Allow access in the browser address bar and retry.',
+        'errNotFound' => $isHi ? 'इस उपकरण पर कोई उपयोगी कैमरा या माइक्रोफ़ोन नहीं मिला।' : 'No usable camera or microphone was found on this device.',
+        'errInUse' => $isHi ? 'आपका कैमरा या माइक्रोफ़ोन पहले से ही किसी अन्य ऐप, ब्राउज़र टैब या प्रोफ़ाइल द्वारा उपयोग किया जा रहा है। यदि आप एक ही कंप्यूटर पर व्यवस्थापक और रोगी का परीक्षण कर रहे हैं, तो एक पक्ष को दूसरे फोन या लैपटॉप पर ले जाएं और पुनः प्रयास करें।' : 'Your camera or microphone is already in use by another app, browser tab, or profile. If you are testing admin and patient on the same computer, move one side to another phone or laptop and retry.',
+        'errOverconstrained' => $isHi ? 'चयनित कैमरा या माइक्रोफ़ोन अनुपलब्ध है। डिफ़ॉल्ट डिवाइस को फिर से चुनें और पुनः प्रयास करें।' : 'The selected camera or microphone is unavailable. Re-select the default device and retry.',
+        'errSecurity' => $isHi ? 'ब्राउज़र मीडिया एक्सेस के लिए इस पेज को लोकलहोस्ट या HTTPS से खोला जाना चाहिए।' : 'This page must be opened from localhost or HTTPS for browser media access.',
+        'errAttemptedPrefix' => $isHi ? 'ब्राउज़र' : 'The browser could not start camera or microphone access after trying',
+        'errAttemptedSuffix' => $isHi ? 'प्रयास करने के बाद कैमरा या माइक्रोफ़ोन एक्सेस शुरू नहीं कर सका। जांचें कि क्या कोई अन्य टैब, प्रोफ़ाइल, ज़ूम, मीट, व्हाट्सएप या कैमरा ऐप पहले से ही डिवाइस का उपयोग कर रहा है।' : '. Check whether another tab, profile, Zoom, Meet, WhatsApp, or the camera app is already using the device.',
+        'errDefault' => $isHi ? 'ब्राउज़र कैमरा या माइक्रोफ़ोन एक्सेस शुरू नहीं कर सका। अनुमतियों की जांच करें और पुनः प्रयास करें।' : 'The browser could not start camera or microphone access. Check permissions and retry.',
+    ];
+@endphp
 <script>
     document.addEventListener('DOMContentLoaded', () => {
+        const lang = @json($translations);
         const role = @json($role);
         const pollUrl = @json(route('consultations.poll', $consultation->uuid));
         const signalUrl = @json(route('consultations.signal', $consultation->uuid));
@@ -797,6 +991,16 @@
         const appliedCandidates = new Set();
         const queuedRemoteCandidates = [];
 
+        function cleanSdp(sdp) {
+            if (!sdp) return '';
+            return sdp
+                .replace(/\r\n/g, '\n')
+                .split('\n')
+                .map(line => line.trim())
+                .filter(line => line && !line.startsWith('a=candidate:'))
+                .join('\n');
+        }
+
         function setStatus(label, tone = 'secondary') {
             const tones = {
                 secondary: ['#e2e8f0', '#0f172a'],
@@ -829,30 +1033,30 @@
             const details = error?.details ? ` ${error.details}` : '';
 
             if (name === 'NotAllowedError' || name === 'PermissionDeniedError') {
-                return `Camera or microphone permission was blocked. Allow access in the browser address bar and retry.${details}`.trim();
+                return `${lang.errBlocked}${details}`.trim();
             }
 
             if (name === 'NotFoundError' || name === 'DevicesNotFoundError') {
-                return `No usable camera or microphone was found on this device.${details}`.trim();
+                return `${lang.errNotFound}${details}`.trim();
             }
 
             if (name === 'NotReadableError' || name === 'TrackStartError' || name === 'AbortError') {
-                return `Your camera or microphone is already in use by another app, browser tab, or profile. If you are testing admin and patient on the same computer, move one side to another phone or laptop and retry.${details}`.trim();
+                return `${lang.errInUse}${details}`.trim();
             }
 
             if (name === 'OverconstrainedError') {
-                return 'The selected camera or microphone is unavailable. Re-select the default device and retry.';
+                return lang.errOverconstrained;
             }
 
             if (name === 'SecurityError') {
-                return 'This page must be opened from localhost or HTTPS for browser media access.';
+                return lang.errSecurity;
             }
 
             if (attemptedModes) {
-                return `The browser could not start camera or microphone access after trying ${attemptedModes}. Check whether another tab, profile, Zoom, Meet, WhatsApp, or the camera app is already using the device.${details}`.trim();
+                return `${lang.errAttemptedPrefix} ${attemptedModes} ${lang.errAttemptedSuffix}${details}`.trim();
             }
 
-            return `The browser could not start camera or microphone access. Check permissions and retry.${details}`.trim();
+            return `${lang.errDefault}${details}`.trim();
         }
 
         function setPrejoinStatus(message) {
@@ -1011,8 +1215,8 @@
                 select.value = items.some((item) => item.deviceId === previous) ? previous : '';
             };
 
-            setOptions(audioInputSelect, audioInputs, selectedAudioDeviceId, 'Default microphone');
-            setOptions(videoInputSelect, videoInputs, selectedVideoDeviceId, 'Default camera');
+            setOptions(audioInputSelect, audioInputs, selectedAudioDeviceId, lang.defaultMicrophone);
+            setOptions(videoInputSelect, videoInputs, selectedVideoDeviceId, lang.defaultCamera);
         }
 
         async function preparePreview(force = false) {
@@ -1024,7 +1228,7 @@
                 stopLocalStream();
             }
 
-            setPrejoinStatus('Checking your devices...');
+            setPrejoinStatus(lang.checkingYourDevices);
 
             try {
                 const media = await acquireLocalStream();
@@ -1034,13 +1238,13 @@
                 localVideo.srcObject = localStream;
 
                 if (media.mode === 'none') {
-                    setPrejoinStatus('Joining with camera and microphone off.');
+                    setPrejoinStatus(lang.joiningCameraMicOff);
                 } else if (media.mode === 'video-only') {
-                    setPrejoinStatus('Preview ready with camera only.');
+                    setPrejoinStatus(lang.previewCameraOnly);
                 } else if (media.mode === 'audio-only') {
-                    setPrejoinStatus('Preview ready with microphone only.');
+                    setPrejoinStatus(lang.previewMicOnly);
                 } else {
-                    setPrejoinStatus('Preview ready. You can join when you are ready.');
+                    setPrejoinStatus(lang.previewReady);
                 }
 
                 await populateDeviceOptions();
@@ -1060,7 +1264,7 @@
             }
 
             stopLocalStream();
-            setPrejoinStatus('Preview stopped to keep your camera and microphone free until you join.');
+            setPrejoinStatus(lang.previewStopped);
             showDeviceAlert('');
             updateControlAvailability();
         }
@@ -1230,51 +1434,51 @@
             prejoinRetryBtn.disabled = callEnded || bootstrapping;
             updateToggleButton(toggleMicBtn, {
                 active: isAudioEnabled,
-                activeLabel: 'Mute microphone',
-                inactiveLabel: 'Unmute microphone',
-                unavailableLabel: 'Microphone unavailable',
+                activeLabel: lang.muteMic,
+                inactiveLabel: lang.unmuteMic,
+                unavailableLabel: lang.micUnavailable,
                 activeIcon: 'mic',
                 inactiveIcon: hasAudio ? 'mic-off' : 'mic-off',
                 disabled: !preferredMediaState.audio || (!hasAudio && joinedCall) || callEnded,
             });
             updateToggleButton(toggleCameraBtn, {
                 active: isVideoEnabled,
-                activeLabel: 'Turn camera off',
-                inactiveLabel: 'Turn camera on',
-                unavailableLabel: 'Camera unavailable',
+                activeLabel: lang.turnCameraOff,
+                inactiveLabel: lang.turnCameraOn,
+                unavailableLabel: lang.cameraUnavailable,
                 activeIcon: 'video',
                 inactiveIcon: hasVideo ? 'video-off' : 'video-off',
                 disabled: !preferredMediaState.video || (!hasVideo && joinedCall) || callEnded,
             });
             updateToggleButton(prejoinToggleMicBtn, {
                 active: isAudioEnabled,
-                activeLabel: 'Mute microphone',
-                inactiveLabel: 'Unmute microphone',
-                unavailableLabel: 'Microphone unavailable',
+                activeLabel: lang.muteMic,
+                inactiveLabel: lang.unmuteMic,
+                unavailableLabel: lang.micUnavailable,
                 activeIcon: 'mic',
                 inactiveIcon: 'mic-off',
                 disabled: callEnded,
             });
             updateToggleButton(prejoinToggleCameraBtn, {
                 active: isVideoEnabled,
-                activeLabel: 'Turn camera off',
-                inactiveLabel: 'Turn camera on',
-                unavailableLabel: 'Camera unavailable',
+                activeLabel: lang.turnCameraOff,
+                inactiveLabel: lang.turnCameraOn,
+                unavailableLabel: lang.cameraUnavailable,
                 activeIcon: 'video',
                 inactiveIcon: 'video-off',
                 disabled: callEnded,
             });
 
             if (bootstrapping) {
-                setDeviceState('Checking devices...', 'ready');
+                setDeviceState(lang.checkingDevices, 'ready');
             } else if (callEnded) {
-                setDeviceState('Call closed', 'danger');
+                setDeviceState(lang.callClosed, 'danger');
             } else if (hasAudio && hasVideo) {
-                setDeviceState('Mic and camera on', 'success');
+                setDeviceState(lang.micCameraOn, 'success');
             } else if (hasAudio || hasVideo) {
-                setDeviceState(hasAudio ? 'Mic only' : 'Camera only', 'warning');
+                setDeviceState(hasAudio ? lang.micOnly : lang.cameraOnly, 'warning');
             } else {
-                setDeviceState('No local media', 'danger');
+                setDeviceState(lang.noLocalMedia, 'danger');
             }
 
             updateLocalPreviewPlaceholders();
@@ -1439,7 +1643,7 @@
             currentConsultationStatus = state.status;
 
             if (state.status === 'completed') {
-                finishCall('Call completed', 'dark');
+                finishCall(lang.callCompleted, 'dark');
                 return;
             }
 
@@ -1448,15 +1652,15 @@
             }
 
             if (state.status === 'rejected') {
-                finishCall('Call rejected', 'danger');
+                finishCall(lang.callRejected, 'danger');
                 showDeviceAlert(role === 'patient'
-                    ? 'The consultation request was rejected by the admin.'
-                    : 'This consultation has been rejected.');
+                    ? lang.patientRejectedByAdmin
+                    : lang.consultationRejected);
                 return;
             }
 
             if (role === 'patient' && state.status === 'accepted' && !state.sdp_answer) {
-                setStatus('Doctor accepted. Joining shortly...', 'info');
+                setStatus(lang.doctorAccepted, 'info');
             }
 
             if (role === 'patient') {
@@ -1465,9 +1669,9 @@
                     if (!currentRemoteDesc) {
                         await peerConnection.setRemoteDescription(new RTCSessionDescription(state.sdp_answer));
                         remoteDescriptionApplied = true;
-                        setStatus('Doctor connected', 'success');
+                        setStatus(lang.doctorConnected, 'success');
                         await flushQueuedRemoteCandidates();
-                    } else if (currentRemoteDesc.sdp !== state.sdp_answer.sdp) {
+                    } else if (cleanSdp(currentRemoteDesc.sdp) !== cleanSdp(state.sdp_answer.sdp)) {
                         console.log('Doctor answer changed, renegotiating...');
                         resetPeerConnection();
                         await sendPatientOffer('active');
@@ -1483,14 +1687,14 @@
                 if (!currentRemoteDesc) {
                     await peerConnection.setRemoteDescription(new RTCSessionDescription(state.sdp_offer));
                     remoteDescriptionApplied = true;
-                    setStatus('Offer received', 'info');
+                    setStatus(lang.offerReceived, 'info');
                     await flushQueuedRemoteCandidates();
-                } else if (currentRemoteDesc.sdp !== state.sdp_offer.sdp) {
+                } else if (cleanSdp(currentRemoteDesc.sdp) !== cleanSdp(state.sdp_offer.sdp)) {
                     console.log('Patient offer changed, recreating answer...');
                     resetPeerConnection();
                     await peerConnection.setRemoteDescription(new RTCSessionDescription(state.sdp_offer));
                     remoteDescriptionApplied = true;
-                    setStatus('Offer received', 'info');
+                    setStatus(lang.offerReceived, 'info');
                     await flushQueuedRemoteCandidates();
                 }
             }
@@ -1504,7 +1708,7 @@
                     status: 'active',
                     sdp_answer: answer.toJSON(),
                 });
-                setStatus('Answer sent', 'success');
+                setStatus(lang.answerSent, 'success');
             }
 
             await applyRemoteCandidates(state.ice_candidates_patient || []);
@@ -1559,7 +1763,7 @@
             } catch (error) {
                 console.error('End call request failed', error);
             } finally {
-                finishCall('Call ended', 'dark');
+                finishCall(lang.callEnded, 'dark');
             }
         }
 
@@ -1595,7 +1799,7 @@
                 remotePlaceholder.classList.add('hidden');
                 updateRemoteVideoState();
                 syncRemotePlayback();
-                setStatus('Peer connection established', 'success');
+                setStatus(lang.peerConnectionEstablished, 'success');
                 startCallTimer();
             });
 
@@ -1603,19 +1807,19 @@
                 const state = peerConnection.connectionState;
 
                 if (state === 'connected') {
-                    setStatus('Live call connected', 'success');
+                    setStatus(lang.liveCallConnected, 'success');
                     startCallTimer();
                 } else if (state === 'connecting') {
-                    setStatus('Connecting call...', 'info');
+                    setStatus(lang.connectingCall, 'info');
                 } else if (state === 'disconnected') {
-                    setStatus('Connection interrupted. Reconnecting...', 'warning');
+                    setStatus(lang.connectionInterrupted, 'warning');
                 } else if (state === 'failed') {
-                    setStatus('Connection failed. Check network and retry.', 'danger');
+                    setStatus(lang.connectionFailed, 'danger');
                     showDeviceAlert(hasTurnServer
-                        ? 'The peers could not establish a stable media path. Retry once and then verify both browser permissions and network or firewall rules.'
-                        : 'The peers could not establish a direct media path. Add TURN credentials in the environment so calls work reliably across different networks.');
+                        ? lang.peerMediaFailedWithTurn
+                        : lang.peerMediaFailedWithoutTurn);
                 } else if (state === 'closed') {
-                    setStatus('Call closed', 'dark');
+                    setStatus(lang.callClosed, 'dark');
                     stopCallTimer();
                 }
             });
@@ -1636,7 +1840,7 @@
                     await handlePolledState(state);
                 } catch (error) {
                     console.error(error);
-                    setStatus('Polling retrying...', 'warning');
+                    setStatus(lang.pollingRetrying, 'warning');
                 }
             }, 2000);
         }
@@ -1650,7 +1854,7 @@
             showJoinedLayout();
             updateControlAvailability();
             showDeviceAlert('');
-            setStatus('Preparing devices...', 'secondary');
+            setStatus(lang.preparingDevices, 'secondary');
 
             try {
                 let media = null;
@@ -1673,25 +1877,25 @@
                 attachLocalTracksToPeer();
 
                 if (media.mode === 'video-only') {
-                    showDeviceAlert('Microphone access is unavailable, so this call will start with video only.');
-                    setDeviceState('Camera only', 'warning');
+                    showDeviceAlert(lang.micUnavailableStartVideoOnly);
+                    setDeviceState(lang.cameraOnly, 'warning');
                 } else if (media.mode === 'audio-only') {
-                    showDeviceAlert('Camera access is unavailable, so this call will start with audio only.');
-                    setDeviceState('Mic only', 'warning');
+                    showDeviceAlert(lang.cameraUnavailableStartAudioOnly);
+                    setDeviceState(lang.micOnly, 'warning');
                 } else if (media.mode === 'none') {
-                    showDeviceAlert('You joined without local camera or microphone. You can retry device access anytime.');
-                    setDeviceState('Joined without local media', 'danger');
+                    showDeviceAlert(lang.joinedNoMediaRetry);
+                    setDeviceState(lang.joinedWithoutLocalMedia, 'danger');
                 } else {
-                    setDeviceState('Mic and camera on', 'success');
+                    setDeviceState(lang.micCameraOn, 'success');
                 }
 
                 updateControlAvailability();
 
                 if (role === 'patient' && !offered) {
                     await sendPatientOffer();
-                    setStatus('Offer sent. Waiting for doctor...', 'info');
+                    setStatus(lang.waitingForDoctor, 'info');
                 } else if (role === 'doctor' && !remoteDescriptionApplied) {
-                    setStatus('Waiting for patient offer...', 'info');
+                    setStatus(lang.waitingForPatient, 'info');
                 }
 
                 startPolling();
@@ -1701,8 +1905,8 @@
             } catch (error) {
                 console.error(error);
                 showDeviceAlert(getFriendlyMediaError(error));
-                setStatus('Joining without local media', 'warning');
-                setDeviceState('Joining without local media', 'danger');
+                setStatus(lang.joiningWithoutLocalMedia, 'warning');
+                setDeviceState(lang.joiningWithoutLocalMedia, 'danger');
 
                 ensurePeerConnection();
                 attachLocalTracksToPeer();
@@ -1710,9 +1914,9 @@
 
                 if (role === 'patient' && !offered) {
                     await sendPatientOffer();
-                    setStatus('Offer sent. Waiting for doctor...', 'info');
+                    setStatus(lang.waitingForDoctor, 'info');
                 } else if (role === 'doctor') {
-                    setStatus('Waiting for patient offer...', 'info');
+                    setStatus(lang.waitingForPatient, 'info');
                 }
 
                 try {
@@ -1786,7 +1990,7 @@
 
         joinCallBtn.addEventListener('click', async () => {
             joinCallBtn.disabled = true;
-            setPrejoinStatus('Joining the consultation room...');
+            setPrejoinStatus(lang.joiningConsultationRoom);
             try {
                 await bootstrapPeer();
             } finally {
@@ -1820,7 +2024,7 @@
 
                 const metaEl = document.createElement('div');
                 metaEl.className = 'consult-chat-meta';
-                metaEl.textContent = isLocal ? 'You' : msg.sender_name;
+                metaEl.textContent = isLocal ? lang.you : msg.sender_name;
 
                 const textEl = document.createElement('div');
                 textEl.className = 'consult-chat-text';
@@ -1873,8 +2077,8 @@
         endCallBtn.addEventListener('click', endCall);
 
         if (!navigator.mediaDevices?.getUserMedia || !window.RTCPeerConnection) {
-            setStatus('Browser not supported', 'danger');
-            showDeviceAlert('This browser does not support the required camera, microphone, or WebRTC APIs.');
+            setStatus(lang.browserNotSupported, 'danger');
+            showDeviceAlert(lang.webrtcNotSupported);
             retryMediaBtn.disabled = true;
             prejoinRetryBtn.disabled = true;
             toggleMicBtn.disabled = true;
@@ -1883,22 +2087,24 @@
             prejoinToggleCameraBtn.disabled = true;
             joinCallBtn.disabled = true;
             endCallBtn.disabled = true;
-            setDeviceState('Browser unsupported', 'danger');
+            setDeviceState(lang.browserNotSupported, 'danger');
             return;
         }
 
-        setDeviceState('Checking devices...', 'ready');
+        setDeviceState(lang.checkingDevices, 'ready');
         updateControlAvailability();
         syncLucideIcons();
         clearRemoteStream();
         navigator.mediaDevices?.addEventListener?.('devicechange', async () => {
             await populateDeviceOptions();
         });
-        populateDeviceOptions();
+        preparePreview(true);
 
         document.addEventListener('visibilitychange', () => {
             if (document.hidden) {
                 releasePrejoinPreview();
+            } else if (!joinedCall && !callEnded) {
+                preparePreview();
             }
         });
     });

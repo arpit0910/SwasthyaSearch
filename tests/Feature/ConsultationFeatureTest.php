@@ -76,7 +76,7 @@ class ConsultationFeatureTest extends TestCase
 
         $this->postJson(route('consultations.signal', $consultation->uuid), [
             'role' => 'patient',
-            'status' => Consultation::STATUS_ACCEPTED,
+            'status' => Consultation::STATUS_PENDING,
             'sdp_offer' => ['type' => 'offer', 'sdp' => 'offer-sdp'],
         ])->assertOk();
 

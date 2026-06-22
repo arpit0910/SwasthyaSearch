@@ -13,7 +13,7 @@ return new class extends Migration
     {
         Schema::create('consultations', function (Blueprint $table) {
             $table->id();
-            $table->uuid('uuid')->unique();
+            $table->string('uuid', 36)->unique();
             $table->string('patient_name');
             $table->unsignedBigInteger('doctor_id')->nullable();
             $table->string('status')->default('pending');

@@ -105,7 +105,11 @@ class ConsultationController extends Controller
             }
 
             if (!empty($data['status'])) {
-                $consultation->status = $data['status'];
+                if ($data['role'] === 'patient' && $data['status'] === Consultation::STATUS_PENDING && in_array($consultation->status, [Consultation::STATUS_ACCEPTED, Consultation::STATUS_ACTIVE], true)) {
+                    // Do not downgrade an accepted or active consultation to pending by the patient.
+                } else {
+                    $consultation->status = $data['status'];
+                }
             }
 
             $consultation->save();
