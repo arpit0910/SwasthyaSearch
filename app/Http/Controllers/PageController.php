@@ -110,7 +110,15 @@ class PageController extends Controller
 
         // In a real app we might store this in a contacts table or send an email.
         // Here we return back with a success flash message.
-        return back()->with('success', 'Your message has been sent successfully. Our support team will get back to you within 24 hours!');
+        $message = 'Your message has been sent successfully. Our support team will get back to you within 24 hours.';
+
+        return back()
+            ->with('success', $message)
+            ->with('site_popup', [
+                'type' => 'success',
+                'title' => 'Message sent',
+                'message' => $message,
+            ]);
     }
 
     public function submitFeedback(Request $request)
@@ -122,7 +130,15 @@ class PageController extends Controller
             'comments' => 'required|string|max:2000',
         ]);
 
-        return back()->with('success', 'Thank you for your valuable feedback! Your input helps us improve Arogio for everyone.');
+        $message = 'Thank you for your valuable feedback! Your input helps us improve Arogio for everyone.';
+
+        return back()
+            ->with('success', $message)
+            ->with('site_popup', [
+                'type' => 'success',
+                'title' => 'Thanks for your feedback',
+                'message' => $message,
+            ]);
     }
 
     public function submitLeadCapture(Request $request)
@@ -163,7 +179,15 @@ class PageController extends Controller
             'updated_at' => now(),
         ]);
 
-        return back()->with('consultation_request_success', 'Your consultation request has been received. Our team will contact you shortly.');
+        $message = 'Your consultation request has been received. Our team will contact you shortly.';
+
+        return back()
+            ->with('consultation_request_success', $message)
+            ->with('site_popup', [
+                'type' => 'success',
+                'title' => 'Request received',
+                'message' => $message,
+            ]);
     }
 
     public function submitListingReport(Request $request)
@@ -194,6 +218,7 @@ class PageController extends Controller
         return response()->json([
             'success' => true,
             'message' => 'Thank you. Your report has been submitted.',
+            'popup_title' => 'Thanks for your contribution',
             'counts' => $counts,
         ]);
     }
@@ -223,6 +248,7 @@ class PageController extends Controller
         return response()->json([
             'success' => true,
             'message' => 'Vote submitted.',
+            'popup_title' => 'Thanks for your confirmation',
             'counts' => $counts,
         ]);
     }

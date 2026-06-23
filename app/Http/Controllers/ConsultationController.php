@@ -29,7 +29,13 @@ class ConsultationController extends Controller
             'ice_candidates_doctor' => [],
         ]);
 
-        return redirect()->route('consultations.room', $consultation->uuid);
+        return redirect()
+            ->route('consultations.room', $consultation->uuid)
+            ->with('site_popup', [
+                'type' => 'success',
+                'title' => 'Consultation room is ready',
+                'message' => 'Your video consultation room has been created successfully.',
+            ]);
     }
 
     public function room(string $uuid): View

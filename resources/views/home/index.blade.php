@@ -14,6 +14,57 @@ $locale === 'hi'
 
 <!-- Hero Section -->
 <style>
+    .hero-symptom-chip {
+        position: relative;
+        border: 1px solid rgba(255, 255, 255, 0.12);
+        background: rgba(255, 255, 255, 0.06);
+        transition: transform 180ms ease, border-color 180ms ease, background 180ms ease, box-shadow 180ms ease;
+    }
+
+    .hero-symptom-chip:hover {
+        transform: translateY(-2px);
+        border-color: rgba(255, 255, 255, 0.3);
+        background: rgba(255, 255, 255, 0.14);
+    }
+
+    .hero-symptom-chip.is-active {
+        border-color: rgba(34, 211, 238, 0.72);
+        background: linear-gradient(135deg, rgba(6, 182, 212, 0.92), rgba(14, 116, 144, 0.92));
+        box-shadow: 0 16px 36px rgba(8, 145, 178, 0.32);
+    }
+
+    .dark .hero-symptom-chip.is-active {
+        border-color: rgba(103, 232, 249, 0.72);
+        background: linear-gradient(135deg, rgba(8, 145, 178, 0.96), rgba(14, 116, 144, 0.96));
+        box-shadow: 0 18px 42px rgba(6, 182, 212, 0.22);
+    }
+
+    .hero-symptom-chip.is-active .hero-symptom-icon {
+        background: rgba(255, 255, 255, 0.18);
+        border-color: rgba(255, 255, 255, 0.18);
+        color: #ffffff;
+    }
+
+    .hero-symptom-chip.is-active .hero-symptom-label {
+        color: #ffffff;
+    }
+
+    .wellness-showcase-card {
+        background: radial-gradient(circle at top right, rgba(34, 211, 238, 0.16), transparent 34%), linear-gradient(160deg, rgba(255, 255, 255, 0.96), rgba(240, 249, 255, 0.92));
+    }
+
+    .dark .wellness-showcase-card {
+        background: radial-gradient(circle at top right, rgba(34, 211, 238, 0.14), transparent 34%), linear-gradient(160deg, rgba(15, 23, 42, 0.96), rgba(12, 18, 33, 0.98));
+    }
+
+    .wellness-option-card {
+        background: linear-gradient(180deg, rgba(255, 255, 255, 0.94), rgba(248, 250, 252, 0.92));
+    }
+
+    .dark .wellness-option-card {
+        background: linear-gradient(180deg, rgba(15, 23, 42, 0.94), rgba(10, 15, 29, 0.98));
+    }
+
     .hero-brand-motif {
         position: absolute;
         inset: 0;
@@ -255,11 +306,11 @@ $locale === 'hi'
                     ];
                     @endphp
                     @foreach($symptoms as $symptom)
-                    <button type="button" onclick="selectSymptom('{{ $locale === 'hi' ? $symptom['hi'] : $symptom['en'] }}')" class="flex flex-col items-center p-3 rounded-2xl bg-white/5 hover:bg-white/15 border border-white/10 hover:border-white/30 hover:scale-105 transition-all duration-300 group shadow-md backdrop-blur-md">
-                        <div class="w-10 h-10 rounded-xl flex items-center justify-center mb-2 {{ $symptom['color'] }} border group-hover:scale-110 transition-transform duration-300">
+                    <button type="button" onclick="selectSymptom('{{ $locale === 'hi' ? $symptom['hi'] : $symptom['en'] }}')" data-symptom-button data-symptom-name="{{ $locale === 'hi' ? $symptom['hi'] : $symptom['en'] }}" aria-pressed="false" class="hero-symptom-chip group flex flex-col items-center rounded-2xl p-3 shadow-md backdrop-blur-md">
+                        <div class="hero-symptom-icon w-10 h-10 rounded-xl flex items-center justify-center mb-2 {{ $symptom['color'] }} border group-hover:scale-110 transition-transform duration-300">
                             <i data-lucide="{{ $symptom['icon'] }}" class="w-5 h-5"></i>
                         </div>
-                        <span class="text-[11px] font-semibold text-slate-200 group-hover:text-white transition-colors truncate max-w-full">{{ $locale === 'hi' ? $symptom['hi'] : $symptom['en'] }}</span>
+                        <span class="hero-symptom-label text-[11px] font-semibold text-slate-200 group-hover:text-white transition-colors truncate max-w-full">{{ $locale === 'hi' ? $symptom['hi'] : $symptom['en'] }}</span>
                     </button>
                     @endforeach
                 </div>
@@ -480,7 +531,7 @@ $locale === 'hi'
             </div>
         </section>
 
-        <section class="relative overflow-hidden rounded-[2rem] border border-cyan-200/70 dark:border-cyan-900/40 bg-gradient-to-br from-cyan-50 via-white to-indigo-50/70 dark:from-slate-900 dark:via-slate-900 dark:to-slate-950 p-5 sm:p-8 shadow-sm">
+        <section class="relative overflow-hidden rounded-[2rem] border border-cyan-200/70 dark:border-cyan-900/40 bg-gradient-to-br from-cyan-50 via-white to-indigo-50/70 dark:from-slate-900 dark:via-slate-950 dark:to-slate-950 p-5 sm:p-8 shadow-sm">
             <div class="pointer-events-none absolute right-0 top-0 h-44 w-44 rounded-full bg-cyan-300/15 blur-3xl"></div>
             <div class="pointer-events-none absolute bottom-0 left-0 h-36 w-36 rounded-full bg-indigo-300/15 blur-3xl"></div>
             <div class="relative z-10 mb-6 flex flex-col gap-4 sm:flex-row sm:items-end sm:justify-between">
@@ -492,36 +543,36 @@ $locale === 'hi'
                 <a href="{{ route('activities.index') }}" class="z-20 inline-flex w-full sm:w-auto items-center justify-center rounded-2xl border border-cyan-200 dark:border-cyan-800/60 bg-white dark:bg-slate-950 px-4 py-3 text-sm font-bold text-cyan-800 dark:text-cyan-200 transition-all duration-300 ease-out hover:-translate-y-0.5 hover:border-cyan-300 hover:bg-cyan-50 hover:text-cyan-900 dark:hover:border-cyan-700 dark:hover:bg-cyan-950/30 dark:hover:text-cyan-100 active:scale-[0.99] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-cyan-400 focus-visible:ring-offset-2 focus-visible:ring-offset-white dark:focus-visible:ring-offset-slate-950">{{ $locale === 'hi' ? 'सभी वेलनेस टूल्स देखें' : 'View All Wellness Tools' }}</a>
             </div>
 
-            <div class="relative z-10 grid grid-cols-1 gap-4 lg:gap-5 lg:grid-cols-[0.95fr,1.05fr] lg:items-start">
-                <div class="rounded-[1.75rem] border border-white/80 dark:border-slate-800 bg-white/92 dark:bg-slate-900/92 p-5 sm:p-6 shadow-sm">
+            <div class="relative z-10 grid grid-cols-1 gap-4 lg:gap-5 lg:grid-cols-[1.05fr,0.95fr] lg:items-start">
+                <div class="wellness-showcase-card rounded-[1.75rem] border border-white/80 dark:border-slate-800/90 p-5 sm:p-6 shadow-[0_22px_65px_rgba(14,165,233,0.12)] dark:shadow-none">
                     <div class="flex items-start gap-4">
                         <div class="flex h-12 w-12 shrink-0 items-center justify-center rounded-2xl bg-gradient-to-br from-cyan-500 to-indigo-500 text-white shadow-lg">
                             <i data-lucide="sparkles" class="w-5 h-5"></i>
                         </div>
                         <div class="min-w-0">
-                            <p class="text-[11px] font-bold uppercase tracking-[0.22em] text-indigo-700 dark:text-indigo-300">{{ $locale === 'hi' ? 'माइक्रो ब्रेक्स' : 'Micro Breaks' }}</p>
+                            <p class="text-[11px] font-bold uppercase tracking-[0.22em] text-indigo-700 dark:text-cyan-300">{{ $locale === 'hi' ? 'माइक्रो ब्रेक्स' : 'Micro Breaks' }}</p>
                             <h3 class="mt-2 text-lg sm:text-xl font-bold text-slate-950 dark:text-white">{{ $locale === 'hi' ? 'छोटे टूल जो दिमाग को हल्का विराम देते हैं' : 'Small tools that give your mind a softer pause' }}</h3>
                             <p class="mt-2 text-sm leading-6 sm:leading-7 text-slate-600 dark:text-slate-300">{{ $locale === 'hi' ? 'जब आपको खोज से थोड़ा ब्रेक चाहिए, ये टूल बिना अतिरिक्त दबाव के रीसेट करने में मदद करते हैं।' : 'When you need a short break from searching, these tools help you reset without adding pressure.' }}</p>
                         </div>
                     </div>
-                    <div class="mt-4 grid grid-cols-3 gap-3">
-                        <div class="rounded-2xl border border-cyan-100 dark:border-cyan-900/40 bg-cyan-50/80 dark:bg-cyan-950/20 px-3 py-3 text-center">
-                            <div class="mx-auto flex h-8 w-8 items-center justify-center rounded-xl bg-white dark:bg-slate-900 text-cyan-700 dark:text-cyan-300 shadow-sm text-sm font-bold">1</div>
-                            <p class="mt-2 text-sm font-semibold text-slate-900 dark:text-white">{{ $locale === 'hi' ? 'सांस' : 'Breathe' }}</p>
+                    <div class="mt-5 grid grid-cols-3 gap-3">
+                        <div class="rounded-2xl border border-cyan-100/90 dark:border-cyan-900/60 bg-white/80 dark:bg-slate-950/80 px-4 py-4 text-left">
+                            <div class="flex h-9 w-9 items-center justify-center rounded-xl bg-cyan-100 dark:bg-cyan-950/50 text-cyan-700 dark:text-cyan-200 shadow-sm text-sm font-bold">1</div>
+                            <p class="mt-3 text-sm font-semibold text-slate-900 dark:text-white">{{ $locale === 'hi' ? 'सांस' : 'Breathe' }}</p>
                         </div>
-                        <div class="rounded-2xl border border-cyan-100 dark:border-cyan-900/40 bg-cyan-50/80 dark:bg-cyan-950/20 px-3 py-3 text-center">
-                            <div class="mx-auto flex h-8 w-8 items-center justify-center rounded-xl bg-white dark:bg-slate-900 text-cyan-700 dark:text-cyan-300 shadow-sm text-sm font-bold">2</div>
-                            <p class="mt-2 text-sm font-semibold text-slate-900 dark:text-white">{{ $locale === 'hi' ? 'रुकें' : 'Pause' }}</p>
+                        <div class="rounded-2xl border border-indigo-100/90 dark:border-indigo-900/60 bg-white/80 dark:bg-slate-950/80 px-4 py-4 text-left">
+                            <div class="flex h-9 w-9 items-center justify-center rounded-xl bg-indigo-100 dark:bg-indigo-950/50 text-indigo-700 dark:text-indigo-200 shadow-sm text-sm font-bold">2</div>
+                            <p class="mt-3 text-sm font-semibold text-slate-900 dark:text-white">{{ $locale === 'hi' ? 'रुकें' : 'Pause' }}</p>
                         </div>
-                        <div class="rounded-2xl border border-cyan-100 dark:border-cyan-900/40 bg-cyan-50/80 dark:bg-cyan-950/20 px-3 py-3 text-center">
-                            <div class="mx-auto flex h-8 w-8 items-center justify-center rounded-xl bg-white dark:bg-slate-900 text-cyan-700 dark:text-cyan-300 shadow-sm text-sm font-bold">3</div>
-                            <p class="mt-2 text-sm font-semibold text-slate-900 dark:text-white">{{ $locale === 'hi' ? 'रीसेट' : 'Reset' }}</p>
+                        <div class="rounded-2xl border border-emerald-100/90 dark:border-emerald-900/60 bg-white/80 dark:bg-slate-950/80 px-4 py-4 text-left">
+                            <div class="flex h-9 w-9 items-center justify-center rounded-xl bg-emerald-100 dark:bg-emerald-950/50 text-emerald-700 dark:text-emerald-200 shadow-sm text-sm font-bold">3</div>
+                            <p class="mt-3 text-sm font-semibold text-slate-900 dark:text-white">{{ $locale === 'hi' ? 'रीसेट' : 'Reset' }}</p>
                         </div>
                     </div>
-                    <div class="mt-4 flex flex-wrap gap-2.5">
-                        <span class="inline-flex items-center rounded-full border border-cyan-100 dark:border-cyan-900/40 bg-white/80 dark:bg-slate-900/70 px-3 py-2 text-xs font-bold text-slate-700 dark:text-slate-200">{{ $locale === 'hi' ? 'कम दबाव' : 'Low pressure' }}</span>
-                        <span class="inline-flex items-center rounded-full border border-cyan-100 dark:border-cyan-900/40 bg-white/80 dark:bg-slate-900/70 px-3 py-2 text-xs font-bold text-slate-700 dark:text-slate-200">{{ $locale === 'hi' ? 'छोटे कदम' : 'Short steps' }}</span>
-                        <span class="inline-flex items-center rounded-full border border-cyan-100 dark:border-cyan-900/40 bg-white/80 dark:bg-slate-900/70 px-3 py-2 text-xs font-bold text-slate-700 dark:text-slate-200">{{ $locale === 'hi' ? 'मोबाइल फ्रेंडली' : 'Mobile friendly' }}</span>
+                    <div class="mt-5 flex flex-wrap gap-2.5">
+                        <span class="inline-flex items-center rounded-full border border-cyan-100 dark:border-cyan-900/50 bg-white/80 dark:bg-slate-950/70 px-3 py-2 text-xs font-bold text-slate-700 dark:text-slate-200">{{ $locale === 'hi' ? 'कम दबाव' : 'Low pressure' }}</span>
+                        <span class="inline-flex items-center rounded-full border border-indigo-100 dark:border-indigo-900/50 bg-white/80 dark:bg-slate-950/70 px-3 py-2 text-xs font-bold text-slate-700 dark:text-slate-200">{{ $locale === 'hi' ? 'छोटे कदम' : 'Short steps' }}</span>
+                        <span class="inline-flex items-center rounded-full border border-emerald-100 dark:border-emerald-900/50 bg-white/80 dark:bg-slate-950/70 px-3 py-2 text-xs font-bold text-slate-700 dark:text-slate-200">{{ $locale === 'hi' ? 'मोबाइल फ्रेंडली' : 'Mobile friendly' }}</span>
                     </div>
                 </div>
 
@@ -556,13 +607,13 @@ $locale === 'hi'
                             'icon' => 'zap',
                         ],
                     ] as $item)
-                        <a href="{{ $item['url'] }}" class="flex h-full flex-col rounded-[1.75rem] border border-slate-200/80 dark:border-slate-800 bg-white/92 dark:bg-slate-900/92 shadow-sm p-4 sm:p-5 hover:-translate-y-1 transition">
+                        <a href="{{ $item['url'] }}" class="wellness-option-card flex h-full flex-col rounded-[1.75rem] border border-slate-200/80 dark:border-slate-800/90 shadow-sm p-4 sm:p-5 transition-all duration-300 hover:-translate-y-1 hover:border-cyan-200 dark:hover:border-cyan-800/70 hover:shadow-[0_18px_40px_rgba(14,165,233,0.10)] dark:hover:shadow-none">
                             <div class="flex h-11 w-11 items-center justify-center rounded-2xl bg-{{ $item['tone'] }}-100 dark:bg-{{ $item['tone'] }}-950/40 text-{{ $item['tone'] }}-700 dark:text-{{ $item['tone'] }}-200 mb-4">
                                 <i data-lucide="{{ $item['icon'] }}" class="w-5 h-5"></i>
                             </div>
                             <h3 class="text-base sm:text-lg font-bold text-slate-900 dark:text-white mb-2">{{ $item['title'] }}</h3>
                             <p class="text-sm text-slate-600 dark:text-slate-300 leading-6 sm:leading-7">{{ $item['description'] }}</p>
-                            <span class="mt-4 inline-flex text-sm font-bold text-cyan-700 dark:text-cyan-300">{{ $locale === 'hi' ? 'खोलें' : 'Open' }}</span>
+                            <span class="mt-4 inline-flex items-center rounded-2xl border border-slate-200/80 dark:border-slate-800 bg-white/75 dark:bg-slate-950/70 px-4 py-3 text-sm font-bold text-cyan-700 dark:text-cyan-300">{{ $locale === 'hi' ? 'खोलें' : 'Open' }}</span>
                         </a>
                     @endforeach
                 </div>
@@ -892,12 +943,6 @@ $locale === 'hi'
                         </div>
                     </div>
 
-                    @if (session('consultation_request_success'))
-                        <div class="mt-4 rounded-2xl border border-emerald-200 bg-emerald-50 px-4 py-3 text-sm font-semibold text-emerald-800 dark:border-emerald-900/60 dark:bg-emerald-950/30 dark:text-emerald-200">
-                            {{ session('consultation_request_success') }}
-                        </div>
-                    @endif
-
                     <form action="{{ route('consultation-requests.submit') }}" method="POST" class="mt-5 grid gap-4 sm:gap-5">
                         @csrf
                         <div class="grid gap-4 sm:grid-cols-2">
@@ -1072,6 +1117,49 @@ $locale === 'hi'
         </div>
         @endif
 
+        <div class="pt-12 border-t border-slate-200/80 dark:border-slate-800">
+            <div class="rounded-[2rem] border border-teal-100/80 bg-gradient-to-br from-teal-50 via-white to-cyan-50 p-7 shadow-sm dark:border-teal-900/60 dark:from-slate-900 dark:via-slate-900 dark:to-cyan-950/30">
+                <div class="grid gap-6 lg:grid-cols-[1.1fr_0.9fr] lg:items-center">
+                    <div>
+                        <span class="inline-flex items-center gap-2 rounded-full border border-teal-200 bg-white px-3 py-1 text-[11px] font-bold uppercase tracking-[0.2em] text-teal-700 dark:border-teal-900/60 dark:bg-slate-900 dark:text-teal-300">
+                            <i data-lucide="heart-handshake" class="h-4 w-4"></i>
+                            {{ $locale === 'hi' ? 'सामुदायिक योगदान' : 'Community Contribution' }}
+                        </span>
+                        <h2 class="mt-4 text-2xl font-extrabold tracking-tight text-slate-900 dark:text-white sm:text-3xl">
+                            {{ $locale === 'hi' ? 'क्या आप किसी डॉक्टर या अस्पताल का सुझाव देना चाहते हैं?' : 'Want to suggest a doctor or hospital?' }}
+                        </h2>
+                        <p class="mt-3 max-w-2xl text-sm leading-7 text-slate-600 dark:text-slate-300 sm:text-base">
+                            {{ $locale === 'hi' ? 'यदि कोई सूची छूटी हुई है या किसी जानकारी में सुधार चाहिए, तो हमारे सुझाव फॉर्म के माध्यम से डॉक्टर या अस्पताल की जानकारी साझा करें।' : 'If a listing is missing or some information needs correction, share doctor or hospital details through our suggestion form.' }}
+                        </p>
+                    </div>
+                    <div class="grid gap-3 sm:grid-cols-2">
+                        <a href="{{ route('suggestions.create', ['type' => 'doctor']) }}" class="group rounded-3xl border border-white/80 bg-white/90 p-5 shadow-lg transition-all duration-300 hover:-translate-y-1 hover:border-teal-200 dark:border-slate-800 dark:bg-slate-950/80 dark:hover:border-teal-800/60">
+                            <div class="flex h-11 w-11 items-center justify-center rounded-2xl bg-teal-100 text-teal-700 shadow-sm dark:bg-teal-900/40 dark:text-teal-200">
+                                <i data-lucide="stethoscope" class="h-5 w-5"></i>
+                            </div>
+                            <h3 class="mt-4 text-base font-bold text-slate-900 dark:text-white">{{ $locale === 'hi' ? 'डॉक्टर सुझाएं' : 'Suggest Doctor' }}</h3>
+                            <p class="mt-2 text-sm leading-6 text-slate-600 dark:text-slate-300">{{ $locale === 'hi' ? 'किसी डॉक्टर की सही जानकारी जोड़ने के लिए सीधे फॉर्म पर जाएं।' : 'Go straight to the form to add a doctor listing.' }}</p>
+                            <span class="mt-4 inline-flex items-center gap-2 text-sm font-bold text-teal-700 dark:text-teal-300">
+                                {{ $locale === 'hi' ? 'फॉर्म खोलें' : 'Open Form' }}
+                                <i data-lucide="arrow-right" class="h-4 w-4 transition-transform duration-300 group-hover:translate-x-1"></i>
+                            </span>
+                        </a>
+                        <a href="{{ route('suggestions.create', ['type' => 'hospital']) }}" class="group rounded-3xl border border-white/80 bg-white/90 p-5 shadow-lg transition-all duration-300 hover:-translate-y-1 hover:border-cyan-200 dark:border-slate-800 dark:bg-slate-950/80 dark:hover:border-cyan-800/60">
+                            <div class="flex h-11 w-11 items-center justify-center rounded-2xl bg-cyan-100 text-cyan-700 shadow-sm dark:bg-cyan-900/40 dark:text-cyan-200">
+                                <i data-lucide="building-2" class="h-5 w-5"></i>
+                            </div>
+                            <h3 class="mt-4 text-base font-bold text-slate-900 dark:text-white">{{ $locale === 'hi' ? 'अस्पताल सुझाएं' : 'Suggest Hospital' }}</h3>
+                            <p class="mt-2 text-sm leading-6 text-slate-600 dark:text-slate-300">{{ $locale === 'hi' ? 'किसी अस्पताल या क्लिनिक की जानकारी साझा करने के लिए फॉर्म पर जाएं।' : 'Jump to the form to share a hospital or clinic listing.' }}</p>
+                            <span class="mt-4 inline-flex items-center gap-2 text-sm font-bold text-cyan-700 dark:text-cyan-300">
+                                {{ $locale === 'hi' ? 'फॉर्म खोलें' : 'Open Form' }}
+                                <i data-lucide="arrow-right" class="h-4 w-4 transition-transform duration-300 group-hover:translate-x-1"></i>
+                            </span>
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+
         <!-- User Feedback Form Section -->
         <div class="pt-12 border-t border-slate-200/80 dark:border-slate-800">
             <div
@@ -1204,9 +1292,20 @@ $locale === 'hi'
         handleOmniSearch('');
     }
 
+    function updateSymptomSelection(value) {
+        const normalizedValue = (value || '').trim().toLowerCase();
+        document.querySelectorAll('[data-symptom-button]').forEach((button) => {
+            const label = (button.dataset.symptomName || '').trim().toLowerCase();
+            const isActive = normalizedValue !== '' && label === normalizedValue;
+            button.classList.toggle('is-active', isActive);
+            button.setAttribute('aria-pressed', isActive ? 'true' : 'false');
+        });
+    }
+
     function handleOmniSearch(val) {
         const input = document.getElementById('omni-search-input');
         if (input.value !== val) input.value = val;
+        updateSymptomSelection(val);
 
         const clearBtn = document.getElementById('clear-search-btn');
         if (val.trim()) {
@@ -1243,6 +1342,7 @@ $locale === 'hi'
     function selectSymptom(name) {
         const input = document.getElementById('omni-search-input');
         input.value = name;
+        updateSymptomSelection(name);
         handleOmniSearch(name);
         const resultsView = document.getElementById('search-results-view');
         if (resultsView) {
@@ -1594,6 +1694,7 @@ $locale === 'hi'
     }
 
     const feedbackForm = document.querySelector('form[action="{{ route('feedback.submit') }}"]');
+    updateSymptomSelection(document.getElementById('omni-search-input')?.value || '');
     if (feedbackForm) {
         feedbackForm.addEventListener('submit', function(e) {
             const ratingValue = Number(document.getElementById('feedback-rating-input')?.value || 0);

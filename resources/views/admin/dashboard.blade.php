@@ -87,6 +87,38 @@
                 </div>
             </div>
         </div>
+
+        <div class="col-12 col-sm-6 col-xl-3">
+            <a href="{{ route('admin.submissions') }}" class="text-decoration-none">
+                <div class="card h-100 border-0 shadow-sm">
+                    <div class="card-body p-4 d-flex align-items-center justify-content-between">
+                        <div>
+                            <div class="text-muted fw-semibold mb-1 text-uppercase fs-7">Pending Contributions</div>
+                            <div class="h2 mb-0 fw-bold text-dark">{{ number_format($stats['pending_submissions_count']) }}</div>
+                            <div class="text-success fs-7 mt-2"><i class="fa-solid fa-share-nodes me-1"></i> Community submissions</div>
+                        </div>
+                        <div class="p-3 bg-success bg-opacity-10 rounded-3 text-success fs-2">
+                            <i class="fa-solid fa-share-nodes"></i>
+                        </div>
+                    </div>
+                </div>
+            </a>
+        </div>
+
+        <div class="col-12 col-sm-6 col-xl-3">
+            <div class="card h-100 border-0 shadow-sm">
+                <div class="card-body p-4 d-flex align-items-center justify-content-between">
+                    <div>
+                        <div class="text-muted fw-semibold mb-1 text-uppercase fs-7">Failed Chatbot Queries</div>
+                        <div class="h2 mb-0 fw-bold text-dark">{{ number_format($stats['failed_queries_count']) }}</div>
+                        <div class="text-secondary fs-7 mt-2"><i class="fa-solid fa-triangle-exclamation me-1"></i> Needs review</div>
+                    </div>
+                    <div class="p-3 bg-secondary bg-opacity-10 rounded-3 text-secondary fs-2">
+                        <i class="fa-solid fa-triangle-exclamation"></i>
+                    </div>
+                </div>
+            </div>
+        </div>
     </div>
 
     <!-- Analytics Chart -->
@@ -133,6 +165,100 @@
                     </div>
                 </div>
             </a>
+        </div>
+    </div>
+
+    <div class="row g-4 mb-4">
+        <div class="col-12 col-xl-6">
+            <div class="card border-0 shadow-sm h-100">
+                <div class="card-header bg-white py-3 border-0 d-flex align-items-center justify-content-between">
+                    <div>
+                        <h5 class="mb-0 fw-bold text-dark"><i class="fa-solid fa-share-nodes me-2 text-success"></i>Recent Share Details</h5>
+                        <div class="text-muted small">Latest doctor and hospital contributions from users.</div>
+                    </div>
+                    <a href="{{ route('admin.submissions') }}" class="btn btn-sm btn-outline-secondary">View all</a>
+                </div>
+                <div class="card-body p-0">
+                    <div class="table-responsive">
+                        <table class="table table-hover align-middle mb-0">
+                            <thead class="table-light">
+                                <tr>
+                                    <th>Name</th>
+                                    <th>Type</th>
+                                    <th>City</th>
+                                    <th>Details</th>
+                                    <th>Status</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @forelse($recentSubmissions as $submission)
+                                    @php $details = $submission->details ?? []; @endphp
+                                    <tr>
+                                        <td>
+                                            <div class="fw-semibold text-dark">{{ $submission->name }}</div>
+                                            <div class="small text-muted">{{ optional($submission->created_at)->diffForHumans() }}</div>
+                                        </td>
+                                        <td class="text-capitalize">{{ $submission->type }}</td>
+                                        <td>{{ $submission->city }}</td>
+                                        <td class="small text-muted">
+                                            {{ \Illuminate\Support\Str::limit($details['address'] ?? ($details['specialization'] ?? $details['hospital_type'] ?? '-'), 60) }}
+                                        </td>
+                                        <td>
+                                            <span class="badge {{ $submission->status === 'approved' ? 'bg-success' : ($submission->status === 'rejected' ? 'bg-danger' : 'bg-warning text-dark') }}">
+                                                {{ ucfirst($submission->status) }}
+                                            </span>
+                                        </td>
+                                    </tr>
+                                @empty
+                                    <tr>
+                                        <td colspan="5" class="text-center text-muted py-4">No contributions submitted yet.</td>
+                                    </tr>
+                                @endforelse
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-12 col-xl-6">
+            <div class="card border-0 shadow-sm h-100">
+                <div class="card-header bg-white py-3 border-0">
+                    <h5 class="mb-0 fw-bold text-dark"><i class="fa-solid fa-robot me-2 text-secondary"></i>Recent Failed Queries</h5>
+                    <div class="text-muted small">Latest chatbot questions that could not be resolved.</div>
+                </div>
+                <div class="card-body p-0">
+                    <div class="table-responsive">
+                        <table class="table table-hover align-middle mb-0">
+                            <thead class="table-light">
+                                <tr>
+                                    <th>Query</th>
+                                    <th>City</th>
+                                    <th>Type</th>
+                                    <th>When</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @forelse($recentFailedQueries as $query)
+                                    <tr>
+                                        <td>
+                                            <div class="fw-semibold text-dark">{{ \Illuminate\Support\Str::limit($query->user_message ?: 'No query text captured', 70) }}</div>
+                                            <div class="small text-muted">{{ \Illuminate\Support\Str::limit($query->error_message ?: 'No error details provided.', 80) }}</div>
+                                        </td>
+                                        <td>{{ $query->city ?: '-' }}</td>
+                                        <td><span class="badge bg-light text-dark border">{{ $query->failure_type }}</span></td>
+                                        <td class="small text-muted">{{ optional($query->created_at)->diffForHumans() }}</td>
+                                    </tr>
+                                @empty
+                                    <tr>
+                                        <td colspan="4" class="text-center text-muted py-4">No failed queries recorded yet.</td>
+                                    </tr>
+                                @endforelse
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
         </div>
     </div>
 

@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Models\Article;
 use App\Models\BloodBank;
 use App\Models\CachedMedicalQuestion;
+use App\Models\ChatbotFailedQuery;
 use App\Models\Consultation;
 use App\Models\Department;
 use App\Models\DirectorySyncHistory;
@@ -19,6 +20,7 @@ use App\Models\MedicineReport;
 use App\Models\Quiz;
 use App\Models\Symptom;
 use App\Models\SymptomTestSubmission;
+use App\Models\UserSubmission;
 use App\Services\DirectorySyncService;
 use App\Services\ScraperService;
 use Illuminate\Http\Request;
@@ -40,6 +42,8 @@ class AdminDashboardController extends Controller
             'faqs_count' => Faq::count(),
             'general_qa_count' => GeneralQuestion::count(),
             'cached_medical_questions_count' => CachedMedicalQuestion::count(),
+            'pending_submissions_count' => UserSubmission::where('status', 'pending')->count(),
+            'failed_queries_count' => ChatbotFailedQuery::count(),
         ];
 
         $departments = Department::withCount('doctors')->get();
@@ -54,7 +58,24 @@ class AdminDashboardController extends Controller
             ->limit(10)
             ->get();
 
-        return view('admin.dashboard', compact('stats', 'chartData', 'supportedCities', 'syncHistory'));
+        $recentSubmissions = UserSubmission::query()
+            ->latest()
+            ->limit(6)
+            ->get();
+
+        $recentFailedQueries = ChatbotFailedQuery::query()
+            ->latest()
+            ->limit(8)
+            ->get();
+
+        return view('admin.dashboard', compact(
+            'stats',
+            'chartData',
+            'supportedCities',
+            'syncHistory',
+            'recentSubmissions',
+            'recentFailedQueries'
+        ));
     }
 
     public function symptomTestReports(Request $request)
@@ -2302,5 +2323,155 @@ class AdminDashboardController extends Controller
     {
         $cachedMedicalQuestion->delete();
         return back()->with('success', 'Cached medical question deleted successfully.');
+    }
+
+    public function submissions(Request $request)
+    {
+        $query = UserSubmission::query();
+        if ($request->filled('type')) {
+            $query->where('type', $request->type);
+        }
+        if ($request->filled('status')) {
+            $query->where('status', $request->status);
+        }
+        $submissions = $query->latest()->paginate(15);
+        return view('admin.submissions.index', compact('submissions'));
+    }
+
+    public function rejectSubmission(UserSubmission $submission)
+    {
+        $submission->update(['status' => 'rejected']);
+        return back()->with('success', 'Submission has been marked as rejected.');
+    }
+
+    public function exportSubmissions()
+    {
+        $submissions = UserSubmission::all();
+        $headers = [
+            'Content-type' => 'text/csv',
+            'Content-Disposition' => 'attachment; filename=user_submissions_export.csv',
+            'Pragma' => 'no-cache',
+            'Cache-Control' => 'must-revalidate, post-check=0, pre-check=0',
+            'Expires' => '0',
+        ];
+
+        $callback = function () use ($submissions) {
+            $file = fopen('php://output', 'w');
+            fputcsv($file, [
+                'id',
+                'type',
+                'name',
+                'phone',
+                'city',
+                'status',
+                'address',
+                'registration_number',
+                'specialization',
+                'hospital_type',
+                'accepts_ayushman',
+                'accepts_janaadhaar',
+                'created_at',
+            ]);
+
+            foreach ($submissions as $sub) {
+                $details = $sub->details ?? [];
+                fputcsv($file, [
+                    $sub->id,
+                    $sub->type,
+                    $sub->name,
+                    $sub->phone,
+                    $sub->city,
+                    $sub->status,
+                    $details['address'] ?? '',
+                    $details['registration_number'] ?? '',
+                    $details['specialization'] ?? '',
+                    $details['hospital_type'] ?? '',
+                    isset($details['accepts_ayushman']) ? ($details['accepts_ayushman'] ? 1 : 0) : '',
+                    isset($details['accepts_janaadhaar']) ? ($details['accepts_janaadhaar'] ? 1 : 0) : '',
+                    $sub->created_at->toDateTimeString(),
+                ]);
+            }
+            fclose($file);
+        };
+
+        return response()->stream($callback, 200, $headers);
+    }
+
+    public function importSubmission(UserSubmission $submission)
+    {
+        if ($submission->type === 'doctor') {
+            $details = $submission->details ?? [];
+            $names = explode(' ', trim($submission->name), 2);
+            $firstName = $names[0];
+            $lastName = $names[1] ?? '';
+
+            $doctor = null;
+            if (!empty($details['registration_number'])) {
+                $doctor = Doctor::where('registration_number', $details['registration_number'])->first();
+            }
+
+            $spec = $details['specialization'] ?? 'General Medicine';
+            $dept = Department::where('name_en', 'like', "%{$spec}%")->first();
+            if (!$dept) {
+                $dept = Department::create([
+                    'name_en' => $spec,
+                    'name_hi' => $spec,
+                    'description_en' => 'Imported via user submission',
+                    'description_hi' => 'उपयोगकर्ता सुझाव द्वारा आयातित',
+                    'is_active' => true,
+                ]);
+            }
+
+            $doctorData = [
+                'first_name' => $firstName,
+                'last_name' => $lastName,
+                'registration_number' => $details['registration_number'] ?? null,
+                'department_id' => $dept->id,
+                'phone_1' => $submission->phone,
+                'city' => $submission->city ?? 'Jaipur',
+                'state' => 'Rajasthan',
+                'address_line1' => $details['address'] ?? null,
+                'is_verified' => true,
+                'education_degrees' => ScraperService::getRealDegreesForDepartment($spec),
+                'languages_spoken' => ['Hindi', 'English'],
+                'experience_years' => 5,
+                'consultation_fee' => 500,
+            ];
+
+            if ($doctor) {
+                $doctor->update($doctorData);
+            } else {
+                $doctor = Doctor::create($doctorData);
+            }
+            $doctor->departments()->syncWithoutDetaching([$dept->id]);
+        } elseif ($submission->type === 'hospital') {
+            $details = $submission->details ?? [];
+            $hospital = Hospital::where('name_en', $submission->name)->first();
+
+            $hospitalData = [
+                'name_en' => $submission->name,
+                'name_hi' => $submission->name,
+                'type' => $details['hospital_type'] ?? 'General',
+                'phone_1' => $submission->phone,
+                'city' => $submission->city ?? 'Jaipur',
+                'state' => 'Rajasthan',
+                'address_line1' => $details['address'] ?? null,
+                'is_verified' => true,
+                'accepts_ayushman_card' => !empty($details['accepts_ayushman']),
+                'accepts_jan_aadhaar' => !empty($details['accepts_janaadhaar']),
+                'accepts_ayushman' => !empty($details['accepts_ayushman']),
+                'accepts_janaadhaar' => !empty($details['accepts_janaadhaar']),
+            ];
+
+            if ($hospital) {
+                $hospital->update($hospitalData);
+            } else {
+                $hospital = Hospital::create($hospitalData);
+            }
+        }
+
+        $submission->update(['status' => 'approved']);
+
+        return back()->with('success', 'Submission has been successfully verified, imported, and marked as approved.');
     }
 }

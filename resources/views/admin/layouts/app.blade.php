@@ -300,6 +300,9 @@
         <a href="{{ route('admin.consultations') }}" class="nav-link {{ request()->routeIs('admin.consultations*') ? 'active' : '' }}">
             <i class="fa-solid fa-video"></i> Video Consultations
         </a>
+        <a href="{{ route('admin.submissions') }}" class="nav-link {{ request()->routeIs('admin.submissions*') ? 'active' : '' }}">
+            <i class="fa-solid fa-hand-holding-heart"></i> User Suggestions
+        </a>
 
         <div class="nav-group-title">Taxonomy & AI Matching</div>
         <a href="{{ route('admin.departments') }}" class="nav-link {{ request()->routeIs('admin.departments') ? 'active' : '' }}">

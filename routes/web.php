@@ -9,6 +9,7 @@ use App\Http\Controllers\BloodBankController;
 use App\Http\Controllers\Api\ChatbotController;
 use App\Http\Controllers\ConsultationController;
 use App\Http\Controllers\DoctorController;
+use App\Http\Controllers\SuggestionController;
 use App\Http\Controllers\HospitalController;
 use App\Http\Controllers\LegalController;
 use App\Http\Controllers\MedicineController;
@@ -153,6 +154,12 @@ Route::prefix('admin')->middleware('web')->group(function () {
         Route::post('/consultations/{uuid}/accept', [AdminDashboardController::class, 'acceptConsultation'])->name('admin.consultations.accept');
         Route::post('/consultations/{uuid}/reject', [AdminDashboardController::class, 'rejectConsultation'])->name('admin.consultations.reject');
         Route::get('/consultations/{uuid}', [AdminDashboardController::class, 'joinConsultation'])->name('admin.consultations.join');
+
+        // User Suggestions / Submissions
+        Route::get('/submissions', [AdminDashboardController::class, 'submissions'])->name('admin.submissions');
+        Route::get('/submissions/export', [AdminDashboardController::class, 'exportSubmissions'])->name('admin.submissions.export');
+        Route::post('/submissions/{submission}/import', [AdminDashboardController::class, 'importSubmission'])->name('admin.submissions.import');
+        Route::post('/submissions/{submission}/reject', [AdminDashboardController::class, 'rejectSubmission'])->name('admin.submissions.reject');
     });
 });
 
@@ -181,6 +188,11 @@ Route::get('/quizzes', [QuizController::class, 'index'])->name('quizzes.index');
 Route::get('/quizzes/{quiz:slug}', [QuizController::class, 'show'])->name('quizzes.show');
 Route::post('/quizzes/{quiz:slug}/result', [QuizController::class, 'result'])->name('quizzes.result');
 Route::post('/switch-locale', [SearchController::class, 'switchLocale'])->name('switch.locale');
+
+// User suggestions routes
+Route::get('/suggest', [SuggestionController::class, 'create'])->name('suggestions.create');
+Route::post('/suggest', [SuggestionController::class, 'store'])->name('suggestions.store');
+
 Route::get('/consultations', [ConsultationController::class, 'index'])->name('consultations.index');
 Route::post('/consultations', [ConsultationController::class, 'store'])->name('consultations.store');
 Route::get('/consultations/{uuid}', [ConsultationController::class, 'room'])->name('consultations.room');

@@ -424,6 +424,28 @@
         </div>
     </div>
     <div id="site-toast-stack" class="site-toast-stack" aria-live="polite" aria-atomic="true"></div>
+    <div id="site-popup-overlay" class="hidden fixed inset-0 z-[110] bg-slate-950/70 backdrop-blur-[4px]"></div>
+    <div id="site-popup-modal" class="hidden fixed inset-0 z-[111] flex items-center justify-center p-4 sm:p-6" aria-hidden="true">
+        <div class="w-full max-w-md overflow-hidden rounded-[2rem] border border-slate-200/80 bg-white shadow-2xl dark:border-slate-700 dark:bg-slate-900">
+            <div class="relative px-6 pt-6 pb-4 sm:px-7">
+                <button type="button" id="site-popup-close" aria-label="Close popup"
+                    class="absolute right-4 top-4 inline-flex h-9 w-9 items-center justify-center rounded-full border border-slate-200 bg-white text-slate-500 transition hover:border-slate-300 hover:text-slate-800 dark:border-slate-700 dark:bg-slate-800 dark:text-slate-300 dark:hover:text-white">
+                    x
+                </button>
+                <div id="site-popup-icon-shell" class="inline-flex h-14 w-14 items-center justify-center rounded-2xl bg-emerald-50 text-emerald-600 dark:bg-emerald-950/40 dark:text-emerald-300">
+                    <i id="site-popup-icon" data-lucide="check-circle-2" class="h-7 w-7"></i>
+                </div>
+                <h3 id="site-popup-title" class="mt-4 text-2xl font-extrabold tracking-tight text-slate-900 dark:text-white">Success</h3>
+                <p id="site-popup-message" class="mt-2 text-sm leading-7 text-slate-600 dark:text-slate-300"></p>
+                <div class="mt-6 flex gap-3">
+                    <button type="button" id="site-popup-action"
+                        class="inline-flex w-full items-center justify-center rounded-2xl bg-gradient-to-r from-teal-500 to-cyan-600 px-5 py-3 text-sm font-bold text-white shadow-lg shadow-cyan-900/15 transition hover:-translate-y-0.5">
+                        Continue
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
     @php
         $locale = session('locale', app()->getLocale());
         $chatbotCities = collect([$activeCity]);
@@ -1330,6 +1352,82 @@
             }
         }
 
+        function closeSitePopup() {
+            document.getElementById('site-popup-overlay')?.classList.add('hidden');
+            document.getElementById('site-popup-modal')?.classList.add('hidden');
+            document.getElementById('site-popup-modal')?.setAttribute('aria-hidden', 'true');
+            const hasBlockingModalOpen =
+                !document.getElementById('lead-capture-modal')?.classList.contains('hidden') ||
+                !document.getElementById('listing-report-modal')?.classList.contains('hidden');
+
+            if (!hasBlockingModalOpen) {
+                document.body.classList.remove('overflow-hidden');
+            }
+        }
+
+        function showSitePopup({
+            title = 'Success',
+            message = '',
+            type = 'success',
+            buttonLabel = 'Continue',
+        } = {}) {
+            if (!message) return;
+
+            const overlay = document.getElementById('site-popup-overlay');
+            const modal = document.getElementById('site-popup-modal');
+            const titleEl = document.getElementById('site-popup-title');
+            const messageEl = document.getElementById('site-popup-message');
+            const actionEl = document.getElementById('site-popup-action');
+            const iconEl = document.getElementById('site-popup-icon');
+            const iconShell = document.getElementById('site-popup-icon-shell');
+
+            if (!overlay || !modal || !titleEl || !messageEl || !actionEl || !iconEl || !iconShell) return;
+
+            titleEl.textContent = title;
+            messageEl.textContent = message;
+            actionEl.textContent = buttonLabel;
+
+            const iconByType = {
+                success: 'check-circle-2',
+                warning: 'alert-triangle',
+                error: 'x-circle',
+                info: 'info',
+            };
+
+            const shellByType = {
+                success: 'bg-emerald-50 text-emerald-600 dark:bg-emerald-950/40 dark:text-emerald-300',
+                warning: 'bg-amber-50 text-amber-600 dark:bg-amber-950/40 dark:text-amber-300',
+                error: 'bg-rose-50 text-rose-600 dark:bg-rose-950/40 dark:text-rose-300',
+                info: 'bg-sky-50 text-sky-600 dark:bg-sky-950/40 dark:text-sky-300',
+            };
+
+            iconEl.setAttribute('data-lucide', iconByType[type] || iconByType.success);
+            iconShell.className = `inline-flex h-14 w-14 items-center justify-center rounded-2xl ${shellByType[type] || shellByType.success}`;
+
+            overlay.classList.remove('hidden');
+            modal.classList.remove('hidden');
+            modal.setAttribute('aria-hidden', 'false');
+            document.body.classList.add('overflow-hidden');
+            window.refreshLucideIcons?.();
+        }
+
+        document.addEventListener('DOMContentLoaded', function() {
+            document.getElementById('site-popup-overlay')?.addEventListener('click', closeSitePopup);
+            document.getElementById('site-popup-close')?.addEventListener('click', closeSitePopup);
+            document.getElementById('site-popup-action')?.addEventListener('click', closeSitePopup);
+
+            document.addEventListener('keydown', function(event) {
+                if (event.key === 'Escape') {
+                    closeSitePopup();
+                }
+            });
+
+            const flashedSitePopup = @json(session('site_popup'));
+            if (flashedSitePopup && flashedSitePopup.message) {
+                showSitePopup(flashedSitePopup);
+            }
+        });
+
         function confirmSiteAction(message) {
             return window.confirm(message);
         }
@@ -1659,6 +1757,11 @@
             if (!res.ok) return;
             const data = await res.json();
             applyVoteCountsFromResponse(String(entityType), Number(entityId), data?.counts || null);
+            showSitePopup({
+                title: data?.popup_title || 'Thanks for your confirmation',
+                message: data?.message || 'Vote submitted.',
+                type: 'success',
+            });
         } catch (err) {
             // Keep UI silent for vote failure to avoid interrupting browsing flow.
         }
@@ -2884,6 +2987,11 @@
                 const data = await res.json();
 
                 localStorage.setItem(LEAD_CAPTURE_DONE_KEY, '1');
+                showSitePopup({
+                    title: 'Thanks for your contribution',
+                    message: data?.message || 'Thanks! Your details were saved successfully.',
+                    type: 'success',
+                });
                 if (msgEl) {
                     msgEl.classList.remove('hidden');
                     msgEl.classList.remove('text-rose-600');
@@ -2932,6 +3040,11 @@
                 if (!res.ok) throw new Error('Unable to submit');
                 const data = await res.json();
                 applyVoteCountsFromResponse(payload.entity_type, payload.entity_id, data?.counts || null);
+                showSitePopup({
+                    title: data?.popup_title || 'Thanks for your contribution',
+                    message: data?.message || 'Thank you! Your report has been submitted.',
+                    type: 'success',
+                });
                 if (msgEl) {
                     msgEl.classList.remove('hidden', 'text-rose-600');
                     msgEl.classList.add('text-emerald-600');

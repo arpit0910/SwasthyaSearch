@@ -43,10 +43,6 @@
             <h2 class="text-2xl sm:text-3xl font-extrabold text-slate-900 tracking-tight mb-2">Send a Message</h2>
             <p class="text-slate-500 text-sm mb-6">We usually respond within 1 business day.</p>
 
-            @if (session('success'))
-                <div class="mb-6 bg-teal-50 border border-teal-200 text-teal-800 p-4 rounded-xl text-sm">{{ session('success') }}</div>
-            @endif
-
             <form action="{{ route('contact.submit') }}" method="POST" class="space-y-5">
                 @csrf
                 <div class="grid grid-cols-1 sm:grid-cols-2 gap-5">
