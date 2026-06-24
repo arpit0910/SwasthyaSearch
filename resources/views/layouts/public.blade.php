@@ -2561,51 +2561,31 @@
                                         `;
                                 }
                                 if (!loaded.hospitals) {
-                                    optionsHtml += ` <
-                button type = "button"
-            onclick = "loadChatbotResource('hospitals')"
-            class =
-            "inline-flex items-center gap-1.5 text-[11px] font-bold text-cyan-700 hover:text-indigo-900 border border-indigo-200 hover:border-indigo-300 bg-white dark:bg-slate-900 dark:border-slate-800 dark:text-indigo-400 dark:hover:bg-slate-800/80 hover:bg-cyan-50 rounded-lg px-2.5 py-1.5 transition-all" >
-            <
-            i data - lucide = "building-2"
-            class = "w-3.5 h-3.5 text-indigo-500 shrink-0" > < /i> <
-            span > $ {
-                    chatbotLocale === 'hi' ? 'अस्पताल व क्लीनिक' : 'Hospitals & Clinics'
-                } < /span> <
-                /button>
-            `;
+                                    optionsHtml += `
+                                            <button type="button" onclick="loadChatbotResource('hospitals')" class="inline-flex items-center gap-1.5 text-[11px] font-bold text-cyan-700 hover:text-indigo-900 border border-indigo-200 hover:border-indigo-300 bg-white dark:bg-slate-900 dark:border-slate-800 dark:text-indigo-400 dark:hover:bg-slate-800/80 hover:bg-cyan-50 rounded-lg px-2.5 py-1.5 transition-all">
+                                                <i data-lucide="building-2" class="w-3.5 h-3.5 text-indigo-500 shrink-0"></i>
+                                                <span>${chatbotLocale === 'hi' ? 'अस्पताल व क्लीनिक' : 'Hospitals & Clinics'}</span>
+                                            </button>
+                                        `;
                                 }
                                 if (!loaded.articles) {
-                                    optionsHtml += ` <
-            button type = "button"
-            onclick = "loadChatbotResource('articles')"
-            class =
-            "inline-flex items-center gap-1.5 text-[11px] font-bold text-amber-700 hover:text-amber-900 border border-amber-200 hover:border-amber-300 bg-white dark:bg-slate-900 dark:border-slate-800 dark:text-amber-400 dark:hover:bg-slate-800/80 hover:bg-amber-50 rounded-lg px-2.5 py-1.5 transition-all" >
-            <
-            i data - lucide = "book-open"
-            class = "w-3.5 h-3.5 text-amber-500 shrink-0" > < /i> <
-            span > $ {
-                    chatbotLocale === 'hi' ? 'स्वास्थ्य लेख' : 'Health Articles'
-                } < /span> <
-                /button>
-            `;
+                                    optionsHtml += `
+                                            <button type="button" onclick="loadChatbotResource('articles')" class="inline-flex items-center gap-1.5 text-[11px] font-bold text-amber-700 hover:text-amber-900 border border-amber-200 hover:border-amber-300 bg-white dark:bg-slate-900 dark:border-slate-800 dark:text-amber-400 dark:hover:bg-slate-800/80 hover:bg-amber-50 rounded-lg px-2.5 py-1.5 transition-all">
+                                                <i data-lucide="book-open" class="w-3.5 h-3.5 text-amber-500 shrink-0"></i>
+                                                <span>${chatbotLocale === 'hi' ? 'स्वास्थ्य लेख' : 'Health Articles'}</span>
+                                            </button>
+                                        `;
                                 }
 
                                 if (optionsHtml !== '') {
-                                    return ` <
-            div class = "pt-2 flex flex-wrap gap-2 items-center" >
-            <
-            span class =
-            "text-[10px] font-bold text-slate-400 dark:text-slate-500 uppercase tracking-wider block w-full mb-1" >
-            $ {
-                chatbotLocale === 'hi' ? 'संबंधित विकल्प लोड करें:' : 'Load related options:'
-            } <
-            /span>
-            $ {
-                optionsHtml
-            } <
-            /div>
-            `;
+                                    return `
+                                            <div class="pt-2 flex flex-wrap gap-2 items-center">
+                                                <span class="text-[10px] font-bold text-slate-400 dark:text-slate-500 uppercase tracking-wider block w-full mb-1">
+                                                    ${chatbotLocale === 'hi' ? 'संबंधित विकल्प लोड करें:' : 'Load related options:'}
+                                                </span>
+                                                ${optionsHtml}
+                                            </div>
+                                        `;
                                 }
                                 return '';
                             })() : ''}

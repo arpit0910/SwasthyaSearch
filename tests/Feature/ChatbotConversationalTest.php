@@ -13,6 +13,14 @@ class ChatbotConversationalTest extends TestCase
 {
     use RefreshDatabase;
 
+    protected function setUp(): void
+    {
+        parent::setUp();
+
+        config()->set('variable.gemini_key', '');
+        config()->set('variable.groq_key', 'test-groq-key');
+    }
+
     public function test_chatbot_returns_live_conversational_response_using_mocked_groq(): void
     {
         Http::fake([
@@ -43,6 +51,88 @@ class ChatbotConversationalTest extends TestCase
             ->assertJsonPath('qa_answer.category', 'General Medicine')
             ->assertJsonPath('qa_answer.detailed_answer', 'Feel free to ask detailed medical questions.')
             ->assertJsonPath('symptom_match', false);
+    }
+
+    public function test_chatbot_prefers_gemini_when_available(): void
+    {
+        config()->set('variable.gemini_key', 'test-gemini-key');
+
+        Http::fake([
+            'generativelanguage.googleapis.com/*' => Http::response([
+                'steps' => [
+                    [
+                        'type' => 'model_output',
+                        'content' => [
+                            [
+                                'text' => json_encode([
+                                    'reply' => 'Gemini says this sounds like a mild viral illness.',
+                                    'detailed_reply' => 'Rest, hydration, and monitoring are usually appropriate first steps.',
+                                    'department' => 'General Medicine',
+                                    'symptom_match' => true,
+                                    'emergency' => false,
+                                ]),
+                            ],
+                        ],
+                    ],
+                ],
+            ], 200),
+            'api.groq.com/*' => Http::response([], 500),
+        ]);
+
+        $response = $this->postJson('/api/chatbot', [
+            'message' => 'I have fever since yesterday',
+            'locale' => 'en',
+        ]);
+
+        $response->assertOk()
+            ->assertJsonPath('reply', 'Gemini says this sounds like a mild viral illness.')
+            ->assertJsonPath('qa_answer.source', 'gemini_ai')
+            ->assertJsonPath('symptom_match', true);
+    }
+
+    public function test_chatbot_falls_back_to_groq_when_gemini_payload_is_invalid(): void
+    {
+        config()->set('variable.gemini_key', 'test-gemini-key');
+
+        Http::fake([
+            'generativelanguage.googleapis.com/*' => Http::response([
+                'steps' => [
+                    [
+                        'type' => 'model_output',
+                        'content' => [
+                            [
+                                'text' => 'This is not valid JSON',
+                            ],
+                        ],
+                    ],
+                ],
+            ], 200),
+            'api.groq.com/*' => Http::response([
+                'choices' => [
+                    [
+                        'message' => [
+                            'content' => "```json\n" . json_encode([
+                                'reply' => 'Groq fallback is working.',
+                                'detailed_reply' => 'Detailed fallback answer.',
+                                'department' => 'General Medicine',
+                                'symptom_match' => false,
+                                'emergency' => false,
+                            ]) . "\n```",
+                        ],
+                    ],
+                ],
+            ], 200),
+        ]);
+
+        $response = $this->postJson('/api/chatbot', [
+            'message' => 'Hello there',
+            'locale' => 'en',
+        ]);
+
+        $response->assertOk()
+            ->assertJsonPath('reply', 'Groq fallback is working.')
+            ->assertJsonPath('qa_answer.source', 'jeeva_ai')
+            ->assertJsonPath('qa_answer.detailed_answer', 'Detailed fallback answer.');
     }
 
     public function test_chatbot_symptom_match_routes_department_and_suggests_details(): void

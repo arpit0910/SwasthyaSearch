@@ -1,8 +1,7 @@
 <?php
 
-namespace App\Http\Controllers\Api;
+namespace App\Http\Controllers;
 
-use App\Http\Controllers\Controller;
 use App\Models\Article;
 use App\Models\BloodBank;
 use App\Models\CachedMedicalQuestion;
@@ -439,7 +438,9 @@ class ChatbotController extends Controller
             }
         }
 
-        $apiKey = config('variable.grok_key');
+        $geminiApiKey = (string) config('variable.gemini_key', '');
+        $geminiModel = (string) config('variable.gemini_model', 'gemini-3.5-flash');
+        $apiKey = (string) config('variable.groq_key', config('variable.grok_key', ''));
         $grokDepartment = null;
 
         $lowerMsg = mb_strtolower($userMessage);
@@ -476,9 +477,71 @@ class ChatbotController extends Controller
 
         $qaAnswer = null;
         $symptomMatch = false;
+        $botReply = '';
 
-        // Try Live LLM with RAG context
-        if ($apiKey && $originalMessage !== '') {
+        // Try Gemini first for the primary conversational response.
+        if ($geminiApiKey !== '' && $originalMessage !== '') {
+            $geminiPayload = $this->queryGemini(
+                apiKey: $geminiApiKey,
+                model: $geminiModel,
+                originalMessage: $originalMessage,
+                locale: $locale,
+                messages: $messages,
+            );
+
+            if ($geminiPayload !== null) {
+                $replyText = $this->normalizeAiText($geminiPayload['reply'] ?? null);
+                $detailedReply = $this->normalizeAiText($geminiPayload['detailed_reply'] ?? null);
+                $department = $this->normalizeAiText($geminiPayload['department'] ?? null, 'General Medical');
+
+                if ($replyText !== '') {
+                    try {
+                        CachedMedicalQuestion::updateOrCreate(
+                            ['question_en' => $locale === 'en' ? $originalMessage : $originalMessage],
+                            [
+                                'question_hi' => $originalMessage,
+                                'answer_en' => $locale === 'en' ? $replyText : '',
+                                'answer_hi' => $locale === 'hi' ? $replyText : '',
+                                'detailed_answer_en' => $locale === 'en' ? ($detailedReply !== '' ? $detailedReply : null) : null,
+                                'detailed_answer_hi' => $locale === 'hi' ? ($detailedReply !== '' ? $detailedReply : null) : null,
+                                'category' => $department !== '' ? $department : 'General Medical',
+                            ]
+                        );
+                    } catch (Throwable $cacheException) {
+                        logger()->warning('Unable to cache chatbot Gemini answer: ' . $cacheException->getMessage());
+                    }
+
+                    $qaAnswer = [
+                        'question' => $originalMessage,
+                        'answer' => $replyText,
+                        'category' => $department !== '' ? $department : 'General Medical',
+                        'source' => 'gemini_ai',
+                        'source_id' => null,
+                        'source_table' => null,
+                        'confidence' => 100.0,
+                        'detailed_answer_en' => $locale === 'en' ? ($detailedReply !== '' ? $detailedReply : null) : null,
+                        'detailed_answer_hi' => $locale === 'hi' ? ($detailedReply !== '' ? $detailedReply : null) : null,
+                        'detailed_answer' => $detailedReply !== '' ? $detailedReply : null,
+                    ];
+
+                    $botReply = $replyText;
+                    $symptomMatch = (bool) ($geminiPayload['symptom_match'] ?? false);
+                    $grokDepartment = $department !== '' ? $department : null;
+                    $isEmergency = (bool) ($geminiPayload['emergency'] ?? false);
+
+                    if ($isEmergency) {
+                        $qaAnswer['source'] = 'emergency_rule';
+                        $botReply = $locale === 'hi'
+                            ? 'यह एक आपातकालीन स्थिति हो सकती है। यदि आपको छाती में दर्द, सांस लेने में तकलीफ, या बेहोशी महसूस हो रही है, तो तुरंत आपातकालीन सेवाओं को कॉल करें और नजदीकी आपातकालीन कक्ष में जाएं।'
+                            : 'This may be an emergency. If you have chest pain, shortness of breath, or fainting, call emergency services immediately and go to the nearest emergency room.';
+                        $qaAnswer['answer'] = $botReply;
+                    }
+                }
+            }
+        }
+
+        // Fallback to Groq if Gemini is unavailable or did not return a usable answer.
+        if (!$qaAnswer && $apiKey !== '' && $originalMessage !== '') {
             $systemPrompt = "You are Jeeva, a professional, warm, empathetic, and knowledgeable medical and healthcare assistant. " .
                 "Your goal is to have a natural, helpful conversation with the user and provide initial medical guidance based on their questions, symptoms, or concerns.\n\n" .
                 "You MUST return a JSON object containing exactly these 5 keys:\n" .
@@ -524,7 +587,8 @@ class ChatbotController extends Controller
 
             foreach ($models as $model) {
                 try {
-                    $response = Http::withoutVerifying()
+                    $response = Http::retry(2, 250)
+                        ->connectTimeout(8)
                         ->withToken($apiKey)
                         ->timeout(12)
                         ->post('https://api.groq.com/openai/v1/chat/completions', [
@@ -540,7 +604,7 @@ class ChatbotController extends Controller
 
                     if ($response->successful()) {
                         $jsonContent = $response->json('choices.0.message.content');
-                        $decoded = json_decode($jsonContent, true);
+                        $decoded = $this->decodeAiJsonResponse($jsonContent);
                         if (is_array($decoded) && isset($decoded['reply'])) {
                             $replyText = $this->normalizeAiText($decoded['reply'] ?? null);
                             $detailedReply = $this->normalizeAiText($decoded['detailed_reply'] ?? null);
@@ -600,6 +664,12 @@ class ChatbotController extends Controller
                             }
                             break;
                         }
+                    } else {
+                        logger()->warning('Groq chatbot request failed.', [
+                            'model' => $model,
+                            'status' => $response->status(),
+                            'body' => Str::limit($response->body(), 1000),
+                        ]);
                     }
                 } catch (Exception $e) {
                     logger()->error("Groq call exception with model {$model}: " . $e->getMessage());
@@ -847,6 +917,7 @@ class ChatbotController extends Controller
                     errorMessage: $e->getMessage(),
                     meta: [
                         'exception' => get_class($e),
+                        'trace_message' => Str::limit($e->getTraceAsString(), 4000),
                     ]
                 );
             } catch (Throwable $_) {}
@@ -1474,6 +1545,162 @@ class ChatbotController extends Controller
         });
 
         return trim(implode("\n", $parts));
+    }
+
+    private function queryGemini(
+        string $apiKey,
+        string $model,
+        string $originalMessage,
+        string $locale,
+        array $messages = []
+    ): ?array {
+        $systemPrompt = "You are Jeeva, a professional, warm, empathetic, and knowledgeable medical and healthcare assistant. " .
+            "Provide safe initial guidance based on the user's symptoms or health question.\n\n" .
+            "Return only a JSON object with these keys:\n" .
+            "- reply: short, warm, direct answer in " . ($locale === 'hi' ? 'Hindi' : 'English') . ".\n" .
+            "- detailed_reply: detailed markdown-friendly explanation in " . ($locale === 'hi' ? 'Hindi' : 'English') . ", or empty string if not needed.\n" .
+            "- department: best matching medical department in English, or empty string.\n" .
+            "- symptom_match: boolean.\n" .
+            "- emergency: boolean.\n" .
+            "Do not add code fences or extra text.";
+
+        $context = $this->medicalQaService->retrieveRelevantContext($originalMessage, $locale);
+        $historyLines = collect($messages)
+            ->slice(0, -1)
+            ->filter(fn ($msg) => isset($msg['sender'], $msg['text']) && in_array($msg['sender'], ['user', 'bot'], true))
+            ->take(-10)
+            ->map(function ($msg) {
+                $role = $msg['sender'] === 'user' ? 'User' : 'Assistant';
+                return $role . ': ' . $msg['text'];
+            })
+            ->implode("\n");
+
+        $input = $systemPrompt;
+        if ($context !== '') {
+            $input .= "\n\nKnowledge base context:\n" . $context;
+        }
+        if ($historyLines !== '') {
+            $input .= "\n\nRecent conversation:\n" . $historyLines;
+        }
+        $input .= "\n\nCurrent user message:\n" . $originalMessage;
+
+        $body = [
+            'model' => $model,
+            'input' => $input,
+            'response_format' => [
+                'type' => 'text',
+                'mime_type' => 'application/json',
+                'schema' => [
+                    'type' => 'object',
+                    'properties' => [
+                        'reply' => ['type' => 'string'],
+                        'detailed_reply' => ['type' => 'string'],
+                        'department' => ['type' => 'string'],
+                        'symptom_match' => ['type' => 'boolean'],
+                        'emergency' => ['type' => 'boolean'],
+                    ],
+                    'required' => ['reply', 'symptom_match', 'emergency'],
+                ],
+            ],
+        ];
+
+        try {
+            $response = Http::retry(2, 250)
+                ->connectTimeout(8)
+                ->timeout(20)
+                ->withHeaders([
+                    'x-goog-api-key' => $apiKey,
+                    'Content-Type' => 'application/json',
+                ])
+                ->post('https://generativelanguage.googleapis.com/v1beta/interactions', $body);
+
+            if (! $response->successful()) {
+                logger()->warning('Gemini chatbot request failed.', [
+                    'model' => $model,
+                    'status' => $response->status(),
+                    'body' => Str::limit($response->body(), 1000),
+                ]);
+
+                return null;
+            }
+
+            $text = $this->extractGeminiOutputText($response->json());
+            if ($text === '') {
+                logger()->warning('Gemini chatbot response missing model output text.', [
+                    'model' => $model,
+                    'body' => Str::limit($response->body(), 1000),
+                ]);
+
+                return null;
+            }
+
+            $decoded = $this->decodeAiJsonResponse($text);
+
+            return is_array($decoded) ? $decoded : null;
+        } catch (Throwable $e) {
+            logger()->error('Gemini chatbot exception: ' . $e->getMessage());
+
+            return null;
+        }
+    }
+
+    private function extractGeminiOutputText(array $payload): string
+    {
+        $steps = $payload['steps'] ?? [];
+
+        foreach ($steps as $step) {
+            if (($step['type'] ?? null) !== 'model_output') {
+                continue;
+            }
+
+            foreach (($step['content'] ?? []) as $content) {
+                $text = trim((string) ($content['text'] ?? ''));
+                if ($text !== '') {
+                    return $text;
+                }
+            }
+        }
+
+        return '';
+    }
+
+    private function decodeAiJsonResponse(mixed $content): ?array
+    {
+        if (is_array($content)) {
+            return $content;
+        }
+
+        if (! is_string($content)) {
+            return null;
+        }
+
+        $trimmed = trim($content);
+        if ($trimmed === '') {
+            return null;
+        }
+
+        $decoded = json_decode($trimmed, true);
+        if (is_array($decoded)) {
+            return $decoded;
+        }
+
+        if (preg_match('/```(?:json)?\s*(\{.*\})\s*```/is', $trimmed, $matches) === 1) {
+            $decoded = json_decode(trim($matches[1]), true);
+            if (is_array($decoded)) {
+                return $decoded;
+            }
+        }
+
+        $jsonStart = strpos($trimmed, '{');
+        $jsonEnd = strrpos($trimmed, '}');
+        if ($jsonStart === false || $jsonEnd === false || $jsonEnd <= $jsonStart) {
+            return null;
+        }
+
+        $candidate = substr($trimmed, $jsonStart, $jsonEnd - $jsonStart + 1);
+        $decoded = json_decode($candidate, true);
+
+        return is_array($decoded) ? $decoded : null;
     }
 
     private function findMedicineResponse(string $message, string $locale): ?array
