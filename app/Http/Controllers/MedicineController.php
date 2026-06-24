@@ -34,6 +34,7 @@ class MedicineController extends Controller
         abort_unless($medicine->is_published && in_array($medicine->review_status, ['reviewed', 'published'], true), 404);
 
         $locale = app()->getLocale();
+        $normalizedLocale = in_array($locale, ['en', 'hi'], true) ? $locale : 'en';
         $relatedMedicines = Medicine::query()
             ->select(['id', 'name', 'slug', 'generic_name', 'category', 'is_published', 'review_status'])
             ->published()
@@ -54,34 +55,43 @@ class MedicineController extends Controller
             ->limit(3)
             ->get();
 
+        $faqs = collect(is_array($medicine->faqs_json) ? $medicine->faqs_json : [])
+            ->filter(fn ($faq) => is_array($faq) && filled($faq['question'] ?? null) && filled($faq['answer'] ?? null))
+            ->values();
+
+        $brandNames = collect(is_array($medicine->brand_names) ? $medicine->brand_names : [])
+            ->filter(fn ($brand) => is_string($brand) && trim($brand) !== '')
+            ->map(fn ($brand) => trim($brand))
+            ->values();
+
         $sections = collect([
-            'overview' => $medicine->getTranslation('overview', $locale),
-            'uses' => $medicine->getTranslation('uses', $locale),
-            'benefits' => $medicine->getTranslation('benefits', $locale),
-            'dosage_information' => $medicine->getTranslation('dosage_information', $locale),
-            'mechanism' => $medicine->getTranslation('mechanism', $locale),
-            'common_side_effects' => $medicine->getTranslation('common_side_effects', $locale),
-            'serious_side_effects' => $medicine->getTranslation('serious_side_effects', $locale),
-            'drug_interactions' => $medicine->getTranslation('drug_interactions', $locale),
-            'food_interactions' => $medicine->getTranslation('food_interactions', $locale),
-            'alcohol_warning' => $medicine->getTranslation('alcohol_warning', $locale),
-            'pregnancy_warning' => $medicine->getTranslation('pregnancy_warning', $locale),
-            'breastfeeding_warning' => $medicine->getTranslation('breastfeeding_warning', $locale),
-            'kidney_warning' => $medicine->getTranslation('kidney_warning', $locale),
-            'liver_warning' => $medicine->getTranslation('liver_warning', $locale),
-            'driving_warning' => $medicine->getTranslation('driving_warning', $locale),
-            'allergy_warning' => $medicine->getTranslation('allergy_warning', $locale),
-            'precautions' => $medicine->getTranslation('precautions', $locale),
-            'contraindications' => $medicine->getTranslation('contraindications', $locale),
-            'avoid_if' => $medicine->getTranslation('avoid_if', $locale),
-            'missed_dose' => $medicine->getTranslation('missed_dose', $locale),
-            'overdose' => $medicine->getTranslation('overdose', $locale),
-            'storage' => $medicine->getTranslation('storage', $locale),
-            'expert_advice' => $medicine->getTranslation('expert_advice', $locale),
-            'when_to_contact_doctor' => $medicine->getTranslation('when_to_contact_doctor', $locale),
+            'overview' => $medicine->getTranslation('overview', $normalizedLocale),
+            'uses' => $medicine->getTranslation('uses', $normalizedLocale),
+            'benefits' => $medicine->getTranslation('benefits', $normalizedLocale),
+            'dosage_information' => $medicine->getTranslation('dosage_information', $normalizedLocale),
+            'mechanism' => $medicine->getTranslation('mechanism', $normalizedLocale),
+            'common_side_effects' => $medicine->getTranslation('common_side_effects', $normalizedLocale),
+            'serious_side_effects' => $medicine->getTranslation('serious_side_effects', $normalizedLocale),
+            'drug_interactions' => $medicine->getTranslation('drug_interactions', $normalizedLocale),
+            'food_interactions' => $medicine->getTranslation('food_interactions', $normalizedLocale),
+            'alcohol_warning' => $medicine->getTranslation('alcohol_warning', $normalizedLocale),
+            'pregnancy_warning' => $medicine->getTranslation('pregnancy_warning', $normalizedLocale),
+            'breastfeeding_warning' => $medicine->getTranslation('breastfeeding_warning', $normalizedLocale),
+            'kidney_warning' => $medicine->getTranslation('kidney_warning', $normalizedLocale),
+            'liver_warning' => $medicine->getTranslation('liver_warning', $normalizedLocale),
+            'driving_warning' => $medicine->getTranslation('driving_warning', $normalizedLocale),
+            'allergy_warning' => $medicine->getTranslation('allergy_warning', $normalizedLocale),
+            'precautions' => $medicine->getTranslation('precautions', $normalizedLocale),
+            'contraindications' => $medicine->getTranslation('contraindications', $normalizedLocale),
+            'avoid_if' => $medicine->getTranslation('avoid_if', $normalizedLocale),
+            'missed_dose' => $medicine->getTranslation('missed_dose', $normalizedLocale),
+            'overdose' => $medicine->getTranslation('overdose', $normalizedLocale),
+            'storage' => $medicine->getTranslation('storage', $normalizedLocale),
+            'expert_advice' => $medicine->getTranslation('expert_advice', $normalizedLocale),
+            'when_to_contact_doctor' => $medicine->getTranslation('when_to_contact_doctor', $normalizedLocale),
         ])->filter(fn ($value) => filled((string) $value));
 
-        return view('medicines.show', compact('medicine', 'relatedMedicines', 'relatedArticles', 'sections', 'locale'));
+        return view('medicines.show', compact('medicine', 'relatedMedicines', 'relatedArticles', 'sections', 'locale', 'normalizedLocale', 'faqs', 'brandNames'));
     }
 
     public function report(Request $request, Medicine $medicine)

@@ -133,7 +133,13 @@ class Medicine extends Model
 
     public function getBrandNamesAttribute(): array
     {
-        return $this->brand_names_json ?? [];
+        $value = $this->brand_names_json;
+
+        if (is_array($value)) {
+            return array_values(array_filter($value, fn ($brand) => is_string($brand) && trim($brand) !== ''));
+        }
+
+        return [];
     }
 
     public function getTranslation(string $field, string $locale): ?string

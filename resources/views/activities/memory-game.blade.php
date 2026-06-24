@@ -23,7 +23,12 @@
                     class="rounded-[1.15rem] bg-cyan-600 hover:bg-cyan-700 px-6 py-3 text-sm font-bold text-white">{{ $isHindi ? 'फिर से चालू करें' : 'Play again' }}</button>
             </div>
 
-            <div class="mt-6 flex flex-wrap gap-2" id="memory-levels"></div>
+            <div class="mt-6 flex flex-col gap-3">
+                <div class="flex flex-wrap gap-2" id="memory-levels"></div>
+                <div class="rounded-[1.2rem] border border-cyan-100 bg-cyan-50/70 px-4 py-3 text-sm leading-6 text-cyan-900 dark:border-cyan-900/40 dark:bg-cyan-950/20 dark:text-cyan-100">
+                    {{ $isHindi ? 'धीरे-धीरे कठिनाई बढ़ती है। अगर आप चाहें, तो किसी भी स्तर पर रुककर फिर से वही स्तर खेल सकते हैं।' : 'The challenge rises gently. You can stop at any level and replay that same level if it feels better.' }}
+                </div>
+            </div>
 
             <div class="mt-8 grid gap-4 sm:grid-cols-4">
                 <div class="rounded-[1.4rem] bg-cyan-50 dark:bg-cyan-950/30 p-4">
@@ -164,7 +169,8 @@
                         button.type = 'button';
                         button.className =
                             `rounded-full border px-3 py-2 text-xs font-bold transition ${index === currentLevelIndex ? 'border-violet-500 bg-violet-600 text-white shadow-lg shadow-violet-500/20' : 'border-slate-200 bg-white text-slate-700 hover:border-violet-300 hover:text-violet-700 dark:border-slate-700 dark:bg-slate-900 dark:text-slate-200 dark:hover:border-violet-500 dark:hover:text-violet-300'}`;
-                        button.textContent = `${isHindi ? 'लेवल' : 'Level'} ${config.level} ? ${config.tiles}`;
+                        const pairCount = config.tiles / 2;
+                        button.textContent = `${isHindi ? 'लेवल' : 'Level'} ${config.level}/${levelConfigs.length} · ${pairCount} ${isHindi ? 'जोड़े' : 'pairs'}`;
                         button.addEventListener('click', () => {
                             currentLevelIndex = index;
                             render();
@@ -178,7 +184,7 @@
                     const activeLevel = getActiveLevel();
                     status.textContent = isHindi ?
                         `बहुत अच्छा। आपने लेवल ${activeLevel.level} को ${moves} चालों में पूरा किया।` :
-                        `Nice work. You finished level ${activeLevel.level} in ${moves} moves. Take one deeper breath.`;
+                        `Nice work. You finished level ${activeLevel.level} in ${moves} moves. Take one deeper breath before the next round.`;
                 };
 
                 const renderCardBack = (button) => {

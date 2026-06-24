@@ -262,7 +262,7 @@
 
 
         <div class="mx-auto mt-6 max-w-2xl rounded-[1.4rem] border border-teal-100 bg-teal-50/70 px-4 py-3 text-left text-sm leading-6 text-teal-900 dark:border-teal-900/40 dark:bg-teal-950/20 dark:text-teal-100">
-            A simple pattern works best here: tap two or three times, then take one long exhale.
+            {{ $isHindi ? 'यहाँ एक सरल लय सबसे अच्छी रहती है: 2-3 बार टैप करें, फिर एक लंबी साँस छोड़ें।' : 'A simple pattern works best here: tap 2-3 times, then take one long exhale.' }}
         </div>
 
         <div class="tap-stage mt-8">
@@ -307,7 +307,7 @@
             <button id="tap-reset" class="rounded-[1.15rem] border border-slate-200 dark:border-slate-700 px-5 py-3 text-sm font-bold text-slate-900 dark:text-slate-100">{{ $isHindi ? 'रीसेट करें' : 'Reset' }}</button>
 
 
-            <a href="{{ route('activities.breathing') }}" class="inline-flex w-full items-center justify-center rounded-[1.15rem] bg-teal-600 px-5 py-3 text-sm font-bold text-white sm:w-auto">One minute breathing</a>
+            <a href="{{ route('activities.breathing') }}" class="inline-flex w-full items-center justify-center rounded-[1.15rem] bg-teal-600 px-5 py-3 text-sm font-bold text-white sm:w-auto">{{ $isHindi ? 'एक मिनट श्वास अभ्यास' : 'One-minute breathing' }}</a>
 
         </div>
 
@@ -417,7 +417,7 @@
             promptEl.textContent = isHindi ? 'इस लय को बनाए रखें' : 'Keep this rhythm';
 
 
-            statusEl.textContent = isHindi ? 'यह गति अच्छी है. हर 2-3 टैप पर अपने कंधों को आराम दें।' : 'This pace is good. Relax your shoulders every 2–3 taps.';
+            statusEl.textContent = isHindi ? 'यह गति अच्छी है. हर 2-3 टैप पर अपने कंधों को आराम दें।' : 'This pace is good. Relax your shoulders every 2-3 taps.';
 
 
         } else {

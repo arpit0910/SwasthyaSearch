@@ -1,10 +1,13 @@
 @extends('layouts.public')
 
 @php
-    $metaTitle = $locale === 'hi'
+    $pageLocale = $normalizedLocale ?? ($locale === 'hi' ? 'hi' : 'en');
+    $faqItems = isset($faqs) && $faqs instanceof \Illuminate\Support\Collection ? $faqs : collect(is_array($faqs ?? null) ? $faqs : []);
+    $brandItems = isset($brandNames) && $brandNames instanceof \Illuminate\Support\Collection ? $brandNames : collect(is_array($brandNames ?? null) ? $brandNames : []);
+    $metaTitle = $pageLocale === 'hi'
         ? ($medicine->meta_title_hi ?: ($medicine->name . ' की जानकारी, उपयोग, सावधानियां और दुष्प्रभाव | Arogio'))
         : ($medicine->meta_title_en ?: ($medicine->name . ': Uses, Side Effects, Dosage Info & Precautions | Arogio'));
-    $metaDescription = $locale === 'hi'
+    $metaDescription = $pageLocale === 'hi'
         ? ($medicine->meta_description_hi ?: ($medicine->name . ' के उपयोग, सामान्य सावधानियां, दुष्प्रभाव और शैक्षणिक दवा जानकारी देखें।'))
         : ($medicine->meta_description_en ?: ('Read educational information about ' . $medicine->name . ', including uses, side effects, precautions, and safety guidance.'));
     $medicineDescription = \App\Support\Seo::cleanText($metaDescription, 160);
@@ -22,7 +25,7 @@
     'headline' => $metaTitle,
     'description' => $medicineDescription,
     'url' => route('medicines.show', $medicine->slug),
-    'inLanguage' => $locale === 'hi' ? 'hi-IN' : 'en-IN',
+    'inLanguage' => $pageLocale === 'hi' ? 'hi-IN' : 'en-IN',
     'about' => [
         '@type' => 'Drug',
         'name' => $medicine->name,
@@ -39,13 +42,12 @@
     ],
 ], JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE) !!}
 </script>
-@if(!empty($medicine->faqs_json))
+@if($faqItems->isNotEmpty())
 <script type="application/ld+json">
 {!! json_encode([
     '@context' => 'https://schema.org',
     '@type' => 'FAQPage',
-    'mainEntity' => collect($medicine->faqs_json)
-        ->filter(fn ($faq) => filled($faq['question'] ?? null) && filled($faq['answer'] ?? null))
+    'mainEntity' => $faqItems
         ->map(fn ($faq) => [
             '@type' => 'Question',
             'name' => $faq['question'],
@@ -106,11 +108,11 @@
                             <div class="mt-1 font-semibold text-slate-950 dark:text-white">{{ $medicine->medicine_type }}</div>
                         </div>
                     @endif
-                    @if(!empty($medicine->brand_names))
+                    @if($brandItems->isNotEmpty())
                         <div class="rounded-2xl border border-slate-200 dark:border-slate-800 p-4">
                             <div class="text-slate-500 dark:text-slate-400">{{ $locale === 'hi' ? 'ब्रांड नाम' : 'Brand Names' }}</div>
                             <div class="mt-2 flex flex-wrap gap-2">
-                                @foreach($medicine->brand_names as $brand)
+                                @foreach($brandItems as $brand)
                                     <span class="rounded-full border border-cyan-200 dark:border-cyan-900/60 bg-cyan-50 dark:bg-cyan-950/40 px-3 py-1 text-xs font-semibold text-cyan-700 dark:text-cyan-200">{{ $brand }}</span>
                                 @endforeach
                             </div>
@@ -230,7 +232,7 @@
                             <div class="flex items-center gap-2.5 mb-4">
                                 <span class="inline-block w-2.5 h-2.5 rounded-full bg-teal-500"></span>
                                 <h3 class="text-xl font-extrabold text-slate-950 dark:text-white">
-                                    {{ $sectionTitles[$locale][$key] ?? str($key)->replace('_', ' ')->title() }}
+                                    {{ $sectionTitles[$pageLocale][$key] ?? str($key)->replace('_', ' ')->title() }}
                                 </h3>
                             </div>
                             <p class="text-slate-600 dark:text-slate-300 text-sm sm:text-base leading-7 whitespace-pre-line">{{ $content }}</p>
@@ -252,7 +254,7 @@
                                     <span class="inline-block w-2.5 h-2.5 rounded-full bg-cyan-500"></span>
                                 @endif
                                 <h3 class="text-xl font-extrabold {{ $isSerious ? 'text-rose-950 dark:text-rose-200' : 'text-slate-950 dark:text-white' }}">
-                                    {{ $sectionTitles[$locale][$key] ?? str($key)->replace('_', ' ')->title() }}
+                                    {{ $sectionTitles[$pageLocale][$key] ?? str($key)->replace('_', ' ')->title() }}
                                 </h3>
                             </div>
                             <p class="{{ $isSerious ? 'text-rose-900/90 dark:text-rose-200/95' : 'text-slate-600 dark:text-slate-300' }} text-sm sm:text-base leading-7 whitespace-pre-line">{{ $content }}</p>
@@ -276,7 +278,7 @@
                             <div class="flex items-center gap-2.5 mb-4">
                                 <i data-lucide="{{ $isAllergy ? 'octagon-alert' : 'alert-circle' }}" class="w-5 h-5 {{ $isAllergy ? 'text-red-600' : 'text-amber-600' }} shrink-0"></i>
                                 <h3 class="text-xl font-extrabold {{ $isAllergy ? 'text-red-950 dark:text-red-200' : 'text-amber-950 dark:text-amber-200' }}">
-                                    {{ $sectionTitles[$locale][$key] ?? str($key)->replace('_', ' ')->title() }}
+                                    {{ $sectionTitles[$pageLocale][$key] ?? str($key)->replace('_', ' ')->title() }}
                                 </h3>
                             </div>
                             <p class="{{ $isAllergy ? 'text-red-900/90 dark:text-red-200/95' : 'text-amber-900/90 dark:text-amber-200/95' }} text-sm sm:text-base leading-7 whitespace-pre-line">{{ $content }}</p>
@@ -291,7 +293,7 @@
                             <div class="flex items-center gap-2.5 mb-4">
                                 <span class="inline-block w-2.5 h-2.5 rounded-full bg-indigo-500"></span>
                                 <h3 class="text-xl font-extrabold text-slate-950 dark:text-white">
-                                    {{ $sectionTitles[$locale][$key] ?? str($key)->replace('_', ' ')->title() }}
+                                    {{ $sectionTitles[$pageLocale][$key] ?? str($key)->replace('_', ' ')->title() }}
                                 </h3>
                             </div>
                             <p class="text-slate-600 dark:text-slate-300 text-sm sm:text-base leading-7 whitespace-pre-line">{{ $content }}</p>
@@ -300,11 +302,11 @@
                 </div>
             </div>
 
-            @if(!empty($medicine->faqs_json))
+            @if($faqItems->isNotEmpty())
                 <section class="rounded-[1.75rem] border border-slate-200/80 dark:border-slate-800 bg-white/90 dark:bg-slate-900/90 shadow-sm p-6">
                     <h2 class="text-xl font-bold text-slate-950 dark:text-white">{{ $locale === 'hi' ? 'अक्सर पूछे जाने वाले सवाल' : 'Frequently Asked Questions' }}</h2>
                     <div class="mt-4 space-y-3">
-                        @foreach($medicine->faqs_json as $faq)
+                        @foreach($faqItems as $faq)
                             <details class="rounded-2xl border border-slate-200 dark:border-slate-800 p-4">
                                 <summary class="cursor-pointer font-semibold text-slate-900 dark:text-slate-100">{{ $faq['question'] ?? '' }}</summary>
                                 <p class="mt-3 text-sm leading-7 text-slate-600 dark:text-slate-300">{{ $faq['answer'] ?? '' }}</p>
@@ -324,8 +326,8 @@
                     <li>{{ $locale === 'hi' ? 'गंभीर लक्षण, ओवरडोज या एलर्जी में तुरंत मदद लें।' : 'Seek urgent help for overdose, severe symptoms, or allergic reactions.' }}</li>
                 </ul>
                 <div class="mt-5 flex flex-col gap-3">
-                    <a href="{{ route('doctors.index') }}" class="rounded-2xl bg-teal-600 hover:bg-teal-700 px-4 py-3 text-sm font-bold text-white text-center">{{ $locale === 'hi' ? 'जयपुर में डॉक्टर खोजें' : 'Find Doctors in Jaipur' }}</a>
-                    <a href="{{ route('hospitals.index') }}" class="rounded-2xl border border-slate-200 dark:border-slate-700 px-4 py-3 text-sm font-bold text-slate-800 dark:text-slate-100 text-center">{{ $locale === 'hi' ? 'जयपुर के अस्पताल देखें' : 'View Jaipur Hospitals' }}</a>
+                    <a href="{{ route('doctors.index') }}" class="rounded-2xl bg-teal-600 hover:bg-teal-700 px-4 py-3 text-sm font-bold text-white text-center">{{ $locale === 'hi' ? 'डॉक्टर खोजें' : 'Find Doctors' }}</a>
+                    <a href="{{ route('hospitals.index') }}" class="rounded-2xl border border-slate-200 dark:border-slate-700 px-4 py-3 text-sm font-bold text-slate-800 dark:text-slate-100 text-center">{{ $locale === 'hi' ? 'अस्पताल देखें' : 'View Hospitals' }}</a>
                 </div>
             </section>
 

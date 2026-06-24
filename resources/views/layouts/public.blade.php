@@ -2324,7 +2324,9 @@
             const res = await fetch('{{ route('api.chatbot') }}', {
                 method: 'POST',
                 headers: {
+                    'Accept': 'application/json',
                     'Content-Type': 'application/json',
+                    'X-Requested-With': 'XMLHttpRequest',
                     'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]')?.content || '',
                 },
                 signal: pendingChatAbortController.signal,
@@ -2336,28 +2338,7 @@
                 }),
             });
 
-            if (!res.ok) {
-                const responseText = await res.text();
-                let serverReply = '';
-                try {
-                    const errorPayload = JSON.parse(responseText);
-                    if (typeof errorPayload?.reply === 'string' && errorPayload.reply.trim() !== '') {
-                        serverReply = errorPayload.reply.trim();
-                    }
-                } catch (_) {}
-
-                if (serverReply !== '') {
-                    loadingDiv.classList.add('hidden');
-                    if (sendBtn) sendBtn.disabled = false;
-                    isSubmittingChat = false;
-                    pendingChatAbortController = null;
-                    appendMessage('bot', serverReply);
-                    return;
-                }
-
-                throw new Error(`chatbot_http_${res.status}`);
-            }
-            const data = await res.json();
+            const data = await parseChatbotApiResponse(res);
             if (data.session_token) chatbotSessionToken = data.session_token;
 
             loadingDiv.classList.add('hidden');
@@ -2442,7 +2423,9 @@
             const res = await fetch('{{ route('api.chatbot') }}', {
                 method: 'POST',
                 headers: {
+                    'Accept': 'application/json',
                     'Content-Type': 'application/json',
+                    'X-Requested-With': 'XMLHttpRequest',
                     'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]')?.content || '',
                 },
                 signal: pendingChatAbortController.signal,
@@ -2455,31 +2438,7 @@
                 }),
             });
 
-            if (!res.ok) {
-                const responseText = await res.text();
-                let serverReply = '';
-                try {
-                    const errorPayload = JSON.parse(responseText);
-                    if (typeof errorPayload?.reply === 'string' && errorPayload.reply.trim() !== '') {
-                        serverReply = errorPayload.reply.trim();
-                    }
-                } catch (_) {}
-
-                if (serverReply !== '') {
-                    if (loadingDiv) loadingDiv.classList.add('hidden');
-                    if (sendBtn) sendBtn.disabled = false;
-                    isSubmittingChat = false;
-                    pendingChatAbortController = null;
-                    if (loadingText) {
-                        loadingText.textContent = 'Jeeva is thinking...';
-                    }
-                    appendMessage('bot', serverReply);
-                    return;
-                }
-
-                throw new Error(`chatbot_http_${res.status}`);
-            }
-            const data = await res.json();
+            const data = await parseChatbotApiResponse(res);
             if (data.session_token) chatbotSessionToken = data.session_token;
 
             if (loadingDiv) loadingDiv.classList.add('hidden');
@@ -2527,7 +2486,9 @@
             await fetch('{{ route('api.chatbot.failure_report') }}', {
                 method: 'POST',
                 headers: {
+                    'Accept': 'application/json',
                     'Content-Type': 'application/json',
+                    'X-Requested-With': 'XMLHttpRequest',
                     'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]')?.content || '',
                 },
                 keepalive: true,
@@ -2544,6 +2505,49 @@
         } catch (_) {
             // Intentionally swallow reporting errors to preserve chat UX.
         }
+    }
+
+    async function parseChatbotApiResponse(res) {
+        const responseText = await res.text();
+        const payload = tryParseChatbotPayload(responseText);
+
+        if (payload && typeof payload === 'object') {
+            if (!res.ok && typeof payload.reply === 'string' && payload.reply.trim() !== '') {
+                return payload;
+            }
+
+            if (res.ok) {
+                return payload;
+            }
+        }
+
+        const contentType = res.headers.get('content-type') || 'unknown';
+        const bodyPreview = responseText
+            .replace(/\s+/g, ' ')
+            .trim()
+            .slice(0, 200);
+
+        throw new Error(`chatbot_http_${res.status}_${contentType}_${bodyPreview || 'empty_response'}`);
+    }
+
+    function tryParseChatbotPayload(responseText) {
+        if (typeof responseText !== 'string') return null;
+
+        const trimmed = responseText.trim();
+        if (!trimmed) return null;
+
+        try {
+            return JSON.parse(trimmed);
+        } catch (_) {}
+
+        const jsonMatch = trimmed.match(/\{[\s\S]*\}$/);
+        if (jsonMatch) {
+            try {
+                return JSON.parse(jsonMatch[0]);
+            } catch (_) {}
+        }
+
+        return null;
     }
 
     async function handleChatbotSubmit(e) {

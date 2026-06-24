@@ -284,20 +284,28 @@
 
 
 
-    <section class="mt-10 rounded-[2rem] border border-slate-200/80 bg-white/90 p-6 shadow-sm dark:border-slate-800 dark:bg-slate-900/90 sm:p-8">
+    <section class="mt-10 relative overflow-hidden rounded-[2.15rem] border border-slate-200/80 bg-[linear-gradient(135deg,rgba(248,250,252,0.96),rgba(240,249,255,0.92),rgba(255,255,255,0.98))] p-6 shadow-sm dark:border-slate-800 dark:bg-[linear-gradient(160deg,rgba(15,23,42,0.98),rgba(8,15,28,0.98),rgba(2,6,23,0.98))] sm:p-8">
 
-        <div class="flex flex-col gap-3 sm:flex-row sm:items-end sm:justify-between">
+        <div class="pointer-events-none absolute -right-12 top-0 h-40 w-40 rounded-full bg-cyan-300/10 blur-3xl"></div>
+        <div class="pointer-events-none absolute -left-10 bottom-0 h-36 w-36 rounded-full bg-emerald-300/10 blur-3xl"></div>
 
-            <div>
+        <div class="relative flex flex-col gap-4 lg:flex-row lg:items-end lg:justify-between">
+
+            <div class="max-w-3xl">
 
                 <p class="text-xs font-bold uppercase tracking-[0.22em] text-slate-500 dark:text-slate-400">{{ $isHindi ? 'अधिक समर्थन' : 'More support' }}</p>
 
-                <h2 class="mt-2 text-2xl font-extrabold text-slate-950 dark:text-white">{{ $isHindi ? 'विभिन्न मनोदशाओं और ऊर्जा स्तरों का समर्थन करने के और अधिक तरीके' : 'More ways to support different moods and energy levels' }}</h2>
+                <h2 class="mt-2 text-2xl font-extrabold leading-tight text-slate-950 dark:text-white sm:text-3xl">{{ $isHindi ? 'Activities, quizzes, and calming tools in one calmer place' : 'Activities, quizzes, and calming tools in one calmer place' }}</h2>
+
+                <p class="mt-3 max-w-2xl text-sm leading-7 text-slate-600 dark:text-slate-300 sm:text-base">
+                    {{ $isHindi ? 'When you need something lighter, more focused, or simply more supportive, these tools are grouped to make choosing feel easier.' : 'When you need something lighter, more focused, or simply more supportive, these tools are grouped to make choosing feel easier.' }}
+                </p>
 
             </div>
 
-            <div class="rounded-full border border-slate-200 bg-slate-50 px-4 py-2 text-sm font-semibold text-slate-600 dark:border-slate-700 dark:bg-slate-950 dark:text-slate-300">
+            <div class="inline-flex items-center gap-2 self-start rounded-full border border-white/80 bg-white/85 px-4 py-2 text-sm font-semibold text-slate-600 shadow-sm dark:border-slate-700 dark:bg-slate-950/90 dark:text-slate-300">
 
+                <span class="inline-flex h-2.5 w-2.5 rounded-full bg-cyan-500"></span>
                 {{ count($supportTools) }} {{ $isHindi ? 'विकल्प' : 'options' }}
 
             </div>
@@ -306,23 +314,36 @@
 
 
 
-        <div class="mt-6 grid grid-cols-1 gap-4 sm:gap-5 md:grid-cols-2 xl:grid-cols-3">
+        <div class="relative mt-7 grid grid-cols-1 gap-4 sm:gap-5 md:grid-cols-2 xl:grid-cols-3">
 
             @foreach($supportTools as $tool)
 
-                <a href="{{ $tool['url'] }}" class="group flex h-full flex-col rounded-[1.7rem] border border-slate-200/80 bg-slate-50/70 p-4 transition hover:-translate-y-0.5 hover:border-cyan-200 hover:bg-white dark:border-slate-800 dark:bg-slate-950/70 dark:hover:bg-slate-900 sm:p-5">
+                <a href="{{ $tool['url'] }}" class="group flex h-full flex-col rounded-[1.8rem] border border-white/80 bg-white/88 p-5 shadow-sm transition duration-300 hover:-translate-y-1 hover:border-cyan-200 hover:shadow-lg hover:shadow-cyan-100/50 dark:border-slate-800 dark:bg-slate-950/75 dark:hover:border-cyan-900/50 dark:hover:bg-slate-900 sm:p-6">
 
-                    <div class="flex h-11 w-11 items-center justify-center rounded-2xl bg-{{ $tool['tone'] }}-100 text-{{ $tool['tone'] }}-700 dark:bg-{{ $tool['tone'] }}-950/40 dark:text-{{ $tool['tone'] }}-200">
+                    <div class="flex items-start justify-between gap-3">
+                        <div class="flex h-12 w-12 items-center justify-center rounded-2xl shadow-inner bg-{{ $tool['tone'] }}-100 text-{{ $tool['tone'] }}-700 dark:bg-{{ $tool['tone'] }}-950/40 dark:text-{{ $tool['tone'] }}-200">
 
-                        <i data-lucide="{{ $tool['icon'] }}" class="h-5 w-5"></i>
+                            <i data-lucide="{{ $tool['icon'] }}" class="h-5 w-5"></i>
 
+                        </div>
+                        <span class="rounded-full bg-slate-100 px-3 py-1 text-[11px] font-bold uppercase tracking-[0.18em] text-slate-500 dark:bg-slate-800 dark:text-slate-300">
+                            {{ $isHindi ? 'Easy flow' : 'Easy flow' }}
+                        </span>
                     </div>
 
-                    <h3 class="mt-3 text-lg font-bold text-slate-950 dark:text-white sm:mt-4">{{ $tool['title'] }}</h3>
+                    <h3 class="mt-4 text-lg font-extrabold text-slate-950 dark:text-white sm:text-[1.15rem]">{{ $tool['title'] }}</h3>
 
                     <p class="mt-2 text-sm leading-6 text-slate-600 dark:text-slate-300 sm:leading-7">{{ $tool['description'] }}</p>
 
-                    <span class="mt-4 inline-flex text-sm font-bold text-cyan-700 dark:text-cyan-300">{{ $isHindi ? 'खुला' : 'Open' }}</span>
+                    <div class="mt-auto pt-5 flex items-center justify-between gap-3">
+                        <span class="text-[11px] font-semibold uppercase tracking-[0.18em] text-slate-400 dark:text-slate-500">
+                            {{ $isHindi ? 'Gentle tool' : 'Gentle tool' }}
+                        </span>
+                        <span class="inline-flex items-center gap-1 rounded-full border border-cyan-200/80 bg-cyan-50 px-3 py-1.5 text-xs font-bold text-cyan-700 transition group-hover:border-cyan-300 group-hover:bg-cyan-100 group-hover:text-cyan-800 dark:border-cyan-900/50 dark:bg-slate-900 dark:text-cyan-300 dark:group-hover:border-cyan-700 dark:group-hover:bg-slate-800 dark:group-hover:text-cyan-200">
+                            {{ $isHindi ? 'Open' : 'Open' }}
+                            <i data-lucide="arrow-up-right" class="h-3.5 w-3.5"></i>
+                        </span>
+                    </div>
 
                 </a>
 

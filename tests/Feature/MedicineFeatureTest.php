@@ -34,6 +34,30 @@ class MedicineFeatureTest extends TestCase
             ->assertSee('Paracetamol', false);
     }
 
+    public function test_medicine_detail_page_tolerates_malformed_optional_json_fields(): void
+    {
+        $medicine = Medicine::create([
+            'name' => 'Ibuprofen',
+            'slug' => 'ibuprofen',
+            'generic_name' => 'Ibuprofen',
+            'review_status' => 'published',
+            'is_published' => true,
+            'brand_names_json' => '"bad-json-shape"',
+            'faqs_json' => '"bad-json-shape"',
+            'overview_en' => 'Educational overview text.',
+        ]);
+
+        $medicine->forceFill([
+            'brand_names_json' => 'not-an-array',
+            'faqs_json' => 'not-an-array',
+        ])->saveQuietly();
+
+        $this->get(route('medicines.show', $medicine->slug))
+            ->assertOk()
+            ->assertSee('Ibuprofen', false)
+            ->assertSee('Educational overview text.', false);
+    }
+
     public function test_unpublished_medicine_is_hidden_from_public_detail_page(): void
     {
         $medicine = Medicine::create([
