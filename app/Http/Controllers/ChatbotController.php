@@ -30,18 +30,26 @@ class ChatbotController extends Controller
     {
         try {
         $activeCity = config('healthcare.active_city', 'Jaipur');
-        $validated = $request->validate([
-            'session_token' => 'nullable|string',
-            'message' => 'nullable|string',
-            'city' => 'nullable|string|max:120',
-            'locale' => 'nullable|in:en,hi',
-            'load_type' => 'nullable|string|in:doctors,hospitals,articles',
-        ]);
+        $sessionToken = trim((string) $request->input('session_token', ''));
+        if ($sessionToken === '') {
+            $sessionToken = Str::random(32);
+        }
 
-        $sessionToken = $validated['session_token'] ?? Str::random(32);
-        $userMessage = isset($validated['message']) ? trim($validated['message']) : '';
+        $userMessage = trim((string) $request->input('message', ''));
+        $inputCity = trim((string) $request->input('city', ''));
+        $locale = strtolower(trim((string) $request->input('locale', app()->getLocale())));
+        $locale = in_array($locale, ['en', 'hi'], true) ? $locale : 'en';
+        $loadType = strtolower(trim((string) $request->input('load_type', '')));
+        $loadType = in_array($loadType, ['doctors', 'hospitals', 'articles'], true) ? $loadType : null;
+
+        if (mb_strlen($sessionToken) > 64) {
+            $sessionToken = Str::limit($sessionToken, 64, '');
+        }
+        if (mb_strlen($inputCity) > 120) {
+            $inputCity = Str::limit($inputCity, 120, '');
+        }
+
         $searchTokens = $this->extractSearchTokens($userMessage);
-        $locale = $validated['locale'] ?? app()->getLocale();
 
         $chatSession = ChatSession::firstOrCreate(
             ['session_token' => $sessionToken],
@@ -162,7 +170,6 @@ class ChatbotController extends Controller
                 'history' => $messages,
             ]);
         }
-        $loadType = $validated['load_type'] ?? null;
         if ($userMessage === '' && !$loadType) {
             return response()->json([
                 'session_token' => $sessionToken,
@@ -947,24 +954,19 @@ class ChatbotController extends Controller
 
     public function reportClientFailure(Request $request)
     {
-        $data = $request->validate([
-            'session_token' => 'nullable|string|max:64',
-            'city' => 'nullable|string|max:120',
-            'locale' => 'nullable|in:en,hi',
-            'message' => 'nullable|string',
-            'failure_type' => 'nullable|string|max:64',
-            'error_message' => 'nullable|string',
-            'meta' => 'nullable|array',
-        ]);
+        $locale = strtolower(trim((string) $request->input('locale', app()->getLocale())));
+        $locale = in_array($locale, ['en', 'hi'], true) ? $locale : 'en';
+        $meta = $request->input('meta');
+        $meta = is_array($meta) ? $meta : [];
 
         $this->storeFailedQuery(
-            sessionToken: (string) ($data['session_token'] ?? ''),
-            city: (string) ($data['city'] ?? ''),
-            locale: (string) ($data['locale'] ?? app()->getLocale()),
-            failureType: (string) ($data['failure_type'] ?? 'client_fetch_failure'),
-            userMessage: (string) ($data['message'] ?? ''),
-            errorMessage: (string) ($data['error_message'] ?? ''),
-            meta: (array) ($data['meta'] ?? [])
+            sessionToken: Str::limit(trim((string) $request->input('session_token', '')), 64, ''),
+            city: Str::limit(trim((string) $request->input('city', '')), 120, ''),
+            locale: $locale,
+            failureType: Str::limit(trim((string) $request->input('failure_type', 'client_fetch_failure')), 64, ''),
+            userMessage: (string) $request->input('message', ''),
+            errorMessage: (string) $request->input('error_message', ''),
+            meta: $meta
         );
 
         return response()->json(['ok' => true]);

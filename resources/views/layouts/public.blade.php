@@ -2337,6 +2337,24 @@
             });
 
             if (!res.ok) {
+                const responseText = await res.text();
+                let serverReply = '';
+                try {
+                    const errorPayload = JSON.parse(responseText);
+                    if (typeof errorPayload?.reply === 'string' && errorPayload.reply.trim() !== '') {
+                        serverReply = errorPayload.reply.trim();
+                    }
+                } catch (_) {}
+
+                if (serverReply !== '') {
+                    loadingDiv.classList.add('hidden');
+                    if (sendBtn) sendBtn.disabled = false;
+                    isSubmittingChat = false;
+                    pendingChatAbortController = null;
+                    appendMessage('bot', serverReply);
+                    return;
+                }
+
                 throw new Error(`chatbot_http_${res.status}`);
             }
             const data = await res.json();
@@ -2438,6 +2456,27 @@
             });
 
             if (!res.ok) {
+                const responseText = await res.text();
+                let serverReply = '';
+                try {
+                    const errorPayload = JSON.parse(responseText);
+                    if (typeof errorPayload?.reply === 'string' && errorPayload.reply.trim() !== '') {
+                        serverReply = errorPayload.reply.trim();
+                    }
+                } catch (_) {}
+
+                if (serverReply !== '') {
+                    if (loadingDiv) loadingDiv.classList.add('hidden');
+                    if (sendBtn) sendBtn.disabled = false;
+                    isSubmittingChat = false;
+                    pendingChatAbortController = null;
+                    if (loadingText) {
+                        loadingText.textContent = 'Jeeva is thinking...';
+                    }
+                    appendMessage('bot', serverReply);
+                    return;
+                }
+
                 throw new Error(`chatbot_http_${res.status}`);
             }
             const data = await res.json();
