@@ -4,6 +4,8 @@
 
 @section('meta_title', 'Arogio - Find Doctors, Hospitals & Blood Banks Near You')
 @section('meta_description', 'Search trusted doctors, hospitals, blood banks, and departments by city or symptoms. Connect directly with healthcare providers without ads or intermediaries.')
+@section('meta_title', 'Arogio | Find Doctors, Hospitals, Blood Banks, Articles and Quizzes')
+@section('meta_description', 'Arogio helps people find trusted doctors, hospitals, blood banks, health articles, and quizzes in one place.')
 @section('content')
 @php
 $quickSymptoms =

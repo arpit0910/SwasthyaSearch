@@ -6,6 +6,26 @@ use Illuminate\Support\Str;
 
 class Seo
 {
+    public static function ensureBrandInTitle(?string $title, ?string $brand = 'Arogio'): string
+    {
+        $title = trim((string) $title);
+        $brand = trim((string) $brand);
+
+        if ($title === '' || $brand === '') {
+            return $title;
+        }
+
+        if (mb_strtolower($title) === mb_strtolower($brand)) {
+            return $brand;
+        }
+
+        if (str_contains(mb_strtolower($title), mb_strtolower($brand))) {
+            return $title;
+        }
+
+        return $title . ' | ' . $brand;
+    }
+
     public static function cleanText(?string $text, int $limit = 160): string
     {
         $value = html_entity_decode((string) $text, ENT_QUOTES | ENT_HTML5, 'UTF-8');

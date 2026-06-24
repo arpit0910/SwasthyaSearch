@@ -4,6 +4,8 @@
 
 @section('meta_title', 'Health Articles and Guides | Arogio')
 @section('meta_description', 'Read patient-friendly health articles and guides on symptoms, prevention, and healthcare access. This content is for general information and not a substitute for medical advice.')
+@section('meta_title', 'Arogio Health Articles and Guides')
+@section('meta_description', 'Read Arogio health articles and guides on symptoms, prevention, wellness, and healthcare access.')
 @php
 $hasActiveMobileFilters = !empty(array_filter((array) request('category', [])));
 @endphp

@@ -183,7 +183,10 @@
         $computedTitle = $routeSeo[$routeName]['title'] ?? $defaultTitle;
         $computedDescription = $routeSeo[$routeName]['description'] ?? $defaultDescription;
         $metaTitle = \App\Support\Seo::cleanText(
-            trim($__env->yieldContent('meta_title', $__env->yieldContent('title', $computedTitle))),
+            \App\Support\Seo::ensureBrandInTitle(
+                trim($__env->yieldContent('meta_title', $__env->yieldContent('title', $computedTitle))),
+                $appName,
+            ),
             70,
         );
         $metaDescription = \App\Support\Seo::cleanText(
@@ -246,7 +249,7 @@
 
     <script type="application/ld+json">
         {!! json_encode([
-            '@context' => 'https://schema.org',
+            '@' . 'context' => 'https://schema.org',
             '@type' => 'Organization',
             'name' => $appName,
             'url' => $siteUrl,
@@ -256,7 +259,7 @@
     </script>
     <script type="application/ld+json">
         {!! json_encode([
-            '@context' => 'https://schema.org',
+            '@' . 'context' => 'https://schema.org',
             '@type' => 'WebSite',
             'name' => $appName,
             'url' => $siteUrl,
@@ -270,17 +273,17 @@
     </script>
     <script type="application/ld+json">
         {!! json_encode([
-            '@context' => 'https://schema.org',
+            '@' . 'context' => 'https://schema.org',
             '@type' => 'WebPage',
             'name' => $metaTitle,
             'description' => $metaDescription,
             'url' => $canonicalUrl,
-            'inLanguage' => $isHindi ? 'hi-IN' : 'en-IN',
             'isPartOf' => [
                 '@type' => 'WebSite',
                 'name' => $appName,
                 'url' => $siteUrl,
             ],
+            'inLanguage' => $isHindi ? 'hi-IN' : 'en-IN',
         ], JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE) !!}
     </script>
     @php
