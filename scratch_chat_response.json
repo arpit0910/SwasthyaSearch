@@ -1,5 +1,5 @@
 {
-    "session_token": "iJePRxwrAfQmXde4u3VAgzfm4zs6BGz9",
+    "session_token": "jFxxujXVPJcj3bTQgCUi7jjoaHaIlfZG",
     "reply": "I'm so sorry to hear that you're experiencing skin allergy and itchiness, that can be really frustrating and uncomfortable. Can you tell me more about your symptoms, like how long you've had them and if anything seems to trigger them?",
     "city": "Jaipur",
     "city_options": [
@@ -30,7 +30,7 @@
             "text": "I have a skin allergy and itchiness",
             "city": "Jaipur",
             "locale": "en",
-            "timestamp": "2026-06-29T09:47:21+00:00"
+            "timestamp": "2026-06-29T10:31:47+00:00"
         },
         {
             "sender": "bot",
@@ -49,7 +49,7 @@
             "show_options": false,
             "response_mode": "general_help",
             "suggest_details": false,
-            "timestamp": "2026-06-29T09:47:21+00:00"
+            "timestamp": "2026-06-29T10:31:47+00:00"
         }
     ]
 }

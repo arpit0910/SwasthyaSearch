@@ -449,7 +449,6 @@ class AdminDashboardController extends Controller
 
     public function exportHospitals()
     {
-        $hospitals = Hospital::all();
         $headers = [
             'Content-type' => 'text/csv',
             'Content-Disposition' => 'attachment; filename=hospitals_export.csv',
@@ -458,7 +457,7 @@ class AdminDashboardController extends Controller
             'Expires' => '0',
         ];
 
-        $callback = function () use ($hospitals) {
+        $callback = function () {
             $file = fopen('php://output', 'w');
             fputcsv($file, [
                 'id',
@@ -485,7 +484,7 @@ class AdminDashboardController extends Controller
                 'longitude'
             ]);
 
-            foreach ($hospitals as $hospital) {
+            Hospital::query()->lazy(100)->each(function ($hospital) use ($file) {
                 fputcsv($file, [
                     $hospital->id,
                     $hospital->getTranslation('name', 'en', false) ?: $hospital->name_en,
@@ -510,7 +509,8 @@ class AdminDashboardController extends Controller
                     $hospital->latitude,
                     $hospital->longitude,
                 ]);
-            }
+            });
+
             fclose($file);
         };
 
@@ -794,7 +794,6 @@ class AdminDashboardController extends Controller
 
     public function exportDoctors()
     {
-        $doctors = Doctor::with('departments')->get();
         $headers = [
             'Content-type' => 'text/csv',
             'Content-Disposition' => 'attachment; filename=doctors_export.csv',
@@ -803,7 +802,7 @@ class AdminDashboardController extends Controller
             'Expires' => '0',
         ];
 
-        $callback = function () use ($doctors) {
+        $callback = function () {
             $file = fopen('php://output', 'w');
             fputcsv($file, [
                 'id',
@@ -833,7 +832,7 @@ class AdminDashboardController extends Controller
                 'longitude'
             ]);
 
-            foreach ($doctors as $doctor) {
+            Doctor::with('departments')->lazy(100)->each(function ($doctor) use ($file) {
                 $dept = $doctor->departments->first() ?? $doctor->department;
                 fputcsv($file, [
                     $doctor->id,
@@ -862,7 +861,7 @@ class AdminDashboardController extends Controller
                     $doctor->latitude,
                     $doctor->longitude,
                 ]);
-            }
+            });
             fclose($file);
         };
 
@@ -1126,7 +1125,6 @@ class AdminDashboardController extends Controller
 
     public function exportBloodBanks()
     {
-        $bloodBanks = \App\Models\BloodBank::all();
         $headers = [
             'Content-type' => 'text/csv',
             'Content-Disposition' => 'attachment; filename=blood_banks_export.csv',
@@ -1135,7 +1133,7 @@ class AdminDashboardController extends Controller
             'Expires' => '0',
         ];
 
-        $callback = function () use ($bloodBanks) {
+        $callback = function () {
             $file = fopen('php://output', 'w');
             fputcsv($file, [
                 'id',
@@ -1163,7 +1161,7 @@ class AdminDashboardController extends Controller
                 'longitude'
             ]);
 
-            foreach ($bloodBanks as $bb) {
+            \App\Models\BloodBank::query()->lazy(100)->each(function ($bb) use ($file) {
                 fputcsv($file, [
                     $bb->id,
                     $bb->name_en,
@@ -1189,7 +1187,7 @@ class AdminDashboardController extends Controller
                     $bb->latitude,
                     $bb->longitude,
                 ]);
-            }
+            });
             fclose($file);
         };
 
@@ -1711,7 +1709,6 @@ class AdminDashboardController extends Controller
 
     public function exportMedicines()
     {
-        $medicines = Medicine::all();
         $headers = [
             'Content-type' => 'text/csv',
             'Content-Disposition' => 'attachment; filename=medicines_export.csv',
@@ -1739,11 +1736,11 @@ class AdminDashboardController extends Controller
             'review_status', 'is_published'
         ];
 
-        $callback = function () use ($medicines, $columns) {
+        $callback = function () use ($columns) {
             $file = fopen('php://output', 'w');
             fputcsv($file, $columns);
 
-            foreach ($medicines as $medicine) {
+            Medicine::query()->lazy(100)->each(function ($medicine) use ($file, $columns) {
                 $row = [];
                 foreach ($columns as $column) {
                     $val = $medicine->{$column};
@@ -1757,7 +1754,7 @@ class AdminDashboardController extends Controller
                     $row[] = $val;
                 }
                 fputcsv($file, $row);
-            }
+            });
             fclose($file);
         };
 

@@ -1445,10 +1445,30 @@ class ChatbotController extends Controller
             }
         }
 
-        $records = GeneralQuestion::query()->get();
+        $tokens = $this->extractSearchTokens($normalized);
+        $stopWords = [
+            'have', 'having', 'feel', 'feeling', 'with', 'need', 'help', 'show', 'find', 
+            'doctors', 'hospitals', 'please', 'what', 'where', 'when', 'who', 'about', 
+            'some', 'many', 'very', 'severe', 'mild', 'pain', 'ache', 'दर्द'
+        ];
+        $filteredTokens = array_filter($tokens, function ($token) use ($stopWords) {
+            return mb_strlen($token) >= 3 && !in_array(mb_strtolower($token), $stopWords, true);
+        });
+
+        $query = GeneralQuestion::query();
+        $query->where(function ($q) use ($normalized, $filteredTokens) {
+            $q->where('question_en', 'LIKE', "%{$normalized}%")
+              ->orWhere('question_hi', 'LIKE', "%{$normalized}%");
+            
+            foreach ($filteredTokens as $token) {
+                $q->orWhere('question_en', 'LIKE', "%{$token}%")
+                  ->orWhere('question_hi', 'LIKE', "%{$token}%");
+            }
+        });
+
+        $records = $query->limit(150)->get();
         $best = null;
         $bestScore = 0;
-        $tokens = $this->extractSearchTokens($normalized);
 
         foreach ($records as $q) {
             $qEn = $this->normalizeForQaMatch((string) $q->question_en);
@@ -1543,26 +1563,36 @@ class ChatbotController extends Controller
             ['query' => GeneralQuestion::query(), 'source' => 'general_questions'],
         ];
 
+        $stopWords = [
+            'have', 'having', 'feel', 'feeling', 'with', 'need', 'help', 'show', 'find', 
+            'doctors', 'hospitals', 'please', 'what', 'where', 'when', 'who', 'about', 
+            'some', 'many', 'very', 'severe', 'mild', 'pain', 'ache', 'दर्द'
+        ];
+
         foreach ($datasets as $dataset) {
             $best = null;
             $bestScore = 0;
             $tokens = $this->extractSearchTokens($normalizedMessage);
 
+            // Filter out common generic/stop words to prevent loading massive record sets for common words like "pain"
+            $filteredTokens = array_filter($tokens, function ($token) use ($stopWords) {
+                return mb_strlen($token) >= 3 && !in_array(mb_strtolower($token), $stopWords, true);
+            });
+
             // Filter records fetched from database to avoid Out-Of-Memory errors
             $query = $dataset['query'];
-            $query->where(function ($q) use ($normalizedMessage, $tokens) {
+            $query->where(function ($q) use ($normalizedMessage, $filteredTokens) {
                 $q->where('question_en', 'LIKE', "%{$normalizedMessage}%")
                   ->orWhere('question_hi', 'LIKE', "%{$normalizedMessage}%");
                 
-                foreach ($tokens as $token) {
-                    if (mb_strlen($token) >= 3) {
-                        $q->orWhere('question_en', 'LIKE', "%{$token}%")
-                          ->orWhere('question_hi', 'LIKE', "%{$token}%");
-                    }
+                foreach ($filteredTokens as $token) {
+                    $q->orWhere('question_en', 'LIKE', "%{$token}%")
+                      ->orWhere('question_hi', 'LIKE', "%{$token}%");
                 }
             });
 
-            $records = $query->get();
+            // Double protection: Limit to 150 records to absolutely guarantee no OOM crash
+            $records = $query->limit(150)->get();
 
             foreach ($records as $q) {
                 $qEn = $this->normalizeForQaMatch((string) $q->question_en);
