@@ -59,18 +59,19 @@ class ChatbotConversationalTest extends TestCase
 
         Http::fake([
             'generativelanguage.googleapis.com/*' => Http::response([
-                'steps' => [
+                'candidates' => [
                     [
-                        'type' => 'model_output',
                         'content' => [
-                            [
-                                'text' => json_encode([
-                                    'reply' => 'Gemini says this sounds like a mild viral illness.',
-                                    'detailed_reply' => 'Rest, hydration, and monitoring are usually appropriate first steps.',
-                                    'department' => 'General Medicine',
-                                    'symptom_match' => true,
-                                    'emergency' => false,
-                                ]),
+                            'parts' => [
+                                [
+                                    'text' => json_encode([
+                                        'reply' => 'Gemini says this sounds like a mild viral illness.',
+                                        'detailed_reply' => 'Rest, hydration, and monitoring are usually appropriate first steps.',
+                                        'department' => 'General Medicine',
+                                        'symptom_match' => true,
+                                        'emergency' => false,
+                                    ]),
+                                ],
                             ],
                         ],
                     ],
@@ -96,12 +97,13 @@ class ChatbotConversationalTest extends TestCase
 
         Http::fake([
             'generativelanguage.googleapis.com/*' => Http::response([
-                'steps' => [
+                'candidates' => [
                     [
-                        'type' => 'model_output',
                         'content' => [
-                            [
-                                'text' => 'This is not valid JSON',
+                            'parts' => [
+                                [
+                                    'text' => 'This is not valid JSON',
+                                ],
                             ],
                         ],
                     ],

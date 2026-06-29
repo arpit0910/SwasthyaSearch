@@ -539,8 +539,8 @@ $locale === 'hi'
             <div class="relative z-10 mb-6 flex flex-col gap-4 sm:flex-row sm:items-end sm:justify-between">
                 <div class="max-w-3xl min-w-0">
                     <p class="text-xs font-bold uppercase tracking-[0.22em] text-cyan-700 dark:text-cyan-300">{{ $locale === 'hi' ? 'वेलनेस टूल्स' : 'Wellness Tools' }}</p>
-                    <h2 class="mt-2 text-2xl sm:text-3xl font-extrabold text-slate-950 dark:text-white">{{ $locale === 'hi' ? 'गतिविधियां, क्विज़ और शांत अभ्यास' : 'Activities, Quizzes, and Calming Tools' }}</h2>
-                    <p class="mt-3 text-sm sm:text-base leading-7 text-slate-600 dark:text-slate-300">{{ $locale === 'hi' ? 'तनाव राहत, आत्म-जागरूकता और छोटे शांत विराम के लिए सहायक टूल्स खोजें।' : 'Explore supportive tools for stress relief, self-awareness, and calmer daily pauses.' }}</p>
+                    <h2 class="mt-2 text-2xl sm:text-3xl font-extrabold text-slate-950 dark:text-white">{{ $locale === 'hi' ? 'शांत रहने के लिए सरल टूल्स' : 'Simple tools to feel calmer' }}</h2>
+                    <p class="mt-3 text-sm sm:text-base leading-7 text-slate-600 dark:text-slate-300">{{ $locale === 'hi' ? 'सांस, मूड चेक-इन, क्विज़ और हल्के गेम एक ही जगह पर पाएं।' : 'Find breathing, mood check-ins, quizzes, and light calming games in one place.' }}</p>
                 </div>
                 <a href="{{ route('activities.index') }}" class="z-20 inline-flex w-full sm:w-auto items-center justify-center rounded-2xl border border-cyan-200 dark:border-cyan-800/60 bg-white dark:bg-slate-950 px-4 py-3 text-sm font-bold text-cyan-800 dark:text-cyan-200 transition-all duration-300 ease-out hover:-translate-y-0.5 hover:border-cyan-300 hover:bg-cyan-50 hover:text-cyan-900 dark:hover:border-cyan-700 dark:hover:bg-cyan-950/30 dark:hover:text-cyan-100 active:scale-[0.99] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-cyan-400 focus-visible:ring-offset-2 focus-visible:ring-offset-white dark:focus-visible:ring-offset-slate-950">{{ $locale === 'hi' ? 'सभी वेलनेस टूल्स देखें' : 'View All Wellness Tools' }}</a>
             </div>
@@ -615,7 +615,7 @@ $locale === 'hi'
                             </div>
                             <h3 class="text-base sm:text-lg font-bold text-slate-900 dark:text-white mb-2">{{ $item['title'] }}</h3>
                             <p class="text-sm text-slate-600 dark:text-slate-300 leading-6 sm:leading-7">{{ $item['description'] }}</p>
-                            <span class="mt-4 inline-flex items-center rounded-2xl border border-slate-200/80 dark:border-slate-800 bg-white/75 dark:bg-slate-950/70 px-4 py-3 text-sm font-bold text-cyan-700 dark:text-cyan-300">{{ $locale === 'hi' ? 'खोलें' : 'Open' }}</span>
+                            <span class="mt-4 inline-flex self-start items-center gap-1 rounded-full border border-slate-200/80 dark:border-slate-800 bg-white/75 dark:bg-slate-950/70 px-3 py-1.5 text-xs font-bold text-cyan-700 dark:text-cyan-300">{{ $locale === 'hi' ? 'खोलें' : 'Open' }}<i data-lucide="arrow-up-right" class="w-3.5 h-3.5"></i></span>
                         </a>
                     @endforeach
                 </div>

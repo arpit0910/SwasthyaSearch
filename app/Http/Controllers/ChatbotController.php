@@ -56,7 +56,7 @@ class ChatbotController extends Controller
             ['messages' => []]
         );
 
-        $messages = $chatSession->messages ?? [];
+        $messages = $this->normalizeChatHistory($chatSession->messages);
 
         $cityOptions = [$activeCity];
         $selectedCity = $activeCity;
@@ -446,7 +446,7 @@ class ChatbotController extends Controller
         }
 
         $geminiApiKey = (string) config('variable.gemini_key', '');
-        $geminiModel = (string) config('variable.gemini_model', 'gemini-3.5-flash');
+        $geminiModel = $this->normalizeGeminiModel((string) config('variable.gemini_model', 'gemini-2.5-flash'));
         $apiKey = (string) config('variable.groq_key', config('variable.grok_key', ''));
         $grokDepartment = null;
 
@@ -1549,6 +1549,102 @@ class ChatbotController extends Controller
         return trim(implode("\n", $parts));
     }
 
+    private function normalizeGeminiModel(string $model): string
+    {
+        $model = trim($model);
+
+        if ($model === '' || $model === 'gemini-3.5-flash') {
+            return 'gemini-2.5-flash';
+        }
+
+        return $model;
+    }
+
+    private function normalizeChatHistory(mixed $messages): array
+    {
+        if (! is_array($messages)) {
+            return [];
+        }
+
+        $normalized = [];
+
+        foreach ($messages as $message) {
+            $entry = $this->normalizeChatHistoryEntry($message);
+            if ($entry !== null) {
+                $normalized[] = $entry;
+            }
+        }
+
+        return array_values($normalized);
+    }
+
+    private function normalizeChatHistoryEntry(mixed $message): ?array
+    {
+        if (! is_array($message)) {
+            return null;
+        }
+
+        $sender = strtolower(trim((string) ($message['sender'] ?? '')));
+        if (! in_array($sender, ['user', 'bot'], true)) {
+            return null;
+        }
+
+        $normalized = [
+            'sender' => $sender,
+            'text' => $this->normalizeAiText($message['text'] ?? ''),
+        ];
+
+        foreach ([
+            'city',
+            'locale',
+            'timestamp',
+            'response_mode',
+            'load_type',
+            'department_info',
+            'see_all_doctors_url',
+            'see_all_hospitals_url',
+            'see_all_blood_banks_url',
+            'see_all_articles_url',
+        ] as $key) {
+            if (array_key_exists($key, $message)) {
+                $normalized[$key] = $this->normalizeAiText($message[$key] ?? '');
+            }
+        }
+
+        foreach (['show_options', 'suggest_details', 'symptom_match', 'needs_city'] as $key) {
+            if (array_key_exists($key, $message)) {
+                $normalized[$key] = (bool) $message[$key];
+            }
+        }
+
+        foreach (['qa_answer', 'medicine_info'] as $key) {
+            if (isset($message[$key]) && is_array($message[$key])) {
+                $normalized[$key] = $message[$key];
+            }
+        }
+
+        foreach (['city_options', 'doctors', 'hospitals', 'blood_banks', 'articles'] as $key) {
+            if (isset($message[$key])) {
+                $normalized[$key] = $this->normalizeChatHistoryList($message[$key]);
+            }
+        }
+
+        return $normalized;
+    }
+
+    private function normalizeChatHistoryList(mixed $items): array
+    {
+        if ($items instanceof \Illuminate\Support\Collection) {
+            $items = $items->values()->all();
+        }
+
+        if (! is_array($items)) {
+            return [];
+        }
+
+        return array_values($items);
+    }
+
     private function queryGemini(
         string $apiKey,
         string $model,
@@ -1587,19 +1683,23 @@ class ChatbotController extends Controller
         $input .= "\n\nCurrent user message:\n" . $originalMessage;
 
         $body = [
-            'model' => $model,
-            'input' => $input,
-            'response_format' => [
-                'type' => 'text',
-                'mime_type' => 'application/json',
-                'schema' => [
-                    'type' => 'object',
+            'contents' => [
+                [
+                    'parts' => [
+                        ['text' => $input]
+                    ]
+                ]
+            ],
+            'generationConfig' => [
+                'responseMimeType' => 'application/json',
+                'responseSchema' => [
+                    'type' => 'OBJECT',
                     'properties' => [
-                        'reply' => ['type' => 'string'],
-                        'detailed_reply' => ['type' => 'string'],
-                        'department' => ['type' => 'string'],
-                        'symptom_match' => ['type' => 'boolean'],
-                        'emergency' => ['type' => 'boolean'],
+                        'reply' => ['type' => 'STRING'],
+                        'detailed_reply' => ['type' => 'STRING'],
+                        'department' => ['type' => 'STRING'],
+                        'symptom_match' => ['type' => 'BOOLEAN'],
+                        'emergency' => ['type' => 'BOOLEAN'],
                     ],
                     'required' => ['reply', 'symptom_match', 'emergency'],
                 ],
@@ -1614,7 +1714,7 @@ class ChatbotController extends Controller
                     'x-goog-api-key' => $apiKey,
                     'Content-Type' => 'application/json',
                 ])
-                ->post('https://generativelanguage.googleapis.com/v1beta/interactions', $body);
+                ->post('https://generativelanguage.googleapis.com/v1beta/models/' . $model . ':generateContent', $body);
 
             if (! $response->successful()) {
                 logger()->warning('Gemini chatbot request failed.', [
@@ -1648,6 +1748,19 @@ class ChatbotController extends Controller
 
     private function extractGeminiOutputText(array $payload): string
     {
+        $directPaths = [
+            'output.0.content.0.text',
+            'response.output.0.content.0.text',
+            'candidates.0.content.parts.0.text',
+        ];
+
+        foreach ($directPaths as $path) {
+            $text = trim((string) data_get($payload, $path, ''));
+            if ($text !== '') {
+                return $text;
+            }
+        }
+
         $steps = $payload['steps'] ?? [];
 
         foreach ($steps as $step) {

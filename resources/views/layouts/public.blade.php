@@ -2024,26 +2024,97 @@
         refreshChatbotCityUI();
     }
 
+    function normalizeChatbotList(items) {
+        return Array.isArray(items) ? items.filter(item => item && typeof item === 'object') : [];
+    }
+
+    function normalizeChatMessage(message) {
+        if (!message || typeof message !== 'object') return null;
+
+        const sender = message.sender === 'user' ? 'user' : (message.sender === 'bot' ? 'bot' : '');
+        if (!sender) return null;
+
+        return {
+            ...message,
+            sender,
+            text: typeof message.text === 'string' ? message.text : String(message.text ?? ''),
+            show_options: Boolean(message.show_options),
+            suggest_details: Boolean(message.suggest_details),
+            symptom_match: Boolean(message.symptom_match),
+            doctors: normalizeChatbotList(message.doctors),
+            hospitals: normalizeChatbotList(message.hospitals),
+            blood_banks: normalizeChatbotList(message.blood_banks),
+            articles: normalizeChatbotList(message.articles),
+            city_options: Array.isArray(message.city_options) ? message.city_options : [],
+            qa_answer: message.qa_answer && typeof message.qa_answer === 'object' ? message.qa_answer : null,
+            medicine_info: message.medicine_info && typeof message.medicine_info === 'object' ? message.medicine_info : null,
+        };
+    }
+
+    function normalizeChatHistory(history) {
+        if (!Array.isArray(history)) return [];
+        return history.map(normalizeChatMessage).filter(Boolean);
+    }
+
+    function buildFallbackChatbotPayload(responseText) {
+        const trimmed = typeof responseText === 'string' ? responseText.trim() : '';
+        if (!trimmed || /^<!doctype html/i.test(trimmed) || /^<html/i.test(trimmed) || /^<\?xml/i.test(trimmed)) {
+            return null;
+        }
+
+        return {
+            reply: trimmed,
+            history: [{
+                sender: 'bot',
+                text: trimmed,
+                show_options: false,
+                suggest_details: false,
+            }],
+        };
+    }
+
     function renderChatHistory(history = [], options = {}) {
         const messagesDiv = document.getElementById('chatbot-messages');
         if (!messagesDiv) return;
 
         const preserveScroll = options.preserveScroll === true;
         const previousScrollTop = preserveScroll ? messagesDiv.scrollTop : 0;
+        const normalizedHistory = normalizeChatHistory(history);
 
         messagesDiv.innerHTML = '';
 
         let lastBotMsgIndex = -1;
-        for (let i = history.length - 1; i >= 0; i--) {
-            if (history[i].sender === 'bot') {
+        for (let i = normalizedHistory.length - 1; i >= 0; i--) {
+            if (normalizedHistory[i].sender === 'bot') {
                 lastBotMsgIndex = i;
                 break;
             }
         }
 
-        history.forEach((msg, idx) => {
-            appendMessageObj(msg, idx === lastBotMsgIndex, history, idx);
-        });
+        try {
+            normalizedHistory.forEach((msg, idx) => {
+                appendMessageObj(msg, idx === lastBotMsgIndex, normalizedHistory, idx);
+            });
+        } catch (error) {
+            reportChatbotFailure({
+                failureType: 'render_history_failed',
+                errorMessage: error?.message || 'unknown render history error',
+                meta: {
+                    history_length: normalizedHistory.length,
+                }
+            });
+
+            messagesDiv.innerHTML = '';
+            const fallbackReply = typeof options.fallbackReply === 'string' ? options.fallbackReply.trim() : '';
+            if (fallbackReply) {
+                appendMessageObj({
+                    sender: 'bot',
+                    text: fallbackReply,
+                    show_options: false,
+                    suggest_details: false,
+                }, true, [], -1);
+            }
+        }
 
         if (preserveScroll) {
             const maxScrollTop = Math.max(0, messagesDiv.scrollHeight - messagesDiv.clientHeight);
@@ -2348,7 +2419,8 @@
 
             if (data.history) {
                 renderChatHistory(data.history, {
-                    preserveScroll: true
+                    preserveScroll: true,
+                    fallbackReply: typeof data.reply === 'string' ? data.reply : '',
                 });
             }
         } catch (error) {
@@ -2452,7 +2524,8 @@
 
             if (data.history) {
                 renderChatHistory(data.history, {
-                    preserveScroll: true
+                    preserveScroll: true,
+                    fallbackReply: typeof data.reply === 'string' ? data.reply : '',
                 });
             }
         } catch (error) {
@@ -2512,12 +2585,28 @@
         const payload = tryParseChatbotPayload(responseText);
 
         if (payload && typeof payload === 'object') {
+            if (!Array.isArray(payload.history) && typeof payload.reply === 'string' && payload.reply.trim() !== '') {
+                payload.history = [{
+                    sender: 'bot',
+                    text: payload.reply.trim(),
+                    show_options: false,
+                    suggest_details: false,
+                }];
+            }
+
             if (!res.ok && typeof payload.reply === 'string' && payload.reply.trim() !== '') {
                 return payload;
             }
 
             if (res.ok) {
                 return payload;
+            }
+        }
+
+        if (res.ok) {
+            const fallbackPayload = buildFallbackChatbotPayload(responseText);
+            if (fallbackPayload) {
+                return fallbackPayload;
             }
         }
 
