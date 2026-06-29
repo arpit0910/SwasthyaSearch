@@ -55,14 +55,22 @@ class ChatbotController extends Controller
                 $inputCity = Str::limit($inputCity, 120, '');
             }
 
+            logger()->info('1. Inputs parsed', ['session_token' => $sessionToken]);
+
             $searchTokens = $this->extractSearchTokens($userMessage);
+
+            logger()->info('2. Querying/Creating ChatSession in DB', ['session_token' => $sessionToken]);
 
             $chatSession = ChatSession::firstOrCreate(
                 ['session_token' => $sessionToken],
                 ['messages' => []]
             );
 
+            logger()->info('3. ChatSession retrieved/created successfully');
+
             $messages = $this->normalizeChatHistory($chatSession->messages);
+
+            logger()->info('4. Chat history normalized');
 
             $cityOptions = [$activeCity];
             $selectedCity = $activeCity;
