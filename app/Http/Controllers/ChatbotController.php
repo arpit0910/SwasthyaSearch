@@ -29,171 +29,729 @@ class ChatbotController extends Controller
     public function handleMessage(Request $request)
     {
         try {
-        $activeCity = config('healthcare.active_city', 'Jaipur');
-        $sessionToken = trim((string) $request->input('session_token', ''));
-        if ($sessionToken === '') {
-            $sessionToken = Str::random(32);
-        }
-
-        $userMessage = trim((string) $request->input('message', ''));
-        $inputCity = trim((string) $request->input('city', ''));
-        $locale = strtolower(trim((string) $request->input('locale', app()->getLocale())));
-        $locale = in_array($locale, ['en', 'hi'], true) ? $locale : 'en';
-        $loadType = strtolower(trim((string) $request->input('load_type', '')));
-        $loadType = in_array($loadType, ['doctors', 'hospitals', 'articles'], true) ? $loadType : null;
-
-        if (mb_strlen($sessionToken) > 64) {
-            $sessionToken = Str::limit($sessionToken, 64, '');
-        }
-        if (mb_strlen($inputCity) > 120) {
-            $inputCity = Str::limit($inputCity, 120, '');
-        }
-
-        $searchTokens = $this->extractSearchTokens($userMessage);
-
-        $chatSession = ChatSession::firstOrCreate(
-            ['session_token' => $sessionToken],
-            ['messages' => []]
-        );
-
-        $messages = $this->normalizeChatHistory($chatSession->messages);
-
-        $cityOptions = [$activeCity];
-        $selectedCity = $activeCity;
-
-        // Always try GeneralQuestion module first for conversational/help queries
-        // before any directory-loading or AI-powered medical flow.
-        if ($userMessage !== '') {
-            $generalHelpPayload = $this->findGeneralHelpResponse($userMessage, $locale, $selectedCity, $messages);
-            if ($generalHelpPayload !== null) {
-                $messages[] = [
-                    'sender' => 'user',
-                    'text' => $userMessage,
-                    'city' => $selectedCity !== '' ? $selectedCity : null,
-                    'locale' => $locale,
-                    'timestamp' => now()->toIso8601String(),
-                ];
-
-                $messages[] = [
-                    'sender' => 'bot',
-                    'text' => $generalHelpPayload['text'],
-                    'qa_answer' => $generalHelpPayload['qa_answer'],
-                    'city' => $selectedCity !== '' ? $selectedCity : null,
-                    'locale' => $locale,
-                    'show_options' => false,
-                    'response_mode' => 'general_help',
-                    'suggest_details' => (bool) $generalHelpPayload['suggest_details'],
-                    'timestamp' => now()->toIso8601String(),
-                ];
-
-                $chatSession->update(['messages' => $messages]);
-
-                return response()->json([
-                    'session_token' => $sessionToken,
-                    'reply' => $generalHelpPayload['text'],
-                    'city' => $selectedCity,
-                    'city_options' => $cityOptions,
-                    'locale' => $locale,
-                    'qa_answer' => $generalHelpPayload['qa_answer'],
-                    'symptom_match' => false,
-                    'department_info' => null,
-                    'doctors' => [],
-                    'hospitals' => [],
-                    'articles' => [],
-                    'see_all_doctors_url' => route('doctors.index'),
-                    'see_all_hospitals_url' => route('hospitals.index'),
-                    'see_all_articles_url' => route('articles.index'),
-                    'suggest_details' => (bool) $generalHelpPayload['suggest_details'],
-                    'history' => $messages,
-                ]);
-            }
-
-            $medicinePayload = $this->findMedicineResponse($userMessage, $locale);
-            if ($medicinePayload !== null) {
-                $messages[] = [
-                    'sender' => 'user',
-                    'text' => $userMessage,
-                    'city' => $selectedCity !== '' ? $selectedCity : null,
-                    'locale' => $locale,
-                    'timestamp' => now()->toIso8601String(),
-                ];
-
-                 $messages[] = [
-                    'sender' => 'bot',
-                    'text' => $medicinePayload['text'],
-                    'city' => $selectedCity !== '' ? $selectedCity : null,
-                    'locale' => $locale,
-                    'show_options' => false,
-                    'response_mode' => 'medicine_help',
-                    'medicine_info' => $medicinePayload['medicine_info'],
-                    'timestamp' => now()->toIso8601String(),
-                ];
-
-                $chatSession->update(['messages' => $messages]);
-
-                return response()->json([
-                    'session_token' => $sessionToken,
-                    'reply' => $medicinePayload['text'],
-                    'medicine_info' => $medicinePayload['medicine_info'],
-                    'city' => $selectedCity,
-                    'city_options' => $cityOptions,
-                    'locale' => $locale,
-                    'qa_answer' => null,
-                    'symptom_match' => false,
-                    'department_info' => null,
-                    'doctors' => [],
-                    'hospitals' => [],
-                    'articles' => [],
-                    'see_all_doctors_url' => route('doctors.index'),
-                    'see_all_hospitals_url' => route('hospitals.index'),
-                    'see_all_articles_url' => route('articles.index'),
-                    'suggest_details' => false,
-                    'history' => $messages,
-                ]);
-            }
-        }
-
-        if (false && !empty($cityOptions) && ($selectedCity === '' || !in_array($selectedCity, $cityOptions, true))) {
-            $cityPrompt = $locale === 'hi'
-                ? 'कृपया सूची में से अपना शहर चुनें ताकि मैं सही डॉक्टर और अस्पताल दिखा सकूं।'
-                : 'Please choose your city from the list so I can show accurate doctors and hospitals.';
-
-            $messages[] = ['sender' => 'user', 'text' => $userMessage, 'timestamp' => now()->toIso8601String()];
-            $messages[] = ['sender' => 'bot', 'text' => $cityPrompt, 'needs_city' => true, 'city_options' => $cityOptions, 'timestamp' => now()->toIso8601String()];
-            $chatSession->update(['messages' => $messages]);
-
-            return response()->json([
-                'session_token' => $sessionToken,
-                'reply' => $cityPrompt,
-                'needs_city' => true,
-                'city_options' => $cityOptions,
-                'history' => $messages,
+            logger()->info('Chatbot query received', [
+                'message' => $request->input('message'),
+                'city' => $request->input('city'),
+                'locale' => $request->input('locale'),
+                'session_token' => $request->input('session_token'),
             ]);
-        }
-        if ($userMessage === '' && !$loadType) {
-            return response()->json([
-                'session_token' => $sessionToken,
-                'reply' => '',
+            $activeCity = config('healthcare.active_city', 'Jaipur');
+            $sessionToken = trim((string) $request->input('session_token', ''));
+            if ($sessionToken === '') {
+                $sessionToken = Str::random(32);
+            }
+
+            $userMessage = trim((string) $request->input('message', ''));
+            $inputCity = trim((string) $request->input('city', ''));
+            $locale = strtolower(trim((string) $request->input('locale', app()->getLocale())));
+            $locale = in_array($locale, ['en', 'hi'], true) ? $locale : 'en';
+            $loadType = strtolower(trim((string) $request->input('load_type', '')));
+            $loadType = in_array($loadType, ['doctors', 'hospitals', 'articles'], true) ? $loadType : null;
+
+            if (mb_strlen($sessionToken) > 64) {
+                $sessionToken = Str::limit($sessionToken, 64, '');
+            }
+            if (mb_strlen($inputCity) > 120) {
+                $inputCity = Str::limit($inputCity, 120, '');
+            }
+
+            $searchTokens = $this->extractSearchTokens($userMessage);
+
+            $chatSession = ChatSession::firstOrCreate(
+                ['session_token' => $sessionToken],
+                ['messages' => []]
+            );
+
+            $messages = $this->normalizeChatHistory($chatSession->messages);
+
+            $cityOptions = [$activeCity];
+            $selectedCity = $activeCity;
+
+            // Always try GeneralQuestion module first for conversational/help queries
+            // before any directory-loading or AI-powered medical flow.
+            if ($userMessage !== '') {
+                $generalHelpPayload = $this->findGeneralHelpResponse($userMessage, $locale, $selectedCity, $messages);
+                if ($generalHelpPayload !== null) {
+                    logger()->info('Chatbot matched general help query.');
+                    $messages[] = [
+                        'sender' => 'user',
+                        'text' => $userMessage,
+                        'city' => $selectedCity !== '' ? $selectedCity : null,
+                        'locale' => $locale,
+                        'timestamp' => now()->toIso8601String(),
+                    ];
+
+                    $messages[] = [
+                        'sender' => 'bot',
+                        'text' => $generalHelpPayload['text'],
+                        'qa_answer' => $generalHelpPayload['qa_answer'],
+                        'city' => $selectedCity !== '' ? $selectedCity : null,
+                        'locale' => $locale,
+                        'show_options' => false,
+                        'response_mode' => 'general_help',
+                        'suggest_details' => (bool) $generalHelpPayload['suggest_details'],
+                        'timestamp' => now()->toIso8601String(),
+                    ];
+
+                    $chatSession->update(['messages' => $messages]);
+
+                    return response()->json([
+                        'session_token' => $sessionToken,
+                        'reply' => $generalHelpPayload['text'],
+                        'city' => $selectedCity,
+                        'city_options' => $cityOptions,
+                        'locale' => $locale,
+                        'qa_answer' => $generalHelpPayload['qa_answer'],
+                        'symptom_match' => false,
+                        'department_info' => null,
+                        'doctors' => [],
+                        'hospitals' => [],
+                        'articles' => [],
+                        'see_all_doctors_url' => route('doctors.index'),
+                        'see_all_hospitals_url' => route('hospitals.index'),
+                        'see_all_articles_url' => route('articles.index'),
+                        'suggest_details' => (bool) $generalHelpPayload['suggest_details'],
+                        'history' => $messages,
+                    ]);
+                }
+
+                $medicinePayload = $this->findMedicineResponse($userMessage, $locale);
+                if ($medicinePayload !== null) {
+                    logger()->info('Chatbot matched medicine query.');
+                    $messages[] = [
+                        'sender' => 'user',
+                        'text' => $userMessage,
+                        'city' => $selectedCity !== '' ? $selectedCity : null,
+                        'locale' => $locale,
+                        'timestamp' => now()->toIso8601String(),
+                    ];
+
+                    $messages[] = [
+                        'sender' => 'bot',
+                        'text' => $medicinePayload['text'],
+                        'city' => $selectedCity !== '' ? $selectedCity : null,
+                        'locale' => $locale,
+                        'show_options' => false,
+                        'response_mode' => 'medicine_help',
+                        'medicine_info' => $medicinePayload['medicine_info'],
+                        'timestamp' => now()->toIso8601String(),
+                    ];
+
+                    $chatSession->update(['messages' => $messages]);
+
+                    return response()->json([
+                        'session_token' => $sessionToken,
+                        'reply' => $medicinePayload['text'],
+                        'medicine_info' => $medicinePayload['medicine_info'],
+                        'city' => $selectedCity,
+                        'city_options' => $cityOptions,
+                        'locale' => $locale,
+                        'qa_answer' => null,
+                        'symptom_match' => false,
+                        'department_info' => null,
+                        'doctors' => [],
+                        'hospitals' => [],
+                        'articles' => [],
+                        'see_all_doctors_url' => route('doctors.index'),
+                        'see_all_hospitals_url' => route('hospitals.index'),
+                        'see_all_articles_url' => route('articles.index'),
+                        'suggest_details' => false,
+                        'history' => $messages,
+                    ]);
+                }
+            }
+
+            if (false && !empty($cityOptions) && ($selectedCity === '' || !in_array($selectedCity, $cityOptions, true))) {
+                $cityPrompt = $locale === 'hi'
+                    ? 'कृपया सूची में से अपना शहर चुनें ताकि मैं सही डॉक्टर और अस्पताल दिखा सकूं।'
+                    : 'Please choose your city from the list so I can show accurate doctors and hospitals.';
+
+                $messages[] = ['sender' => 'user', 'text' => $userMessage, 'timestamp' => now()->toIso8601String()];
+                $messages[] = ['sender' => 'bot', 'text' => $cityPrompt, 'needs_city' => true, 'city_options' => $cityOptions, 'timestamp' => now()->toIso8601String()];
+                $chatSession->update(['messages' => $messages]);
+
+                return response()->json([
+                    'session_token' => $sessionToken,
+                    'reply' => $cityPrompt,
+                    'needs_city' => true,
+                    'city_options' => $cityOptions,
+                    'history' => $messages,
+                ]);
+            }
+            if ($userMessage === '' && !$loadType) {
+                return response()->json([
+                    'session_token' => $sessionToken,
+                    'reply' => '',
+                    'city' => $selectedCity,
+                    'city_options' => $cityOptions,
+                    'locale' => $locale,
+                    'history' => $messages,
+                ]);
+            }
+
+            if ($loadType) {
+                $lastUserMessageObj = collect($messages)->reverse()->first(fn($msg) => isset($msg['sender']) && $msg['sender'] === 'user' && !empty($msg['text']));
+                $originalMessage = $lastUserMessageObj ? trim($lastUserMessageObj['text']) : '';
+                $searchTokens = $this->extractSearchTokens($originalMessage);
+
+                $qaAnswer = null;
+                if ($originalMessage !== '') {
+                    $qaAnswer = $this->medicalQaService->findBestAnswer($originalMessage, $locale);
+                }
+                $grokDepartment = $qaAnswer ? ($qaAnswer['category'] ?? null) : null;
+                $grokDepartment = is_string($grokDepartment) ? trim($grokDepartment) : $grokDepartment;
+
+                $matchedDeptId = null;
+                if (is_string($grokDepartment) && $grokDepartment !== '') {
+                    $cleanedGrokDept = trim($grokDepartment);
+                    $matchedDept = Department::where('is_active', true)
+                        ->where(function ($query) use ($cleanedGrokDept) {
+                            $query->where('name_en', 'LIKE', $cleanedGrokDept)
+                                ->orWhere('name_hi', 'LIKE', $cleanedGrokDept)
+                                ->orWhereRaw('LOWER(name_en) = ?', [strtolower($cleanedGrokDept)])
+                                ->orWhereRaw('LOWER(name_hi) = ?', [strtolower($cleanedGrokDept)])
+                                ->orWhere('name_en', 'LIKE', "%{$cleanedGrokDept}%")
+                                ->orWhere('name_hi', 'LIKE', "%{$cleanedGrokDept}%");
+                        })
+                        ->first();
+
+                    if (! $matchedDept) {
+                        $lowerGrokDept = strtolower($cleanedGrokDept);
+                        $allDepts = Department::where('is_active', true)->get();
+                        foreach ($allDepts as $dept) {
+                            if (
+                                stripos($lowerGrokDept, strtolower($dept->name_en)) !== false ||
+                                ($dept->name_hi && stripos($lowerGrokDept, strtolower($dept->name_hi)) !== false)
+                            ) {
+                                $matchedDept = $dept;
+                                break;
+                            }
+                        }
+                    }
+
+                    if ($matchedDept) {
+                        $matchedDeptId = $matchedDept->id;
+                    }
+                }
+
+                if (! $matchedDeptId) {
+                    $allDiseases = Disease::with('department')->get();
+                    foreach ($allDiseases as $disease) {
+                        $diseaseNameEn = trim((string) $disease->name_en);
+                        $diseaseNameHi = trim((string) ($disease->name_hi ?? ''));
+
+                        if (
+                            $diseaseNameEn !== '' &&
+                            (stripos($originalMessage, $diseaseNameEn) !== false || stripos($diseaseNameEn, $originalMessage) !== false)
+                        ) {
+                            $matchedDeptId = $disease->department_id;
+                            break;
+                        }
+                        if (
+                            $diseaseNameHi !== '' &&
+                            (mb_stripos($originalMessage, $diseaseNameHi) !== false || mb_stripos($diseaseNameHi, $originalMessage) !== false)
+                        ) {
+                            $matchedDeptId = $disease->department_id;
+                            break;
+                        }
+                    }
+                }
+
+                if (! $matchedDeptId) {
+                    $allDepartments = Department::where('is_active', true)->get();
+                    foreach ($allDepartments as $dept) {
+                        $deptNameEn = trim((string) $dept->name_en);
+                        $deptNameHi = trim((string) ($dept->name_hi ?? ''));
+
+                        if (
+                            $deptNameEn !== '' &&
+                            (stripos($originalMessage, $deptNameEn) !== false || stripos($deptNameEn, $originalMessage) !== false)
+                        ) {
+                            $matchedDeptId = $dept->id;
+                            break;
+                        }
+                        if (
+                            $deptNameHi !== '' &&
+                            (mb_stripos($originalMessage, $deptNameHi) !== false || mb_stripos($deptNameHi, $originalMessage) !== false)
+                        ) {
+                            $matchedDeptId = $dept->id;
+                            break;
+                        }
+                    }
+                }
+
+                $botReply = '';
+                $newMsg = [
+                    'sender' => 'bot',
+                    'city' => $selectedCity,
+                    'locale' => $locale,
+                    'show_options' => false,
+                    'timestamp' => now()->toIso8601String(),
+                ];
+
+                if ($loadType === 'doctors') {
+                    $doctors = collect();
+                    if ($matchedDeptId) {
+                        $doctors = Doctor::where('department_id', $matchedDeptId)
+                            ->with(['department', 'hospitals'])
+                            ->where('is_verified', true)
+                            ->whereHas('hospitals', fn($q) => $q->where('city', $selectedCity))
+                            ->take(3)
+                            ->get();
+                    }
+
+                    if ($doctors->isEmpty()) {
+                        $doctors = Doctor::with(['department', 'hospitals'])
+                            ->where('is_verified', true)
+                            ->whereHas('hospitals', fn($q) => $q->where('city', $selectedCity))
+                            ->where(function ($query) use ($originalMessage, $searchTokens) {
+                                if (! empty($searchTokens)) {
+                                    foreach ($searchTokens as $token) {
+                                        $query->orWhere('first_name', 'LIKE', "%{$token}%")
+                                            ->orWhere('last_name', 'LIKE', "%{$token}%")
+                                            ->orWhereRaw("CONCAT(first_name, ' ', last_name) LIKE ?", ["%{$token}%"])
+                                            ->orWhere('about_en', 'LIKE', "%{$token}%")
+                                            ->orWhere('about_hi', 'LIKE', "%{$token}%");
+                                    }
+                                } else {
+                                    $query->where('first_name', 'LIKE', "%{$originalMessage}%")
+                                        ->orWhere('last_name', 'LIKE', "%{$originalMessage}%")
+                                        ->orWhereRaw("CONCAT(first_name, ' ', last_name) LIKE ?", ["%{$originalMessage}%"]);
+                                }
+                            })
+                            ->take(3)
+                            ->get();
+                    }
+
+                    $deptForFilter = $matchedDeptId ?: (optional($doctors->first())->department_id ?? 'All');
+                    $seeAllDoctorsUrl = route('doctors.index');
+
+                    $botReply = $locale === 'hi'
+                        ? "I found some recommended specialist doctors in {$selectedCity}:"
+                        : "I have found some recommended specialist doctors in {$selectedCity}:";
+
+                    $newMsg['text'] = $botReply;
+                    $newMsg['doctors'] = $doctors;
+                    $newMsg['see_all_doctors_url'] = $seeAllDoctorsUrl;
+                } elseif ($loadType === 'hospitals') {
+                    $hospitals = Hospital::where('is_verified', true)
+                        ->where('city', $selectedCity)
+                        ->where(function ($query) use ($originalMessage, $searchTokens) {
+                            if (! empty($searchTokens)) {
+                                foreach ($searchTokens as $token) {
+                                    $query->orWhere('name_en', 'LIKE', "%{$token}%")
+                                        ->orWhere('name_hi', 'LIKE', "%{$token}%")
+                                        ->orWhere('address', 'LIKE', "%{$token}%")
+                                        ->orWhere('type', 'LIKE', "%{$token}%");
+                                }
+                            } else {
+                                $query->where('name_en', 'LIKE', "%{$originalMessage}%")
+                                    ->orWhere('name_hi', 'LIKE', "%{$originalMessage}%")
+                                    ->orWhere('address', 'LIKE', "%{$originalMessage}%")
+                                    ->orWhere('type', 'LIKE', "%{$originalMessage}%");
+                            }
+                        })
+                        ->take(3)
+                        ->get();
+
+                    if ($hospitals->isEmpty()) {
+                        $hospitals = Hospital::where('is_verified', true)->where('city', $selectedCity)->latest()->take(3)->get();
+                    }
+
+                    $seeAllHospitalsUrl = route('hospitals.index');
+
+                    $botReply = $locale === 'hi'
+                        ? "I found the following hospitals and clinics in {$selectedCity}:"
+                        : "I have found the following hospitals and clinics in {$selectedCity}:";
+
+                    $newMsg['text'] = $botReply;
+                    $newMsg['hospitals'] = $hospitals;
+                    $newMsg['see_all_hospitals_url'] = $seeAllHospitalsUrl;
+                } elseif ($loadType === 'articles') {
+                    $articles = Article::where('is_published', true)
+                        ->where(function ($query) use ($originalMessage) {
+                            $query->where('title_en', 'LIKE', "%{$originalMessage}%")
+                                ->orWhere('title_hi', 'LIKE', "%{$originalMessage}%")
+                                ->orWhere('content_en', 'LIKE', "%{$originalMessage}%")
+                                ->orWhere('content_hi', 'LIKE', "%{$originalMessage}%");
+                        })
+                        ->take(3)
+                        ->get();
+
+                    if ($articles->isEmpty()) {
+                        $articles = Article::where('is_published', true)->latest()->take(3)->get();
+                    }
+
+                    $seeAllArticlesUrl = route('articles.index', ['category' => $grokDepartment ?: 'All']);
+
+                    $botReply = $locale === 'hi'
+                        ? "Here are some health articles that might be helpful for you:"
+                        : "Here are some health articles that might be helpful for you:";
+
+                    $newMsg['text'] = $botReply;
+                    $newMsg['articles'] = $articles;
+                    $newMsg['see_all_articles_url'] = $seeAllArticlesUrl;
+                }
+
+                $messages[] = $newMsg;
+                $chatSession->update(['messages' => $messages]);
+
+                return response()->json([
+                    'session_token' => $sessionToken,
+                    'reply' => $botReply,
+                    'city' => $selectedCity,
+                    'locale' => $locale,
+                    'history' => $messages,
+                ]);
+            }
+
+            $messages[] = [
+                'sender' => 'user',
+                'text' => $userMessage,
                 'city' => $selectedCity,
-                'city_options' => $cityOptions,
                 'locale' => $locale,
-                'history' => $messages,
-            ]);
-        }
+                'timestamp' => now()->toIso8601String(),
+            ];
 
-        if ($loadType) {
-            $lastUserMessageObj = collect($messages)->reverse()->first(fn($msg) => isset($msg['sender']) && $msg['sender'] === 'user' && !empty($msg['text']));
-            $originalMessage = $lastUserMessageObj ? trim($lastUserMessageObj['text']) : '';
+            // Directory-first routing layer to reduce AI usage and return exact entity matches quickly.
+            // If user is searching names/departments/providers, we should avoid AI calls.
+            if ($this->shouldRouteToDirectory($userMessage, $searchTokens, $selectedCity)) {
+                logger()->info('Chatbot routing query directly to directory.');
+                $directoryPayload = $this->buildDirectoryFirstResponse($originalMessage = $userMessage, $searchTokens, $selectedCity, $locale);
+                if ($directoryPayload !== null) {
+                    $messages[] = array_merge([
+                        'sender' => 'bot',
+                        'city' => $selectedCity,
+                        'locale' => $locale,
+                        'timestamp' => now()->toIso8601String(),
+                        'response_mode' => 'directory_first',
+                    ], $directoryPayload);
+
+                    $chatSession->update(['messages' => $messages]);
+
+                    return response()->json([
+                        'session_token' => $sessionToken,
+                        'reply' => $directoryPayload['text'] ?? '',
+                        'city' => $selectedCity,
+                        'city_options' => $cityOptions,
+                        'locale' => $locale,
+                        'qa_answer' => null,
+                        'symptom_match' => false,
+                        'department_info' => $directoryPayload['department_info'] ?? null,
+                        'doctors' => $directoryPayload['doctors'] ?? [],
+                        'hospitals' => $directoryPayload['hospitals'] ?? [],
+                        'blood_banks' => $directoryPayload['blood_banks'] ?? [],
+                        'articles' => [],
+                        'see_all_doctors_url' => $directoryPayload['see_all_doctors_url'] ?? route('doctors.index'),
+                        'see_all_hospitals_url' => $directoryPayload['see_all_hospitals_url'] ?? route('hospitals.index'),
+                        'see_all_blood_banks_url' => $directoryPayload['see_all_blood_banks_url'] ?? route('blood_banks.index'),
+                        'see_all_articles_url' => route('articles.index'),
+                        'suggest_details' => false,
+                        'history' => $messages,
+                    ]);
+                }
+            }
+
+            $geminiApiKey = (string) config('variable.gemini_key', '');
+            $geminiModel = $this->normalizeGeminiModel((string) config('variable.gemini_model', 'gemini-2.5-flash'));
+            $apiKey = (string) config('variable.groq_key', config('variable.grok_key', ''));
+            $grokDepartment = null;
+
+            $lowerMsg = mb_strtolower($userMessage);
+            $isDetailRequest = false;
+            $detailKeywords = [
+                'detail',
+                'explain',
+                'more',
+                'elaborate',
+                'describe',
+                'deep dive',
+                'विस्तार',
+                'विवरण',
+                'अधिक',
+                'समझाएं',
+                'और बताएं'
+            ];
+            foreach ($detailKeywords as $keyword) {
+                if (mb_stripos($lowerMsg, $keyword) !== false) {
+                    $isDetailRequest = true;
+                    break;
+                }
+            }
+
+            $originalMessage = $userMessage;
+            if ($isDetailRequest) {
+                $pastUserMsgs = collect($messages)
+                    ->filter(fn($msg) => isset($msg['sender']) && $msg['sender'] === 'user' && isset($msg['text']))
+                    ->filter(function ($msg) use ($detailKeywords) {
+                        $txt = mb_strtolower($msg['text']);
+                        foreach ($detailKeywords as $keyword) {
+                            if (mb_stripos($txt, $keyword) !== false) {
+                                return false;
+                            }
+                        }
+                        return true;
+                    });
+                if ($pastUserMsgs->isNotEmpty()) {
+                    $originalMessage = $pastUserMsgs->last()['text'];
+                }
+            }
             $searchTokens = $this->extractSearchTokens($originalMessage);
 
             $qaAnswer = null;
-            if ($originalMessage !== '') {
-                $qaAnswer = $this->medicalQaService->findBestAnswer($originalMessage, $locale);
+            $symptomMatch = false;
+            $botReply = '';
+
+            // Try Gemini first for the primary conversational response.
+            logger()->info('Attempting Gemini query...', [
+                'model' => $geminiModel,
+                'has_api_key' => $geminiApiKey !== '',
+            ]);
+            if ($geminiApiKey !== '' && $originalMessage !== '') {
+                $geminiPayload = $this->queryGemini(
+                    apiKey: $geminiApiKey,
+                    model: $geminiModel,
+                    originalMessage: $originalMessage,
+                    locale: $locale,
+                    messages: $messages,
+                );
+
+                if ($geminiPayload !== null) {
+                    logger()->info('Gemini query succeeded.');
+                    $replyText = $this->normalizeAiText($geminiPayload['reply'] ?? null);
+                    $detailedReply = $this->normalizeAiText($geminiPayload['detailed_reply'] ?? null);
+                    $department = $this->normalizeAiText($geminiPayload['department'] ?? null, 'General Medical');
+
+                    if ($replyText !== '') {
+                        try {
+                            CachedMedicalQuestion::updateOrCreate(
+                                ['question_en' => $locale === 'en' ? $originalMessage : $originalMessage],
+                                [
+                                    'question_hi' => $originalMessage,
+                                    'answer_en' => $locale === 'en' ? $replyText : '',
+                                    'answer_hi' => $locale === 'hi' ? $replyText : '',
+                                    'detailed_answer_en' => $locale === 'en' ? ($detailedReply !== '' ? $detailedReply : null) : null,
+                                    'detailed_answer_hi' => $locale === 'hi' ? ($detailedReply !== '' ? $detailedReply : null) : null,
+                                    'category' => $department !== '' ? $department : 'General Medical',
+                                ]
+                            );
+                        } catch (Throwable $cacheException) {
+                            logger()->warning('Unable to cache chatbot Gemini answer: ' . $cacheException->getMessage());
+                        }
+
+                        $qaAnswer = [
+                            'question' => $originalMessage,
+                            'answer' => $replyText,
+                            'category' => $department !== '' ? $department : 'General Medical',
+                            'source' => 'gemini_ai',
+                            'source_id' => null,
+                            'source_table' => null,
+                            'confidence' => 100.0,
+                            'detailed_answer_en' => $locale === 'en' ? ($detailedReply !== '' ? $detailedReply : null) : null,
+                            'detailed_answer_hi' => $locale === 'hi' ? ($detailedReply !== '' ? $detailedReply : null) : null,
+                            'detailed_answer' => $detailedReply !== '' ? $detailedReply : null,
+                        ];
+
+                        $botReply = $replyText;
+                        $symptomMatch = (bool) ($geminiPayload['symptom_match'] ?? false);
+                        $grokDepartment = $department !== '' ? $department : null;
+                        $isEmergency = (bool) ($geminiPayload['emergency'] ?? false);
+
+                        if ($isEmergency) {
+                            $qaAnswer['source'] = 'emergency_rule';
+                            $botReply = $locale === 'hi'
+                                ? 'यह एक आपातकालीन स्थिति हो सकती है। यदि आपको छाती में दर्द, सांस लेने में तकलीफ, या बेहोशी महसूस हो रही है, तो तुरंत आपातकालीन सेवाओं को कॉल करें और नजदीकी आपातकालीन कक्ष में जाएं।'
+                                : 'This may be an emergency. If you have chest pain, shortness of breath, or fainting, call emergency services immediately and go to the nearest emergency room.';
+                            $qaAnswer['answer'] = $botReply;
+                        }
+                    }
+                } else {
+                    logger()->warning('Gemini query returned null payload.');
+                }
             }
-            $grokDepartment = $qaAnswer ? ($qaAnswer['category'] ?? null) : null;
-            $grokDepartment = is_string($grokDepartment) ? trim($grokDepartment) : $grokDepartment;
+
+            // Fallback to Groq if Gemini is unavailable or did not return a usable answer.
+            if (!$qaAnswer && $apiKey !== '' && $originalMessage !== '') {
+                logger()->info('Gemini failed or skipped. Falling back to Groq query...', [
+                    'has_groq_key' => $apiKey !== '',
+                ]);
+                $systemPrompt = "You are Jeeva, a professional, warm, empathetic, and knowledgeable medical and healthcare assistant. " .
+                    "Your goal is to have a natural, helpful conversation with the user and provide initial medical guidance based on their questions, symptoms, or concerns.\n\n" .
+                    "You MUST return a JSON object containing exactly these 5 keys:\n" .
+                    "1. 'reply': A warm, caring, and human-like response in the language of the user's query (" . ($locale === 'hi' ? 'Hindi' : 'English') . "). Answer their query directly. Avoid sounding like a machine; use friendly, compassionate phrasing. Limit the reply to 2-3 sentences. You can ask a natural follow-up question if appropriate to keep the conversation going.\n" .
+                    "2. 'detailed_reply': A comprehensive, detailed, and structured explanation in " . ($locale === 'hi' ? 'Hindi' : 'English') . " (using markdown formatting like bullet points and bold text) that explains symptoms, home care, precautions, or medical descriptions. Set to null if the query is a simple greeting or general help request (not a medical topic).\n" .
+                    "3. 'department': The English name of the most appropriate medical department from this list: ['Cardiology', 'Pediatrics', 'Neurology', 'Dermatology', 'General Medicine', 'Orthopedics', 'Gynecology', 'ENT (Otolaryngology)', 'Ophthalmology', 'Urology', 'Dentistry', 'Psychiatry'] that matches the symptoms described, or null if no medical department is relevant.\n" .
+                    "4. 'symptom_match': A boolean (true if the user is describing medical symptoms or asking health/medical questions, false otherwise).\n" .
+                    "5. 'emergency': A boolean (true if the symptoms suggest a life-threatening medical emergency like severe chest pain, extreme breathlessness, sudden speech loss, etc.).\n\n" .
+                    "Do NOT wrap the JSON response in markdown blocks like ```json. Output ONLY raw valid JSON, starting with { and ending with }.";
+
+                $grokMessages = [
+                    ['role' => 'system', 'content' => $systemPrompt]
+                ];
+
+                // Retrieve database RAG context
+                $context = $this->medicalQaService->retrieveRelevantContext($originalMessage, $locale);
+                if ($context !== '') {
+                    $grokMessages[0]['content'] .= "\n\n---\nRETRIEVED KNOWLEDGE BASE CONTEXT (Use this as reference if relevant to the query):\n" . $context . "\n---";
+                }
+
+                // Include past message history, excluding the final user message which was already pushed to $messages
+                $pastMessages = collect($messages)
+                    ->slice(0, -1)
+                    ->filter(fn($msg) => isset($msg['sender']) && isset($msg['text']) && in_array($msg['sender'], ['user', 'bot'], true))
+                    ->take(-10);
+
+                foreach ($pastMessages as $msg) {
+                    $grokMessages[] = [
+                        'role' => $msg['sender'] === 'user' ? 'user' : 'assistant',
+                        'content' => $msg['text'],
+                    ];
+                }
+
+                $grokMessages[] = [
+                    'role' => 'user',
+                    'content' => $originalMessage,
+                ];
+
+                $models = [
+                    'llama-3.3-70b-versatile',
+                    'llama-3.1-8b-instant'
+                ];
+
+                foreach ($models as $model) {
+                    try {
+                        logger()->info("Sending POST request to Groq API with model: {$model}");
+                        $response = Http::retry(2, 250)
+                            ->connectTimeout(8)
+                            ->withToken($apiKey)
+                            ->timeout(12)
+                            ->post('https://api.groq.com/openai/v1/chat/completions', [
+                                'messages' => $grokMessages,
+                                'model' => $model,
+                                'temperature' => 0.7,
+                                'max_completion_tokens' => 1024,
+                                'top_p' => 1,
+                                'stream' => false,
+                                'response_format' => ['type' => 'json_object'],
+                                'stop' => null,
+                            ]);
+
+                        if ($response->successful()) {
+                            logger()->info("Groq query succeeded with model: {$model}");
+                            $jsonContent = $response->json('choices.0.message.content');
+                            $decoded = $this->decodeAiJsonResponse($jsonContent);
+                            if (is_array($decoded) && isset($decoded['reply'])) {
+                                $replyText = $this->normalizeAiText($decoded['reply'] ?? null);
+                                $detailedReply = $this->normalizeAiText($decoded['detailed_reply'] ?? null);
+                                $department = $this->normalizeAiText($decoded['department'] ?? null, 'General Medical');
+                                $questionEn = trim($locale === 'en'
+                                    ? $originalMessage
+                                    : $this->normalizeAiText($decoded['question_en'] ?? null, $originalMessage));
+                                $questionHi = trim($locale === 'hi'
+                                    ? $originalMessage
+                                    : $this->normalizeAiText($decoded['question_hi'] ?? null, $originalMessage));
+
+                                if ($replyText === '') {
+                                    throw new Exception('Groq response missing usable reply text.');
+                                }
+
+                                // Cache failures should not block the live answer.
+                                try {
+                                    CachedMedicalQuestion::updateOrCreate(
+                                        ['question_en' => $questionEn !== '' ? $questionEn : $originalMessage],
+                                        [
+                                            'question_hi' => $questionHi !== '' ? $questionHi : $originalMessage,
+                                            'answer_en' => $locale === 'en' ? $replyText : '',
+                                            'answer_hi' => $locale === 'hi' ? $replyText : '',
+                                            'detailed_answer_en' => $locale === 'en' ? ($detailedReply !== '' ? $detailedReply : null) : null,
+                                            'detailed_answer_hi' => $locale === 'hi' ? ($detailedReply !== '' ? $detailedReply : null) : null,
+                                            'category' => $department !== '' ? $department : 'General Medical',
+                                        ]
+                                    );
+                                } catch (Throwable $cacheException) {
+                                    logger()->warning('Unable to cache chatbot AI answer: ' . $cacheException->getMessage());
+                                }
+
+                                $qaAnswer = [
+                                    'question' => $originalMessage,
+                                    'answer' => $replyText,
+                                    'category' => $department !== '' ? $department : 'General Medical',
+                                    'source' => 'jeeva_ai',
+                                    'source_id' => null,
+                                    'source_table' => null,
+                                    'confidence' => 100.0,
+                                    'detailed_answer_en' => $locale === 'en' ? ($detailedReply !== '' ? $detailedReply : null) : null,
+                                    'detailed_answer_hi' => $locale === 'hi' ? ($detailedReply !== '' ? $detailedReply : null) : null,
+                                    'detailed_answer' => $detailedReply !== '' ? $detailedReply : null,
+                                ];
+
+                                $botReply = $replyText;
+                                $symptomMatch = (bool) ($decoded['symptom_match'] ?? false);
+                                $grokDepartment = $department !== '' ? $department : null;
+                                $isEmergency = (bool) ($decoded['emergency'] ?? false);
+
+                                if ($isEmergency) {
+                                    $qaAnswer['source'] = 'emergency_rule';
+                                    $botReply = $locale === 'hi'
+                                        ? 'यह एक आपातकालीन स्थिति हो सकती है। यदि आपको छाती में दर्द, सांस लेने में तकलीफ, या बेहोशी महसूस हो रही है, तो तुरंत आपातकालीन सेवाओं को कॉल करें और नजदीकी आपातकालीन कक्ष में जाएं।'
+                                        : 'This may be an emergency. If you have chest pain, shortness of breath, or fainting, call emergency services immediately and go to the nearest emergency room.';
+                                    $qaAnswer['answer'] = $botReply;
+                                }
+                                break;
+                            }
+                        } else {
+                            logger()->warning('Groq chatbot request failed.', [
+                                'model' => $model,
+                                'status' => $response->status(),
+                                'body' => Str::limit($response->body(), 1000),
+                            ]);
+                        }
+                    } catch (Exception $e) {
+                        logger()->error("Groq call exception with model {$model}: " . $e->getMessage(), [
+                            'exception' => get_class($e),
+                            'trace' => Str::limit($e->getTraceAsString(), 1000),
+                        ]);
+                    }
+                }
+            }
+
+            // Fallback to static DB match if Groq call failed or key is missing
+            if (!$qaAnswer && $originalMessage !== '') {
+                logger()->info('AI calls failed or skipped. Falling back to static DB match.');
+                $qaAnswer = $this->medicalQaService->findBestAnswer($originalMessage, $locale);
+                if ($qaAnswer) {
+                    logger()->info('Static DB match succeeded.', ['source' => $qaAnswer['source'] ?? 'unknown']);
+                    $botReply = $qaAnswer['answer'];
+                    $grokDepartment = $qaAnswer['category'] ?? null;
+                    $qaSource = (string) ($qaAnswer['source'] ?? '');
+                    $symptomMatch = (bool) $qaAnswer && (
+                        in_array($qaSource, ['cached_medical_questions', 'medical_qa_config', 'grok_ai', 'grok_ai_cached', 'general_questions', 'faq'], true)
+                        || str_ends_with($qaSource, '_like')
+                    );
+                }
+            }
+
+            if (!$qaAnswer) {
+                logger()->info('Static DB match failed. Falling back to generated fallback answer.');
+                $qaAnswer = $this->medicalQaService->generateFallbackAnswer($originalMessage, $locale);
+                if ($qaAnswer) {
+                    logger()->info('Generated fallback answer succeeded.');
+                    $botReply = $qaAnswer['answer'];
+                    $grokDepartment = $qaAnswer['category'] ?? null;
+                    $symptomMatch = true;
+                }
+            }
 
             $matchedDeptId = null;
+            $matchedDiseaseNameEn = null;
+            $matchedDiseaseNameHi = null;
+            $departmentInfo = null;
+
+            $doctors = collect();
+            $hospitals = collect();
+            $articles = collect();
+
+            // Match department using classification from Grok AI (or fallback match)
             if (is_string($grokDepartment) && $grokDepartment !== '') {
                 $cleanedGrokDept = trim($grokDepartment);
                 $matchedDept = Department::where('is_active', true)
@@ -207,6 +765,7 @@ class ChatbotController extends Controller
                     })
                     ->first();
 
+                // If not found, try a looser contains match in English/Hindi
                 if (! $matchedDept) {
                     $lowerGrokDept = strtolower($cleanedGrokDept);
                     $allDepts = Department::where('is_active', true)->get();
@@ -226,6 +785,22 @@ class ChatbotController extends Controller
                 }
             }
 
+            if (DB::getDriverName() === 'pgsql') {
+                try {
+                    $stringObj = Str::of($originalMessage);
+                    $userEmbedding = method_exists($stringObj, 'toEmbeddings') ? $stringObj->toEmbeddings() : json_encode(array_fill(0, 1536, 0.01));
+                    $diseases = Disease::whereVectorSimilarTo('symptoms_embedding', $userEmbedding)->with(['department'])->get();
+
+                    if ($diseases->isNotEmpty()) {
+                        $firstMatch = $diseases->first();
+                        $matchedDeptId = $firstMatch->department_id;
+                        $matchedDiseaseNameEn = $firstMatch->name_en;
+                        $matchedDiseaseNameHi = $firstMatch->name_hi;
+                    }
+                } catch (Exception $e) {
+                }
+            }
+
             if (! $matchedDeptId) {
                 $allDiseases = Disease::with('department')->get();
                 foreach ($allDiseases as $disease) {
@@ -237,6 +812,8 @@ class ChatbotController extends Controller
                         (stripos($originalMessage, $diseaseNameEn) !== false || stripos($diseaseNameEn, $originalMessage) !== false)
                     ) {
                         $matchedDeptId = $disease->department_id;
+                        $matchedDiseaseNameEn = $disease->name_en;
+                        $matchedDiseaseNameHi = $disease->name_hi;
                         break;
                     }
                     if (
@@ -244,6 +821,8 @@ class ChatbotController extends Controller
                         (mb_stripos($originalMessage, $diseaseNameHi) !== false || mb_stripos($diseaseNameHi, $originalMessage) !== false)
                     ) {
                         $matchedDeptId = $disease->department_id;
+                        $matchedDiseaseNameEn = $disease->name_en;
+                        $matchedDiseaseNameHi = $disease->name_hi;
                         break;
                     }
                 }
@@ -272,647 +851,112 @@ class ChatbotController extends Controller
                 }
             }
 
-            $botReply = '';
-            $newMsg = [
+            if ($matchedDeptId) {
+                $dept = Department::find($matchedDeptId);
+                $deptNameEn = $dept?->name_en ?? '';
+                $deptNameHi = $dept?->name_hi ?? '';
+                $deptName = $locale === 'hi' ? ($deptNameHi ?: $deptNameEn) : $deptNameEn;
+
+                if ($matchedDiseaseNameEn) {
+                    $disName = $locale === 'hi' ? ($matchedDiseaseNameHi ?: $matchedDiseaseNameEn) : $matchedDiseaseNameEn;
+                    $departmentInfo = $locale === 'hi'
+                        ? "आपकी खोज '{$disName}' के लिए '{$deptName}' विभाग अनुशंसित है।"
+                        : "For '{$disName}', '{$deptName}' department is recommended.";
+                } else {
+                    $departmentInfo = $locale === 'hi'
+                        ? "आपकी खोज के आधार पर '{$deptName}' विभाग अनुशंसित है।"
+                        : "Based on your query, '{$deptName}' department is recommended.";
+                }
+            }
+
+            $deptForFilter = $matchedDeptId ?: 'All';
+            $seeAllDoctorsUrl = route('doctors.index');
+            $seeAllHospitalsUrl = route('hospitals.index');
+            $seeAllArticlesUrl = route('articles.index', ['category' => $grokDepartment ?: 'All']);
+
+            if (!$botReply) {
+                if ($qaAnswer) {
+                    if ($isDetailRequest) {
+                        $detailedAnswer = $locale === 'hi'
+                            ? ($qaAnswer['detailed_answer_hi'] ?? $qaAnswer['detailed_answer_en'] ?? $qaAnswer['detailed_answer'] ?? null)
+                            : ($qaAnswer['detailed_answer_en'] ?? $qaAnswer['detailed_answer_hi'] ?? $qaAnswer['detailed_answer'] ?? null);
+                        $botReply = (string) ($detailedAnswer ?: $qaAnswer['answer']);
+                    } else {
+                        $botReply = (string) $qaAnswer['answer'];
+                    }
+                } elseif ($departmentInfo) {
+                    $botReply = $locale === 'hi'
+                        ? 'मैंने आपकी खोज का विश्लेषण किया है। आपके शहर में संबंधित डॉक्टर और अस्पताल नीचे दिए गए हैं:'
+                        : 'I analyzed your query. Here are relevant doctors and hospitals in your city:';
+                } else {
+                    $botReply = $locale === 'hi'
+                        ? 'मुझे कोई सटीक परिणाम नहीं मिला, लेकिन आपके शहर में कुछ उपयोगी विकल्प नीचे दिए गए हैं।'
+                        : 'I could not find an exact match, but here are useful options in your city.';
+                }
+            }
+
+            $suggestDetails = false;
+            if ($qaAnswer && !$isDetailRequest && ($qaAnswer['source'] ?? '') !== 'emergency_rule') {
+                $detailedAnswer = $locale === 'hi'
+                    ? ($qaAnswer['detailed_answer_hi'] ?? $qaAnswer['detailed_answer_en'] ?? $qaAnswer['detailed_answer'] ?? null)
+                    : ($qaAnswer['detailed_answer_en'] ?? $qaAnswer['detailed_answer_hi'] ?? $qaAnswer['detailed_answer'] ?? null);
+                if (!empty($detailedAnswer)) {
+                    $suggestDetails = true;
+                }
+            }
+
+            $messages[] = [
                 'sender' => 'bot',
+                'text' => $botReply,
                 'city' => $selectedCity,
                 'locale' => $locale,
-                'show_options' => false,
+                'qa_answer' => $qaAnswer,
+                'symptom_match' => $symptomMatch,
+                'department_info' => $departmentInfo,
+                'doctors' => $doctors,
+                'hospitals' => $hospitals,
+                'articles' => $articles,
+                'see_all_doctors_url' => $seeAllDoctorsUrl,
+                'see_all_hospitals_url' => $seeAllHospitalsUrl,
+                'see_all_articles_url' => $seeAllArticlesUrl,
+                'suggest_details' => $suggestDetails,
+                'show_options' => true,
                 'timestamp' => now()->toIso8601String(),
             ];
 
-            if ($loadType === 'doctors') {
-                $doctors = collect();
-                if ($matchedDeptId) {
-                    $doctors = Doctor::where('department_id', $matchedDeptId)
-                        ->with(['department', 'hospitals'])
-                        ->where('is_verified', true)
-                        ->whereHas('hospitals', fn($q) => $q->where('city', $selectedCity))
-                        ->take(3)
-                        ->get();
-                }
-
-                if ($doctors->isEmpty()) {
-                    $doctors = Doctor::with(['department', 'hospitals'])
-                        ->where('is_verified', true)
-                        ->whereHas('hospitals', fn($q) => $q->where('city', $selectedCity))
-                        ->where(function ($query) use ($originalMessage, $searchTokens) {
-                            if (! empty($searchTokens)) {
-                                foreach ($searchTokens as $token) {
-                                    $query->orWhere('first_name', 'LIKE', "%{$token}%")
-                                        ->orWhere('last_name', 'LIKE', "%{$token}%")
-                                        ->orWhereRaw("CONCAT(first_name, ' ', last_name) LIKE ?", ["%{$token}%"])
-                                        ->orWhere('about_en', 'LIKE', "%{$token}%")
-                                        ->orWhere('about_hi', 'LIKE', "%{$token}%");
-                                }
-                            } else {
-                                $query->where('first_name', 'LIKE', "%{$originalMessage}%")
-                                    ->orWhere('last_name', 'LIKE', "%{$originalMessage}%")
-                                    ->orWhereRaw("CONCAT(first_name, ' ', last_name) LIKE ?", ["%{$originalMessage}%"]);
-                            }
-                        })
-                        ->take(3)
-                        ->get();
-                }
-
-                $deptForFilter = $matchedDeptId ?: (optional($doctors->first())->department_id ?? 'All');
-                $seeAllDoctorsUrl = route('doctors.index');
-
-                $botReply = $locale === 'hi'
-                    ? "I found some recommended specialist doctors in {$selectedCity}:"
-                    : "I have found some recommended specialist doctors in {$selectedCity}:";
-
-                $newMsg['text'] = $botReply;
-                $newMsg['doctors'] = $doctors;
-                $newMsg['see_all_doctors_url'] = $seeAllDoctorsUrl;
-
-            } elseif ($loadType === 'hospitals') {
-                $hospitals = Hospital::where('is_verified', true)
-                    ->where('city', $selectedCity)
-                    ->where(function ($query) use ($originalMessage, $searchTokens) {
-                        if (! empty($searchTokens)) {
-                            foreach ($searchTokens as $token) {
-                                $query->orWhere('name_en', 'LIKE', "%{$token}%")
-                                    ->orWhere('name_hi', 'LIKE', "%{$token}%")
-                                    ->orWhere('address', 'LIKE', "%{$token}%")
-                                    ->orWhere('type', 'LIKE', "%{$token}%");
-                            }
-                        } else {
-                            $query->where('name_en', 'LIKE', "%{$originalMessage}%")
-                                ->orWhere('name_hi', 'LIKE', "%{$originalMessage}%")
-                                ->orWhere('address', 'LIKE', "%{$originalMessage}%")
-                                ->orWhere('type', 'LIKE', "%{$originalMessage}%");
-                        }
-                    })
-                    ->take(3)
-                    ->get();
-
-                if ($hospitals->isEmpty()) {
-                    $hospitals = Hospital::where('is_verified', true)->where('city', $selectedCity)->latest()->take(3)->get();
-                }
-
-                $seeAllHospitalsUrl = route('hospitals.index');
-
-                $botReply = $locale === 'hi'
-                    ? "I found the following hospitals and clinics in {$selectedCity}:"
-                    : "I have found the following hospitals and clinics in {$selectedCity}:";
-
-                $newMsg['text'] = $botReply;
-                $newMsg['hospitals'] = $hospitals;
-                $newMsg['see_all_hospitals_url'] = $seeAllHospitalsUrl;
-
-            } elseif ($loadType === 'articles') {
-                $articles = Article::where('is_published', true)
-                    ->where(function ($query) use ($originalMessage) {
-                        $query->where('title_en', 'LIKE', "%{$originalMessage}%")
-                            ->orWhere('title_hi', 'LIKE', "%{$originalMessage}%")
-                            ->orWhere('content_en', 'LIKE', "%{$originalMessage}%")
-                            ->orWhere('content_hi', 'LIKE', "%{$originalMessage}%");
-                    })
-                    ->take(3)
-                    ->get();
-
-                if ($articles->isEmpty()) {
-                    $articles = Article::where('is_published', true)->latest()->take(3)->get();
-                }
-
-                $seeAllArticlesUrl = route('articles.index', ['category' => $grokDepartment ?: 'All']);
-
-                $botReply = $locale === 'hi'
-                    ? "Here are some health articles that might be helpful for you:"
-                    : "Here are some health articles that might be helpful for you:";
-
-                $newMsg['text'] = $botReply;
-                $newMsg['articles'] = $articles;
-                $newMsg['see_all_articles_url'] = $seeAllArticlesUrl;
-            }
-
-            $messages[] = $newMsg;
+            logger()->info('Chatbot query processed successfully. Returning reply.', [
+                'reply' => Str::limit($botReply, 100),
+                'has_qa_answer' => $qaAnswer !== null,
+            ]);
             $chatSession->update(['messages' => $messages]);
 
             return response()->json([
                 'session_token' => $sessionToken,
                 'reply' => $botReply,
                 'city' => $selectedCity,
+                'city_options' => $cityOptions,
                 'locale' => $locale,
+                'qa_answer' => $qaAnswer,
+                'symptom_match' => $symptomMatch,
+                'department_info' => $departmentInfo,
+                'doctors' => $doctors,
+                'hospitals' => $hospitals,
+                'articles' => $articles,
+                'see_all_doctors_url' => $seeAllDoctorsUrl,
+                'see_all_hospitals_url' => $seeAllHospitalsUrl,
+                'see_all_articles_url' => $seeAllArticlesUrl,
+                'suggest_details' => $suggestDetails,
                 'history' => $messages,
             ]);
-        }
-
-        $messages[] = [
-            'sender' => 'user',
-            'text' => $userMessage,
-            'city' => $selectedCity,
-            'locale' => $locale,
-            'timestamp' => now()->toIso8601String(),
-        ];
-
-        // Directory-first routing layer to reduce AI usage and return exact entity matches quickly.
-        // If user is searching names/departments/providers, we should avoid AI calls.
-        if ($this->shouldRouteToDirectory($userMessage, $searchTokens, $selectedCity)) {
-            $directoryPayload = $this->buildDirectoryFirstResponse($originalMessage = $userMessage, $searchTokens, $selectedCity, $locale);
-            if ($directoryPayload !== null) {
-                $messages[] = array_merge([
-                    'sender' => 'bot',
-                    'city' => $selectedCity,
-                    'locale' => $locale,
-                    'timestamp' => now()->toIso8601String(),
-                    'response_mode' => 'directory_first',
-                ], $directoryPayload);
-
-                $chatSession->update(['messages' => $messages]);
-
-                return response()->json([
-                    'session_token' => $sessionToken,
-                    'reply' => $directoryPayload['text'] ?? '',
-                    'city' => $selectedCity,
-                    'city_options' => $cityOptions,
-                    'locale' => $locale,
-                    'qa_answer' => null,
-                    'symptom_match' => false,
-                    'department_info' => $directoryPayload['department_info'] ?? null,
-                    'doctors' => $directoryPayload['doctors'] ?? [],
-                    'hospitals' => $directoryPayload['hospitals'] ?? [],
-                    'blood_banks' => $directoryPayload['blood_banks'] ?? [],
-                    'articles' => [],
-                    'see_all_doctors_url' => $directoryPayload['see_all_doctors_url'] ?? route('doctors.index'),
-                    'see_all_hospitals_url' => $directoryPayload['see_all_hospitals_url'] ?? route('hospitals.index'),
-                    'see_all_blood_banks_url' => $directoryPayload['see_all_blood_banks_url'] ?? route('blood_banks.index'),
-                    'see_all_articles_url' => route('articles.index'),
-                    'suggest_details' => false,
-                    'history' => $messages,
-                ]);
-            }
-        }
-
-        $geminiApiKey = (string) config('variable.gemini_key', '');
-        $geminiModel = $this->normalizeGeminiModel((string) config('variable.gemini_model', 'gemini-2.5-flash'));
-        $apiKey = (string) config('variable.groq_key', config('variable.grok_key', ''));
-        $grokDepartment = null;
-
-        $lowerMsg = mb_strtolower($userMessage);
-        $isDetailRequest = false;
-        $detailKeywords = [
-            'detail', 'explain', 'more', 'elaborate', 'describe', 'deep dive',
-            'विस्तार', 'विवरण', 'अधिक', 'समझाएं', 'और बताएं'
-        ];
-        foreach ($detailKeywords as $keyword) {
-            if (mb_stripos($lowerMsg, $keyword) !== false) {
-                $isDetailRequest = true;
-                break;
-            }
-        }
-
-        $originalMessage = $userMessage;
-        if ($isDetailRequest) {
-            $pastUserMsgs = collect($messages)
-                ->filter(fn($msg) => isset($msg['sender']) && $msg['sender'] === 'user' && isset($msg['text']))
-                ->filter(function($msg) use ($detailKeywords) {
-                    $txt = mb_strtolower($msg['text']);
-                    foreach ($detailKeywords as $keyword) {
-                        if (mb_stripos($txt, $keyword) !== false) {
-                            return false;
-                        }
-                    }
-                    return true;
-                });
-            if ($pastUserMsgs->isNotEmpty()) {
-                $originalMessage = $pastUserMsgs->last()['text'];
-            }
-        }
-        $searchTokens = $this->extractSearchTokens($originalMessage);
-
-        $qaAnswer = null;
-        $symptomMatch = false;
-        $botReply = '';
-
-        // Try Gemini first for the primary conversational response.
-        if ($geminiApiKey !== '' && $originalMessage !== '') {
-            $geminiPayload = $this->queryGemini(
-                apiKey: $geminiApiKey,
-                model: $geminiModel,
-                originalMessage: $originalMessage,
-                locale: $locale,
-                messages: $messages,
-            );
-
-            if ($geminiPayload !== null) {
-                $replyText = $this->normalizeAiText($geminiPayload['reply'] ?? null);
-                $detailedReply = $this->normalizeAiText($geminiPayload['detailed_reply'] ?? null);
-                $department = $this->normalizeAiText($geminiPayload['department'] ?? null, 'General Medical');
-
-                if ($replyText !== '') {
-                    try {
-                        CachedMedicalQuestion::updateOrCreate(
-                            ['question_en' => $locale === 'en' ? $originalMessage : $originalMessage],
-                            [
-                                'question_hi' => $originalMessage,
-                                'answer_en' => $locale === 'en' ? $replyText : '',
-                                'answer_hi' => $locale === 'hi' ? $replyText : '',
-                                'detailed_answer_en' => $locale === 'en' ? ($detailedReply !== '' ? $detailedReply : null) : null,
-                                'detailed_answer_hi' => $locale === 'hi' ? ($detailedReply !== '' ? $detailedReply : null) : null,
-                                'category' => $department !== '' ? $department : 'General Medical',
-                            ]
-                        );
-                    } catch (Throwable $cacheException) {
-                        logger()->warning('Unable to cache chatbot Gemini answer: ' . $cacheException->getMessage());
-                    }
-
-                    $qaAnswer = [
-                        'question' => $originalMessage,
-                        'answer' => $replyText,
-                        'category' => $department !== '' ? $department : 'General Medical',
-                        'source' => 'gemini_ai',
-                        'source_id' => null,
-                        'source_table' => null,
-                        'confidence' => 100.0,
-                        'detailed_answer_en' => $locale === 'en' ? ($detailedReply !== '' ? $detailedReply : null) : null,
-                        'detailed_answer_hi' => $locale === 'hi' ? ($detailedReply !== '' ? $detailedReply : null) : null,
-                        'detailed_answer' => $detailedReply !== '' ? $detailedReply : null,
-                    ];
-
-                    $botReply = $replyText;
-                    $symptomMatch = (bool) ($geminiPayload['symptom_match'] ?? false);
-                    $grokDepartment = $department !== '' ? $department : null;
-                    $isEmergency = (bool) ($geminiPayload['emergency'] ?? false);
-
-                    if ($isEmergency) {
-                        $qaAnswer['source'] = 'emergency_rule';
-                        $botReply = $locale === 'hi'
-                            ? 'यह एक आपातकालीन स्थिति हो सकती है। यदि आपको छाती में दर्द, सांस लेने में तकलीफ, या बेहोशी महसूस हो रही है, तो तुरंत आपातकालीन सेवाओं को कॉल करें और नजदीकी आपातकालीन कक्ष में जाएं।'
-                            : 'This may be an emergency. If you have chest pain, shortness of breath, or fainting, call emergency services immediately and go to the nearest emergency room.';
-                        $qaAnswer['answer'] = $botReply;
-                    }
-                }
-            }
-        }
-
-        // Fallback to Groq if Gemini is unavailable or did not return a usable answer.
-        if (!$qaAnswer && $apiKey !== '' && $originalMessage !== '') {
-            $systemPrompt = "You are Jeeva, a professional, warm, empathetic, and knowledgeable medical and healthcare assistant. " .
-                "Your goal is to have a natural, helpful conversation with the user and provide initial medical guidance based on their questions, symptoms, or concerns.\n\n" .
-                "You MUST return a JSON object containing exactly these 5 keys:\n" .
-                "1. 'reply': A warm, caring, and human-like response in the language of the user's query (" . ($locale === 'hi' ? 'Hindi' : 'English') . "). Answer their query directly. Avoid sounding like a machine; use friendly, compassionate phrasing. Limit the reply to 2-3 sentences. You can ask a natural follow-up question if appropriate to keep the conversation going.\n" .
-                "2. 'detailed_reply': A comprehensive, detailed, and structured explanation in " . ($locale === 'hi' ? 'Hindi' : 'English') . " (using markdown formatting like bullet points and bold text) that explains symptoms, home care, precautions, or medical descriptions. Set to null if the query is a simple greeting or general help request (not a medical topic).\n" .
-                "3. 'department': The English name of the most appropriate medical department from this list: ['Cardiology', 'Pediatrics', 'Neurology', 'Dermatology', 'General Medicine', 'Orthopedics', 'Gynecology', 'ENT (Otolaryngology)', 'Ophthalmology', 'Urology', 'Dentistry', 'Psychiatry'] that matches the symptoms described, or null if no medical department is relevant.\n" .
-                "4. 'symptom_match': A boolean (true if the user is describing medical symptoms or asking health/medical questions, false otherwise).\n" .
-                "5. 'emergency': A boolean (true if the symptoms suggest a life-threatening medical emergency like severe chest pain, extreme breathlessness, sudden speech loss, etc.).\n\n" .
-                "Do NOT wrap the JSON response in markdown blocks like ```json. Output ONLY raw valid JSON, starting with { and ending with }.";
-
-            $grokMessages = [
-                ['role' => 'system', 'content' => $systemPrompt]
-            ];
-
-            // Retrieve database RAG context
-            $context = $this->medicalQaService->retrieveRelevantContext($originalMessage, $locale);
-            if ($context !== '') {
-                $grokMessages[0]['content'] .= "\n\n---\nRETRIEVED KNOWLEDGE BASE CONTEXT (Use this as reference if relevant to the query):\n" . $context . "\n---";
-            }
-
-            // Include past message history, excluding the final user message which was already pushed to $messages
-            $pastMessages = collect($messages)
-                ->slice(0, -1)
-                ->filter(fn($msg) => isset($msg['sender']) && isset($msg['text']) && in_array($msg['sender'], ['user', 'bot'], true))
-                ->take(-10);
-
-            foreach ($pastMessages as $msg) {
-                $grokMessages[] = [
-                    'role' => $msg['sender'] === 'user' ? 'user' : 'assistant',
-                    'content' => $msg['text'],
-                ];
-            }
-
-            $grokMessages[] = [
-                'role' => 'user',
-                'content' => $originalMessage,
-            ];
-
-            $models = [
-                'llama-3.3-70b-versatile',
-                'llama-3.1-8b-instant'
-            ];
-
-            foreach ($models as $model) {
-                try {
-                    $response = Http::retry(2, 250)
-                        ->connectTimeout(8)
-                        ->withToken($apiKey)
-                        ->timeout(12)
-                        ->post('https://api.groq.com/openai/v1/chat/completions', [
-                            'messages' => $grokMessages,
-                            'model' => $model,
-                            'temperature' => 0.7,
-                            'max_completion_tokens' => 1024,
-                            'top_p' => 1,
-                            'stream' => false,
-                            'response_format' => ['type' => 'json_object'],
-                            'stop' => null,
-                        ]);
-
-                    if ($response->successful()) {
-                        $jsonContent = $response->json('choices.0.message.content');
-                        $decoded = $this->decodeAiJsonResponse($jsonContent);
-                        if (is_array($decoded) && isset($decoded['reply'])) {
-                            $replyText = $this->normalizeAiText($decoded['reply'] ?? null);
-                            $detailedReply = $this->normalizeAiText($decoded['detailed_reply'] ?? null);
-                            $department = $this->normalizeAiText($decoded['department'] ?? null, 'General Medical');
-                            $questionEn = trim($locale === 'en'
-                                ? $originalMessage
-                                : $this->normalizeAiText($decoded['question_en'] ?? null, $originalMessage));
-                            $questionHi = trim($locale === 'hi'
-                                ? $originalMessage
-                                : $this->normalizeAiText($decoded['question_hi'] ?? null, $originalMessage));
-
-                            if ($replyText === '') {
-                                throw new Exception('Groq response missing usable reply text.');
-                            }
-
-                            // Cache failures should not block the live answer.
-                            try {
-                                CachedMedicalQuestion::updateOrCreate(
-                                    ['question_en' => $questionEn !== '' ? $questionEn : $originalMessage],
-                                    [
-                                        'question_hi' => $questionHi !== '' ? $questionHi : $originalMessage,
-                                        'answer_en' => $locale === 'en' ? $replyText : '',
-                                        'answer_hi' => $locale === 'hi' ? $replyText : '',
-                                        'detailed_answer_en' => $locale === 'en' ? ($detailedReply !== '' ? $detailedReply : null) : null,
-                                        'detailed_answer_hi' => $locale === 'hi' ? ($detailedReply !== '' ? $detailedReply : null) : null,
-                                        'category' => $department !== '' ? $department : 'General Medical',
-                                    ]
-                                );
-                            } catch (Throwable $cacheException) {
-                                logger()->warning('Unable to cache chatbot AI answer: ' . $cacheException->getMessage());
-                            }
-
-                            $qaAnswer = [
-                                'question' => $originalMessage,
-                                'answer' => $replyText,
-                                'category' => $department !== '' ? $department : 'General Medical',
-                                'source' => 'jeeva_ai',
-                                'source_id' => null,
-                                'source_table' => null,
-                                'confidence' => 100.0,
-                                'detailed_answer_en' => $locale === 'en' ? ($detailedReply !== '' ? $detailedReply : null) : null,
-                                'detailed_answer_hi' => $locale === 'hi' ? ($detailedReply !== '' ? $detailedReply : null) : null,
-                                'detailed_answer' => $detailedReply !== '' ? $detailedReply : null,
-                            ];
-
-                            $botReply = $replyText;
-                            $symptomMatch = (bool) ($decoded['symptom_match'] ?? false);
-                            $grokDepartment = $department !== '' ? $department : null;
-                            $isEmergency = (bool) ($decoded['emergency'] ?? false);
-
-                            if ($isEmergency) {
-                                $qaAnswer['source'] = 'emergency_rule';
-                                $botReply = $locale === 'hi'
-                                    ? 'यह एक आपातकालीन स्थिति हो सकती है। यदि आपको छाती में दर्द, सांस लेने में तकलीफ, या बेहोशी महसूस हो रही है, तो तुरंत आपातकालीन सेवाओं को कॉल करें और नजदीकी आपातकालीन कक्ष में जाएं।'
-                                    : 'This may be an emergency. If you have chest pain, shortness of breath, or fainting, call emergency services immediately and go to the nearest emergency room.';
-                                $qaAnswer['answer'] = $botReply;
-                            }
-                            break;
-                        }
-                    } else {
-                        logger()->warning('Groq chatbot request failed.', [
-                            'model' => $model,
-                            'status' => $response->status(),
-                            'body' => Str::limit($response->body(), 1000),
-                        ]);
-                    }
-                } catch (Exception $e) {
-                    logger()->error("Groq call exception with model {$model}: " . $e->getMessage());
-                }
-            }
-        }
-
-        // Fallback to static DB match if Groq call failed or key is missing
-        if (!$qaAnswer && $originalMessage !== '') {
-            $qaAnswer = $this->medicalQaService->findBestAnswer($originalMessage, $locale);
-            if ($qaAnswer) {
-                $botReply = $qaAnswer['answer'];
-                $grokDepartment = $qaAnswer['category'] ?? null;
-                $qaSource = (string) ($qaAnswer['source'] ?? '');
-                $symptomMatch = (bool) $qaAnswer && (
-                    in_array($qaSource, ['cached_medical_questions', 'medical_qa_config', 'grok_ai', 'grok_ai_cached', 'general_questions', 'faq'], true)
-                    || str_ends_with($qaSource, '_like')
-                );
-            }
-        }
-
-        if (!$qaAnswer) {
-            $qaAnswer = $this->medicalQaService->generateFallbackAnswer($originalMessage, $locale);
-            if ($qaAnswer) {
-                $botReply = $qaAnswer['answer'];
-                $grokDepartment = $qaAnswer['category'] ?? null;
-                $symptomMatch = true;
-            }
-        }
-
-        $matchedDeptId = null;
-        $matchedDiseaseNameEn = null;
-        $matchedDiseaseNameHi = null;
-        $departmentInfo = null;
-
-        $doctors = collect();
-        $hospitals = collect();
-        $articles = collect();
-
-        // Match department using classification from Grok AI (or fallback match)
-        if (is_string($grokDepartment) && $grokDepartment !== '') {
-            $cleanedGrokDept = trim($grokDepartment);
-            $matchedDept = Department::where('is_active', true)
-                ->where(function ($query) use ($cleanedGrokDept) {
-                    $query->where('name_en', 'LIKE', $cleanedGrokDept)
-                        ->orWhere('name_hi', 'LIKE', $cleanedGrokDept)
-                        ->orWhereRaw('LOWER(name_en) = ?', [strtolower($cleanedGrokDept)])
-                        ->orWhereRaw('LOWER(name_hi) = ?', [strtolower($cleanedGrokDept)])
-                        ->orWhere('name_en', 'LIKE', "%{$cleanedGrokDept}%")
-                        ->orWhere('name_hi', 'LIKE', "%{$cleanedGrokDept}%");
-                })
-                ->first();
-
-            // If not found, try a looser contains match in English/Hindi
-            if (! $matchedDept) {
-                $lowerGrokDept = strtolower($cleanedGrokDept);
-                $allDepts = Department::where('is_active', true)->get();
-                foreach ($allDepts as $dept) {
-                    if (
-                        stripos($lowerGrokDept, strtolower($dept->name_en)) !== false ||
-                        ($dept->name_hi && stripos($lowerGrokDept, strtolower($dept->name_hi)) !== false)
-                    ) {
-                        $matchedDept = $dept;
-                        break;
-                    }
-                }
-            }
-
-            if ($matchedDept) {
-                $matchedDeptId = $matchedDept->id;
-            }
-        }
-
-        if (DB::getDriverName() === 'pgsql') {
-            try {
-                $stringObj = Str::of($originalMessage);
-                $userEmbedding = method_exists($stringObj, 'toEmbeddings') ? $stringObj->toEmbeddings() : json_encode(array_fill(0, 1536, 0.01));
-                $diseases = Disease::whereVectorSimilarTo('symptoms_embedding', $userEmbedding)->with(['department'])->get();
-
-                if ($diseases->isNotEmpty()) {
-                    $firstMatch = $diseases->first();
-                    $matchedDeptId = $firstMatch->department_id;
-                    $matchedDiseaseNameEn = $firstMatch->name_en;
-                    $matchedDiseaseNameHi = $firstMatch->name_hi;
-                }
-            } catch (Exception $e) {
-            }
-        }
-
-        if (! $matchedDeptId) {
-            $allDiseases = Disease::with('department')->get();
-            foreach ($allDiseases as $disease) {
-                $diseaseNameEn = trim((string) $disease->name_en);
-                $diseaseNameHi = trim((string) ($disease->name_hi ?? ''));
-
-                if (
-                    $diseaseNameEn !== '' &&
-                    (stripos($originalMessage, $diseaseNameEn) !== false || stripos($diseaseNameEn, $originalMessage) !== false)
-                ) {
-                    $matchedDeptId = $disease->department_id;
-                    $matchedDiseaseNameEn = $disease->name_en;
-                    $matchedDiseaseNameHi = $disease->name_hi;
-                    break;
-                }
-                if (
-                    $diseaseNameHi !== '' &&
-                    (mb_stripos($originalMessage, $diseaseNameHi) !== false || mb_stripos($diseaseNameHi, $originalMessage) !== false)
-                ) {
-                    $matchedDeptId = $disease->department_id;
-                    $matchedDiseaseNameEn = $disease->name_en;
-                    $matchedDiseaseNameHi = $disease->name_hi;
-                    break;
-                }
-            }
-        }
-
-        if (! $matchedDeptId) {
-            $allDepartments = Department::where('is_active', true)->get();
-            foreach ($allDepartments as $dept) {
-                $deptNameEn = trim((string) $dept->name_en);
-                $deptNameHi = trim((string) ($dept->name_hi ?? ''));
-
-                if (
-                    $deptNameEn !== '' &&
-                    (stripos($originalMessage, $deptNameEn) !== false || stripos($deptNameEn, $originalMessage) !== false)
-                ) {
-                    $matchedDeptId = $dept->id;
-                    break;
-                }
-                if (
-                    $deptNameHi !== '' &&
-                    (mb_stripos($originalMessage, $deptNameHi) !== false || mb_stripos($deptNameHi, $originalMessage) !== false)
-                ) {
-                    $matchedDeptId = $dept->id;
-                    break;
-                }
-            }
-        }
-
-        if ($matchedDeptId) {
-            $dept = Department::find($matchedDeptId);
-            $deptNameEn = $dept?->name_en ?? '';
-            $deptNameHi = $dept?->name_hi ?? '';
-            $deptName = $locale === 'hi' ? ($deptNameHi ?: $deptNameEn) : $deptNameEn;
-
-            if ($matchedDiseaseNameEn) {
-                $disName = $locale === 'hi' ? ($matchedDiseaseNameHi ?: $matchedDiseaseNameEn) : $matchedDiseaseNameEn;
-                $departmentInfo = $locale === 'hi'
-                    ? "आपकी खोज '{$disName}' के लिए '{$deptName}' विभाग अनुशंसित है।"
-                    : "For '{$disName}', '{$deptName}' department is recommended.";
-            } else {
-                $departmentInfo = $locale === 'hi'
-                    ? "आपकी खोज के आधार पर '{$deptName}' विभाग अनुशंसित है।"
-                    : "Based on your query, '{$deptName}' department is recommended.";
-            }
-        }
-
-        $deptForFilter = $matchedDeptId ?: 'All';
-        $seeAllDoctorsUrl = route('doctors.index');
-        $seeAllHospitalsUrl = route('hospitals.index');
-        $seeAllArticlesUrl = route('articles.index', ['category' => $grokDepartment ?: 'All']);
-
-        if (!$botReply) {
-            if ($qaAnswer) {
-                if ($isDetailRequest) {
-                    $detailedAnswer = $locale === 'hi'
-                        ? ($qaAnswer['detailed_answer_hi'] ?? $qaAnswer['detailed_answer_en'] ?? $qaAnswer['detailed_answer'] ?? null)
-                        : ($qaAnswer['detailed_answer_en'] ?? $qaAnswer['detailed_answer_hi'] ?? $qaAnswer['detailed_answer'] ?? null);
-                    $botReply = (string) ($detailedAnswer ?: $qaAnswer['answer']);
-                } else {
-                    $botReply = (string) $qaAnswer['answer'];
-                }
-            } elseif ($departmentInfo) {
-                $botReply = $locale === 'hi'
-                    ? 'मैंने आपकी खोज का विश्लेषण किया है। आपके शहर में संबंधित डॉक्टर और अस्पताल नीचे दिए गए हैं:'
-                    : 'I analyzed your query. Here are relevant doctors and hospitals in your city:';
-            } else {
-                $botReply = $locale === 'hi'
-                    ? 'मुझे कोई सटीक परिणाम नहीं मिला, लेकिन आपके शहर में कुछ उपयोगी विकल्प नीचे दिए गए हैं।'
-                    : 'I could not find an exact match, but here are useful options in your city.';
-            }
-        }
-
-        $suggestDetails = false;
-        if ($qaAnswer && !$isDetailRequest && ($qaAnswer['source'] ?? '') !== 'emergency_rule') {
-            $detailedAnswer = $locale === 'hi'
-                ? ($qaAnswer['detailed_answer_hi'] ?? $qaAnswer['detailed_answer_en'] ?? $qaAnswer['detailed_answer'] ?? null)
-                : ($qaAnswer['detailed_answer_en'] ?? $qaAnswer['detailed_answer_hi'] ?? $qaAnswer['detailed_answer'] ?? null);
-            if (!empty($detailedAnswer)) {
-                $suggestDetails = true;
-            }
-        }
-
-        $messages[] = [
-            'sender' => 'bot',
-            'text' => $botReply,
-            'city' => $selectedCity,
-            'locale' => $locale,
-            'qa_answer' => $qaAnswer,
-            'symptom_match' => $symptomMatch,
-            'department_info' => $departmentInfo,
-            'doctors' => $doctors,
-            'hospitals' => $hospitals,
-            'articles' => $articles,
-            'see_all_doctors_url' => $seeAllDoctorsUrl,
-            'see_all_hospitals_url' => $seeAllHospitalsUrl,
-            'see_all_articles_url' => $seeAllArticlesUrl,
-            'suggest_details' => $suggestDetails,
-            'show_options' => true,
-            'timestamp' => now()->toIso8601String(),
-        ];
-
-        $chatSession->update(['messages' => $messages]);
-
-        return response()->json([
-            'session_token' => $sessionToken,
-            'reply' => $botReply,
-            'city' => $selectedCity,
-            'city_options' => $cityOptions,
-            'locale' => $locale,
-            'qa_answer' => $qaAnswer,
-            'symptom_match' => $symptomMatch,
-            'department_info' => $departmentInfo,
-            'doctors' => $doctors,
-            'hospitals' => $hospitals,
-            'articles' => $articles,
-            'see_all_doctors_url' => $seeAllDoctorsUrl,
-            'see_all_hospitals_url' => $seeAllHospitalsUrl,
-            'see_all_articles_url' => $seeAllArticlesUrl,
-            'suggest_details' => $suggestDetails,
-            'history' => $messages,
-        ]);
         } catch (Throwable $e) {
+            logger()->critical('Chatbot controller handleMessage crashed with exception: ' . $e->getMessage(), [
+                'exception' => get_class($e),
+                'trace' => Str::limit($e->getTraceAsString(), 3000),
+            ]);
             try {
                 report($e);
-            } catch (Throwable $_) {}
+            } catch (Throwable $_) {
+            }
 
             try {
                 $this->storeFailedQuery(
@@ -927,7 +971,8 @@ class ChatbotController extends Controller
                         'trace_message' => Str::limit($e->getTraceAsString(), 4000),
                     ]
                 );
-            } catch (Throwable $_) {}
+            } catch (Throwable $_) {
+            }
 
             $locale = (string) ($request->input('locale') ?: app()->getLocale());
             $fallbackReply = $locale === 'hi'
@@ -1055,15 +1100,56 @@ class ChatbotController extends Controller
         }
 
         $directoryKeywords = [
-            'find', 'search', 'near', 'nearby', 'doctor', 'hospital', 'clinic', 'blood bank', 'specialist', 'department',
-            'show doctors', 'show hospitals', 'cardiologist', 'orthopedic', 'dermatologist',
-            'खोज', 'डॉक्टर', 'अस्पताल', 'क्लिनिक', 'ब्लड बैंक', 'विशेषज्ञ', 'विभाग', 'पास', 'नजदीक',
+            'find',
+            'search',
+            'near',
+            'nearby',
+            'doctor',
+            'hospital',
+            'clinic',
+            'blood bank',
+            'specialist',
+            'department',
+            'show doctors',
+            'show hospitals',
+            'cardiologist',
+            'orthopedic',
+            'dermatologist',
+            'खोज',
+            'डॉक्टर',
+            'अस्पताल',
+            'क्लिनिक',
+            'ब्लड बैंक',
+            'विशेषज्ञ',
+            'विभाग',
+            'पास',
+            'नजदीक',
         ];
 
         $aiMedicalIntentKeywords = [
-            'why', 'cause', 'treatment', 'medicine', 'dosage', 'dose', 'diet', 'prevention', 'symptom meaning',
-            'explain', 'detail', 'detailed', 'serious', 'is this dangerous',
-            'क्यों', 'कारण', 'इलाज', 'दवा', 'खुराक', 'उपचार', 'समझाएं', 'विस्तार', 'गंभीर',
+            'why',
+            'cause',
+            'treatment',
+            'medicine',
+            'dosage',
+            'dose',
+            'diet',
+            'prevention',
+            'symptom meaning',
+            'explain',
+            'detail',
+            'detailed',
+            'serious',
+            'is this dangerous',
+            'क्यों',
+            'कारण',
+            'इलाज',
+            'दवा',
+            'खुराक',
+            'उपचार',
+            'समझाएं',
+            'विस्तार',
+            'गंभीर',
         ];
 
         foreach ($directoryKeywords as $keyword) {
@@ -1433,10 +1519,12 @@ class ChatbotController extends Controller
 
     private function findStrictConversationMatch(string $normalizedMessage, string $locale): ?array
     {
-        foreach ([
-            ['records' => CachedMedicalQuestion::query()->get(), 'source' => 'cached_medical_questions'],
-            ['records' => GeneralQuestion::query()->get(), 'source' => 'general_questions'],
-        ] as $dataset) {
+        foreach (
+            [
+                ['records' => CachedMedicalQuestion::query()->get(), 'source' => 'cached_medical_questions'],
+                ['records' => GeneralQuestion::query()->get(), 'source' => 'general_questions'],
+            ] as $dataset
+        ) {
             $best = null;
             $bestScore = 0;
             $tokens = $this->extractSearchTokens($normalizedMessage);
@@ -1594,18 +1682,20 @@ class ChatbotController extends Controller
             'text' => $this->normalizeAiText($message['text'] ?? ''),
         ];
 
-        foreach ([
-            'city',
-            'locale',
-            'timestamp',
-            'response_mode',
-            'load_type',
-            'department_info',
-            'see_all_doctors_url',
-            'see_all_hospitals_url',
-            'see_all_blood_banks_url',
-            'see_all_articles_url',
-        ] as $key) {
+        foreach (
+            [
+                'city',
+                'locale',
+                'timestamp',
+                'response_mode',
+                'load_type',
+                'department_info',
+                'see_all_doctors_url',
+                'see_all_hospitals_url',
+                'see_all_blood_banks_url',
+                'see_all_articles_url',
+            ] as $key
+        ) {
             if (array_key_exists($key, $message)) {
                 $normalized[$key] = $this->normalizeAiText($message[$key] ?? '');
             }
@@ -1665,7 +1755,7 @@ class ChatbotController extends Controller
         $context = $this->medicalQaService->retrieveRelevantContext($originalMessage, $locale);
         $historyLines = collect($messages)
             ->slice(0, -1)
-            ->filter(fn ($msg) => isset($msg['sender'], $msg['text']) && in_array($msg['sender'], ['user', 'bot'], true))
+            ->filter(fn($msg) => isset($msg['sender'], $msg['text']) && in_array($msg['sender'], ['user', 'bot'], true))
             ->take(-10)
             ->map(function ($msg) {
                 $role = $msg['sender'] === 'user' ? 'User' : 'Assistant';
@@ -1707,6 +1797,10 @@ class ChatbotController extends Controller
         ];
 
         try {
+            logger()->info('Sending POST request to Gemini generateContent API...', [
+                'model' => $model,
+                'has_key' => $apiKey !== '',
+            ]);
             $response = Http::retry(2, 250)
                 ->connectTimeout(8)
                 ->timeout(20)
@@ -1740,7 +1834,10 @@ class ChatbotController extends Controller
 
             return is_array($decoded) ? $decoded : null;
         } catch (Throwable $e) {
-            logger()->error('Gemini chatbot exception: ' . $e->getMessage());
+            logger()->error('Gemini chatbot exception caught in queryGemini: ' . $e->getMessage(), [
+                'exception' => get_class($e),
+                'trace' => Str::limit($e->getTraceAsString(), 1000),
+            ]);
 
             return null;
         }
@@ -1826,7 +1923,7 @@ class ChatbotController extends Controller
         }
 
         $explicitKeywords = ['medicine', 'tablet', 'capsule', 'dose', 'dosage', 'dolo', 'paracetamol', 'cetirizine', 'azithromycin', 'metformin', 'pantoprazole', 'दवा', 'टैबलेट'];
-        $hasMedicineIntent = collect($explicitKeywords)->contains(fn ($keyword) => mb_stripos($normalized, $keyword) !== false);
+        $hasMedicineIntent = collect($explicitKeywords)->contains(fn($keyword) => mb_stripos($normalized, $keyword) !== false);
 
         // Strip common helper words for cleaner database search matching
         $searchQuery = $normalized;

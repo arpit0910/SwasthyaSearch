@@ -893,11 +893,11 @@
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-8">
                 <div class="lg:col-span-2">
-                    <div class="flex items-center space-x-3 mb-3">
-                        <div class="p-2 bg-gradient-to-tr from-teal-500 to-cyan-600 rounded-xl shadow-md">
-                            <i data-lucide="heart-pulse" class="w-6 h-6 text-white"></i>
-                        </div>
-                        <span class="text-xl font-bold tracking-tight">Arogio</span>
+                    <div class="flex items-center mb-4">
+                        <span class="relative block h-11 w-[148px] sm:h-12 sm:w-[162px] shrink-0" aria-label="Arogio">
+                            <img src="{{ $brandLogoDarkUrl }}" alt="Arogio" class="absolute inset-0 h-full w-full object-contain object-left drop-shadow-sm">
+                        </span>
+
                     </div>
                     <p class="text-sm text-slate-300">
                         {{ $locale === 'hi' ? 'Arogio स्वास्थ्य सेवा प्रदाता खोजने में मदद करता है। हम निदान, उपचार या आपातकालीन प्रतिक्रिया प्रदान नहीं करते। जाने से पहले कृपया कॉल करें।' : 'Arogio helps users find healthcare providers. We do not provide diagnosis, treatment, or emergency response. Please call before visiting.' }}

@@ -25,8 +25,18 @@ class SuggestionController extends Controller
             'name' => 'required|string|max:255',
             'phone' => 'nullable|string|max:50',
             'city' => 'required|string|max:100',
-            'address' => 'required|string|max:500',
+            'latitude' => 'nullable|numeric|between:-90,90',
+            'longitude' => 'nullable|numeric|between:-180,180',
         ];
+
+        if ($request->has('address_line_1')) {
+            $rules['address_line_1'] = 'required|string|max:255';
+            $rules['address_line_2'] = 'nullable|string|max:255';
+            $rules['state'] = 'required|string|max:100';
+            $rules['pincode'] = 'required|string|max:20';
+        } else {
+            $rules['address'] = 'required|string|max:500';
+        }
 
         if ($request->input('type') === 'doctor') {
             $rules['registration_number'] = 'required|string|max:100';
@@ -37,8 +47,22 @@ class SuggestionController extends Controller
 
         $request->validate($rules);
 
+        $address = $request->input('address');
+        if ($request->has('address_line_1')) {
+            $addressParts = array_filter([
+                $request->input('address_line_1'),
+                $request->input('address_line_2'),
+                $request->input('city'),
+                $request->input('state'),
+                $request->input('pincode'),
+            ]);
+            $address = implode(', ', $addressParts);
+        }
+
         $details = [
-            'address' => $request->input('address'),
+            'address' => $address,
+            'latitude' => $request->input('latitude') !== null ? (float) $request->input('latitude') : null,
+            'longitude' => $request->input('longitude') !== null ? (float) $request->input('longitude') : null,
         ];
 
         if ($request->input('type') === 'doctor') {

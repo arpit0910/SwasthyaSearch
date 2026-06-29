@@ -12,7 +12,8 @@
     <div class="absolute inset-0 bg-[radial-gradient(circle_at_top_left,_rgba(20,184,166,0.15),_transparent_38%),radial-gradient(circle_at_bottom_right,_rgba(49,46,129,0.12),_transparent_35%)]"></div>
     <div class="relative max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-12 lg:py-16">
         <div class="text-center space-y-4 mb-10">
-            <span class="inline-flex items-center gap-2 rounded-full border border-teal-200 bg-white/80 px-4 py-2 text-sm font-semibold text-teal-700 shadow-sm">
+            <span class="inline-flex items-center gap-1.5 rounded-full border border-teal-200/80 bg-white/90 px-3 py-1.5 text-[11px] font-bold uppercase tracking-[0.2em] text-teal-700 shadow-sm dark:border-teal-900/50 dark:bg-slate-950/80 dark:text-teal-300">
+                <i data-lucide="users" class="w-3.5 h-3.5 text-teal-600 dark:text-teal-400"></i>
                 {{ $isHi ? 'सामुदायिक योगदान' : 'Community Contribution' }}
             </span>
             <h1 class="text-3xl sm:text-4xl font-extrabold tracking-tight text-slate-900 dark:text-white">
@@ -50,14 +51,14 @@
                         {{ $isHi ? 'आप किसकी जानकारी साझा करना चाहते हैं?' : 'What would you like to suggest?' }}
                     </label>
                     <div class="grid grid-cols-2 gap-4">
-                        <label class="relative flex items-center justify-center p-4 rounded-2xl border-2 border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-950 cursor-pointer select-none transition-all duration-200 hover:border-teal-300 [&:has(input:checked)]:border-teal-500 [&:has(input:checked)]:bg-teal-50/30 dark:[&:has(input:checked)]:bg-teal-950/15">
+                        <label id="label-type-doctor" class="relative flex items-center justify-center p-4 rounded-2xl border-2 border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-950 cursor-pointer select-none transition-all duration-200 hover:border-teal-300">
                             <input type="radio" name="type" value="doctor" class="sr-only" {{ old('type', $defaultType ?? 'doctor') === 'doctor' ? 'checked' : '' }} onchange="toggleFormFields('doctor')">
                             <div class="text-center space-y-1">
                                 <i data-lucide="stethoscope" class="w-6 h-6 mx-auto text-teal-600"></i>
                                 <span class="block font-bold text-sm text-slate-800 dark:text-slate-100">{{ $isHi ? 'डॉक्टर' : 'Doctor' }}</span>
                             </div>
                         </label>
-                        <label class="relative flex items-center justify-center p-4 rounded-2xl border-2 border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-950 cursor-pointer select-none transition-all duration-200 hover:border-teal-300 [&:has(input:checked)]:border-teal-500 [&:has(input:checked)]:bg-teal-50/30 dark:[&:has(input:checked)]:bg-teal-950/15">
+                        <label id="label-type-hospital" class="relative flex items-center justify-center p-4 rounded-2xl border-2 border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-950 cursor-pointer select-none transition-all duration-200 hover:border-teal-300">
                             <input type="radio" name="type" value="hospital" class="sr-only" {{ old('type', $defaultType ?? 'doctor') === 'hospital' ? 'checked' : '' }} onchange="toggleFormFields('hospital')">
                             <div class="text-center space-y-1">
                                 <i data-lucide="building-2" class="w-6 h-6 mx-auto text-teal-600"></i>
@@ -104,7 +105,40 @@
                     </div>
                 </div>
 
+                <!-- Structured Address Fields -->
                 <div class="grid sm:grid-cols-2 gap-5">
+                    <div>
+                        <label for="address_line_1" class="mb-2 block text-sm font-semibold text-slate-800 dark:text-slate-200">
+                            {{ $isHi ? 'पता पंक्ति 1' : 'Address Line 1' }}
+                        </label>
+                        <input
+                            id="address_line_1"
+                            name="address_line_1"
+                            type="text"
+                            value="{{ old('address_line_1') }}"
+                            required
+                            maxlength="255"
+                            class="w-full rounded-2xl border border-slate-200 bg-white px-4 py-3 text-slate-900 shadow-sm outline-none transition focus:border-teal-500 focus:ring-4 focus:ring-teal-100 dark:border-slate-700 dark:bg-slate-950 dark:text-white dark:focus:ring-teal-900/30"
+                            placeholder="{{ $isHi ? 'मकान नंबर, गली, मोहल्ला' : 'House number, Street, Area' }}"
+                        >
+                    </div>
+                    <div>
+                        <label for="address_line_2" class="mb-2 block text-sm font-semibold text-slate-800 dark:text-slate-200">
+                            {{ $isHi ? 'पता पंक्ति 2 (वैकल्पिक)' : 'Address Line 2 (Optional)' }}
+                        </label>
+                        <input
+                            id="address_line_2"
+                            name="address_line_2"
+                            type="text"
+                            value="{{ old('address_line_2') }}"
+                            maxlength="255"
+                            class="w-full rounded-2xl border border-slate-200 bg-white px-4 py-3 text-slate-900 shadow-sm outline-none transition focus:border-teal-500 focus:ring-4 focus:ring-teal-100 dark:border-slate-700 dark:bg-slate-950 dark:text-white dark:focus:ring-teal-900/30"
+                            placeholder="{{ $isHi ? 'लैंडमार्क, सेक्टर' : 'Landmark, Sector' }}"
+                        >
+                    </div>
+                </div>
+
+                <div class="grid sm:grid-cols-3 gap-5">
                     <div>
                         <label for="city" class="mb-2 block text-sm font-semibold text-slate-800 dark:text-slate-200">
                             {{ $isHi ? 'शहर' : 'City' }}
@@ -117,21 +151,69 @@
                             required
                             maxlength="100"
                             class="w-full rounded-2xl border border-slate-200 bg-white px-4 py-3 text-slate-900 shadow-sm outline-none transition focus:border-teal-500 focus:ring-4 focus:ring-teal-100 dark:border-slate-700 dark:bg-slate-950 dark:text-white dark:focus:ring-teal-900/30"
+                            placeholder="{{ $isHi ? 'उदा. जयपुर' : 'e.g. Jaipur' }}"
                         >
                     </div>
                     <div>
-                        <label for="address" class="mb-2 block text-sm font-semibold text-slate-800 dark:text-slate-200">
-                            {{ $isHi ? 'पूरा पता' : 'Full Address' }}
+                        <label for="state" class="mb-2 block text-sm font-semibold text-slate-800 dark:text-slate-200">
+                            {{ $isHi ? 'राज्य' : 'State' }}
                         </label>
                         <input
-                            id="address"
-                            name="address"
+                            id="state"
+                            name="state"
                             type="text"
-                            value="{{ old('address') }}"
+                            value="{{ old('state', 'Rajasthan') }}"
                             required
-                            maxlength="500"
+                            maxlength="100"
                             class="w-full rounded-2xl border border-slate-200 bg-white px-4 py-3 text-slate-900 shadow-sm outline-none transition focus:border-teal-500 focus:ring-4 focus:ring-teal-100 dark:border-slate-700 dark:bg-slate-950 dark:text-white dark:focus:ring-teal-900/30"
-                            placeholder="{{ $isHi ? 'उदा. वैशाली नगर, जयपुर' : 'e.g. Vaishali Nagar, Jaipur' }}"
+                            placeholder="{{ $isHi ? 'उदा. राजस्थान' : 'e.g. Rajasthan' }}"
+                        >
+                    </div>
+                    <div>
+                        <label for="pincode" class="mb-2 block text-sm font-semibold text-slate-800 dark:text-slate-200">
+                            {{ $isHi ? 'पिनकोड' : 'Pincode' }}
+                        </label>
+                        <input
+                            id="pincode"
+                            name="pincode"
+                            type="text"
+                            value="{{ old('pincode') }}"
+                            required
+                            maxlength="20"
+                            class="w-full rounded-2xl border border-slate-200 bg-white px-4 py-3 text-slate-900 shadow-sm outline-none transition focus:border-teal-500 focus:ring-4 focus:ring-teal-100 dark:border-slate-700 dark:bg-slate-950 dark:text-white dark:focus:ring-teal-900/30"
+                            placeholder="{{ $isHi ? 'उदा. 302017' : 'e.g. 302017' }}"
+                        >
+                    </div>
+                </div>
+
+                <!-- Geolocation Fields -->
+                <div class="grid sm:grid-cols-2 gap-5">
+                    <div>
+                        <label for="latitude" class="mb-2 block text-sm font-semibold text-slate-800 dark:text-slate-200">
+                            {{ $isHi ? 'अक्षांश (Latitude - वैकल्पिक)' : 'Latitude (Optional)' }}
+                        </label>
+                        <input
+                            id="latitude"
+                            name="latitude"
+                            type="text"
+                            value="{{ old('latitude') }}"
+                            maxlength="20"
+                            class="w-full rounded-2xl border border-slate-200 bg-white px-4 py-3 text-slate-900 shadow-sm outline-none transition focus:border-teal-500 focus:ring-4 focus:ring-teal-100 dark:border-slate-700 dark:bg-slate-950 dark:text-white dark:focus:ring-teal-900/30"
+                            placeholder="e.g. 26.9124"
+                        >
+                    </div>
+                    <div>
+                        <label for="longitude" class="mb-2 block text-sm font-semibold text-slate-800 dark:text-slate-200">
+                            {{ $isHi ? 'रेखांश (Longitude - वैकल्पिक)' : 'Longitude (Optional)' }}
+                        </label>
+                        <input
+                            id="longitude"
+                            name="longitude"
+                            type="text"
+                            value="{{ old('longitude') }}"
+                            maxlength="20"
+                            class="w-full rounded-2xl border border-slate-200 bg-white px-4 py-3 text-slate-900 shadow-sm outline-none transition focus:border-teal-500 focus:ring-4 focus:ring-teal-100 dark:border-slate-700 dark:bg-slate-950 dark:text-white dark:focus:ring-teal-900/30"
+                            placeholder="e.g. 75.7873"
                         >
                     </div>
                 </div>
@@ -223,6 +305,9 @@
         const docSpecInput = document.getElementById('specialization');
         const hospTypeSelect = document.getElementById('hospital_type');
 
+        const labelDoc = document.getElementById('label-type-doctor');
+        const labelHosp = document.getElementById('label-type-hospital');
+
         if (type === 'doctor') {
             docFields.classList.remove('hidden');
             hospFields.classList.add('hidden');
@@ -232,6 +317,14 @@
             docRegInput.setAttribute('required', 'required');
             docSpecInput.setAttribute('required', 'required');
             hospTypeSelect.removeAttribute('required');
+
+            // Highlight Doctor
+            labelDoc.classList.remove('border-slate-200', 'dark:border-slate-800', 'bg-white', 'dark:bg-slate-950');
+            labelDoc.classList.add('border-teal-500', 'bg-teal-50/30', 'dark:bg-teal-950/15');
+
+            // Reset Hospital
+            labelHosp.classList.remove('border-teal-500', 'bg-teal-50/30', 'dark:bg-teal-950/15');
+            labelHosp.classList.add('border-slate-200', 'dark:border-slate-800', 'bg-white', 'dark:bg-slate-950');
         } else {
             docFields.classList.add('hidden');
             hospFields.classList.remove('hidden');
@@ -241,6 +334,14 @@
             docRegInput.removeAttribute('required');
             docSpecInput.removeAttribute('required');
             hospTypeSelect.setAttribute('required', 'required');
+
+            // Highlight Hospital
+            labelHosp.classList.remove('border-slate-200', 'dark:border-slate-800', 'bg-white', 'dark:bg-slate-950');
+            labelHosp.classList.add('border-teal-500', 'bg-teal-50/30', 'dark:bg-teal-950/15');
+
+            // Reset Doctor
+            labelDoc.classList.remove('border-teal-500', 'bg-teal-50/30', 'dark:bg-teal-950/15');
+            labelDoc.classList.add('border-slate-200', 'dark:border-slate-800', 'bg-white', 'dark:bg-slate-950');
         }
     }
 

@@ -31,6 +31,8 @@ class SubmissionFeatureTest extends TestCase
             'address' => 'Malviya Nagar, Jaipur',
             'registration_number' => 'R-778899',
             'specialization' => 'Cardiologist',
+            'latitude' => '26.9124',
+            'longitude' => '75.7873',
         ]);
 
         $response->assertRedirect();
@@ -48,6 +50,8 @@ class SubmissionFeatureTest extends TestCase
         $this->assertEquals('Malviya Nagar, Jaipur', $submission->details['address']);
         $this->assertEquals('R-778899', $submission->details['registration_number']);
         $this->assertEquals('Cardiologist', $submission->details['specialization']);
+        $this->assertEquals(26.9124, $submission->details['latitude']);
+        $this->assertEquals(75.7873, $submission->details['longitude']);
     }
 
     public function test_visitor_can_submit_hospital_suggestion(): void
@@ -188,6 +192,8 @@ class SubmissionFeatureTest extends TestCase
                 'address' => 'Malviya Nagar, Jaipur',
                 'registration_number' => 'R-998877',
                 'specialization' => 'Pediatrics',
+                'latitude' => 26.9124,
+                'longitude' => 75.7873,
             ],
         ]);
 
@@ -201,6 +207,8 @@ class SubmissionFeatureTest extends TestCase
             'registration_number' => 'R-998877',
             'phone_1' => '9999888877',
             'city' => 'Jaipur',
+            'latitude' => 26.9124,
+            'longitude' => 75.7873,
             'is_verified' => true,
         ]);
     }
