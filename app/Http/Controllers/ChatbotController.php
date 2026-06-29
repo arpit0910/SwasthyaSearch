@@ -421,8 +421,11 @@ class ChatbotController extends Controller
                 'timestamp' => now()->toIso8601String(),
             ];
 
+            logger()->info('5. User message appended to history array');
+
             // Directory-first routing layer to reduce AI usage and return exact entity matches quickly.
             // If user is searching names/departments/providers, we should avoid AI calls.
+            logger()->info('6. Checking if query should route to directory');
             if ($this->shouldRouteToDirectory($userMessage, $searchTokens, $selectedCity)) {
                 logger()->info('Chatbot routing query directly to directory.');
                 $directoryPayload = $this->buildDirectoryFirstResponse($originalMessage = $userMessage, $searchTokens, $selectedCity, $locale);
@@ -460,10 +463,18 @@ class ChatbotController extends Controller
                 }
             }
 
+            logger()->info('7. Directory routing check completed (did not route)');
+
             $geminiApiKey = (string) config('variable.gemini_key', '');
             $geminiModel = $this->normalizeGeminiModel((string) config('variable.gemini_model', 'gemini-2.5-flash'));
             $apiKey = (string) config('variable.groq_key', config('variable.grok_key', ''));
             $grokDepartment = null;
+
+            logger()->info('8. Configuration keys loaded', [
+                'has_gemini_key' => $geminiApiKey !== '',
+                'gemini_model' => $geminiModel,
+                'has_groq_key' => $apiKey !== '',
+            ]);
 
             $lowerMsg = mb_strtolower($userMessage);
             $isDetailRequest = false;
@@ -1527,17 +1538,33 @@ class ChatbotController extends Controller
 
     private function findStrictConversationMatch(string $normalizedMessage, string $locale): ?array
     {
-        foreach (
-            [
-                ['records' => CachedMedicalQuestion::query()->get(), 'source' => 'cached_medical_questions'],
-                ['records' => GeneralQuestion::query()->get(), 'source' => 'general_questions'],
-            ] as $dataset
-        ) {
+        $datasets = [
+            ['query' => CachedMedicalQuestion::query(), 'source' => 'cached_medical_questions'],
+            ['query' => GeneralQuestion::query(), 'source' => 'general_questions'],
+        ];
+
+        foreach ($datasets as $dataset) {
             $best = null;
             $bestScore = 0;
             $tokens = $this->extractSearchTokens($normalizedMessage);
 
-            foreach ($dataset['records'] as $q) {
+            // Filter records fetched from database to avoid Out-Of-Memory errors
+            $query = $dataset['query'];
+            $query->where(function ($q) use ($normalizedMessage, $tokens) {
+                $q->where('question_en', 'LIKE', "%{$normalizedMessage}%")
+                  ->orWhere('question_hi', 'LIKE', "%{$normalizedMessage}%");
+                
+                foreach ($tokens as $token) {
+                    if (mb_strlen($token) >= 3) {
+                        $q->orWhere('question_en', 'LIKE', "%{$token}%")
+                          ->orWhere('question_hi', 'LIKE', "%{$token}%");
+                    }
+                }
+            });
+
+            $records = $query->get();
+
+            foreach ($records as $q) {
                 $qEn = $this->normalizeForQaMatch((string) $q->question_en);
                 $qHi = $this->normalizeForQaMatch((string) $q->question_hi);
                 if ($qEn === '' && $qHi === '') {
