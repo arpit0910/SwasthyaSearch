@@ -640,7 +640,8 @@ class ChatbotController extends Controller
                 foreach ($models as $model) {
                     try {
                         logger()->info("Sending POST request to Groq API with model: {$model}");
-                        $response = Http::retry(2, 250)
+                        $verifySsl = app()->environment('local') ? false : true;
+                        $response = Http::withOptions(['verify' => $verifySsl])->retry(2, 250)
                             ->connectTimeout(8)
                             ->withToken($apiKey)
                             ->timeout(12)
@@ -1866,7 +1867,8 @@ class ChatbotController extends Controller
                 'model' => $model,
                 'has_key' => $apiKey !== '',
             ]);
-            $response = Http::retry(2, 250)
+            $verifySsl = app()->environment('local') ? false : true;
+            $response = Http::withOptions(['verify' => $verifySsl])->retry(2, 250)
                 ->connectTimeout(8)
                 ->timeout(20)
                 ->withHeaders([
