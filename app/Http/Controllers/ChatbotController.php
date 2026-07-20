@@ -640,7 +640,7 @@ class ChatbotController extends Controller
                 foreach ($models as $model) {
                     try {
                         logger()->info("Sending POST request to Groq API with model: {$model}");
-                        $verifySsl = app()->environment('local') ? false : true;
+                        $verifySsl = app()->environment('local') ? false : storage_path('app/cacert.pem');
                         $response = Http::withOptions(['verify' => $verifySsl])->retry(2, 250)
                             ->connectTimeout(8)
                             ->withToken($apiKey)
@@ -1448,9 +1448,31 @@ class ChatbotController extends Controller
 
         $tokens = $this->extractSearchTokens($normalized);
         $stopWords = [
-            'have', 'having', 'feel', 'feeling', 'with', 'need', 'help', 'show', 'find', 
-            'doctors', 'hospitals', 'please', 'what', 'where', 'when', 'who', 'about', 
-            'some', 'many', 'very', 'severe', 'mild', 'pain', 'ache', 'दर्द'
+            'have',
+            'having',
+            'feel',
+            'feeling',
+            'with',
+            'need',
+            'help',
+            'show',
+            'find',
+            'doctors',
+            'hospitals',
+            'please',
+            'what',
+            'where',
+            'when',
+            'who',
+            'about',
+            'some',
+            'many',
+            'very',
+            'severe',
+            'mild',
+            'pain',
+            'ache',
+            'दर्द'
         ];
         $filteredTokens = array_filter($tokens, function ($token) use ($stopWords) {
             return mb_strlen($token) >= 3 && !in_array(mb_strtolower($token), $stopWords, true);
@@ -1459,11 +1481,11 @@ class ChatbotController extends Controller
         $query = GeneralQuestion::query();
         $query->where(function ($q) use ($normalized, $filteredTokens) {
             $q->where('question_en', 'LIKE', "%{$normalized}%")
-              ->orWhere('question_hi', 'LIKE', "%{$normalized}%");
-            
+                ->orWhere('question_hi', 'LIKE', "%{$normalized}%");
+
             foreach ($filteredTokens as $token) {
                 $q->orWhere('question_en', 'LIKE', "%{$token}%")
-                  ->orWhere('question_hi', 'LIKE', "%{$token}%");
+                    ->orWhere('question_hi', 'LIKE', "%{$token}%");
             }
         });
 
@@ -1565,9 +1587,31 @@ class ChatbotController extends Controller
         ];
 
         $stopWords = [
-            'have', 'having', 'feel', 'feeling', 'with', 'need', 'help', 'show', 'find', 
-            'doctors', 'hospitals', 'please', 'what', 'where', 'when', 'who', 'about', 
-            'some', 'many', 'very', 'severe', 'mild', 'pain', 'ache', 'दर्द'
+            'have',
+            'having',
+            'feel',
+            'feeling',
+            'with',
+            'need',
+            'help',
+            'show',
+            'find',
+            'doctors',
+            'hospitals',
+            'please',
+            'what',
+            'where',
+            'when',
+            'who',
+            'about',
+            'some',
+            'many',
+            'very',
+            'severe',
+            'mild',
+            'pain',
+            'ache',
+            'दर्द'
         ];
 
         foreach ($datasets as $dataset) {
@@ -1584,11 +1628,11 @@ class ChatbotController extends Controller
             $query = $dataset['query'];
             $query->where(function ($q) use ($normalizedMessage, $filteredTokens) {
                 $q->where('question_en', 'LIKE', "%{$normalizedMessage}%")
-                  ->orWhere('question_hi', 'LIKE', "%{$normalizedMessage}%");
-                
+                    ->orWhere('question_hi', 'LIKE', "%{$normalizedMessage}%");
+
                 foreach ($filteredTokens as $token) {
                     $q->orWhere('question_en', 'LIKE', "%{$token}%")
-                      ->orWhere('question_hi', 'LIKE', "%{$token}%");
+                        ->orWhere('question_hi', 'LIKE', "%{$token}%");
                 }
             });
 
@@ -1705,10 +1749,10 @@ class ChatbotController extends Controller
 
     private function normalizeGeminiModel(string $model): string
     {
-        $model = trim($model);
+        $model = mb_strtolower(trim($model));
 
-        if ($model === '' || $model === 'gemini-3.5-flash') {
-            return 'gemini-2.5-flash';
+        if ($model === '') {
+            return 'gemini-3.5-flash';
         }
 
         return $model;
@@ -1867,7 +1911,7 @@ class ChatbotController extends Controller
                 'model' => $model,
                 'has_key' => $apiKey !== '',
             ]);
-            $verifySsl = app()->environment('local') ? false : true;
+            $verifySsl = app()->environment('local') ? false : storage_path('app/cacert.pem');
             $response = Http::withOptions(['verify' => $verifySsl])->retry(2, 250)
                 ->connectTimeout(8)
                 ->timeout(20)
