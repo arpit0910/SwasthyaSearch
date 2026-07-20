@@ -1557,23 +1557,21 @@ class ChatbotController extends Controller
         ];
 
         foreach ($onboardingPhrases as $phrase) {
-            if (! str_contains($normalizedMessage, $phrase)) {
-                continue;
+            if ($normalizedMessage === $phrase) {
+                return [
+                    'text' => $isHindi
+                        ? 'आप मुखपृष्ठ पर अपने लक्षण सामान्य भाषा में लिखकर शुरू कर सकते हैं। हमारा स्मार्ट symptom test आपको समझने में मदद करेगा कि आगे क्या करना है। बेहतर मार्गदर्शन के लिए step-by-step symptom check खोलें और अपनी जानकारी धीरे-धीरे भरें।'
+                        : 'You can start by entering your symptoms in plain language on the homepage, and our AI will provide a smart assessment and clear advice on next steps. Try using the "Simple Analysis" or "Advanced Check" tool for personalized guidance.',
+                    'qa_answer' => [
+                        'question' => $isHindi ? 'What to do' : 'What to do',
+                        'answer' => $isHindi
+                            ? 'आप मुखपृष्ठ पर अपने लक्षण सामान्य भाषा में लिखकर शुरू कर सकते हैं।'
+                            : 'You can start by entering your symptoms in plain language on the homepage, and our AI will provide a smart assessment and clear advice on next steps.',
+                        'source' => 'chatbot_onboarding',
+                    ],
+                    'suggest_details' => false,
+                ];
             }
-
-            return [
-                'text' => $isHindi
-                    ? 'आप मुखपृष्ठ पर अपने लक्षण सामान्य भाषा में लिखकर शुरू कर सकते हैं। हमारा स्मार्ट symptom test आपको समझने में मदद करेगा कि आगे क्या करना है। बेहतर मार्गदर्शन के लिए step-by-step symptom check खोलें और अपनी जानकारी धीरे-धीरे भरें।'
-                    : 'You can start by entering your symptoms in plain language on the homepage, and our AI will provide a smart assessment and clear advice on next steps. Try using the "Simple Analysis" or "Advanced Check" tool for personalized guidance.',
-                'qa_answer' => [
-                    'question' => $isHindi ? 'What to do' : 'What to do',
-                    'answer' => $isHindi
-                        ? 'आप मुखपृष्ठ पर अपने लक्षण सामान्य भाषा में लिखकर शुरू कर सकते हैं।'
-                        : 'You can start by entering your symptoms in plain language on the homepage, and our AI will provide a smart assessment and clear advice on next steps.',
-                    'source' => 'chatbot_onboarding',
-                ],
-                'suggest_details' => false,
-            ];
         }
 
         return null;
