@@ -18,6 +18,7 @@ use App\Http\Controllers\QuizController;
 use App\Http\Controllers\SymptomTestController;
 use App\Http\Controllers\SampleDownloadController;
 use App\Http\Controllers\SearchController;
+use App\Http\Controllers\SeoController;
 use App\Http\Controllers\HealthcareQueryController;
 use App\Http\Controllers\ReliableDirectoryController;
 use Illuminate\Foundation\Http\Middleware\ValidateCsrfToken;
@@ -200,97 +201,9 @@ Route::get('/consultations/{uuid}/poll', [ConsultationController::class, 'poll']
 Route::post('/consultations/{uuid}/signal', [ConsultationController::class, 'signal'])->name('consultations.signal');
 Route::post('/consultations/{uuid}/end', [ConsultationController::class, 'end'])->name('consultations.end');
 
-Route::get('/sitemap.xml', function () {
-    $base = rtrim(config('app.url', url('/')), '/');
-    $lastDoctors = optional(\App\Models\Doctor::query()->latest('updated_at')->value('updated_at'))->toDateString() ?? now()->toDateString();
-    $lastHospitals = optional(\App\Models\Hospital::query()->latest('updated_at')->value('updated_at'))->toDateString() ?? now()->toDateString();
-    $lastBloodBanks = optional(\App\Models\BloodBank::query()->latest('updated_at')->value('updated_at'))->toDateString() ?? now()->toDateString();
-    $lastArticles = optional(\App\Models\Article::query()->where('is_published', true)->latest('updated_at')->value('updated_at'))->toDateString() ?? now()->toDateString();
-    $lastQuizzes = optional(\App\Models\Quiz::query()->published()->latest('updated_at')->value('updated_at'))->toDateString() ?? now()->toDateString();
-
-    $staticUrls = [
-        ['loc' => route('home'), 'changefreq' => 'daily', 'priority' => '1.0', 'lastmod' => now()->toDateString()],
-        ['loc' => route('doctors.index'), 'changefreq' => 'daily', 'priority' => '0.9', 'lastmod' => $lastDoctors],
-        ['loc' => route('hospitals.index'), 'changefreq' => 'daily', 'priority' => '0.9', 'lastmod' => $lastHospitals],
-        ['loc' => route('blood_banks.index'), 'changefreq' => 'daily', 'priority' => '0.9', 'lastmod' => $lastBloodBanks],
-        ['loc' => route('articles.index'), 'changefreq' => 'daily', 'priority' => '0.8', 'lastmod' => $lastArticles],
-        ['loc' => route('medicines.index'), 'changefreq' => 'weekly', 'priority' => '0.8', 'lastmod' => now()->toDateString()],
-        ['loc' => route('activities.index'), 'changefreq' => 'weekly', 'priority' => '0.7', 'lastmod' => now()->toDateString()],
-        ['loc' => route('activities.breathing'), 'changefreq' => 'monthly', 'priority' => '0.6', 'lastmod' => now()->toDateString()],
-        ['loc' => route('activities.grounding'), 'changefreq' => 'monthly', 'priority' => '0.6', 'lastmod' => now()->toDateString()],
-        ['loc' => route('activities.mood-check'), 'changefreq' => 'monthly', 'priority' => '0.6', 'lastmod' => now()->toDateString()],
-        ['loc' => route('activities.calm-audio'), 'changefreq' => 'monthly', 'priority' => '0.6', 'lastmod' => now()->toDateString()],
-        ['loc' => route('activities.games.memory'), 'changefreq' => 'monthly', 'priority' => '0.5', 'lastmod' => now()->toDateString()],
-        ['loc' => route('activities.games.calm-tap'), 'changefreq' => 'monthly', 'priority' => '0.5', 'lastmod' => now()->toDateString()],
-        ['loc' => route('quizzes.index'), 'changefreq' => 'weekly', 'priority' => '0.7', 'lastmod' => $lastQuizzes],
-        ['loc' => route('support.crisis'), 'changefreq' => 'monthly', 'priority' => '0.7', 'lastmod' => now()->toDateString()],
-        ['loc' => route('symptom-test'), 'changefreq' => 'weekly', 'priority' => '0.8', 'lastmod' => now()->toDateString()],
-        ['loc' => route('departments.index'), 'changefreq' => 'weekly', 'priority' => '0.6', 'lastmod' => now()->toDateString()],
-        ['loc' => route('diseases.index'), 'changefreq' => 'weekly', 'priority' => '0.6', 'lastmod' => now()->toDateString()],
-        ['loc' => route('about'), 'changefreq' => 'monthly', 'priority' => '0.6', 'lastmod' => now()->toDateString()],
-        ['loc' => route('contact'), 'changefreq' => 'monthly', 'priority' => '0.6', 'lastmod' => now()->toDateString()],
-        ['loc' => route('privacy.policy'), 'changefreq' => 'yearly', 'priority' => '0.3', 'lastmod' => now()->toDateString()],
-        ['loc' => route('terms.service'), 'changefreq' => 'yearly', 'priority' => '0.3', 'lastmod' => now()->toDateString()],
-    ];
-
-    $articleUrls = \App\Models\Article::query()
-        ->where('is_published', true)
-        ->latest('updated_at')
-        ->get(['id', 'updated_at'])
-        ->map(function ($article) {
-            return [
-                'loc' => route('articles.show', $article->id),
-                'changefreq' => 'weekly',
-                'priority' => '0.7',
-                'lastmod' => optional($article->updated_at)->toDateString() ?? now()->toDateString(),
-            ];
-        })->values()->all();
-
-    $medicineUrls = \App\Models\Medicine::query()
-        ->published()
-        ->latest('updated_at')
-        ->get(['slug', 'updated_at'])
-        ->map(function ($medicine) {
-            return [
-                'loc' => route('medicines.show', $medicine->slug),
-                'changefreq' => 'monthly',
-                'priority' => '0.7',
-                'lastmod' => optional($medicine->updated_at)->toDateString() ?? now()->toDateString(),
-            ];
-        })->values()->all();
-
-    $quizUrls = \App\Models\Quiz::query()
-        ->published()
-        ->latest('updated_at')
-        ->get(['slug', 'updated_at'])
-        ->map(function ($quiz) {
-            return [
-                'loc' => route('quizzes.show', $quiz->slug),
-                'changefreq' => 'monthly',
-                'priority' => '0.6',
-                'lastmod' => optional($quiz->updated_at)->toDateString() ?? now()->toDateString(),
-            ];
-        })->values()->all();
-
-    $hospitalDoctorUrls = \App\Models\Hospital::query()
-        ->where('is_verified', true)
-        ->whereHas('doctors', fn ($query) => $query->where('is_verified', true))
-        ->latest('updated_at')
-        ->get(['id', 'updated_at'])
-        ->map(function ($hospital) {
-            return [
-                'loc' => route('hospitals.doctors', $hospital->id),
-                'changefreq' => 'weekly',
-                'priority' => '0.6',
-                'lastmod' => optional($hospital->updated_at)->toDateString() ?? now()->toDateString(),
-            ];
-        })->values()->all();
-
-    $urls = array_merge($staticUrls, $articleUrls, $medicineUrls, $quizUrls, $hospitalDoctorUrls);
-
-    $xml = view('sitemap.xml', compact('urls', 'base'))->render();
-    return response($xml, 200)->header('Content-Type', 'application/xml');
-})->name('sitemap');
+Route::get('/robots.txt', [SeoController::class, 'robots'])->name('robots');
+Route::get('/sitemap.xml', [SeoController::class, 'sitemap'])->name('sitemap');
+Route::get('/site.webmanifest', [SeoController::class, 'manifest'])->name('manifest');
 
 // Doctors & Hospitals Directory Routes
 Route::match(['get', 'post'], '/doctors', [DoctorController::class, 'index'])->name('doctors.index');

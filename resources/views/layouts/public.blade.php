@@ -215,16 +215,19 @@
         $ogImageAlt = trim($__env->yieldContent('og_image_alt', $appName . ' healthcare discovery platform'));
         $ogType = trim($__env->yieldContent('og_type', request()->routeIs('articles.show') ? 'article' : 'website'));
         $themeColor = trim($__env->yieldContent('theme_color', '#0f766e'));
+        $metaAuthor = trim($__env->yieldContent('meta_author', $appName));
     @endphp
 
     <title>{{ $metaTitle }}</title>
     <meta name="description" content="{{ $metaDescription }}">
-    <meta name="author" content="Arogio">
+    <meta name="author" content="{{ $metaAuthor }}">
+    <meta name="application-name" content="{{ $appName }}">
     <meta name="robots" content="{{ $metaRobots }}">
     <meta name="googlebot" content="{{ $metaRobots }}">
     <meta name="theme-color" content="{{ $themeColor }}">
     <meta name="apple-mobile-web-app-title" content="{{ $appName }}">
     <meta name="format-detection" content="telephone=no">
+    <meta name="referrer" content="strict-origin-when-cross-origin">
     <link rel="canonical" href="{{ $canonicalUrl }}">
 
     <meta property="og:type" content="{{ $ogType }}">
@@ -244,6 +247,7 @@
     <link rel="icon" type="image/png" sizes="32x32" href="{{ $brandFaviconUrl }}">
     <link rel="icon" type="image/png" sizes="192x192" href="{{ $brandFaviconUrl }}">
     <link rel="apple-touch-icon" href="{{ $brandFaviconUrl }}">
+    <link rel="manifest" href="{{ url('/site.webmanifest') }}">
 
     <link rel="alternate" hreflang="x-default" href="{{ $canonicalUrl }}">
 
@@ -1649,8 +1653,8 @@
         updateMobileMenuIcon();
     }
 
-    const LEAD_CAPTURE_NEXT_SHOW_KEY = 'swasthya_lead_capture_next_show_at';
-    const LEAD_CAPTURE_DONE_KEY = 'swasthya_lead_capture_done';
+    const LEAD_CAPTURE_NEXT_SHOW_KEY = 'arogio_lead_capture_next_show_at';
+    const LEAD_CAPTURE_DONE_KEY = 'arogio_lead_capture_done';
 
     function closeLeadCaptureModal() {
         document.getElementById('lead-capture-modal')?.classList.add('hidden');
@@ -1920,7 +1924,9 @@
                 const res = await fetch('{{ route('api.chatbot') }}', {
                     method: 'POST',
                     headers: {
+                        'Accept': 'application/json',
                         'Content-Type': 'application/json',
+                        'X-Requested-With': 'XMLHttpRequest',
                         'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]')?.content || '',
                     },
                     body: JSON.stringify({
@@ -1930,12 +1936,16 @@
                         locale: chatbotLocale,
                     }),
                 });
-                const data = await res.json();
+                const data = await parseChatbotApiResponse(res);
                 if (data.history && data.history.length > 0) {
                     renderChatHistory(data.history);
                 }
             } catch (e) {
                 console.error("Error loading chat history:", e);
+                reportChatbotFailure({
+                    failureType: 'initialize_chat_failed',
+                    errorMessage: e?.message || 'unknown initialization error',
+                });
             }
         }
     }

@@ -19,6 +19,8 @@ class ChatbotConversationalTest extends TestCase
 
         config()->set('variable.gemini_key', '');
         config()->set('variable.groq_key', 'test-groq-key');
+        config()->set('variable.chatbot_disable_ssl_verify', false);
+        config()->set('variable.chatbot_ca_bundle_path', '');
     }
 
     public function test_chatbot_returns_live_conversational_response_using_mocked_groq(): void
@@ -216,5 +218,21 @@ class ChatbotConversationalTest extends TestCase
         $this->assertStringContainsStringIgnoringCase('Paracetamol', $response->json('reply'));
         $this->assertEquals('Paracetamol', $response->json('medicine_info.name'));
         $this->assertStringContainsString('/medicines/paracetamol', $response->json('medicine_info.url'));
+    }
+
+    public function test_chatbot_uses_system_ca_fallback_when_custom_bundle_path_is_missing(): void
+    {
+        config()->set('variable.groq_key', '');
+        config()->set('variable.gemini_key', '');
+        config()->set('variable.chatbot_ca_bundle_path', 'D:/non-existent/cacert.pem');
+
+        $response = $this->postJson('/api/chatbot', [
+            'message' => 'What is dengue?',
+            'locale' => 'en',
+        ]);
+
+        $response->assertOk()
+            ->assertJsonStructure(['reply', 'history']);
+        $this->assertNotEmpty($response->json('reply'));
     }
 }

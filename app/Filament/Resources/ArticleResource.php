@@ -41,7 +41,7 @@ class ArticleResource extends Resource
                         Forms\Components\TextInput::make('author_name')
                             ->required()
                             ->maxLength(255)
-                            ->default('Swasthya Editorial'),
+                            ->default('Arogio Editorial'),
                         Forms\Components\Textarea::make('excerpt.en')
                             ->label('Excerpt (English)')
                             ->required()

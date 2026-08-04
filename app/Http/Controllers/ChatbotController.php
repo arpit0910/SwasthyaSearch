@@ -19,7 +19,9 @@ use Exception;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Schema;
 use Illuminate\Support\Str;
+use Illuminate\Http\Client\PendingRequest;
 use Throwable;
 
 class ChatbotController extends Controller
@@ -61,14 +63,11 @@ class ChatbotController extends Controller
 
             logger()->info('2. Querying/Creating ChatSession in DB', ['session_token' => $sessionToken]);
 
-            $chatSession = ChatSession::firstOrCreate(
-                ['session_token' => $sessionToken],
-                ['messages' => []]
-            );
+            $chatSession = $this->findOrCreateChatSessionSafely($sessionToken);
 
             logger()->info('3. ChatSession retrieved/created successfully');
 
-            $messages = $this->normalizeChatHistory($chatSession->messages);
+            $messages = $this->normalizeChatHistory($chatSession?->messages);
 
             logger()->info('4. Chat history normalized');
 
@@ -78,7 +77,7 @@ class ChatbotController extends Controller
             // Always try GeneralQuestion module first for conversational/help queries
             // before any directory-loading or AI-powered medical flow.
             if ($userMessage !== '') {
-                $generalHelpPayload = $this->findGeneralHelpResponse($userMessage, $locale, $selectedCity, $messages);
+                $generalHelpPayload = $this->safeFindGeneralHelpResponse($userMessage, $locale, $selectedCity, $messages);
                 if ($generalHelpPayload !== null) {
                     logger()->info('Chatbot matched general help query.');
                     $messages[] = [
@@ -101,7 +100,7 @@ class ChatbotController extends Controller
                         'timestamp' => now()->toIso8601String(),
                     ];
 
-                    $chatSession->update(['messages' => $messages]);
+                    $this->persistChatSessionSafely($chatSession, $messages);
 
                     return response()->json([
                         'session_token' => $sessionToken,
@@ -123,7 +122,7 @@ class ChatbotController extends Controller
                     ]);
                 }
 
-                $medicinePayload = $this->findMedicineResponse($userMessage, $locale);
+                $medicinePayload = $this->safeFindMedicineResponse($userMessage, $locale);
                 if ($medicinePayload !== null) {
                     logger()->info('Chatbot matched medicine query.');
                     $messages[] = [
@@ -145,7 +144,7 @@ class ChatbotController extends Controller
                         'timestamp' => now()->toIso8601String(),
                     ];
 
-                    $chatSession->update(['messages' => $messages]);
+                    $this->persistChatSessionSafely($chatSession, $messages);
 
                     return response()->json([
                         'session_token' => $sessionToken,
@@ -176,7 +175,7 @@ class ChatbotController extends Controller
 
                 $messages[] = ['sender' => 'user', 'text' => $userMessage, 'timestamp' => now()->toIso8601String()];
                 $messages[] = ['sender' => 'bot', 'text' => $cityPrompt, 'needs_city' => true, 'city_options' => $cityOptions, 'timestamp' => now()->toIso8601String()];
-                $chatSession->update(['messages' => $messages]);
+                $this->persistChatSessionSafely($chatSession, $messages);
 
                 return response()->json([
                     'session_token' => $sessionToken,
@@ -204,7 +203,7 @@ class ChatbotController extends Controller
 
                 $qaAnswer = null;
                 if ($originalMessage !== '') {
-                    $qaAnswer = $this->medicalQaService->findBestAnswer($originalMessage, $locale);
+                    $qaAnswer = $this->safeFindBestAnswer($originalMessage, $locale);
                 }
                 $grokDepartment = $qaAnswer ? ($qaAnswer['category'] ?? null) : null;
                 $grokDepartment = is_string($grokDepartment) ? trim($grokDepartment) : $grokDepartment;
@@ -402,7 +401,7 @@ class ChatbotController extends Controller
                 }
 
                 $messages[] = $newMsg;
-                $chatSession->update(['messages' => $messages]);
+                    $this->persistChatSessionSafely($chatSession, $messages);
 
                 return response()->json([
                     'session_token' => $sessionToken,
@@ -438,7 +437,7 @@ class ChatbotController extends Controller
                         'response_mode' => 'directory_first',
                     ], $directoryPayload);
 
-                    $chatSession->update(['messages' => $messages]);
+                    $this->persistChatSessionSafely($chatSession, $messages);
 
                     return response()->json([
                         'session_token' => $sessionToken,
@@ -640,8 +639,7 @@ class ChatbotController extends Controller
                 foreach ($models as $model) {
                     try {
                         logger()->info("Sending POST request to Groq API with model: {$model}");
-                        $verifySsl = app()->environment('local') ? false : storage_path('app/cacert.pem');
-                        $response = Http::withOptions(['verify' => $verifySsl])->retry(2, 250)
+                        $response = $this->chatbotHttpClient()->retry(2, 250)
                             ->connectTimeout(8)
                             ->withToken($apiKey)
                             ->timeout(12)
@@ -738,7 +736,7 @@ class ChatbotController extends Controller
             // Fallback to static DB match if Groq call failed or key is missing
             if (!$qaAnswer && $originalMessage !== '') {
                 logger()->info('AI calls failed or skipped. Falling back to static DB match.');
-                $qaAnswer = $this->medicalQaService->findBestAnswer($originalMessage, $locale);
+                $qaAnswer = $this->safeFindBestAnswer($originalMessage, $locale);
                 if ($qaAnswer) {
                     logger()->info('Static DB match succeeded.', ['source' => $qaAnswer['source'] ?? 'unknown']);
                     $botReply = $qaAnswer['answer'];
@@ -753,7 +751,7 @@ class ChatbotController extends Controller
 
             if (!$qaAnswer) {
                 logger()->info('Static DB match failed. Falling back to generated fallback answer.');
-                $qaAnswer = $this->medicalQaService->generateFallbackAnswer($originalMessage, $locale);
+                $qaAnswer = $this->safeGenerateFallbackAnswer($originalMessage, $locale);
                 if ($qaAnswer) {
                     logger()->info('Generated fallback answer succeeded.');
                     $botReply = $qaAnswer['answer'];
@@ -948,7 +946,7 @@ class ChatbotController extends Controller
                 'reply' => Str::limit($botReply, 100),
                 'has_qa_answer' => $qaAnswer !== null,
             ]);
-            $chatSession->update(['messages' => $messages]);
+            $this->persistChatSessionSafely($chatSession, $messages);
 
             return response()->json([
                 'session_token' => $sessionToken,
@@ -1058,6 +1056,96 @@ class ChatbotController extends Controller
             ]);
         } catch (Throwable $e) {
             report($e);
+        }
+    }
+
+    private function findOrCreateChatSessionSafely(string $sessionToken): ?ChatSession
+    {
+        try {
+            if (!Schema::hasTable('chat_sessions')) {
+                logger()->warning('chat_sessions table is missing. Chatbot will continue without persistence.');
+
+                return null;
+            }
+
+            return ChatSession::firstOrCreate(
+                ['session_token' => $sessionToken],
+                ['messages' => []]
+            );
+        } catch (Throwable $e) {
+            logger()->error('Unable to initialize chatbot session storage: ' . $e->getMessage(), [
+                'exception' => get_class($e),
+            ]);
+
+            return null;
+        }
+    }
+
+    private function persistChatSessionSafely(?ChatSession $chatSession, array $messages): void
+    {
+        if (!$chatSession) {
+            return;
+        }
+
+        try {
+            $chatSession->update(['messages' => $messages]);
+        } catch (Throwable $e) {
+            logger()->warning('Unable to persist chatbot session history: ' . $e->getMessage(), [
+                'exception' => get_class($e),
+                'session_token' => $chatSession->session_token ?? null,
+            ]);
+        }
+    }
+
+    private function safeFindGeneralHelpResponse(string $message, string $locale, string $selectedCity = '', array $messages = []): ?array
+    {
+        try {
+            return $this->findGeneralHelpResponse($message, $locale, $selectedCity, $messages);
+        } catch (Throwable $e) {
+            logger()->warning('General help chatbot lookup failed: ' . $e->getMessage(), [
+                'exception' => get_class($e),
+            ]);
+
+            return null;
+        }
+    }
+
+    private function safeFindMedicineResponse(string $message, string $locale): ?array
+    {
+        try {
+            return $this->findMedicineResponse($message, $locale);
+        } catch (Throwable $e) {
+            logger()->warning('Medicine chatbot lookup failed: ' . $e->getMessage(), [
+                'exception' => get_class($e),
+            ]);
+
+            return null;
+        }
+    }
+
+    private function safeFindBestAnswer(string $message, string $locale): ?array
+    {
+        try {
+            return $this->medicalQaService->findBestAnswer($message, $locale);
+        } catch (Throwable $e) {
+            logger()->warning('Medical QA lookup failed: ' . $e->getMessage(), [
+                'exception' => get_class($e),
+            ]);
+
+            return null;
+        }
+    }
+
+    private function safeGenerateFallbackAnswer(string $message, string $locale): ?array
+    {
+        try {
+            return $this->medicalQaService->generateFallbackAnswer($message, $locale);
+        } catch (Throwable $e) {
+            logger()->warning('Medical QA generated fallback failed: ' . $e->getMessage(), [
+                'exception' => get_class($e),
+            ]);
+
+            return null;
         }
     }
 
@@ -1909,8 +1997,7 @@ class ChatbotController extends Controller
                 'model' => $model,
                 'has_key' => $apiKey !== '',
             ]);
-            $verifySsl = app()->environment('local') ? false : storage_path('app/cacert.pem');
-            $response = Http::withOptions(['verify' => $verifySsl])->retry(2, 250)
+            $response = $this->chatbotHttpClient()->retry(2, 250)
                 ->connectTimeout(8)
                 ->timeout(20)
                 ->withHeaders([
@@ -1983,6 +2070,46 @@ class ChatbotController extends Controller
         }
 
         return '';
+    }
+
+    private function chatbotHttpClient(): PendingRequest
+    {
+        return Http::withOptions([
+            'verify' => $this->resolveChatbotSslVerification(),
+        ]);
+    }
+
+    private function resolveChatbotSslVerification(): bool|string
+    {
+        if ((bool) config('variable.chatbot_disable_ssl_verify', false)) {
+            logger()->warning('Chatbot SSL verification has been disabled by configuration.');
+
+            return false;
+        }
+
+        if (app()->environment('local')) {
+            return false;
+        }
+
+        $configuredBundlePath = trim((string) config('variable.chatbot_ca_bundle_path', ''));
+        if ($configuredBundlePath !== '') {
+            if (is_file($configuredBundlePath) && is_readable($configuredBundlePath)) {
+                return $configuredBundlePath;
+            }
+
+            logger()->warning('Configured chatbot CA bundle path is missing or unreadable.', [
+                'path' => $configuredBundlePath,
+            ]);
+        }
+
+        $defaultBundlePath = storage_path('app/cacert.pem');
+        if (is_file($defaultBundlePath) && is_readable($defaultBundlePath)) {
+            return $defaultBundlePath;
+        }
+
+        logger()->info('Chatbot CA bundle not found. Falling back to system CA trust store.');
+
+        return true;
     }
 
     private function decodeAiJsonResponse(mixed $content): ?array

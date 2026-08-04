@@ -9,6 +9,8 @@ use App\Models\GeneralQuestion;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Str;
 use App\Helpers\LocaleHelper;
+use Illuminate\Support\Facades\Schema;
+use Throwable;
 
 class MedicalQaService
 {
@@ -238,6 +240,10 @@ class MedicalQaService
             return null;
         }
 
+        if (!Schema::hasTable('diseases')) {
+            return null;
+        }
+
         $disease = Disease::query()->with('department:id,name_en,name_hi')->get(['id', 'name_en', 'name_hi', 'department_id'])
             ->first(function (Disease $item) use ($normalizedMessage) {
                 $nameEn = $this->normalize((string) $item->name_en);
@@ -315,59 +321,75 @@ class MedicalQaService
      */
     private function buildKnowledgeEntries(): Collection
     {
-        $dbFaqs = CachedMedicalQuestion::query()
-            ->get()
-            ->map(function (CachedMedicalQuestion $qa) {
-                return [
-                    'source_id' => $qa->id,
-                    'source_table' => $qa->getTable(),
-                    'question_en' => $qa->question_en,
-                    'question_hi' => $qa->question_hi,
-                    'answer_en' => $qa->answer_en,
-                    'answer_hi' => $qa->answer_hi,
-                    'detailed_answer_en' => $qa->detailed_answer_en,
-                    'detailed_answer_hi' => $qa->detailed_answer_hi,
-                    'category' => $qa->category ?? 'General Medical',
-                    'keywords' => [],
-                    'source' => 'cached_medical_questions',
-                ];
-            });
+        $dbFaqs = collect();
+        $generalQuestions = collect();
+        $faqs = collect();
 
-        $generalQuestions = GeneralQuestion::query()
-            ->get()
-            ->map(function (GeneralQuestion $qa) {
-                return [
-                    'source_id' => $qa->id,
-                    'source_table' => $qa->getTable(),
-                    'question_en' => $qa->question_en,
-                    'question_hi' => $qa->question_hi,
-                    'answer_en' => $qa->answer_en,
-                    'answer_hi' => $qa->answer_hi,
-                    'detailed_answer_en' => $qa->detailed_answer_en,
-                    'detailed_answer_hi' => $qa->detailed_answer_hi,
-                    'category' => 'General Help',
-                    'keywords' => [],
-                    'source' => 'general_questions',
-                ];
-            });
+        try {
+            if (Schema::hasTable('cached_medical_questions')) {
+                $dbFaqs = CachedMedicalQuestion::query()
+                    ->get()
+                    ->map(function (CachedMedicalQuestion $qa) {
+                        return [
+                            'source_id' => $qa->id,
+                            'source_table' => $qa->getTable(),
+                            'question_en' => $qa->question_en,
+                            'question_hi' => $qa->question_hi,
+                            'answer_en' => $qa->answer_en,
+                            'answer_hi' => $qa->answer_hi,
+                            'detailed_answer_en' => $qa->detailed_answer_en,
+                            'detailed_answer_hi' => $qa->detailed_answer_hi,
+                            'category' => $qa->category ?? 'General Medical',
+                            'keywords' => [],
+                            'source' => 'cached_medical_questions',
+                        ];
+                    });
+            }
 
-        $faqs = Faq::query()
-            ->get()
-            ->map(function (Faq $qa) {
-                return [
-                    'source_id' => $qa->id,
-                    'source_table' => $qa->getTable(),
-                    'question_en' => $qa->question_en,
-                    'question_hi' => $qa->question_hi,
-                    'answer_en' => $qa->answer_en,
-                    'answer_hi' => $qa->answer_hi,
-                    'detailed_answer_en' => null,
-                    'detailed_answer_hi' => null,
-                    'category' => $qa->category ?? 'FAQ',
-                    'keywords' => [],
-                    'source' => 'faq',
-                ];
-            });
+            if (Schema::hasTable('general_questions')) {
+                $generalQuestions = GeneralQuestion::query()
+                    ->get()
+                    ->map(function (GeneralQuestion $qa) {
+                        return [
+                            'source_id' => $qa->id,
+                            'source_table' => $qa->getTable(),
+                            'question_en' => $qa->question_en,
+                            'question_hi' => $qa->question_hi,
+                            'answer_en' => $qa->answer_en,
+                            'answer_hi' => $qa->answer_hi,
+                            'detailed_answer_en' => $qa->detailed_answer_en,
+                            'detailed_answer_hi' => $qa->detailed_answer_hi,
+                            'category' => 'General Help',
+                            'keywords' => [],
+                            'source' => 'general_questions',
+                        ];
+                    });
+            }
+
+            if (Schema::hasTable('faqs')) {
+                $faqs = Faq::query()
+                    ->get()
+                    ->map(function (Faq $qa) {
+                        return [
+                            'source_id' => $qa->id,
+                            'source_table' => $qa->getTable(),
+                            'question_en' => $qa->question_en,
+                            'question_hi' => $qa->question_hi,
+                            'answer_en' => $qa->answer_en,
+                            'answer_hi' => $qa->answer_hi,
+                            'detailed_answer_en' => null,
+                            'detailed_answer_hi' => null,
+                            'category' => $qa->category ?? 'FAQ',
+                            'keywords' => [],
+                            'source' => 'faq',
+                        ];
+                    });
+            }
+        } catch (Throwable $e) {
+            logger()->warning('Medical QA knowledge base tables could not be loaded: ' . $e->getMessage(), [
+                'exception' => get_class($e),
+            ]);
+        }
 
         $configured = collect(config('medical_qa.entries', []))
             ->map(function (array $entry) {
@@ -519,7 +541,7 @@ class MedicalQaService
 
         // 1. Check for Medicine matches
         $terms = $this->expandSearchTerms($message);
-        if (!empty($terms)) {
+        if (!empty($terms) && Schema::hasTable('medicines')) {
             $matchedMedicines = \App\Models\Medicine::query()
                 ->published()
                 ->where(function ($query) use ($terms) {
@@ -543,16 +565,19 @@ class MedicalQaService
         }
 
         // 2. Check for Disease matches
-        $matchedDiseases = \App\Models\Disease::query()
-            ->with('department')
-            ->get()
-            ->filter(function ($item) use ($normalizedMessage) {
-                $nameEn = $this->normalize((string) $item->name_en);
-                $nameHi = $this->normalize((string) ($item->name_hi ?? ''));
-                return ($nameEn !== '' && str_contains($normalizedMessage, $nameEn))
-                    || ($nameHi !== '' && str_contains($normalizedMessage, $nameHi));
-            })
-            ->take(3);
+        $matchedDiseases = collect();
+        if (Schema::hasTable('diseases')) {
+            $matchedDiseases = \App\Models\Disease::query()
+                ->with('department')
+                ->get()
+                ->filter(function ($item) use ($normalizedMessage) {
+                    $nameEn = $this->normalize((string) $item->name_en);
+                    $nameHi = $this->normalize((string) ($item->name_hi ?? ''));
+                    return ($nameEn !== '' && str_contains($normalizedMessage, $nameEn))
+                        || ($nameHi !== '' && str_contains($normalizedMessage, $nameHi));
+                })
+                ->take(3);
+        }
 
         if ($matchedDiseases->isNotEmpty()) {
             $disStrings = [];

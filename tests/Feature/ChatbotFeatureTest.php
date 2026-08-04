@@ -5,6 +5,7 @@ namespace Tests\Feature;
 use App\Models\ChatSession;
 use App\Models\Hospital;
 use Illuminate\Foundation\Testing\RefreshDatabase;
+use Illuminate\Support\Facades\Schema;
 use Tests\TestCase;
 
 class ChatbotFeatureTest extends TestCase
@@ -81,5 +82,28 @@ class ChatbotFeatureTest extends TestCase
             ->assertJsonPath('history.0.doctors', [])
             ->assertJsonPath('history.1.sender', 'user')
             ->assertJsonPath('history.1.text', 'Previous question');
+    }
+
+    public function test_chatbot_still_replies_when_session_and_general_question_tables_are_missing(): void
+    {
+        Schema::dropIfExists('chat_sessions');
+        Schema::dropIfExists('general_questions');
+
+        config()->set('variable.gemini_key', '');
+        config()->set('variable.groq_key', '');
+
+        $response = $this->postJson('/api/chatbot', [
+            'message' => 'What should I do for fever at home?',
+            'locale' => 'en',
+        ]);
+
+        $response->assertOk()
+            ->assertJsonMissingPath('needs_city');
+
+        $this->assertNotSame(
+            'A technical issue occurred. Please resend your message in a moment.',
+            $response->json('reply')
+        );
+        $this->assertNotEmpty($response->json('reply'));
     }
 }
