@@ -1633,6 +1633,10 @@ class ChatbotController extends Controller
         $isHindi = $locale === 'hi';
 
         $onboardingPhrases = [
+            'start',
+            'start chat',
+            'start chatbot',
+            'begin',
             'what to do',
             'how to start',
             'how do i start',

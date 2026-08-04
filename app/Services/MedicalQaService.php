@@ -35,7 +35,7 @@ class MedicalQaService
             return $likeMatch;
         }
 
-        $entries = $this->buildKnowledgeEntries();
+        $entries = $this->buildKnowledgeEntries($message, 120);
         if ($entries->isEmpty()) {
             return null;
         }
@@ -123,7 +123,7 @@ class MedicalQaService
 
         // Multi-source LIKE-style match:
         // CachedMedicalQuestion + GeneralQuestion + Faq (+ configured entries)
-        $entries = $this->buildKnowledgeEntries();
+        $entries = $this->buildKnowledgeEntries($message, 120);
         if ($entries->isEmpty()) {
             return null;
         }
@@ -244,7 +244,20 @@ class MedicalQaService
             return null;
         }
 
-        $disease = Disease::query()->with('department:id,name_en,name_hi')->get(['id', 'name_en', 'name_hi', 'department_id'])
+        $terms = $this->expandSearchTerms($message);
+        $disease = Disease::query()
+            ->with('department:id,name_en,name_hi')
+            ->select(['id', 'name_en', 'name_hi', 'department_id'])
+            ->when(!empty($terms), function ($query) use ($terms) {
+                $query->where(function ($nested) use ($terms) {
+                    foreach ($terms as $term) {
+                        $nested->orWhere('name_en', 'LIKE', '%' . $term . '%')
+                            ->orWhere('name_hi', 'LIKE', '%' . $term . '%');
+                    }
+                });
+            })
+            ->limit(25)
+            ->get()
             ->first(function (Disease $item) use ($normalizedMessage) {
                 $nameEn = $this->normalize((string) $item->name_en);
                 $nameHi = $this->normalize((string) ($item->name_hi ?? ''));
@@ -319,15 +332,39 @@ class MedicalQaService
     }    /**
      * @return Collection<int, array<string, mixed>>
      */
-    private function buildKnowledgeEntries(): Collection
+    private function buildKnowledgeEntries(?string $message = null, int $perSourceLimit = 150): Collection
     {
         $dbFaqs = collect();
         $generalQuestions = collect();
         $faqs = collect();
+        $terms = $message !== null ? $this->expandSearchTerms($message) : [];
+        $perSourceLimit = max(20, min($perSourceLimit, 250));
 
         try {
             if (Schema::hasTable('cached_medical_questions')) {
                 $dbFaqs = CachedMedicalQuestion::query()
+                    ->select([
+                        'id',
+                        'question_en',
+                        'question_hi',
+                        'answer_en',
+                        'answer_hi',
+                        'detailed_answer_en',
+                        'detailed_answer_hi',
+                        'category',
+                    ])
+                    ->when(!empty($terms), function ($query) use ($terms) {
+                        $query->where(function ($nested) use ($terms) {
+                            foreach ($terms as $term) {
+                                $nested->orWhere('question_en', 'LIKE', '%' . $term . '%')
+                                    ->orWhere('question_hi', 'LIKE', '%' . $term . '%')
+                                    ->orWhere('answer_en', 'LIKE', '%' . $term . '%')
+                                    ->orWhere('answer_hi', 'LIKE', '%' . $term . '%')
+                                    ->orWhere('category', 'LIKE', '%' . $term . '%');
+                            }
+                        });
+                    })
+                    ->limit($perSourceLimit)
                     ->get()
                     ->map(function (CachedMedicalQuestion $qa) {
                         return [
@@ -348,6 +385,26 @@ class MedicalQaService
 
             if (Schema::hasTable('general_questions')) {
                 $generalQuestions = GeneralQuestion::query()
+                    ->select([
+                        'id',
+                        'question_en',
+                        'question_hi',
+                        'answer_en',
+                        'answer_hi',
+                        'detailed_answer_en',
+                        'detailed_answer_hi',
+                    ])
+                    ->when(!empty($terms), function ($query) use ($terms) {
+                        $query->where(function ($nested) use ($terms) {
+                            foreach ($terms as $term) {
+                                $nested->orWhere('question_en', 'LIKE', '%' . $term . '%')
+                                    ->orWhere('question_hi', 'LIKE', '%' . $term . '%')
+                                    ->orWhere('answer_en', 'LIKE', '%' . $term . '%')
+                                    ->orWhere('answer_hi', 'LIKE', '%' . $term . '%');
+                            }
+                        });
+                    })
+                    ->limit($perSourceLimit)
                     ->get()
                     ->map(function (GeneralQuestion $qa) {
                         return [
@@ -368,6 +425,26 @@ class MedicalQaService
 
             if (Schema::hasTable('faqs')) {
                 $faqs = Faq::query()
+                    ->select([
+                        'id',
+                        'question_en',
+                        'question_hi',
+                        'answer_en',
+                        'answer_hi',
+                        'category',
+                    ])
+                    ->when(!empty($terms), function ($query) use ($terms) {
+                        $query->where(function ($nested) use ($terms) {
+                            foreach ($terms as $term) {
+                                $nested->orWhere('question_en', 'LIKE', '%' . $term . '%')
+                                    ->orWhere('question_hi', 'LIKE', '%' . $term . '%')
+                                    ->orWhere('answer_en', 'LIKE', '%' . $term . '%')
+                                    ->orWhere('answer_hi', 'LIKE', '%' . $term . '%')
+                                    ->orWhere('category', 'LIKE', '%' . $term . '%');
+                            }
+                        });
+                    })
+                    ->limit($perSourceLimit)
                     ->get()
                     ->map(function (Faq $qa) {
                         return [
@@ -544,6 +621,17 @@ class MedicalQaService
         if (!empty($terms) && Schema::hasTable('medicines')) {
             $matchedMedicines = \App\Models\Medicine::query()
                 ->published()
+                ->select([
+                    'name',
+                    'generic_name',
+                    'category',
+                    'purpose_en',
+                    'purpose_hi',
+                    'common_side_effects_en',
+                    'common_side_effects_hi',
+                    'serious_side_effects_en',
+                    'serious_side_effects_hi',
+                ])
                 ->where(function ($query) use ($terms) {
                     foreach ($terms as $term) {
                         $query->orWhere('name', 'LIKE', "%{$term}%")
@@ -569,6 +657,16 @@ class MedicalQaService
         if (Schema::hasTable('diseases')) {
             $matchedDiseases = \App\Models\Disease::query()
                 ->with('department')
+                ->select(['id', 'name_en', 'name_hi', 'department_id'])
+                ->when(!empty($terms), function ($query) use ($terms) {
+                    $query->where(function ($nested) use ($terms) {
+                        foreach ($terms as $term) {
+                            $nested->orWhere('name_en', 'LIKE', '%' . $term . '%')
+                                ->orWhere('name_hi', 'LIKE', '%' . $term . '%');
+                        }
+                    });
+                })
+                ->limit(25)
                 ->get()
                 ->filter(function ($item) use ($normalizedMessage) {
                     $nameEn = $this->normalize((string) $item->name_en);
@@ -591,7 +689,7 @@ class MedicalQaService
         }
 
         // 3. Check FAQs / QA database matches
-        $entries = $this->buildKnowledgeEntries();
+        $entries = $this->buildKnowledgeEntries($message, 80);
         if ($entries->isNotEmpty()) {
             $scored = $entries->map(function ($entry) use ($normalizedMessage) {
                 $question = $this->normalize((string) ($entry['question_en'] ?? ''));

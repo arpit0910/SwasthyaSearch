@@ -106,4 +106,20 @@ class ChatbotFeatureTest extends TestCase
         );
         $this->assertNotEmpty($response->json('reply'));
     }
+
+    public function test_chatbot_handles_start_with_lightweight_onboarding_response(): void
+    {
+        config()->set('variable.gemini_key', '');
+        config()->set('variable.groq_key', '');
+
+        $response = $this->postJson('/api/chatbot', [
+            'message' => 'Start',
+            'locale' => 'en',
+        ]);
+
+        $response->assertOk()
+            ->assertJsonMissingPath('needs_city');
+
+        $this->assertStringContainsStringIgnoringCase('start', $response->json('reply'));
+    }
 }
