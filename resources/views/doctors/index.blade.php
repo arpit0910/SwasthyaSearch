@@ -601,6 +601,12 @@ $pageDescription = filled($searchTerm)
                                     <span>{{ $locale === 'hi' ? 'सीजीएचएस' : 'CGHS' }}</span>
                                 </span>
                                 @endif
+                                @if(!empty($h->accepts_esic))
+                                <span class="min-w-0 max-w-full bg-amber-50 dark:bg-amber-900/30 text-amber-800 dark:text-amber-200 border border-amber-200 dark:border-amber-700/70 px-2 py-0.5 rounded text-[10px] font-bold inline-flex items-center gap-1 shadow-2xs">
+                                    <i data-lucide="briefcase-medical" class="w-3 h-3 text-amber-600"></i>
+                                    <span>{{ $locale === 'hi' ? 'ईएसआईसी' : 'ESIC' }}</span>
+                                </span>
+                                @endif
                                 @if(!empty($h->is_cashless))
                                 <span class="min-w-0 max-w-full bg-teal-50 dark:bg-teal-900/30 text-teal-800 dark:text-teal-200 border border-teal-200 dark:border-teal-700/70 px-2 py-0.5 rounded text-[10px] font-bold inline-flex items-center gap-1 shadow-2xs">
                                     <i data-lucide="credit-card" class="w-3 h-3 text-teal-600"></i>
@@ -1018,5 +1024,4 @@ $pageDescription = filled($searchTerm)
 
 </script>
 @endpush
-
 

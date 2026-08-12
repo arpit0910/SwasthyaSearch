@@ -228,6 +228,7 @@ class SearchController extends Controller
                 'accepts_ayushman' => $hospital->accepts_ayushman || $hospital->accepts_ayushman_card,
                 'accepts_janaadhaar' => $hospital->accepts_janaadhaar || $hospital->accepts_jan_aadhaar,
                 'accepts_cghs' => $hospital->accepts_cghs,
+                'accepts_esic' => $hospital->accepts_esic,
                 'rgahs_approved' => $hospital->rgahs_approved,
                 'is_cashless' => $hospital->is_cashless || $hospital->cashless_treatment_available,
                 'cashless_schemes_list' => $hospital->cashless_schemes_list ?: [],

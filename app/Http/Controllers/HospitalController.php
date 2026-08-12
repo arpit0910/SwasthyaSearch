@@ -103,6 +103,8 @@ class HospitalController extends Controller
                         $q->orWhere('accepts_janaadhaar', true);
                     } elseif ($benefit === 'cghs') {
                         $q->orWhere('accepts_cghs', true);
+                    } elseif ($benefit === 'esic') {
+                        $q->orWhere('accepts_esic', true);
                     } elseif ($benefit === 'cashless') {
                         $q->orWhere('is_cashless', true);
                     }
@@ -172,6 +174,7 @@ class HospitalController extends Controller
             'accepts_ayushman' => $hospital->accepts_ayushman,
             'accepts_janaadhaar' => $hospital->accepts_janaadhaar,
             'accepts_cghs' => $hospital->accepts_cghs,
+            'accepts_esic' => $hospital->accepts_esic,
             'is_cashless' => $hospital->is_cashless,
             'cashless_schemes_list' => $hospital->cashless_schemes_list,
             'distance_km' => $this->calculateDistanceKm($userLat, $userLng, $hospital->latitude, $hospital->longitude),

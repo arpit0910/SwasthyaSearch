@@ -44,6 +44,7 @@ $selectedBenefits = collect((array) request('benefit', []))
             'ayushman' => $locale === 'hi' ? 'आयुष्मान' : 'Ayushman',
             'janaadhaar' => $locale === 'hi' ? 'जन आधार' : 'Jan Aadhaar',
             'cghs' => 'CGHS',
+            'esic' => 'ESIC',
             'cashless' => $locale === 'hi' ? 'कैशलेस' : 'Cashless',
             default => $value,
         };
@@ -225,6 +226,9 @@ $pageDescription = filled($searchTerm)
                         <option value="cghs" {{ in_array('cghs', $selectedBenefits) ? 'selected' : '' }}>
                             {{ $locale === 'hi' ? 'सीजीएचएस (CGHS)' : 'CGHS Govt' }}
                         </option>
+                        <option value="esic" {{ in_array('esic', $selectedBenefits) ? 'selected' : '' }}>
+                            {{ $locale === 'hi' ? 'ईएसआईसी (ESIC)' : 'ESIC' }}
+                        </option>
                         <option value="cashless" {{ in_array('cashless', $selectedBenefits) ? 'selected' : '' }}>
                             {{ $locale === 'hi' ? 'कैशलेस सुविधा' : 'Cashless Facility' }}
                         </option>
@@ -300,6 +304,9 @@ $pageDescription = filled($searchTerm)
                     </option>
                     <option value="cghs" {{ in_array('cghs', $selectedBenefits) ? 'selected' : '' }}>
                         {{ $locale === 'hi' ? 'सीजीएचएस (CGHS)' : 'CGHS Govt' }}
+                    </option>
+                    <option value="esic" {{ in_array('esic', $selectedBenefits) ? 'selected' : '' }}>
+                        {{ $locale === 'hi' ? 'ईएसआईसी (ESIC)' : 'ESIC' }}
                     </option>
                     <option value="cashless" {{ in_array('cashless', $selectedBenefits) ? 'selected' : '' }}>
                         {{ $locale === 'hi' ? 'कैशलेस सुविधा' : 'Cashless Facility' }}
@@ -477,6 +484,7 @@ $pageDescription = filled($searchTerm)
                     !empty($h->accepts_ayushman) ||
                     !empty($h->accepts_janaadhaar) ||
                     !empty($h->accepts_cghs) ||
+                    !empty($h->accepts_esic) ||
                     !empty($h->is_cashless) ||
                     (!empty($h->cashless_schemes_list) &&
                     is_array($h->cashless_schemes_list) &&
@@ -504,6 +512,13 @@ $pageDescription = filled($searchTerm)
                                 class="min-w-0 max-w-full bg-violet-50 dark:bg-violet-900/30 text-violet-800 dark:text-violet-200 border border-violet-200 dark:border-violet-700/70 px-2.5 py-1 rounded-lg text-xs font-bold inline-flex items-center gap-1.5 shadow-2xs">
                                 <i data-lucide="check-badge" class="w-3.5 h-3.5 text-purple-600"></i>
                                 <span>{{ $locale === 'hi' ? 'सीजीएचएस (CGHS)' : 'CGHS Govt' }}</span>
+                            </span>
+                            @endif
+                            @if (!empty($h->accepts_esic))
+                            <span
+                                class="min-w-0 max-w-full bg-amber-50 dark:bg-amber-900/30 text-amber-800 dark:text-amber-200 border border-amber-200 dark:border-amber-700/70 px-2.5 py-1 rounded-lg text-xs font-bold inline-flex items-center gap-1.5 shadow-2xs">
+                                <i data-lucide="briefcase-medical" class="w-3.5 h-3.5 text-amber-600"></i>
+                                <span>{{ $locale === 'hi' ? 'ईएसआईसी (ESIC)' : 'ESIC' }}</span>
                             </span>
                             @endif
                             @if (!empty($h->is_cashless))

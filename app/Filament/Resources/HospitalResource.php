@@ -64,6 +64,21 @@ class HospitalResource extends Resource
                             ->required()
                             ->default(true),
                     ])->columns(2),
+                Forms\Components\Section::make('Accepted Schemes')
+                    ->schema([
+                        Forms\Components\Toggle::make('accepts_ayushman')
+                            ->label('Ayushman Card'),
+                        Forms\Components\Toggle::make('accepts_janaadhaar')
+                            ->label('Jan Aadhaar'),
+                        Forms\Components\Toggle::make('accepts_cghs')
+                            ->label('CGHS'),
+                        Forms\Components\Toggle::make('accepts_esic')
+                            ->label('ESIC'),
+                        Forms\Components\Toggle::make('is_cashless')
+                            ->label('Cashless Facility'),
+                        Forms\Components\Toggle::make('rgahs_approved')
+                            ->label('RGAHS Approved'),
+                    ])->columns(2),
             ]);
     }
 
@@ -88,6 +103,21 @@ class HospitalResource extends Resource
                 Tables\Columns\TextColumn::make('phone_2')
                     ->label('Phone 2')
                     ->searchable(),
+                Tables\Columns\IconColumn::make('accepts_ayushman')
+                    ->label('Ayushman')
+                    ->boolean(),
+                Tables\Columns\IconColumn::make('accepts_janaadhaar')
+                    ->label('Jan Aadhaar')
+                    ->boolean(),
+                Tables\Columns\IconColumn::make('accepts_cghs')
+                    ->label('CGHS')
+                    ->boolean(),
+                Tables\Columns\IconColumn::make('accepts_esic')
+                    ->label('ESIC')
+                    ->boolean(),
+                Tables\Columns\IconColumn::make('is_cashless')
+                    ->label('Cashless')
+                    ->boolean(),
                 Tables\Columns\IconColumn::make('is_verified')
                     ->boolean(),
             ])

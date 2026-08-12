@@ -173,7 +173,7 @@ class DirectoryDeduplicationService
                 'name_en', 'name_hi', 'type', 'address', 'address_line1', 'address_line2', 'landmark',
                 'city', 'state', 'pincode', 'latitude', 'longitude', 'country_code_1', 'country_code_2',
                 'phone_1', 'phone_2', 'is_verified', 'accepts_ayushman', 'accepts_janaadhaar',
-                'accepts_cghs', 'is_cashless', 'cashless_schemes_list', 'cashless_treatment_available',
+                'accepts_cghs', 'accepts_esic', 'is_cashless', 'cashless_schemes_list', 'cashless_treatment_available',
                 'accepts_ayushman_card', 'accepts_jan_aadhaar', 'rgahs_approved',
             ]);
 
