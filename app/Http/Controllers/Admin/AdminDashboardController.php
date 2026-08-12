@@ -21,6 +21,7 @@ use App\Models\Quiz;
 use App\Models\Symptom;
 use App\Models\SymptomTestSubmission;
 use App\Models\UserSubmission;
+use App\Services\DoctorImportService;
 use App\Services\DirectorySyncService;
 use App\Services\ScraperService;
 use Illuminate\Http\Request;
@@ -805,6 +806,106 @@ class AdminDashboardController extends Controller
         $callback = function () {
             $file = fopen('php://output', 'w');
             fputcsv($file, [
+                'doctor_hospital_link_id',
+                'doctor_id',
+                'hospital_id',
+                'registration_number',
+                'first_name',
+                'last_name',
+                'department_name_en',
+                'department_name_hi',
+                'medical_council',
+                'phone_1',
+                'phone_2',
+                'consultation_fee',
+                'experience_years',
+                'education_degrees',
+                'about_en',
+                'about_hi',
+                'city',
+                'state',
+                'pincode',
+                'address_line1',
+                'address_line2',
+                'landmark',
+                'languages_spoken',
+                'gender',
+                'is_verified',
+                'latitude',
+                'longitude',
+                'hospital_name',
+                'hospital_city',
+                'doctor_hospital_role',
+                'consultation_mode',
+                'availability',
+                'days_of_week',
+                'start_time',
+                'end_time',
+                'hospital_consultation_fee',
+            ]);
+
+            Doctor::with(['departments', 'hospitals'])->lazy(100)->each(function ($doctor) use ($file) {
+                $dept = $doctor->departments->first() ?? $doctor->department;
+                $hospitals = $doctor->hospitals->isNotEmpty() ? $doctor->hospitals : collect([null]);
+
+                foreach ($hospitals as $hospital) {
+                    fputcsv($file, [
+                        $hospital?->pivot?->external_link_id ?: $hospital?->pivot?->id,
+                        $doctor->id,
+                        $hospital?->id,
+                        $doctor->registration_number,
+                        $doctor->first_name,
+                        $doctor->last_name,
+                        $dept?->name_en,
+                        $dept?->name_hi,
+                        $doctor->medical_council,
+                        $doctor->phone_1,
+                        $doctor->phone_2,
+                        $doctor->consultation_fee,
+                        $doctor->experience_years,
+                        is_array($doctor->education_degrees) ? implode(';', $doctor->education_degrees) : $doctor->education_degrees,
+                        $doctor->about_en,
+                        $doctor->about_hi,
+                        $doctor->city,
+                        $doctor->state,
+                        $doctor->pincode,
+                        $doctor->address_line1,
+                        $doctor->address_line2,
+                        $doctor->landmark,
+                        is_array($doctor->languages_spoken) ? implode(';', $doctor->languages_spoken) : $doctor->languages_spoken,
+                        $doctor->gender,
+                        $doctor->is_verified === null ? null : ($doctor->is_verified ? 1 : 0),
+                        $doctor->latitude,
+                        $doctor->longitude,
+                        $hospital?->name_en,
+                        $hospital?->city,
+                        $hospital?->pivot?->role,
+                        $hospital?->pivot?->consultation_mode,
+                        $hospital?->pivot?->availability,
+                        $hospital?->pivot?->days_of_week,
+                        $hospital?->pivot?->start_time,
+                        $hospital?->pivot?->end_time,
+                        $hospital?->pivot?->consultation_fee,
+                    ]);
+                }
+            });
+
+            fclose($file);
+        };
+
+        return response()->stream($callback, 200, $headers);
+
+        $headers = [
+            'Content-type' => 'text/csv',
+            'Content-Disposition' => 'attachment; filename=doctors_export.csv',
+            'Pragma' => 'no-cache',
+            'Cache-Control' => 'must-revalidate, post-check=0, pre-check=0',
+            'Expires' => '0',
+        ];
+
+        $callback = function () {
+            $file = fopen('php://output', 'w');
+            fputcsv($file, [
                 'id',
                 'registration_number',
                 'first_name',
@@ -870,6 +971,17 @@ class AdminDashboardController extends Controller
 
     public function importDoctors(Request $request)
     {
+        $request->validate([
+            'file' => 'required|mimes:csv,txt',
+        ]);
+
+        $count = app(DoctorImportService::class)->importFile($request->file('file')->getRealPath());
+
+        return back()->with(
+            'success',
+            "Doctors imported successfully. {$count} row(s) processed with blank cells preserved and hospital links matched from the file."
+        );
+
         $request->validate(['file' => 'required|mimes:csv,txt']);
         $path = $request->file('file')->getRealPath();
         $file = fopen($path, 'r');

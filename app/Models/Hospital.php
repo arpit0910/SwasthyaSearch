@@ -61,7 +61,7 @@ class Hospital extends Model
     public function doctors()
     {
         return $this->belongsToMany(Doctor::class, 'doctor_hospital')
-            ->withPivot('days_of_week', 'start_time', 'end_time', 'consultation_fee')
+            ->withPivot('id', 'external_link_id', 'role', 'consultation_mode', 'availability', 'days_of_week', 'start_time', 'end_time', 'consultation_fee')
             ->withTimestamps();
     }
 

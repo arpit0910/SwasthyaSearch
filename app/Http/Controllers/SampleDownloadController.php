@@ -37,8 +37,8 @@ class SampleDownloadController extends Controller
                 break;
             case 'doctors':
             default:
-                $content .= "first_name,last_name,department_name_en,registration_number,medical_council,education_degrees,experience_years,phone,about_en,about_hi\n";
-                $content .= "Ramesh,Kumar,Cardiologist,MCI-55412,Medical Council of India,MBBS; MD Cardiology,15,\"+91 9876543210, +91 9988776655\",Expert cardiologist,Expert cardiologist Hindi\n";
+                $content .= "doctor_hospital_link_id,doctor_id,hospital_id,registration_number,first_name,last_name,department_name_en,department_name_hi,medical_council,country_code_1,country_code_2,phone_1,phone_2,consultation_fee,experience_years,education_degrees,about_en,about_hi,email,website,city,state,pincode,address_line1,address_line2,landmark,languages_spoken,gender,is_verified,latitude,longitude,hospital_name,hospital_city,doctor_hospital_role,consultation_mode,availability,days_of_week,start_time,end_time,hospital_consultation_fee\n";
+                $content .= "LINK-JPR-001,,12,MCI-55412,Ramesh,Kumar,Cardiology,हृदय रोग विभाग,Medical Council of India,+91,,9876543210,,800,15,\"MBBS; MD Cardiology\",Expert cardiologist,,doctor@example.com,,Jaipur,Rajasthan,302001,Malviya Nagar,,,Hindi; English,male,1,26.8467,75.8497,Apex Heart Hospital,Jaipur,Consultant,In-person,\"Mon-Fri OPD\",Mon-Fri,10:00,13:00,900\n";
                 break;
         }
 
