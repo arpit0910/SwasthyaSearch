@@ -43,6 +43,39 @@ class SeoInfrastructureTest extends TestCase
             ->assertOk()
             ->assertSee('rel="manifest"', false)
             ->assertSee('/site.webmanifest', false)
-            ->assertSee('content="index,follow', false);
+            ->assertSee('content="index,follow', false)
+            ->assertSee('name="keywords"', false)
+            ->assertSee('property="og:image:secure_url"', false)
+            ->assertSee('property="og:image:type"', false)
+            ->assertSee('hreflang="x-default"', false);
+    }
+
+    public function test_article_page_exposes_article_specific_meta_tags(): void
+    {
+        Department::create([
+            'name_en' => 'General Medicine',
+            'name_hi' => 'à¤œà¤¨à¤°à¤² à¤®à¥‡à¤¡à¤¿à¤¸à¤¿à¤¨',
+            'is_active' => true,
+        ]);
+
+        $article = \App\Models\Article::create([
+            'title_en' => 'Healthy Sleep Basics',
+            'title_hi' => 'à¤¬à¥‡à¤¹à¤¤à¤° à¤¨à¥€à¤‚à¤¦ à¤•à¥€ à¤¬à¥à¤¨à¤¿à¤¯à¤¾à¤¦',
+            'excerpt_en' => 'Simple sleep basics.',
+            'excerpt_hi' => 'à¤¬à¥‡à¤¹à¤¤à¤° à¤¨à¥€à¤‚à¤¦ à¤•à¥‡ à¤†à¤¸à¤¾à¤¨ à¤¤à¤°à¥€à¤•à¥‡à¥¤',
+            'content_en' => 'Sleep well.',
+            'content_hi' => 'à¤…à¤šà¥à¤›à¥€ à¤¨à¥€à¤‚à¤¦ à¤²à¥‡à¤‚à¥¤',
+            'category' => 'Wellness',
+            'author_name' => 'Arogio Team',
+            'is_published' => true,
+        ]);
+
+        $this->get(route('articles.show', $article))
+            ->assertOk()
+            ->assertSee('property="og:type" content="article"', false)
+            ->assertSee('property="article:published_time"', false)
+            ->assertSee('property="article:modified_time"', false)
+            ->assertSee('property="article:author"', false)
+            ->assertSee('name="keywords"', false);
     }
 }

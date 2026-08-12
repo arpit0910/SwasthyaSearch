@@ -15,8 +15,12 @@
 @section('title', $title . ' - Arogio')
 @section('meta_title', $title . ' | Arogio')
 @section('meta_description', \Illuminate\Support\Str::limit(strip_tags($excerpt ?: $content), 160, '...'))
+@section('meta_keywords', \App\Support\Seo::keywords([$title, $article->category, 'health article', 'patient education', 'Arogio']))
+@section('meta_author', $article->author_name ?: 'Arogio Team')
+@section('article_published_time', optional($article->created_at)->toIso8601String())
+@section('article_modified_time', optional($article->updated_at)->toIso8601String())
 @section('og_type', 'article')
-@section('canonical_url', route('articles.show', $article->id))
+@section('canonical_url', route('articles.show', $article))
 @section('structured_data')
 <script type="application/ld+json">
 {!! json_encode([

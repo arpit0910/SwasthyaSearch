@@ -358,9 +358,12 @@ $pageDescription = filled($searchTerm)
         $doc = is_array($doctor) ? (object) $doctor : $doctor;
         $fullName = "Dr. {$doc->first_name} {$doc->last_name}";
         $dept = is_array($doc->department) ? (object) $doc->department : $doc->department;
-        $deptNameEn = is_array($dept->name) ? $dept->name['en'] : ($dept->name['en'] ?? $dept->name_en);
-        $deptNameHi = is_array($dept->name) ? $dept->name['hi'] : ($dept->name['hi'] ?? $dept->name_hi);
-        $deptName = $locale === 'hi' ? ($deptNameHi ?: $deptNameEn) : $deptNameEn;
+        $deptNameData = $dept->name ?? null;
+        $deptNameEn = is_array($deptNameData) ? ($deptNameData['en'] ?? '') : ($deptNameData['en'] ?? ($dept->name_en ?? ''));
+        $deptNameHi = is_array($deptNameData) ? ($deptNameData['hi'] ?? '') : ($deptNameData['hi'] ?? ($dept->name_hi ?? ''));
+        $deptName = $locale === 'hi'
+            ? ($deptNameHi ?: ($deptNameEn ?: 'विभाग उपलब्ध नहीं'))
+            : ($deptNameEn ?: 'Department not available');
         $aboutEn = is_array($doc->about) ? $doc->about['en'] : ($doc->about['en'] ?? $doc->about_en);
         $aboutHi = is_array($doc->about) ? $doc->about['hi'] : ($doc->about['hi'] ?? $doc->about_hi);
         $about = $locale === 'hi' ? ($aboutHi ?: $aboutEn) : $aboutEn;
@@ -406,7 +409,10 @@ $pageDescription = filled($searchTerm)
         $firstHospName = '';
         if (!empty($doc->hospitals) && count($doc->hospitals) > 0) {
         $h0 = is_array($doc->hospitals[0]) ? (object) $doc->hospitals[0] : $doc->hospitals[0];
-        $firstHospName = $locale === 'hi' ? ($h0->name['hi'] ?? $h0->name['en']) : $h0->name['en'];
+        $h0NameData = $h0->name ?? null;
+        $h0NameEn = is_array($h0NameData) ? ($h0NameData['en'] ?? '') : ($h0NameData['en'] ?? ($h0->name_en ?? ''));
+        $h0NameHi = is_array($h0NameData) ? ($h0NameData['hi'] ?? '') : ($h0NameData['hi'] ?? ($h0->name_hi ?? ''));
+        $firstHospName = $locale === 'hi' ? ($h0NameHi ?: $h0NameEn) : $h0NameEn;
         }
         @endphp
         <div class="glass-card rounded-3xl border border-slate-200/80 dark:border-slate-800 shadow-2xs hover:shadow-xl transition-all duration-300 overflow-hidden flex flex-col group hover:-translate-y-1 relative" data-ayushman="{{ $hasAyushman ? 'true' : 'false' }}" data-cashless="{{ $hasCashless ? 'true' : 'false' }}" data-verified="{{ $doc->is_verified ? 'true' : 'false' }}">
@@ -471,6 +477,7 @@ $pageDescription = filled($searchTerm)
             <!-- Card Body -->
             <div class="p-6 flex-1 flex flex-col space-y-4">
                 <div class="grid grid-cols-2 gap-2 text-xs font-semibold">
+                    @if(($doc->experience_years ?? 0) > 0)
                     <div class="bg-slate-50 dark:bg-slate-800/60 p-3 rounded-2xl border border-slate-100/80 dark:border-slate-700/80 flex items-center space-x-2 shadow-2xs">
                         <i data-lucide="award" class="w-4 h-4 text-indigo-500 shrink-0"></i>
                         <div class="truncate">
@@ -478,6 +485,7 @@ $pageDescription = filled($searchTerm)
                             <span class="text-slate-900 dark:text-white font-bold">{{ $doc->experience_years }} {{ $locale === 'hi' ? 'वर्ष' : 'Years' }}</span>
                         </div>
                     </div>
+                    @endif
                     <div class="bg-slate-50 dark:bg-slate-800/60 p-3 rounded-2xl border border-slate-100/80 dark:border-slate-700/80 flex items-center space-x-2 shadow-2xs">
                         <i data-lucide="file-text" class="w-4 h-4 text-teal-500 shrink-0"></i>
                         <div class="truncate">
@@ -555,9 +563,12 @@ $pageDescription = filled($searchTerm)
                         @foreach ($doc->hospitals as $hosp)
                         @php
                         $h = is_array($hosp) ? (object) $hosp : $hosp;
-                        $hNameEn = is_array($h->name) ? $h->name['en'] : ($h->name['en'] ?? $h->name_en);
-                        $hNameHi = is_array($h->name) ? $h->name['hi'] : ($h->name['hi'] ?? $h->name_hi);
-                        $hName = $locale === 'hi' ? ($hNameHi ?: $hNameEn) : $hNameEn;
+                        $hNameData = $h->name ?? null;
+                        $hNameEn = is_array($hNameData) ? ($hNameData['en'] ?? '') : ($hNameData['en'] ?? ($h->name_en ?? ''));
+                        $hNameHi = is_array($hNameData) ? ($hNameData['hi'] ?? '') : ($hNameData['hi'] ?? ($h->name_hi ?? ''));
+                        $hName = $locale === 'hi'
+                            ? ($hNameHi ?: ($hNameEn ?: 'अस्पताल उपलब्ध नहीं'))
+                            : ($hNameEn ?: 'Hospital not available');
                         $pivot = is_array($h->pivot) ? (object) $h->pivot : $h->pivot;
                         @endphp
                         <div class="bg-slate-50 dark:bg-slate-800/40 p-4 rounded-2xl border border-slate-100/80 dark:border-slate-700/80 space-y-2 text-xs hover:border-slate-200 dark:hover:border-slate-600 transition-colors shadow-2xs">

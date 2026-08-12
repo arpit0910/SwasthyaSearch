@@ -98,7 +98,9 @@
                 <article class="bg-white border border-slate-200 rounded-2xl p-5 shadow-sm hover:shadow-md transition">
                     <h3 class="font-bold text-slate-900 text-lg">{{ $fullName }}</h3>
                     <p class="text-sm text-teal-700 font-semibold mt-1">{{ $deptName }}</p>
+                    @if(($doc['experience_years'] ?? 0) > 0)
                     <p class="text-xs text-slate-600 mt-2">{{ $doc['experience_years'] }}+ {{ $locale === 'hi' ? 'वर्ष अनुभव' : 'years experience' }}</p>
+                    @endif
                     @if(!empty($doc['phone']))
                         <a href="tel:{{ $doc['phone'] }}" class="mt-4 inline-flex items-center gap-2 text-sm font-semibold bg-cyan-600 text-white px-3 py-2 rounded-xl">
                             <i data-lucide="phone" class="w-4 h-4"></i>{{ $locale === 'hi' ? 'कॉल डॉक्टर' : 'Call Doctor' }}

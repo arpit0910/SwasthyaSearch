@@ -1,5 +1,8 @@
 @extends('layouts.public')
 
+@section('meta_title', 'Arogio Video Consultation | Private Browser-Based Care')
+@section('meta_keywords', 'video consultation, online consultation, browser-based consultation, Arogio')
+
 @php
     $isHi = \App\Helpers\LocaleHelper::current() === 'hi';
 @endphp

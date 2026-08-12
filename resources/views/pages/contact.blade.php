@@ -1,10 +1,9 @@
 @extends('layouts.public')
 
 @section('title', ($locale === 'hi' ? 'जयपुर हेल्थकेयर सहायता से संपर्क करें' : 'Contact Jaipur Healthcare Support') . ' - Arogio')
-@section('meta_title', 'Contact Jaipur Healthcare Support | Arogio')
-@section('meta_description', 'Contact Arogio for Jaipur healthcare support, listing corrections, and update requests.')
-@section('meta_title', $locale === 'hi' ? 'Arogio संपर्क पेज' : 'Contact Arogio | Support, Corrections and Feedback')
-@section('meta_description', $locale === 'hi' ? 'Arogio से सपोर्ट, listing corrections और feedback के लिए संपर्क करें।' : 'Contact Arogio for support, listing corrections, update requests, and feedback.')
+@section('meta_title', $locale === 'hi' ? 'Arogio संपर्क | Support, Listing Corrections और Feedback' : 'Contact Arogio | Support, Listing Corrections & Feedback')
+@section('meta_description', $locale === 'hi' ? 'Arogio से support, doctor या hospital listing corrections, update requests और feedback के लिए संपर्क करें।' : 'Contact Arogio for support, doctor or hospital listing corrections, update requests, and feedback.')
+@section('meta_keywords', 'Arogio contact, listing correction, doctor update, hospital update, support')
 
 @section('content')
 <header class="bg-gradient-to-r from-cyan-800 via-teal-700 to-emerald-700 text-white py-14 px-4 sm:px-6 lg:px-8 border-b border-slate-800 shadow-xl relative overflow-hidden">

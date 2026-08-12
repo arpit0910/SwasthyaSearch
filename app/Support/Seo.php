@@ -10,6 +10,7 @@ class Seo
     {
         $title = trim((string) $title);
         $brand = trim((string) $brand);
+        $brandRoot = trim((string) preg_replace('/\s*-\s*.*/u', '', $brand));
 
         if ($title === '' || $brand === '') {
             return $title;
@@ -21,6 +22,14 @@ class Seo
 
         if (str_contains(mb_strtolower($title), mb_strtolower($brand))) {
             return $title;
+        }
+
+        if ($brandRoot !== '' && preg_match('/(\||-)\s*' . preg_quote($brandRoot, '/') . '\s*$/iu', $title)) {
+            return preg_replace('/' . preg_quote($brandRoot, '/') . '\s*$/iu', $brand, $title) ?? $title;
+        }
+
+        if ($brandRoot !== '' && mb_strtolower($title) === mb_strtolower($brandRoot)) {
+            return $brand;
         }
 
         return $title . ' | ' . $brand;
@@ -64,5 +73,18 @@ class Seo
         $last = array_pop($items);
 
         return implode(', ', $items) . ', ' . $conjunction . ' ' . $last;
+    }
+
+    public static function keywords(array $items, int $maxItems = 12): string
+    {
+        $keywords = collect($items)
+            ->flatten()
+            ->map(static fn ($item) => self::cleanText((string) $item, 80))
+            ->filter()
+            ->unique(static fn ($item) => mb_strtolower($item))
+            ->take($maxItems)
+            ->values();
+
+        return $keywords->implode(', ');
     }
 }

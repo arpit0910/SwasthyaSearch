@@ -9,6 +9,7 @@
 @section('title', $quizTitle . ' - Arogio')
 @section('meta_title', ($isHindi ? ($quiz->meta_title_hi ?: ($quizTitle . ' | Arogio')) : ($quiz->meta_title_en ?: ($quizTitle . ' | Arogio'))))
 @section('meta_description', \App\Support\Seo::cleanText($isHindi ? ($quiz->meta_description_hi ?: $quizDescription) : ($quiz->meta_description_en ?: $quizDescription), 160))
+@section('meta_keywords', \App\Support\Seo::keywords([$quizTitle, 'health quiz', 'self assessment', 'wellness quiz', 'Arogio']))
 @section('structured_data')
 <script type="application/ld+json">
 {!! json_encode([

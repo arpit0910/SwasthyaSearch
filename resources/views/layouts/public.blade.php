@@ -66,6 +66,9 @@
         $defaultDescription = $isHindi
             ? 'arogio पर अपने शहर में सत्यापित डॉक्टर, अस्पताल, क्लिनिक और ब्लड बैंक खोजें।'
             : 'Find verified doctors, hospitals, clinics, blood banks, and health articles on Arogio.';
+        $defaultKeywords = $isHindi
+            ? \App\Support\Seo::keywords(['Arogio', 'डॉक्टर', 'अस्पताल', 'ब्लड बैंक', 'स्वास्थ्य लेख', 'दवा जानकारी', $activeCityHi])
+            : \App\Support\Seo::keywords(['Arogio', 'doctors', 'hospitals', 'blood banks', 'health articles', 'medicine information', $activeCity]);
 
         $routeName = request()->route()?->getName() ?? '';
         $routeSeo = [
@@ -193,6 +196,7 @@
             trim($__env->yieldContent('meta_description', $computedDescription)),
             160,
         );
+        $metaKeywords = trim($__env->yieldContent('meta_keywords', $defaultKeywords));
         $defaultCanonical = $currentUrl . (!empty($canonicalQuery) ? '?' . http_build_query($canonicalQuery) : '');
         $filterableRoutes = ['doctors.index', 'hospitals.index', 'blood_banks.index', 'articles.index'];
         $isFilterRoute = in_array($routeName, $filterableRoutes, true);
@@ -216,12 +220,23 @@
         $ogType = trim($__env->yieldContent('og_type', request()->routeIs('articles.show') ? 'article' : 'website'));
         $themeColor = trim($__env->yieldContent('theme_color', '#0f766e'));
         $metaAuthor = trim($__env->yieldContent('meta_author', $appName));
+        $metaPublisher = trim($__env->yieldContent('meta_publisher', $appName));
+        $ogImageType = trim($__env->yieldContent('og_image_type', 'image/png'));
+        $ogImageWidth = trim($__env->yieldContent('og_image_width', '512'));
+        $ogImageHeight = trim($__env->yieldContent('og_image_height', '512'));
+        $publishedTime = trim($__env->yieldContent('article_published_time'));
+        $modifiedTime = trim($__env->yieldContent('article_modified_time'));
+        $currentLocaleCode = $isHindi ? 'hi-IN' : 'en-IN';
+        $currentOgLocale = $isHindi ? 'hi_IN' : 'en_US';
     @endphp
 
     <title>{{ $metaTitle }}</title>
     <meta name="description" content="{{ $metaDescription }}">
     <meta name="author" content="{{ $metaAuthor }}">
+    <meta name="publisher" content="{{ $metaPublisher }}">
     <meta name="application-name" content="{{ $appName }}">
+    <meta name="language" content="{{ $currentLocaleCode }}">
+    <meta name="keywords" content="{{ $metaKeywords }}">
     <meta name="robots" content="{{ $metaRobots }}">
     <meta name="googlebot" content="{{ $metaRobots }}">
     <meta name="theme-color" content="{{ $themeColor }}">
@@ -236,8 +251,24 @@
     <meta property="og:description" content="{{ $metaDescription }}">
     <meta property="og:url" content="{{ $canonicalUrl }}">
     <meta property="og:image" content="{{ $ogImage }}">
+    <meta property="og:image:secure_url" content="{{ $ogImage }}">
+    <meta property="og:image:type" content="{{ $ogImageType }}">
+    <meta property="og:image:width" content="{{ $ogImageWidth }}">
+    <meta property="og:image:height" content="{{ $ogImageHeight }}">
     <meta property="og:image:alt" content="{{ $ogImageAlt }}">
-    <meta property="og:locale" content="{{ $isHindi ? 'hi_IN' : 'en_US' }}">
+    <meta property="og:locale" content="{{ $currentOgLocale }}">
+    @if ($modifiedTime !== '')
+    <meta property="og:updated_time" content="{{ $modifiedTime }}">
+    @endif
+    @if ($ogType === 'article' && $publishedTime !== '')
+    <meta property="article:published_time" content="{{ $publishedTime }}">
+    @endif
+    @if ($ogType === 'article' && $modifiedTime !== '')
+    <meta property="article:modified_time" content="{{ $modifiedTime }}">
+    @endif
+    @if ($ogType === 'article' && $metaAuthor !== '')
+    <meta property="article:author" content="{{ $metaAuthor }}">
+    @endif
 
     <meta name="twitter:card" content="summary_large_image">
     <meta name="twitter:title" content="{{ $metaTitle }}">
@@ -249,6 +280,7 @@
     <link rel="apple-touch-icon" href="{{ $brandFaviconUrl }}">
     <link rel="manifest" href="{{ url('/site.webmanifest') }}">
 
+    <link rel="alternate" hreflang="{{ $currentLocaleCode }}" href="{{ $canonicalUrl }}">
     <link rel="alternate" hreflang="x-default" href="{{ $canonicalUrl }}">
 
     <script type="application/ld+json">

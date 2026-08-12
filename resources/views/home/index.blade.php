@@ -2,10 +2,9 @@
 
 @section('title', ($locale === 'hi' ? 'मुखपृष्ठ' : 'Home') . ' - Arogio')
 
-@section('meta_title', 'Arogio - Find Doctors, Hospitals & Blood Banks Near You')
-@section('meta_description', 'Search trusted doctors, hospitals, blood banks, and departments by city or symptoms. Connect directly with healthcare providers without ads or intermediaries.')
-@section('meta_title', 'Arogio | Find Doctors, Hospitals, Blood Banks, Articles and Quizzes')
-@section('meta_description', 'Arogio helps people find trusted doctors, hospitals, blood banks, health articles, and quizzes in one place.')
+@section('meta_title', $locale === 'hi' ? 'Arogio | Doctors, Hospitals, Blood Banks, Articles और Health Tools' : 'Arogio | Doctors, Hospitals, Blood Banks, Articles & Health Tools')
+@section('meta_description', $locale === 'hi' ? 'Arogio पर अपने शहर में trusted doctors, hospitals, blood banks, health articles, symptom tools और wellness resources खोजें।' : 'Find trusted doctors, hospitals, blood banks, health articles, symptom tools, and wellness resources in your city with Arogio.')
+@section('meta_keywords', $locale === 'hi' ? 'Arogio, डॉक्टर, अस्पताल, ब्लड बैंक, स्वास्थ्य लेख, symptom test, wellness tools' : 'Arogio, doctors, hospitals, blood banks, health articles, symptom test, wellness tools')
 @section('content')
 @php
 $quickSymptoms =
@@ -1711,7 +1710,6 @@ $locale === 'hi'
     updateStarsDisplay(0);
 </script>
 @endpush
-
 
 
 

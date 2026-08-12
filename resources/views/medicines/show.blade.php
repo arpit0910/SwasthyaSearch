@@ -16,6 +16,7 @@
 @section('title', $medicine->name . ' - Arogio')
 @section('meta_title', $metaTitle)
 @section('meta_description', $medicineDescription)
+@section('meta_keywords', \App\Support\Seo::keywords([$medicine->name, 'medicine information', 'uses', 'side effects', 'precautions', 'Arogio']))
 @section('structured_data')
 <script type="application/ld+json">
 {!! json_encode([

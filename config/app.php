@@ -13,7 +13,7 @@ return [
     |
     */
 
-    'name' => env('APP_NAME', 'Arogio'),
+    'name' => env('APP_NAME', 'Arogio - Health Technology Platform'),
 
     /*
     |--------------------------------------------------------------------------
