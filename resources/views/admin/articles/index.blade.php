@@ -7,7 +7,13 @@
             <h1 class="h3 mb-1 fw-bold text-dark">Medical Articles Management</h1>
             <p class="text-muted mb-0">Publish and maintain expert health publications and educational guides.</p>
         </div>
-        <div>
+        <div class="d-flex gap-2">
+            <a href="{{ route('admin.articles.export') }}" class="btn btn-outline-success d-flex align-items-center gap-2">
+                <i class="fa-solid fa-file-export"></i> Export CSV
+            </a>
+            <button class="btn btn-outline-secondary d-flex align-items-center gap-2" data-bs-toggle="modal" data-bs-target="#importModal">
+                <i class="fa-solid fa-file-import"></i> Import CSV
+            </button>
             <a class="btn btn-primary d-flex align-items-center gap-2" href="{{ route('admin.articles.create') }}">
                 <i class="fa-solid fa-plus"></i> Publish New Article
             </a>
@@ -59,6 +65,8 @@
             </div>
         </div>
     </div>
+
+    @include('admin.articles.import')
 
 @endsection
 

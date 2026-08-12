@@ -643,11 +643,11 @@
         class="hidden fixed inset-0 z-[95] bg-slate-950/75 dark:bg-slate-950/85 backdrop-blur-[6px]"></div>
     <div id="lead-capture-modal" class="hidden fixed inset-0 z-[96] flex items-center justify-center p-4">
         <div
-            class="relative w-full max-w-md overflow-hidden rounded-3xl border border-slate-200/80 dark:border-slate-800 bg-white shadow-2xl ring-1 ring-slate-100/60 dark:border-slate-700 dark:bg-slate-900 dark:ring-slate-700">
-            <div class="absolute -top-16 -right-16 h-44 w-44 rounded-full bg-cyan-400/20 blur-2xl"></div>
-            <div class="absolute -bottom-20 -left-10 h-52 w-52 rounded-full bg-teal-400/15 blur-2xl"></div>
+            class="relative w-full max-w-lg overflow-hidden rounded-[2rem] border border-slate-200/80 dark:border-slate-800 bg-white shadow-2xl ring-1 ring-slate-100/60 dark:border-slate-700 dark:bg-slate-900 dark:ring-slate-700">
+            <div class="absolute -top-20 -right-20 h-52 w-52 rounded-full bg-cyan-400/20 blur-3xl"></div>
+            <div class="absolute -bottom-20 -left-10 h-56 w-56 rounded-full bg-teal-400/15 blur-3xl"></div>
 
-            <div class="relative px-6 pt-6 pb-4 border-b border-slate-100/90 dark:border-slate-800">
+            <div class="relative px-6 pt-6 pb-5 border-b border-slate-100/90 dark:border-slate-800 bg-gradient-to-br from-white via-cyan-50/60 to-teal-50/70 dark:from-slate-900 dark:via-slate-900 dark:to-slate-900">
                 <button type="button" id="lead-capture-close" aria-label="Close"
                     class="absolute right-4 top-4 h-8 w-8 rounded-full border border-slate-200 bg-white/90 text-slate-500 hover:text-slate-800 hover:border-slate-300 dark:border-slate-700 dark:bg-slate-800 dark:text-slate-300 dark:hover:text-white">
                     ×
@@ -663,6 +663,18 @@
                 </p>
             </div>
 
+                <div class="mx-6 mt-4 rounded-2xl border border-teal-100 bg-white/90 px-4 py-3 shadow-sm shadow-cyan-100/60 backdrop-blur dark:border-slate-700 dark:bg-slate-800/80">
+                    <div class="flex flex-wrap items-center gap-x-4 gap-y-2 text-[11px] font-semibold uppercase tracking-[0.22em] text-teal-700 dark:text-teal-300">
+                        <span>{{ $locale === 'hi' ? 'à¤¨à¤¿à¤œà¥€ à¤”à¤° à¤¸à¥à¤°à¤•à¥à¤·à¤¿à¤¤' : 'Private & Secure' }}</span>
+                        <span class="h-1 w-1 rounded-full bg-teal-400"></span>
+                        <span>{{ $locale === 'hi' ? 'à¤•à¥‹à¤ˆ à¤¸à¥à¤ªà¥ˆà¤® à¤¨à¤¹à¥€à¤‚' : 'No Spam' }}</span>
+                        <span class="h-1 w-1 rounded-full bg-teal-400"></span>
+                        <span>{{ $locale === 'hi' ? 'à¤•à¤­à¥€ à¤­à¥€ à¤¬à¤‚à¤¦ à¤•à¤°à¥‡à¤‚' : 'Opt out anytime' }}</span>
+                    </div>
+                    <p class="mt-2 text-sm leading-6 text-slate-600 dark:text-slate-300">
+                        {{ $locale === 'hi' ? 'Arogio à¤•à¥‡à¤µà¤² à¤‰à¤ªà¤¯à¥‹à¤—à¥€ à¤¹à¥‡à¤²à¥à¤¥ à¤…à¤ªà¤¡à¥‡à¤Ÿà¥à¤¸, à¤µà¥‡à¤²à¤¨à¥‡à¤¸ à¤Ÿà¤¿à¤ªà¥à¤¸ à¤”à¤° à¤®à¤¹à¤¤à¥à¤µà¤ªà¥‚à¤°à¥à¤£ à¤¹à¥‡à¤²à¥à¤¥ à¤†à¤²à¤°à¥à¤Ÿà¥à¤¸ à¤•à¥‡ à¤²à¤¿à¤ à¤†à¤ªà¤•à¥€ à¤œà¤¾à¤¨à¤•à¤¾à¤°à¥€ à¤‰à¤ªà¤¯à¥‹à¤— à¤•à¤°à¥‡à¤—à¤¾à¥¤' : 'Arogio uses your details only for useful health updates, wellness tips, and important healthcare alerts.' }}
+                    </p>
+                </div>
             <form id="lead-capture-form"
                 class="relative px-6 py-5 space-y-4 bg-gradient-to-b from-white to-cyan-50/30 dark:from-slate-900 dark:to-slate-900">
                 <div>
@@ -681,9 +693,13 @@
                 <div>
                     <label
                         class="mb-1.5 block text-xs font-bold uppercase tracking-wider text-slate-600 dark:text-slate-300">{{ $locale === 'hi' ? 'मोबाइल नंबर' : 'Mobile Number' }}</label>
-                    <input type="tel" name="mobile" inputmode="numeric" pattern="[0-9]{10,15}" required
-                        placeholder="{{ $locale === 'hi' ? '10-15 अंकों का नंबर' : '10-15 digit phone number' }}"
-                        class="w-full rounded-xl border border-slate-300 bg-white px-4 py-3 text-sm text-slate-900 shadow-sm outline-none transition focus:border-teal-500 focus:ring-2 focus:ring-teal-500/25 dark:border-slate-700 dark:bg-slate-800 dark:text-slate-100">
+                    <div class="relative">
+                        <span class="pointer-events-none absolute inset-y-0 left-0 inline-flex items-center rounded-l-xl border-r border-slate-200 bg-slate-50 px-4 text-sm font-bold text-slate-700 dark:border-slate-700 dark:bg-slate-900 dark:text-slate-200">+91</span>
+                    <input type="tel" id="lead-capture-mobile" name="mobile" inputmode="numeric" pattern="[0-9]{10}" maxlength="10" required
+                            placeholder="{{ $locale === 'hi' ? '10 अंकों का मोबाइल नंबर' : '10 digit mobile number' }}"
+                            class="w-full rounded-xl border border-slate-300 bg-white py-3 pl-16 pr-4 text-sm text-slate-900 shadow-sm outline-none transition focus:border-teal-500 focus:ring-2 focus:ring-teal-500/25 dark:border-slate-700 dark:bg-slate-800 dark:text-slate-100">
+                </div>
+                    <p class="mt-1.5 text-xs text-slate-500 dark:text-slate-400">{{ $locale === 'hi' ? 'à¤•à¥‡à¤µà¤² 10 à¤…à¤‚à¤• à¤¡à¤¾à¤²à¥‡à¤‚à¥¤ à¤•à¥‹à¤¡ +91 à¤¸à¥à¤µà¤šà¤¾à¤²à¤¿à¤¤ à¤°à¥‚à¤ª à¤¸à¥‡ à¤œà¥à¤¡à¤¼à¤¾ à¤¹à¥ˆà¥¤' : 'Enter only your 10 digit Indian mobile number. Country code +91 is shown automatically.' }}</p>
                 </div>
                 <p id="lead-capture-message" class="hidden rounded-lg px-3 py-2 text-xs font-semibold"></p>
                 <div class="flex items-center justify-between gap-3 pt-1">
@@ -1709,6 +1725,10 @@
         document.getElementById('lead-capture-overlay')?.classList.remove('hidden');
         document.getElementById('lead-capture-modal')?.classList.remove('hidden');
         document.body.classList.add('overflow-hidden');
+    }
+
+    function normalizeIndianMobile(value) {
+        return String(value || '').replace(/\D/g, '').slice(0, 10);
     }
 
     function openListingReportModal(entityType, entityId, entityName) {
@@ -3119,16 +3139,31 @@
         document.getElementById('lead-capture-overlay')?.addEventListener('click', () => skipLeadCapture(3));
         document.getElementById('lead-capture-skip')?.addEventListener('click', () => skipLeadCapture(7));
         document.getElementById('lead-capture-close')?.addEventListener('click', () => skipLeadCapture(7));
+        document.getElementById('lead-capture-mobile')?.addEventListener('input', function() {
+            this.value = normalizeIndianMobile(this.value);
+        });
         document.getElementById('lead-capture-form')?.addEventListener('submit', async function(e) {
             e.preventDefault();
             const form = e.currentTarget;
             const msgEl = document.getElementById('lead-capture-message');
             const formData = new FormData(form);
+            const mobile = normalizeIndianMobile(formData.get('mobile'));
             const payload = {
                 name: String(formData.get('name') || '').trim(),
                 email: String(formData.get('email') || '').trim(),
-                mobile: String(formData.get('mobile') || '').trim(),
+                mobile,
             };
+
+            if (mobile.length !== 10) {
+                if (msgEl) {
+                    msgEl.classList.remove('hidden');
+                    msgEl.classList.remove('text-emerald-600');
+                    msgEl.classList.add('text-rose-600');
+                    msgEl.textContent =
+                        '{{ $locale === 'hi' ? 'à¤•à¥ƒà¤ªà¤¯à¤¾ à¤µà¥ˆà¤§ 10 à¤…à¤‚à¤•à¥‹à¤‚ à¤•à¤¾ à¤®à¥‹à¤¬à¤¾à¤‡à¤² à¤¨à¤‚à¤¬à¤° à¤¡à¤¾à¤²à¥‡à¤‚à¥¤' : 'Please enter a valid 10 digit mobile number.' }}';
+                }
+                return;
+            }
 
             try {
                 const res = await fetch('{{ route('lead.capture.submit') }}', {

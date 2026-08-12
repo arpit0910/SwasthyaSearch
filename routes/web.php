@@ -103,6 +103,8 @@ Route::prefix('admin')->middleware('web')->group(function () {
         Route::post('/articles', [AdminDashboardController::class, 'storeArticle'])->name('admin.articles.store');
         Route::put('/articles/{article}', [AdminDashboardController::class, 'updateArticle'])->name('admin.articles.update');
         Route::delete('/articles/{article}', [AdminDashboardController::class, 'destroyArticle'])->name('admin.articles.destroy');
+        Route::post('/articles/import', [AdminDashboardController::class, 'importArticles'])->name('admin.articles.import');
+        Route::get('/articles/export', [AdminDashboardController::class, 'exportArticles'])->name('admin.articles.export');
 
         // Medicines
         Route::get('/medicines', [AdminDashboardController::class, 'medicines'])->name('admin.medicines');

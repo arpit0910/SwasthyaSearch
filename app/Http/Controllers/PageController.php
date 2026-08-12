@@ -146,7 +146,7 @@ class PageController extends Controller
         $validated = $request->validate([
             'name' => 'required|string|max:255',
             'email' => 'required|email|max:255',
-            'mobile' => ['required', 'string', 'regex:/^[0-9]{10,15}$/'],
+            'mobile' => ['required', 'string', 'regex:/^[0-9]{10}$/'],
         ]);
 
         return response()->json([

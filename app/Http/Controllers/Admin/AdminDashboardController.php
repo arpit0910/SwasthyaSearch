@@ -1767,6 +1767,118 @@ class AdminDashboardController extends Controller
         return back()->with('success', 'Article deleted successfully.');
     }
 
+    public function exportArticles()
+    {
+        $headers = [
+            'Content-type' => 'text/csv',
+            'Content-Disposition' => 'attachment; filename=articles_export.csv',
+            'Pragma' => 'no-cache',
+            'Cache-Control' => 'must-revalidate, post-check=0, pre-check=0',
+            'Expires' => '0',
+        ];
+
+        $columns = [
+            'id',
+            'title_en',
+            'title_hi',
+            'excerpt_en',
+            'excerpt_hi',
+            'content_en',
+            'content_hi',
+            'category',
+            'author_name',
+            'is_published',
+            'created_at',
+            'updated_at',
+        ];
+
+        $callback = function () use ($columns) {
+            $file = fopen('php://output', 'w');
+            fputcsv($file, $columns);
+
+            Article::query()->lazy(100)->each(function (Article $article) use ($file, $columns) {
+                $row = [];
+
+                foreach ($columns as $column) {
+                    $value = $article->{$column};
+
+                    if ($value instanceof \DateTimeInterface) {
+                        $value = $value->format('Y-m-d H:i:s');
+                    } elseif (is_bool($value)) {
+                        $value = $value ? 1 : 0;
+                    }
+
+                    $row[] = $value;
+                }
+
+                fputcsv($file, $row);
+            });
+
+            fclose($file);
+        };
+
+        return response()->stream($callback, 200, $headers);
+    }
+
+    public function importArticles(Request $request)
+    {
+        $request->validate(['file' => 'required|mimes:csv,txt']);
+
+        $path = $request->file('file')->getRealPath();
+        $file = fopen($path, 'r');
+        $header = fgetcsv($file);
+
+        if ($header === false) {
+            fclose($file);
+
+            return back()->with('error', 'The uploaded CSV file is empty.');
+        }
+
+        $importedCount = 0;
+
+        while ($row = fgetcsv($file)) {
+            if (count($header) !== count($row)) {
+                continue;
+            }
+
+            $data = array_combine($header, $row);
+
+            if (empty(trim((string) ($data['title_en'] ?? '')))) {
+                continue;
+            }
+
+            $article = !empty($data['id'])
+                ? Article::find($data['id'])
+                : Article::where('title_en', trim((string) $data['title_en']))->first();
+
+            $payload = [
+                'title_en' => trim((string) ($data['title_en'] ?? '')),
+                'title_hi' => trim((string) ($data['title_hi'] ?? '')),
+                'excerpt_en' => trim((string) ($data['excerpt_en'] ?? '')),
+                'excerpt_hi' => trim((string) ($data['excerpt_hi'] ?? '')),
+                'content_en' => trim((string) ($data['content_en'] ?? '')),
+                'content_hi' => trim((string) ($data['content_hi'] ?? '')),
+                'category' => filled($data['category'] ?? null) ? trim((string) $data['category']) : null,
+                'author_name' => filled($data['author_name'] ?? null) ? trim((string) $data['author_name']) : null,
+                'is_published' => isset($data['is_published'])
+                    ? filter_var($data['is_published'], FILTER_VALIDATE_BOOLEAN, FILTER_NULL_ON_FAILURE) ?? in_array((string) $data['is_published'], ['1', 'yes', 'Yes'], true)
+                    : false,
+            ];
+
+            if ($article) {
+                $article->update($payload);
+            } else {
+                Article::create($payload);
+            }
+
+            $importedCount++;
+        }
+
+        fclose($file);
+
+        return back()->with('success', "Articles import completed successfully. Imported {$importedCount} row(s).");
+    }
+
     // --- MEDICINES CRUD ---
     public function medicines(Request $request)
     {

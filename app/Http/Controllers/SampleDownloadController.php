@@ -35,6 +35,10 @@ class SampleDownloadController extends Controller
                 $content .= "name,slug,generic_name,brand_names_json,composition,strength,medicine_type,category,prescription_required,purpose_en,purpose_hi,overview_en,overview_hi,review_status,is_published\n";
                 $content .= "Paracetamol,paracetamol,Acetaminophen,\"[\"\"Dolo 650\"\",\"\"Crocin\"\"]\",Paracetamol IP,650 mg,Tablet,Pain relief,0,Fever reduction,बुखार कम करने के लिए,Commonly used for fever,बुखार में आमतौर पर उपयोग,published,1\n";
                 break;
+            case 'articles':
+                $content .= "id,title_en,title_hi,excerpt_en,excerpt_hi,content_en,content_hi,category,author_name,is_published\n";
+                $content .= "1,Understanding Heart Health,Heart Health Hindi,\"A patient-friendly overview of heart health.\",\"Heart health hindi excerpt\",\"Heart health article body\",\"Heart health article body hindi\",Cardiology,Arogio Team,1\n";
+                break;
             case 'doctors':
             default:
                 $content .= "doctor_hospital_link_id,doctor_id,hospital_id,registration_number,first_name,last_name,department_name_en,department_name_hi,medical_council,country_code_1,country_code_2,phone_1,phone_2,consultation_fee,experience_years,education_degrees,about_en,about_hi,email,website,city,state,pincode,address_line1,address_line2,landmark,languages_spoken,gender,is_verified,latitude,longitude,hospital_name,hospital_city,doctor_hospital_role,consultation_mode,availability,days_of_week,start_time,end_time,hospital_consultation_fee\n";
