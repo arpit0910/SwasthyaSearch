@@ -219,6 +219,7 @@ Route::get('/articles/{article}', [ArticleController::class, 'show'])->name('art
 
 // Static & Contact Pages
 Route::get('/about', [PageController::class, 'about'])->name('about');
+Route::get('/emergency', [PageController::class, 'emergency'])->name('emergency');
 Route::get('/departments', [PageController::class, 'departments'])->name('departments.index');
 Route::get('/diseases', [PageController::class, 'diseases'])->name('diseases.index');
 Route::get('/contact', [PageController::class, 'contact'])->name('contact');

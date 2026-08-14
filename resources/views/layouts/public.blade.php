@@ -517,7 +517,7 @@
                         </a>
                         <a href="{{ route('blood_banks.index') }}"
                             class="px-3 py-2 rounded-xl text-sm font-semibold transition-all duration-200 {{ request()->routeIs('blood_banks.*') ? 'bg-teal-50 dark:bg-teal-900/40 text-teal-700 dark:text-teal-400 border border-teal-100/80 dark:border-teal-900/50 shadow-2xs' : 'text-slate-600 dark:text-slate-300 hover:text-slate-900 dark:hover:text-white hover:bg-slate-50 dark:hover:bg-slate-800' }}">
-                            {{ $locale === 'hi' ? 'ब्लड बैंक' : 'Blood Banks' }}
+                            Blood Banks
                         </a>
                         <a href="{{ route('articles.index') }}"
                             class="px-3 py-2 rounded-xl text-sm font-semibold transition-all duration-200 {{ request()->routeIs('articles.*') ? 'bg-teal-50 dark:bg-teal-900/40 text-teal-700 dark:text-teal-400 border border-teal-100/80 dark:border-teal-900/50 shadow-2xs' : 'text-slate-600 dark:text-slate-300 hover:text-slate-900 dark:hover:text-white hover:bg-slate-50 dark:hover:bg-slate-800' }}">
@@ -611,13 +611,12 @@
                     <a href="{{ route('blood_banks.index') }}"
                         class="mobile-nav-item {{ request()->routeIs('blood_banks.*') ? 'active' : '' }}">
                         <i data-lucide="droplet" class="w-4 h-4"></i>
-                        <span>{{ $locale === 'hi' ? 'ब्लड बैंक' : 'Blood Banks' }}</span>
+                        <span>Blood Banks</span>
                     </a>
                     <a href="{{ route('articles.index') }}"
                         class="mobile-nav-item {{ request()->routeIs('articles.*') ? 'active' : '' }}">
                         <i data-lucide="book-open" class="w-4 h-4"></i>
-                        <span>{{ $locale === 'hi' ? 'स्वास्थ्य लेख' : 'Articles' }}</span>
-                    </a>
+                        <span>Articles</span>
                     </a>
                     <a href="{{ route('about') }}"
                         class="mobile-nav-item {{ request()->routeIs('about') ? 'active' : '' }}">
@@ -974,15 +973,17 @@
                         {{ $locale === 'hi' ? 'शहर हेल्थकेयर' : 'Healthcare in Your City' }}</h4>
                     <div class="space-y-2 text-sm text-slate-400">
                         <a href="{{ route('doctors.index') }}"
-                            class="block hover:text-white">{{ $locale === 'hi' ? 'डॉक्टर खोजें' : 'Find Doctors' }}</a>
+                            class="block hover:text-white">Find Doctors</a>
                         <a href="{{ route('hospitals.index') }}"
-                            class="block hover:text-white">{{ $locale === 'hi' ? 'अस्पताल खोजें' : 'Find Hospitals' }}</a>
+                            class="block hover:text-white">Find Hospitals</a>
                         <a href="{{ route('blood_banks.index') }}"
-                            class="block hover:text-white">{{ $locale === 'hi' ? 'ब्लड बैंक खोजें' : 'Find Blood Banks' }}</a>
+                            class="block hover:text-white">Find Blood Banks</a>
+                        <a href="{{ route('emergency') }}"
+                            class="block hover:text-white">Emergency Help</a>
                         <a href="{{ route('medicines.index') }}"
-                            class="block hover:text-white">{{ $locale === 'hi' ? 'दवा जानकारी' : 'Medicine Information' }}</a>
+                            class="block hover:text-white">Medicine Information</a>
                         <a href="{{ route('support.crisis') }}"
-                            class="block hover:text-white">{{ $locale === 'hi' ? 'संकट सहायता' : 'Crisis Support' }}</a>
+                            class="block hover:text-white">Crisis Support</a>
                     </div>
                 </div>
                 <div>

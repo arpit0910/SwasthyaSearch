@@ -404,7 +404,8 @@ $locale === 'hi'
                     <p class="mt-3 text-sm sm:text-base leading-7 text-slate-600 dark:text-slate-300">{{ $locale === 'hi' ? 'नज़दीकी अस्पताल और ब्लड बैंक जल्दी खोजें। जाने से पहले कॉल करें क्योंकि इमरजेंसी उपलब्धता, डॉक्टर, बेड और ब्लड स्टॉक बदल सकते हैं।' : 'Find nearby hospitals and blood banks quickly. Please call before visiting because emergency availability, doctors, beds, and blood stock can change quickly.' }}</p>
                     <p class="mt-3 text-xs sm:text-sm font-semibold text-rose-700 dark:text-rose-300">{{ $locale === 'hi' ? 'यदि यह जीवन-घातक आपातस्थिति है, तो तुरंत इमरजेंसी सेवाओं से संपर्क करें या नज़दीकी अस्पताल जाएँ।' : 'If this is a life-threatening emergency, contact emergency services or go to the nearest hospital immediately.' }}</p>
                 </div>
-                <div class="grid gap-3 sm:grid-cols-3 lg:w-[440px]">
+                <div class="grid gap-3 sm:grid-cols-2 lg:w-[440px]">
+                    <a href="{{ route('emergency') }}" class="inline-flex items-center justify-center rounded-2xl border border-rose-600 bg-rose-600 px-4 py-3 text-sm font-bold text-white shadow-sm transition-all duration-300 ease-out hover:-translate-y-0.5 hover:bg-rose-700 active:scale-[0.99] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-rose-400 focus-visible:ring-offset-2 focus-visible:ring-offset-white dark:focus-visible:ring-offset-slate-950">{{ $locale === 'hi' ? 'आपात नंबर देखें' : 'Emergency Numbers' }}</a>
                     <a href="{{ route('hospitals.index') }}" class="inline-flex items-center justify-center rounded-2xl border border-rose-200 dark:border-rose-900/50 bg-white/90 dark:bg-slate-950 px-4 py-3 text-sm font-bold text-rose-700 dark:text-rose-200 shadow-sm transition-all duration-300 ease-out hover:-translate-y-0.5 hover:border-rose-300 hover:bg-rose-50 hover:text-rose-800 dark:hover:border-rose-800 dark:hover:bg-rose-950/30 dark:hover:text-rose-100 active:scale-[0.99] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-rose-400 focus-visible:ring-offset-2 focus-visible:ring-offset-white dark:focus-visible:ring-offset-slate-950">{{ $locale === 'hi' ? 'अस्पताल देखें' : 'View Hospitals' }}</a>
                     <a href="{{ route('blood_banks.index') }}" class="inline-flex items-center justify-center rounded-2xl border border-red-200 dark:border-red-900/50 bg-white/90 dark:bg-slate-950 px-4 py-3 text-sm font-bold text-red-700 dark:text-red-200 shadow-sm transition-all duration-300 ease-out hover:-translate-y-0.5 hover:border-red-300 hover:bg-red-50 hover:text-red-800 dark:hover:border-red-800 dark:hover:bg-red-950/30 dark:hover:text-red-100 active:scale-[0.99] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-red-400 focus-visible:ring-offset-2 focus-visible:ring-offset-white dark:focus-visible:ring-offset-slate-950">{{ $locale === 'hi' ? 'ब्लड बैंक देखें' : 'View Blood Banks' }}</a>
                     <button type="button" onclick="toggleChatbot()" class="inline-flex items-center justify-center rounded-2xl border border-slate-900 dark:border-cyan-500 bg-slate-900 dark:bg-cyan-600 px-4 py-3 text-sm font-bold text-white shadow-lg shadow-slate-900/10 transition-all duration-300 ease-out hover:-translate-y-0.5 hover:bg-slate-800 dark:hover:bg-cyan-500 active:scale-[0.99] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-cyan-400 focus-visible:ring-offset-2 focus-visible:ring-offset-white dark:focus-visible:ring-offset-slate-950">{{ $locale === 'hi' ? 'AI सहायक' : 'Ask Health Assistant' }}</button>
@@ -415,17 +416,17 @@ $locale === 'hi'
         <section class="rounded-[2rem] border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 p-6 sm:p-8 shadow-sm">
             <div class="grid gap-8 xl:grid-cols-[minmax(0,1.15fr)_minmax(320px,0.85fr)] xl:items-start">
                 <div class="max-w-3xl">
-                    <p class="text-xs font-bold uppercase tracking-[0.22em] text-emerald-700 dark:text-emerald-300">{{ $locale === 'hi' ? '??? ???????' : 'Medicine Information' }}</p>
-                    <h2 class="mt-2 text-2xl sm:text-3xl font-extrabold text-slate-950 dark:text-white">{{ $locale === 'hi' ? '????? ?? ????? ?? ???? ??' : 'Simple, clear medicine guidance' }}</h2>
-                    <p class="mt-3 max-w-2xl text-sm sm:text-base leading-7 text-slate-600 dark:text-slate-300">{{ $locale === 'hi' ? '??? ??? ??? ??? ??, ???? ????? ?? ???? ??, ??? ????? ?? ????? ???? ?? ?? ??????? ???? ?????? ???? ?? ???? ???, ?? ?? ???? ?? ????? ?? ????? ???? ??????? ??? ??????' : 'Understand what a medicine is for, how it is commonly used, important precautions, and possible side effects in a clear, easy-to-read format.' }}</p>
+                    <p class="text-xs font-bold uppercase tracking-[0.22em] text-emerald-700 dark:text-emerald-300">Medicine Information</p>
+                    <h2 class="mt-2 text-2xl sm:text-3xl font-extrabold text-slate-950 dark:text-white">Simple, clear medicine guidance</h2>
+                    <p class="mt-3 max-w-2xl text-sm sm:text-base leading-7 text-slate-600 dark:text-slate-300">Understand what a medicine is for, how it is commonly used, important precautions, and possible side effects in a clear, easy-to-read format.</p>
                     <div class="mt-6 space-y-3">
                         <div class="flex items-start gap-3 rounded-2xl border border-slate-200 dark:border-slate-800 bg-slate-50/80 dark:bg-slate-950/60 p-4">
                             <div class="mt-0.5 flex h-9 w-9 shrink-0 items-center justify-center rounded-xl bg-emerald-100 dark:bg-emerald-950/40 text-emerald-700 dark:text-emerald-300">
                                 <i data-lucide="pill" class="h-4 w-4"></i>
                             </div>
                             <div>
-                                <p class="text-sm font-semibold text-slate-900 dark:text-white">{{ $locale === 'hi' ? '????? ?? ????? ???????' : 'Uses and key details' }}</p>
-                                <p class="mt-1 text-sm leading-6 text-slate-600 dark:text-slate-300">{{ $locale === 'hi' ? '??? ????? ?? ????? ??? ?? ???? ?? ?? ???-?? ????? ????? ????? ??????' : 'See what the medicine is commonly used for and the main points to know first.' }}</p>
+                                <p class="text-sm font-semibold text-slate-900 dark:text-white">Uses and key details</p>
+                                <p class="mt-1 text-sm leading-6 text-slate-600 dark:text-slate-300">See what the medicine is commonly used for and the main points to know first.</p>
                             </div>
                         </div>
                         <div class="flex items-start gap-3 rounded-2xl border border-slate-200 dark:border-slate-800 bg-slate-50/80 dark:bg-slate-950/60 p-4">
@@ -433,8 +434,8 @@ $locale === 'hi'
                                 <i data-lucide="shield-alert" class="h-4 w-4"></i>
                             </div>
                             <div>
-                                <p class="text-sm font-semibold text-slate-900 dark:text-white">{{ $locale === 'hi' ? '?????????? ?? ???????' : 'Precautions and warnings' }}</p>
-                                <p class="mt-1 text-sm leading-6 text-slate-600 dark:text-slate-300">{{ $locale === 'hi' ? '?? ?????? ?? ????? ?????, ??? ????????? ??? ???????? ????? ???? ??, ?? ????? ??????' : 'Quickly understand when extra care is needed and when it is better to check with a doctor.' }}</p>
+                                <p class="text-sm font-semibold text-slate-900 dark:text-white">Precautions and warnings</p>
+                                <p class="mt-1 text-sm leading-6 text-slate-600 dark:text-slate-300">Quickly understand when extra care is needed and when it is better to check with a doctor.</p>
                             </div>
                         </div>
                         <div class="flex items-start gap-3 rounded-2xl border border-slate-200 dark:border-slate-800 bg-slate-50/80 dark:bg-slate-950/60 p-4">
@@ -442,22 +443,22 @@ $locale === 'hi'
                                 <i data-lucide="file-text" class="h-4 w-4"></i>
                             </div>
                             <div>
-                                <p class="text-sm font-semibold text-slate-900 dark:text-white">{{ $locale === 'hi' ? '????, ?????-???????? ?????' : 'Easy to scan layout' }}</p>
-                                <p class="mt-1 text-sm leading-6 text-slate-600 dark:text-slate-300">{{ $locale === 'hi' ? '???? ?? ???? ????????? ?? ??? ????, ???? ??????? ???? ?????????? ????? ??? ?????' : 'Short, clean sections help users understand the medicine without reading through heavy text blocks.' }}</p>
+                                <p class="text-sm font-semibold text-slate-900 dark:text-white">Easy to scan layout</p>
+                                <p class="mt-1 text-sm leading-6 text-slate-600 dark:text-slate-300">Short, clean sections help users understand the medicine without reading through heavy text blocks.</p>
                             </div>
                         </div>
                     </div>
                     <div class="mt-6 flex flex-wrap gap-3">
-                        <a href="{{ route('medicines.index') }}" class="inline-flex items-center justify-center rounded-2xl bg-emerald-600 px-5 py-3 text-sm font-bold text-white transition-colors hover:bg-emerald-700 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-emerald-400 focus-visible:ring-offset-2 focus-visible:ring-offset-white dark:focus-visible:ring-offset-slate-950">{{ $locale === 'hi' ? '????? ?????' : 'Browse Medicines' }}</a>
-                        <button type="button" onclick="toggleChatbot()" class="inline-flex items-center justify-center rounded-2xl border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-950 px-5 py-3 text-sm font-bold text-slate-700 dark:text-slate-200 transition-colors hover:bg-slate-50 dark:hover:bg-slate-900 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-emerald-400 focus-visible:ring-offset-2 focus-visible:ring-offset-white dark:focus-visible:ring-offset-slate-950">{{ $locale === 'hi' ? '??? ?? ???? ??? ?????' : 'Ask About a Medicine' }}</button>
+                        <a href="{{ route('medicines.index') }}" class="inline-flex items-center justify-center rounded-2xl bg-emerald-600 px-5 py-3 text-sm font-bold text-white transition-colors hover:bg-emerald-700 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-emerald-400 focus-visible:ring-offset-2 focus-visible:ring-offset-white dark:focus-visible:ring-offset-slate-950">Browse Medicines</a>
+                        <button type="button" onclick="toggleChatbot()" class="inline-flex items-center justify-center rounded-2xl border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-950 px-5 py-3 text-sm font-bold text-slate-700 dark:text-slate-200 transition-colors hover:bg-slate-50 dark:hover:bg-slate-900 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-emerald-400 focus-visible:ring-offset-2 focus-visible:ring-offset-white dark:focus-visible:ring-offset-slate-950">Ask About a Medicine</button>
                     </div>
                 </div>
                 <a href="{{ route('medicines.index') }}" class="block rounded-[1.75rem] border border-slate-200 dark:border-slate-800 bg-slate-50 dark:bg-slate-950 p-5 transition-colors hover:bg-white dark:hover:bg-slate-900 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-emerald-400 focus-visible:ring-offset-2 focus-visible:ring-offset-white dark:focus-visible:ring-offset-slate-950">
                     <div class="flex items-start justify-between gap-4">
                         <div>
-                            <p class="text-xs font-bold uppercase tracking-[0.22em] text-slate-500 dark:text-slate-400">{{ $locale === 'hi' ? '?????? ?????' : 'Example View' }}</p>
+                            <p class="text-xs font-bold uppercase tracking-[0.22em] text-slate-500 dark:text-slate-400">Example View</p>
                             <h3 class="mt-2 text-xl font-bold text-slate-900 dark:text-white">Paracetamol 650</h3>
-                            <p class="mt-2 text-sm leading-6 text-slate-600 dark:text-slate-300">{{ $locale === 'hi' ? '?????? ??????? ????, ???? ?????? ??? ????? ???? ?? ???? ????? ???? ???' : 'Key information is grouped into short sections so it is easier to understand.' }}</p>
+                            <p class="mt-2 text-sm leading-6 text-slate-600 dark:text-slate-300">Key information is grouped into short sections so it is easier to understand.</p>
                         </div>
                         <div class="flex h-11 w-11 shrink-0 items-center justify-center rounded-2xl bg-emerald-100 dark:bg-emerald-950/40 text-emerald-700 dark:text-emerald-300">
                             <i data-lucide="pill" class="h-5 w-5"></i>
@@ -465,20 +466,20 @@ $locale === 'hi'
                     </div>
                     <div class="mt-5 space-y-3">
                         <div class="rounded-2xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 p-4">
-                            <p class="text-xs font-bold uppercase tracking-wider text-slate-500 dark:text-slate-400">{{ $locale === 'hi' ? '?? ????? ??? ??' : 'Used for' }}</p>
-                            <p class="mt-1 text-sm font-medium text-slate-800 dark:text-slate-100">{{ $locale === 'hi' ? '?????, ???????, ???? ????' : 'Fever, headache, body pain' }}</p>
+                            <p class="text-xs font-bold uppercase tracking-wider text-slate-500 dark:text-slate-400">Used for</p>
+                            <p class="mt-1 text-sm font-medium text-slate-800 dark:text-slate-100">Fever, headache, body pain</p>
                         </div>
                         <div class="rounded-2xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 p-4">
-                            <p class="text-xs font-bold uppercase tracking-wider text-slate-500 dark:text-slate-400">{{ $locale === 'hi' ? '????? ????' : 'Take care' }}</p>
-                            <p class="mt-1 text-sm font-medium text-slate-800 dark:text-slate-100">{{ $locale === 'hi' ? '???? ?? ?????? ?? ?? ?????? ?? ???? ???' : 'Check with a doctor if you have liver problems' }}</p>
+                            <p class="text-xs font-bold uppercase tracking-wider text-slate-500 dark:text-slate-400">Take care</p>
+                            <p class="mt-1 text-sm font-medium text-slate-800 dark:text-slate-100">Check with a doctor if you have liver problems</p>
                         </div>
                         <div class="rounded-2xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 p-4">
-                            <p class="text-xs font-bold uppercase tracking-wider text-slate-500 dark:text-slate-400">{{ $locale === 'hi' ? '??????? ???? ??????' : 'Possible side effects' }}</p>
-                            <p class="mt-1 text-sm font-medium text-slate-800 dark:text-slate-100">{{ $locale === 'hi' ? '????, ????? ??????, ?????? ????? ??? ?????' : 'Nausea, mild allergy, risk with overuse' }}</p>
+                            <p class="text-xs font-bold uppercase tracking-wider text-slate-500 dark:text-slate-400">Possible side effects</p>
+                            <p class="mt-1 text-sm font-medium text-slate-800 dark:text-slate-100">Nausea, mild allergy, risk with overuse</p>
                         </div>
                     </div>
                     <div class="mt-4 flex items-center justify-between text-sm font-semibold text-emerald-700 dark:text-emerald-300">
-                        <span>{{ $locale === 'hi' ? '???? ??? ??????? ?????' : 'View full medicine information' }}</span>
+                        <span>View full medicine information</span>
                         <i data-lucide="arrow-right" class="h-4 w-4"></i>
                     </div>
                 </a>
@@ -487,46 +488,46 @@ $locale === 'hi'
         <section class="rounded-[2rem] border border-slate-200/80 dark:border-slate-800 bg-white dark:bg-slate-900 p-6 sm:p-8 shadow-sm">
             <div class="flex flex-col gap-4 lg:flex-row lg:items-end lg:justify-between">
                 <div class="max-w-3xl">
-                    <p class="text-xs font-bold uppercase tracking-[0.22em] text-cyan-700 dark:text-cyan-300">{{ $locale === 'hi' ? '?????? ?????' : 'Wellness Tools' }}</p>
-                    <h2 class="mt-2 text-2xl sm:text-3xl font-bold tracking-tight text-slate-900 dark:text-white">{{ $locale === 'hi' ? '????? ????' : 'Calm Zone' }}</h2>
-                    <p class="mt-2 text-sm sm:text-base leading-7 text-slate-600 dark:text-slate-300">{{ $locale === 'hi' ? '????, ??? ???, ???? ?????? ?? ????? ????? ?? ?? ????, ?????? ?? ????? ??? ??? ???? ??? ?? ?????' : 'A simple fun zone for breathing, mood check-ins, quick quizzes, and light calming games.' }}</p>
+                    <p class="text-xs font-bold uppercase tracking-[0.22em] text-cyan-700 dark:text-cyan-300">Wellness Tools</p>
+                    <h2 class="mt-2 text-2xl sm:text-3xl font-bold tracking-tight text-slate-900 dark:text-white">Calm Zone</h2>
+                    <p class="mt-2 text-sm sm:text-base leading-7 text-slate-600 dark:text-slate-300">A simple fun zone for breathing, mood check-ins, quick quizzes, and light calming games.</p>
                 </div>
-                <a href="{{ route('activities.index') }}" class="inline-flex items-center justify-center rounded-2xl bg-cyan-600 px-5 py-3 text-sm font-bold text-white transition-colors hover:bg-cyan-700 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-cyan-400 focus-visible:ring-offset-2 focus-visible:ring-offset-white dark:focus-visible:ring-offset-slate-950">{{ $locale === 'hi' ? '????? ???? ?????' : 'Open Calm Zone' }}</a>
+                <a href="{{ route('activities.index') }}" class="inline-flex items-center justify-center rounded-2xl bg-cyan-600 px-5 py-3 text-sm font-bold text-white transition-colors hover:bg-cyan-700 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-cyan-400 focus-visible:ring-offset-2 focus-visible:ring-offset-white dark:focus-visible:ring-offset-slate-950">Open Calm Zone</a>
             </div>
 
             <div class="mt-8 grid gap-4 sm:grid-cols-2 xl:grid-cols-4">
                 @foreach([
                     [
-                        'title' => $locale === 'hi' ? '???? ?? ??????????' : 'Breathe & Ground',
-                        'description' => $locale === 'hi' ? '???? ???? ??? ?? ??? ?? ???? ?????' : 'Slow down with breathing and grounding tools.',
+                        'title' => 'Breathe & Ground',
+                        'description' => 'Slow down with breathing and grounding tools.',
                         'url' => route('activities.breathing'),
                         'tone' => 'cyan',
                         'icon' => 'wind',
-                        'tag' => $locale === 'hi' ? '2 ????' : '2 min',
+                        'tag' => '2 min',
                     ],
                     [
-                        'title' => $locale === 'hi' ? '??? ???' : 'Mood Check',
-                        'description' => $locale === 'hi' ? '??? ???? ????? ?? ??? ??, ????? ??????' : 'Quickly check in with how you feel.',
+                        'title' => 'Mood Check',
+                        'description' => 'Quickly check in with how you feel.',
                         'url' => route('activities.mood-check'),
                         'tone' => 'indigo',
                         'icon' => 'heart',
-                        'tag' => $locale === 'hi' ? '????' : 'Quick',
+                        'tag' => 'Quick',
                     ],
                     [
-                        'title' => $locale === 'hi' ? '????? ??????' : 'Health Quizzes',
-                        'description' => $locale === 'hi' ? '???? ?????? ?? ??? ????? ?? ??????' : 'Learn with short and easy quizzes.',
+                        'title' => 'Health Quizzes',
+                        'description' => 'Learn with short and easy quizzes.',
                         'url' => route('quizzes.index'),
                         'tone' => 'teal',
                         'icon' => 'brain',
-                        'tag' => $locale === 'hi' ? '?????' : 'Learn',
+                        'tag' => 'Learn',
                     ],
                     [
-                        'title' => $locale === 'hi' ? '????? ?????' : 'Calm Games',
-                        'description' => $locale === 'hi' ? '????? ????? ?? ????? ??????? ?????' : 'Relax for a moment with light games.',
+                        'title' => 'Calm Games',
+                        'description' => 'Relax for a moment with light games.',
                         'url' => route('activities.games.memory'),
                         'tone' => 'amber',
                         'icon' => 'sparkles',
-                        'tag' => $locale === 'hi' ? '??' : 'Fun',
+                        'tag' => 'Fun',
                     ],
                 ] as $item)
                     <a href="{{ $item['url'] }}" class="flex h-full flex-col rounded-[1.5rem] border border-slate-200 dark:border-slate-800 bg-slate-50/80 dark:bg-slate-950/70 p-5 transition-all duration-300 hover:-translate-y-0.5 hover:border-cyan-300 dark:hover:border-cyan-800">
@@ -539,7 +540,7 @@ $locale === 'hi'
                         <h3 class="mt-4 text-lg font-bold text-slate-900 dark:text-white">{{ $item['title'] }}</h3>
                         <p class="mt-2 text-sm leading-6 text-slate-600 dark:text-slate-300">{{ $item['description'] }}</p>
                         <span class="mt-5 inline-flex items-center gap-2 text-sm font-bold text-cyan-700 dark:text-cyan-300">
-                            {{ $locale === 'hi' ? '?????' : 'Open' }}
+                            Open
                             <i data-lucide="arrow-right" class="w-4 h-4"></i>
                         </span>
                     </a>

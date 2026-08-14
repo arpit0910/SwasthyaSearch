@@ -19,6 +19,13 @@ class PageController extends Controller
         return view('pages.contact');
     }
 
+    public function emergency()
+    {
+        return view('pages.emergency', [
+            'locale' => app()->getLocale(),
+        ]);
+    }
+
     public function departments()
     {
         $locale = app()->getLocale();
