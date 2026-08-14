@@ -8,6 +8,7 @@ use App\Models\Disease;
 use App\Models\Doctor;
 use App\Models\Faq;
 use App\Models\Hospital;
+use App\Models\Medicine;
 use Exception;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Session;
@@ -23,6 +24,7 @@ class SearchController extends Controller
         return view('home.index', [
             'departments' => Department::where('is_active', true)->orderBy($nameColumn)->get()->map(fn(Department $department) => $this->formatDepartment($department)),
             'doctors' => Doctor::with(['department', 'hospitals'])->where('is_verified', true)->whereHas('hospitals', fn($query) => $query->where('city', 'LIKE', "%{$activeCity}%"))->latest()->take(6)->get()->map(fn(Doctor $doctor) => $this->formatDoctor($doctor)),
+            'medicines' => Medicine::published()->latest()->take(3)->get(),
             'articles' => Article::with('comments')->where('is_published', true)->latest()->take(6)->get(),
             // Homepage FAQ section must always come from FAQ module entries.
             'faqs' => Faq::query()->latest('id')->get(),
