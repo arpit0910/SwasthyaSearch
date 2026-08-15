@@ -7,6 +7,7 @@
     <title>{{ config('app.name', 'Arogio') }} | Coming Soon</title>
     <meta name="description" content="Arogio is launching soon with trusted healthcare discovery and wellness features.">
     <link rel="icon" type="image/png" sizes="32x32" href="{{ asset('img/fav-icon.png') }}">
+    @include('partials.google-analytics')
     <style>
         :root {
             --brand-cyan: #45cdda;

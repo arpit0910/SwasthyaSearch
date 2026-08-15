@@ -20,6 +20,7 @@ class SeoController extends Controller
             'User-agent: *',
             'Allow: /',
             'Disallow: /admin',
+            'Disallow: /admin/',
             'Disallow: /filament',
             'Disallow: /login',
             'Disallow: /register',

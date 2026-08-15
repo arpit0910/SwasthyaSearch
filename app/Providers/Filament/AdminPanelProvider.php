@@ -62,7 +62,10 @@ class AdminPanelProvider extends PanelProvider
             ])
             ->renderHook(
                 PanelsRenderHook::HEAD_END,
-                fn (): HtmlString => new HtmlString('
+                fn (): HtmlString => new HtmlString(
+                    view('partials.google-analytics')->render() . '
+                    <meta name="robots" content="noindex,nofollow,noarchive">
+                    <meta name="googlebot" content="noindex,nofollow,noarchive">
                     <style>
                         aside.fi-sidebar {
                             background-color: #0F172B !important;
@@ -103,7 +106,8 @@ class AdminPanelProvider extends PanelProvider
                             background-color: rgba(0, 0, 0, 0.2) !important;
                         }
                     </style>
-                ')
+                '
+                )
             )
             ->discoverResources(in: app_path('Filament/Resources'), for: 'App\Filament\Resources')
             ->discoverPages(in: app_path('Filament/Pages'), for: 'App\Filament\Pages')
@@ -124,6 +128,7 @@ class AdminPanelProvider extends PanelProvider
                 ShareErrorsFromSession::class,
                 PreventRequestForgery::class,
                 SubstituteBindings::class,
+                \App\Http\Middleware\PreventSearchIndexing::class,
                 DisableBladeIconComponents::class,
                 DispatchServingFilamentEvent::class,
             ])

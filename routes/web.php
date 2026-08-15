@@ -27,7 +27,7 @@ use Illuminate\Support\Facades\Route;
 // Route::view('/coming-soon', 'coming-soon')->name('coming-soon');
 
 // --- CUSTOM ADMIN DASHBOARD ROUTES (Blade + Bootstrap 5) ---
-Route::prefix('admin')->middleware('web')->group(function () {
+Route::prefix('admin')->middleware(['web', \App\Http\Middleware\PreventSearchIndexing::class])->group(function () {
     Route::get('/login', [AdminAuthController::class, 'showLogin'])->name('admin.login');
     Route::post('/login', [AdminAuthController::class, 'login'])->name('admin.login.post');
     Route::post('/logout', [AdminAuthController::class, 'logout'])->name('admin.logout');

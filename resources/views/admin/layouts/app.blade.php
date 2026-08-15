@@ -4,9 +4,11 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="robots" content="noindex,nofollow,noarchive">
+    <meta name="googlebot" content="noindex,nofollow,noarchive">
     <title>Arogio Admin Dashboard</title>
     <link rel="icon" type="image/png" sizes="32x32" href="{{ asset('img/fav-icon.png') }}">
     <link rel="apple-touch-icon" href="{{ asset('img/fav-icon.png') }}">
+    @include('partials.google-analytics')
     <!-- Bootstrap 5 CSS -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
     <!-- FontAwesome 6 Icons -->
