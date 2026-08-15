@@ -27,6 +27,7 @@ use App\Services\ScraperService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Str;
 use Illuminate\Validation\Rule;
 
@@ -1717,46 +1718,20 @@ class AdminDashboardController extends Controller
 
     public function storeArticle(Request $request)
     {
-        $data = $request->validate([
-            'title_en' => 'required|string|max:255',
-            'title_hi' => 'required|string|max:255',
-            'excerpt_en' => 'required|string',
-            'excerpt_hi' => 'required|string',
-            'content_en' => 'required|string',
-            'content_hi' => 'required|string',
-        ]);
+        $data = $request->validate($this->articleValidationRules());
+        $data['is_published'] = $request->boolean('is_published');
 
-        Article::create([
-            'title_en' => $data['title_en'],
-            'title_hi' => $data['title_hi'],
-            'excerpt_en' => $data['excerpt_en'],
-            'excerpt_hi' => $data['excerpt_hi'],
-            'content_en' => $data['content_en'],
-            'content_hi' => $data['content_hi'],
-        ]);
+        Article::create($this->normalizeArticlePayload($data));
 
         return back()->with('success', 'Article created successfully.');
     }
 
     public function updateArticle(Request $request, Article $article)
     {
-        $data = $request->validate([
-            'title_en' => 'required|string|max:255',
-            'title_hi' => 'required|string|max:255',
-            'excerpt_en' => 'required|string',
-            'excerpt_hi' => 'required|string',
-            'content_en' => 'required|string',
-            'content_hi' => 'required|string',
-        ]);
+        $data = $request->validate($this->articleValidationRules());
+        $data['is_published'] = $request->boolean('is_published');
 
-        $article->update([
-            'title_en' => $data['title_en'],
-            'title_hi' => $data['title_hi'],
-            'excerpt_en' => $data['excerpt_en'],
-            'excerpt_hi' => $data['excerpt_hi'],
-            'content_en' => $data['content_en'],
-            'content_hi' => $data['content_hi'],
-        ]);
+        $article->update($this->normalizeArticlePayload($data));
 
         return back()->with('success', 'Article updated successfully.');
     }
@@ -1834,36 +1809,48 @@ class AdminDashboardController extends Controller
             return back()->with('error', 'The uploaded CSV file is empty.');
         }
 
+        $requiredColumns = [
+            'title_en',
+            'title_hi',
+            'excerpt_en',
+            'excerpt_hi',
+            'content_en',
+            'content_hi',
+        ];
+
+        $missingColumns = array_values(array_diff($requiredColumns, $header));
+        if ($missingColumns !== []) {
+            fclose($file);
+
+            return back()->with('error', 'The CSV is missing required columns: ' . implode(', ', $missingColumns));
+        }
+
         $importedCount = 0;
+        $skippedRows = [];
+        $rowNumber = 1;
 
         while ($row = fgetcsv($file)) {
+            $rowNumber++;
+
             if (count($header) !== count($row)) {
+                $skippedRows[] = "Row {$rowNumber}: column count mismatch.";
                 continue;
             }
 
             $data = array_combine($header, $row);
+            $payload = $this->normalizeArticlePayload($data);
+            $validator = Validator::make($payload, $this->articleValidationRules());
 
-            if (empty(trim((string) ($data['title_en'] ?? '')))) {
+            if ($validator->fails()) {
+                $skippedRows[] = "Row {$rowNumber}: " . implode(' ', $validator->errors()->all());
                 continue;
             }
 
             $article = !empty($data['id'])
                 ? Article::find($data['id'])
-                : Article::where('title_en', trim((string) $data['title_en']))->first();
-
-            $payload = [
-                'title_en' => trim((string) ($data['title_en'] ?? '')),
-                'title_hi' => trim((string) ($data['title_hi'] ?? '')),
-                'excerpt_en' => trim((string) ($data['excerpt_en'] ?? '')),
-                'excerpt_hi' => trim((string) ($data['excerpt_hi'] ?? '')),
-                'content_en' => trim((string) ($data['content_en'] ?? '')),
-                'content_hi' => trim((string) ($data['content_hi'] ?? '')),
-                'category' => filled($data['category'] ?? null) ? trim((string) $data['category']) : null,
-                'author_name' => filled($data['author_name'] ?? null) ? trim((string) $data['author_name']) : null,
-                'is_published' => isset($data['is_published'])
-                    ? filter_var($data['is_published'], FILTER_VALIDATE_BOOLEAN, FILTER_NULL_ON_FAILURE) ?? in_array((string) $data['is_published'], ['1', 'yes', 'Yes'], true)
-                    : false,
-            ];
+                : Article::where('title_en', $payload['title_en'])
+                    ->where('title_hi', $payload['title_hi'])
+                    ->first();
 
             if ($article) {
                 $article->update($payload);
@@ -1876,7 +1863,51 @@ class AdminDashboardController extends Controller
 
         fclose($file);
 
-        return back()->with('success', "Articles import completed successfully. Imported {$importedCount} row(s).");
+        $message = "Articles import completed successfully. Imported {$importedCount} row(s).";
+        if ($skippedRows !== []) {
+            $message .= ' Skipped ' . count($skippedRows) . ' row(s): ' . implode(' ', array_slice($skippedRows, 0, 5));
+            if (count($skippedRows) > 5) {
+                $message .= ' More rows were skipped as well.';
+            }
+        }
+
+        return back()->with('success', $message);
+    }
+
+    private function articleValidationRules(): array
+    {
+        return [
+            'title_en' => 'required|string|max:255',
+            'title_hi' => 'required|string|max:255',
+            'excerpt_en' => 'required|string',
+            'excerpt_hi' => 'required|string',
+            'content_en' => 'required|string',
+            'content_hi' => 'required|string',
+            'category' => 'nullable|string|max:255',
+            'author_name' => 'nullable|string|max:255',
+            'is_published' => 'nullable|boolean',
+        ];
+    }
+
+    private function normalizeArticlePayload(array $data): array
+    {
+        $publishedValue = $data['is_published'] ?? false;
+        if (!is_bool($publishedValue)) {
+            $publishedValue = filter_var($publishedValue, FILTER_VALIDATE_BOOLEAN, FILTER_NULL_ON_FAILURE)
+                ?? in_array((string) $publishedValue, ['1', 'yes', 'Yes'], true);
+        }
+
+        return [
+            'title_en' => trim((string) ($data['title_en'] ?? '')),
+            'title_hi' => trim((string) ($data['title_hi'] ?? '')),
+            'excerpt_en' => trim((string) ($data['excerpt_en'] ?? '')),
+            'excerpt_hi' => trim((string) ($data['excerpt_hi'] ?? '')),
+            'content_en' => trim((string) ($data['content_en'] ?? '')),
+            'content_hi' => trim((string) ($data['content_hi'] ?? '')),
+            'category' => filled($data['category'] ?? null) ? trim((string) $data['category']) : 'Wellness',
+            'author_name' => filled($data['author_name'] ?? null) ? trim((string) $data['author_name']) : 'Swasthya Editorial',
+            'is_published' => (bool) $publishedValue,
+        ];
     }
 
     // --- MEDICINES CRUD ---

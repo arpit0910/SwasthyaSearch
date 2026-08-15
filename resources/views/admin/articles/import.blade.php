@@ -13,8 +13,9 @@
                         <label class="form-label fw-semibold">Upload CSV File</label>
                         <input type="file" name="file" class="form-control" accept=".csv" required>
                         <div class="form-text mt-2">
-                            Ensure your CSV file matches the required columns.
+                            Ensure each CSV row contains one complete article record with both English and Hindi content.
                             <div class="mt-1"><code>id,title_en,title_hi,excerpt_en,excerpt_hi,content_en,content_hi,category,author_name,is_published</code></div>
+                            <div class="mt-1 text-muted">The bilingual content columns are required for import.</div>
                             <a href="{{ route('sample.download', ['type' => 'articles']) }}" class="text-primary fw-semibold d-inline-block mt-1">
                                 <i class="fa-solid fa-download me-1"></i> Download Sample CSV Template
                             </a>

@@ -37,7 +37,7 @@ class SampleDownloadController extends Controller
                 break;
             case 'articles':
                 $content .= "id,title_en,title_hi,excerpt_en,excerpt_hi,content_en,content_hi,category,author_name,is_published\n";
-                $content .= "1,Understanding Heart Health,Heart Health Hindi,\"A patient-friendly overview of heart health.\",\"Heart health hindi excerpt\",\"Heart health article body\",\"Heart health article body hindi\",Cardiology,Arogio Team,1\n";
+                $content .= "1,Understanding Heart Health,हृदय स्वास्थ्य को समझना,\"A patient-friendly overview of heart health.\",\"हृदय स्वास्थ्य की आसान जानकारी।\",\"Heart health article body\",\"हृदय स्वास्थ्य लेख का मुख्य भाग\",Cardiology,Arogio Team,1\n";
                 break;
             case 'doctors':
             default:
