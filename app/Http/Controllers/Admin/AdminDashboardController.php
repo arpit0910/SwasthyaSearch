@@ -1801,13 +1801,15 @@ class AdminDashboardController extends Controller
 
         $path = $request->file('file')->getRealPath();
         $file = fopen($path, 'r');
-        $header = fgetcsv($file);
+        $header = fgetcsv($file, 0, ',', '"', '\\');
 
         if ($header === false) {
             fclose($file);
 
             return back()->with('error', 'The uploaded CSV file is empty.');
         }
+
+        $header = $this->normalizeCsvHeaderRow($header);
 
         $requiredColumns = [
             'title_en',
@@ -1829,7 +1831,7 @@ class AdminDashboardController extends Controller
         $skippedRows = [];
         $rowNumber = 1;
 
-        while ($row = fgetcsv($file)) {
+        while ($row = fgetcsv($file, 0, ',', '"', '\\')) {
             $rowNumber++;
 
             if (count($header) !== count($row)) {
@@ -1908,6 +1910,16 @@ class AdminDashboardController extends Controller
             'author_name' => filled($data['author_name'] ?? null) ? trim((string) $data['author_name']) : 'Swasthya Editorial',
             'is_published' => (bool) $publishedValue,
         ];
+    }
+
+    private function normalizeCsvHeaderRow(array $header): array
+    {
+        return array_map(function ($column) {
+            $column = (string) $column;
+            $column = preg_replace('/^\xEF\xBB\xBF/', '', $column) ?? $column;
+
+            return trim($column);
+        }, $header);
     }
 
     // --- MEDICINES CRUD ---
