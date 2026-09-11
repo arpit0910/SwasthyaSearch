@@ -1,0 +1,3 @@
+<?php
+namespace Database\Seeders; use Illuminate\Database\Seeder; use App\Models\HomeRemedyIngredient; use Illuminate\Support\Str;
+class HomeRemedyIngredientSeeder extends Seeder { public function run():void { foreach(['Ajwain'=>'अजवाइन','Haldi'=>'हल्दी','Ginger'=>'अदरक','Honey'=>'शहद','Tulsi'=>'तुलसी','Jeera'=>'जीरा','Saunf'=>'सौंफ','Dalchini'=>'दालचीनी','Elaichi'=>'इलायची','Methi'=>'मेथी','Garlic'=>'लहसुन','Lemon'=>'नींबू','Black Salt'=>'काला नमक','Aloe Vera'=>'एलोवेरा'] as $en=>$hi) HomeRemedyIngredient::updateOrCreate(['slug'=>Str::slug($en)],['name_en'=>$en,'name_hi'=>$hi,'is_active'=>true]); } }

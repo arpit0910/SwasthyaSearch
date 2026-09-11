@@ -21,6 +21,9 @@ use App\Http\Controllers\SearchController;
 use App\Http\Controllers\SeoController;
 use App\Http\Controllers\HealthcareQueryController;
 use App\Http\Controllers\ReliableDirectoryController;
+use App\Http\Controllers\HomeRemedyController;
+use App\Http\Controllers\Admin\HomeRemedyImportExportController;
+use App\Http\Controllers\Admin\HomeRemedyAdminController;
 use Illuminate\Foundation\Http\Middleware\ValidateCsrfToken;
 use Illuminate\Support\Facades\Route;
 
@@ -36,6 +39,17 @@ Route::prefix('admin')->middleware(['web', \App\Http\Middleware\PreventSearchInd
 
     Route::middleware('auth:admin')->group(function () {
         Route::get('/', [AdminDashboardController::class, 'index'])->name('admin.dashboard');
+        Route::get('/nani-dadi-ke-nuskhe/import', [HomeRemedyImportExportController::class, 'importForm'])->name('admin.nani-dadi.import.form');
+        Route::get('/nani-dadi-ke-nuskhe', [HomeRemedyAdminController::class, 'index'])->name('admin.nani-dadi.index');
+        Route::get('/nani-dadi-ke-nuskhe/create', [HomeRemedyAdminController::class, 'create'])->name('admin.nani-dadi.create');
+        Route::post('/nani-dadi-ke-nuskhe', [HomeRemedyAdminController::class, 'store'])->name('admin.nani-dadi.store');
+        Route::get('/nani-dadi-ke-nuskhe/{remedy}/edit', [HomeRemedyAdminController::class, 'edit'])->name('admin.nani-dadi.edit');
+        Route::put('/nani-dadi-ke-nuskhe/{remedy}', [HomeRemedyAdminController::class, 'update'])->name('admin.nani-dadi.update');
+        Route::delete('/nani-dadi-ke-nuskhe/{remedy}', [HomeRemedyAdminController::class, 'destroy'])->name('admin.nani-dadi.destroy');
+        Route::post('/nani-dadi-ke-nuskhe/{remedy}/toggle', [HomeRemedyAdminController::class, 'toggle'])->name('admin.nani-dadi.toggle');
+        Route::post('/nani-dadi-ke-nuskhe/import', [HomeRemedyImportExportController::class, 'import'])->name('admin.nani-dadi.import');
+        Route::get('/nani-dadi-ke-nuskhe/template', [HomeRemedyImportExportController::class, 'template'])->name('admin.nani-dadi.template');
+        Route::get('/nani-dadi-ke-nuskhe/export', [HomeRemedyImportExportController::class, 'export'])->name('admin.nani-dadi.export');
 
         // Hospitals
         Route::get('/hospitals', [AdminDashboardController::class, 'hospitals'])->name('admin.hospitals');
@@ -169,6 +183,14 @@ Route::prefix('admin')->middleware(['web', \App\Http\Middleware\PreventSearchInd
 // Public Omni-Search & Chatbot Routes
 Route::get('/', [SearchController::class, 'index'])->name('home');
 Route::get('/api/search', [SearchController::class, 'search'])->name('api.search');
+Route::get('/nani-dadi-ke-nuskhe', [HomeRemedyController::class, 'index'])->name('nani-dadi.index');
+Route::get('/nani-dadi-ke-nuskhe/category/{slug}', [HomeRemedyController::class, 'category'])->name('nani-dadi.category');
+Route::get('/nani-dadi-ke-nuskhe/ingredient/{slug}', [HomeRemedyController::class, 'ingredient'])->name('nani-dadi.ingredient');
+Route::get('/nani-dadi-ke-nuskhe/{slug}', [HomeRemedyController::class, 'show'])->name('nani-dadi.show');
+Route::get('/api/home-remedies', [HomeRemedyController::class, 'apiIndex'])->name('api.home-remedies');
+Route::get('/api/home-remedies/{slug}', [HomeRemedyController::class, 'apiShow'])->name('api.home-remedies.show');
+Route::get('/api/home-remedy-categories', [HomeRemedyController::class, 'apiCategories'])->name('api.home-remedy-categories');
+Route::get('/api/home-remedy-ingredients', [HomeRemedyController::class, 'apiIngredients'])->name('api.home-remedy-ingredients');
 Route::get('/api/doctors/nearest', [HealthcareQueryController::class, 'nearestDoctors'])->name('api.doctors.nearest');
 Route::get('/api/directory', [HealthcareQueryController::class, 'cityDirectory'])->name('api.directory.city');
 Route::get('/api/doctors', [ReliableDirectoryController::class, 'doctors'])->name('api.doctors.city');

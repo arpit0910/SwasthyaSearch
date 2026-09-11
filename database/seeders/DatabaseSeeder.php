@@ -23,6 +23,9 @@ class DatabaseSeeder extends Seeder
             GeneralMedicalQaBulkSeeder::class,
             DiseaseFaqSeeder::class,
             ArticleSeeder::class,
+            HomeRemedyCategorySeeder::class,
+            HomeRemedyIngredientSeeder::class,
+            HomeRemedySeeder::class,
         ]);
     }
 }

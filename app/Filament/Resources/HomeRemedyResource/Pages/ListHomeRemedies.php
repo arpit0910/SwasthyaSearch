@@ -1,0 +1,3 @@
+<?php
+namespace App\Filament\Resources\HomeRemedyResource\Pages; use App\Filament\Resources\HomeRemedyResource; use Filament\Resources\Pages\ListRecords; use Filament\Actions\Action;
+class ListHomeRemedies extends ListRecords { protected static string $resource=HomeRemedyResource::class; protected function getHeaderActions():array{return [Action::make('import')->label('Import')->url(route('admin.nani-dadi.import.form')),Action::make('export')->label('Export CSV')->url(route('admin.nani-dadi.export')),Action::make('template')->label('Template')->url(route('admin.nani-dadi.template')),\Filament\Actions\CreateAction::make()];} }

@@ -8,6 +8,7 @@ use App\Models\Doctor;
 use App\Models\Hospital;
 use App\Models\Medicine;
 use App\Models\Quiz;
+use App\Models\HomeRemedy;
 use Symfony\Component\HttpFoundation\Response;
 
 class SeoController extends Controller
@@ -43,6 +44,7 @@ class SeoController extends Controller
         $lastArticles = optional(Article::query()->where('is_published', true)->latest('updated_at')->value('updated_at'))->toDateString() ?? $today;
         $lastQuizzes = optional(Quiz::query()->published()->latest('updated_at')->value('updated_at'))->toDateString() ?? $today;
         $lastMedicines = optional(Medicine::query()->published()->latest('updated_at')->value('updated_at'))->toDateString() ?? $today;
+        $lastRemedies = optional(HomeRemedy::query()->published()->latest('updated_at')->value('updated_at'))->toDateString() ?? $today;
 
         $staticUrls = [
             ['loc' => route('home'), 'changefreq' => 'daily', 'priority' => '1.0', 'lastmod' => $today],
@@ -51,6 +53,7 @@ class SeoController extends Controller
             ['loc' => route('blood_banks.index'), 'changefreq' => 'daily', 'priority' => '0.9', 'lastmod' => $lastBloodBanks],
             ['loc' => route('articles.index'), 'changefreq' => 'daily', 'priority' => '0.8', 'lastmod' => $lastArticles],
             ['loc' => route('medicines.index'), 'changefreq' => 'weekly', 'priority' => '0.8', 'lastmod' => $lastMedicines],
+            ['loc' => route('nani-dadi.index'), 'changefreq' => 'weekly', 'priority' => '0.8', 'lastmod' => $lastRemedies],
             ['loc' => route('activities.index'), 'changefreq' => 'weekly', 'priority' => '0.7', 'lastmod' => $today],
             ['loc' => route('activities.breathing'), 'changefreq' => 'monthly', 'priority' => '0.6', 'lastmod' => $today],
             ['loc' => route('activities.grounding'), 'changefreq' => 'monthly', 'priority' => '0.6', 'lastmod' => $today],
@@ -122,7 +125,8 @@ class SeoController extends Controller
             ->values()
             ->all();
 
-        $urls = array_merge($staticUrls, $articleUrls, $medicineUrls, $quizUrls, $hospitalDoctorUrls);
+        $remedyUrls = HomeRemedy::query()->published()->latest('updated_at')->get(['slug','updated_at'])->map(fn($r)=>['loc'=>route('nani-dadi.show',$r->slug),'changefreq'=>'monthly','priority'=>'0.7','lastmod'=>optional($r->updated_at)->toDateString()??$today])->all();
+        $urls = array_merge($staticUrls, $articleUrls, $medicineUrls, $quizUrls, $hospitalDoctorUrls, $remedyUrls);
         $xml = view('sitemap.xml', compact('urls', 'base'))->render();
 
         return response($xml, 200, ['Content-Type' => 'application/xml; charset=UTF-8']);
