@@ -1,0 +1,76 @@
+/* Stitch reference: Urbanist typography, quiet teal canvas, compact Material surfaces. */
+:root { --arogio-canvas: #f7fafa; --arogio-paper: #fff; --arogio-text: #172b3a; --arogio-muted: #546e7a; --arogio-border: #e2e8ea; }
+html.dark { --arogio-canvas: #101e24; --arogio-paper: #172b34; --arogio-text: #e4f0f4; --arogio-muted: #b4c8ce; --arogio-border: #31464f; }
+body { background: var(--arogio-canvas) !important; color: var(--arogio-text); font-family: Urbanist, 'Noto Sans Devanagari', sans-serif !important; }
+body > .pointer-events-none.fixed { display: none; }
+#arogio-header { position: sticky; top: 0; z-index: 60; min-height: 73px; }
+#arogio-footer { margin-top: auto; }
+.design-logo { flex-shrink: 0; display: flex; align-items: center; }
+.design-logo img { object-fit: contain; width: 126px; height: 40px; }
+.design-grid { display: grid; gap: 24px; }
+.design-grid.three { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+.design-grid.two { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+.design-grid.four { grid-template-columns: repeat(4, minmax(0, 1fr)); }
+.design-grid.consultation { grid-template-columns: minmax(0, 1.4fr) minmax(0, 1fr); }
+.design-grid.footer { grid-template-columns: 1.4fr repeat(3, 1fr); gap: 40px; }
+.design-grid > * { min-width: 0; }
+.design-hero { background: radial-gradient(ellipse at 65% 0%, #e0f2f180, transparent 60%), linear-gradient(#f3faff, #f7fafa); }
+.design-jeeva { background: linear-gradient(110deg, #edf8f5, #f2f8fc) !important; }
+.dark .design-hero, .dark .design-jeeva { background: linear-gradient(110deg, #142d30, #101e24) !important; }
+.design-remedy-art, .design-article-art { height: 200px; position: relative; display: grid; place-items: center; overflow: hidden; }
+.design-remedy-art { background: radial-gradient(circle at 70% 30%, #e6eee0 0 20%, transparent 21%), linear-gradient(120deg, #d7e9d8, #f1e5cd); color: #47735a; }
+.design-article-art { background: radial-gradient(circle at 70% 30%, #d4e4ef 0 20%, transparent 21%), linear-gradient(120deg, #d5e8f2, #edf4f8); color: #4b7897; }
+.design-bottom-nav { display: none; }
+#arogio-home .MuiTab-root.Mui-selected { color: #fff; }
+.dark #arogio-home .MuiTab-root.Mui-selected { color: #00201b; }
+#arogio-home .MuiTabs-root { max-width: 100%; min-width: 0; }
+#compare-dock:not(.show) { visibility: hidden; pointer-events: none; }
+.design-footer-logo { max-height: 44px; object-fit: contain; }
+.dark .design-footer-logo { background: #fff; border-radius: 6px; padding: 4px; }
+.design-skip { position: fixed; top: -100px; left: 16px; z-index: 1600; background: #fff; color: #005e53; padding: 12px 20px; border-radius: 8px; }
+.design-skip:focus { top: 8px; }
+.design-fallback { display: none !important; }
+/* Shared legacy pages keep their behavior while adopting the new visual tokens. */
+.arogio-legacy-content { flex: 1; }
+.arogio-legacy-content :is(input, select, textarea, button) { font-family: inherit; }
+.arogio-legacy-content :is(input:not([type=checkbox]):not([type=radio]):not([type=hidden]), select, textarea) { border-radius: 8px; }
+.arogio-legacy-content :is(.rounded-3xl, .rounded-2xl) { border-radius: 12px; }
+.arogio-legacy-content :is(.shadow-xl, .shadow-2xl) { box-shadow: 0 3px 15px rgb(23 43 58 / 7%); }
+.arogio-legacy-content :is(h1,h2,h3) { letter-spacing: -.02em; }
+.arogio-legacy-content > header { background: linear-gradient(110deg, #edf8f5, #f3faff); color: var(--arogio-text); padding-block: 40px; box-shadow: none; border-color: var(--arogio-border); }
+.arogio-legacy-content > header > .absolute { display: none; }
+.arogio-legacy-content > header > .max-w-7xl { max-width: 1192px; text-align: left; }
+.arogio-legacy-content > header h1 { color: var(--arogio-text); background: none; -webkit-text-fill-color: currentColor; font-size: clamp(28px, 4vw, 40px); margin-bottom: 8px; }
+.arogio-legacy-content > header p { color: var(--arogio-muted); margin-inline: 0; }
+.arogio-legacy-content > header span { color: #005e53; background: #e0f2f1; border-color: #c5e4dd; box-shadow: none; }
+.dark .arogio-legacy-content > header { background: linear-gradient(110deg, #142d30, #101e24); }
+#chatbot-window { border-radius: 14px !important; border-color: var(--arogio-border) !important; }
+#chatbot-toggle-btn { box-shadow: 0 4px 16px rgb(0 94 83 / 20%) !important; }
+@media (max-width: 1000px) { .design-grid.three, .design-grid.four { grid-template-columns: repeat(2, minmax(0, 1fr)); } .design-grid.consultation { grid-template-columns: 1fr; } }
+@media (max-width: 767px) {
+  .design-grid.two, .design-grid.three, .design-grid.footer { grid-template-columns: 1fr; }
+  .design-grid { gap: 16px; }
+  .design-grid.four { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .design-bottom-nav { display: block; position: fixed; bottom: 0; left: 0; right: 0; z-index: 65; padding-bottom: env(safe-area-inset-bottom); }
+  #chatbot-container { bottom: calc(76px + env(safe-area-inset-bottom)) !important; }
+  #chatbot-window { z-index: 80 !important; }
+  #compare-dock { bottom: 60px !important; }
+  .design-logo img { width: 102px; }
+}
+.stitch-directory-layout { display: grid; grid-template-columns: 280px minmax(0, 1fr); gap: 24px; }
+.stitch-directory-layout > * { min-width: 0; }
+.stitch-remedy-intro { display: grid; grid-template-columns: minmax(0, 1.7fr) minmax(0, 1fr); gap: 32px; align-items: center; }
+.stitch-page .MuiPaper-root { overflow-wrap: anywhere; }
+.stitch-page .MuiOutlinedInput-input { border: 0; box-shadow: none; background: transparent; }
+.stitch-jeeva-panel#chatbot-window { min-height: 0; margin: 0; }
+.stitch-jeeva-panel #chatbot-input { border: 0; box-shadow: none; background: transparent; }
+.stitch-jeeva-panel .MuiInputBase-root { padding-right: 6px; }
+@media (max-width: 1199px) { .stitch-directory-layout { grid-template-columns: minmax(0, 1fr); } }
+@media (max-width: 767px) { .stitch-remedy-intro { grid-template-columns: minmax(0, 1fr); gap: 20px; } }
+@media print {
+  #arogio-header, #arogio-footer, #arogio-jeeva, #compare-dock, .design-bottom-nav { display: none !important; }
+  .stitch-symptoms .MuiButton-root, .stitch-symptoms .MuiStepper-root { display: none !important; }
+  .stitch-symptoms .MuiPaper-root { break-inside: avoid; box-shadow: none; }
+  .stitch-symptoms { background: white !important; color: #172b3a !important; }
+}
+@media (prefers-reduced-motion: reduce) { *, *::before, *::after { scroll-behavior: auto !important; animation-duration: .01ms !important; transition-duration: .01ms !important; } }

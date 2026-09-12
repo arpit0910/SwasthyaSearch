@@ -148,102 +148,100 @@
             'nani-dadi.category' => [
                 'title' => $isHindi
                     ? 'श्रेणी अनुसार घरेलू नुस्खे | दादी-नानी के नुस्खे | Arogio'
-                    : 'Home Remedies by Category | Dadi Nani Ke Nuskhe | Arogio',
+                    : 'Remedies by Category | Dadi Nani Ke Nuskhe | Arogio',
                 'description' => $isHindi
-                    ? 'स्वास्थ्य श्रेणी, लक्षण और रोग के अनुसार पारंपरिक भारतीय घरेलू नुस्खे खोजें।'
-                    : 'Browse traditional Indian home remedies categorized by health conditions, symptoms, and wellness topics.',
+                    ? 'पाचन, श्वसन, त्वचा व सामान्य स्वास्थ्य समस्याओं के लिए प्राकृतिक आयुर्वेदिक घरेलू नुस्खे खोजें।'
+                    : 'Explore traditional Ayurvedic home remedies categorized by health conditions and wellness goals.',
             ],
             'nani-dadi.ingredient' => [
                 'title' => $isHindi
-                    ? 'प्राकृतिक सामग्री अनुसार नुस्खे | दादी-नानी के नुस्खे | Arogio'
-                    : 'Home Remedies by Natural Ingredient | Arogio',
+                    ? 'सामग्री अनुसार घरेलू नुस्खे | दादी-नानी के नुस्खे | Arogio'
+                    : 'Remedies by Ingredient | Dadi Nani Ke Nuskhe | Arogio',
                 'description' => $isHindi
-                    ? 'अदरक, हल्दी, तुलसी, शहद, लौंग और प्राकृतिक जड़ी-बूटियों से बने पारंपरिक घरेलू नुस्खे और उनके लाभ।'
-                    : 'Explore traditional home remedies and health benefits of turmeric, ginger, tulsi, honey, and natural Indian herbs.',
+                    ? 'हल्दी, अदरक, शहद, तुलसी व अन्य रसोई सामग्रियों से बनने वाले प्रामाणिक घरेलू नुस्खे खोजें।'
+                    : 'Discover natural home remedies based on everyday kitchen herbs and spices like Turmeric, Ginger, Tulsi, and Honey.',
             ],
             'articles.index' => [
-                'title' => $isHindi ? 'स्वास्थ्य लेख एवं वेलनेस टिप्स | Arogio' : 'Health Articles & Wellness Tips | Arogio',
+                'title' => $isHindi ? 'स्वास्थ्य लेख व चिकित्सा मार्गदर्शन | Arogio' : 'Health Articles & Medical Guidance | Arogio',
                 'description' => $isHindi
-                    ? 'चिकित्सा विशेषज्ञों द्वारा प्रमाणित स्वास्थ्य, पोषण, जीवनशैली और वेलनेस पर उपयोगी लेख पढ़ें।'
-                    : 'Read expert-verified articles on healthcare, nutrition, fitness, disease prevention, and healthy lifestyle guidance.',
+                    ? 'स्वास्थ्य, पोषण, बीमारियों की रोकथाम और वेलनेस पर डॉक्टर-समीक्षित उपयोगी लेख पढ़ें।'
+                    : 'Read expert-reviewed health, nutrition, preventive care, and wellness articles.',
+            ],
+            'consultations.index' => [
+                'title' => $isHindi ? 'Video Consulting | Arogio' : 'Video Consulting | Arogio',
+                'description' => $isHindi
+                    ? 'अपने ब्राउज़र से तुरंत निजी वीडियो परामर्श शुरू करें।'
+                    : 'Start a private browser-based video consultation instantly.',
+            ],
+            'consultations.room' => [
+                'title' => $isHindi ? 'परामर्श कक्ष | Arogio' : 'Consultation Room | Arogio',
+                'description' => $isHindi
+                    ? 'निजी वीडियो परामर्श कक्ष में जुड़े रहें।'
+                    : 'Stay connected inside the private consultation room.',
             ],
             'medicines.index' => [
-                'title' => $isHindi
-                    ? 'दवा निर्देशिका - उपयोग, खुराक, दुष्प्रभाव और चेतावनियां | Arogio'
-                    : 'Medicine Directory - Uses, Side Effects & Safety Warnings | Arogio',
+                'title' => $isHindi ? 'दवा जानकारी निर्देशिका | Arogio' : 'Medicine Information Directory | Arogio',
                 'description' => $isHindi
-                    ? 'दवाओं के चिकित्सीय उपयोग, खुराक, सामग्री, सामान्य दुष्प्रभाव और सुरक्षा सावधानियों की विस्तृत जानकारी।'
-                    : 'Search medicines to understand active ingredients, clinical indications, dosages, side effects, and safety warnings.',
+                    ? 'दवाओं के उपयोग, खुराक, दुष्प्रभाव, सावधानियां और चेतावनियों की प्रामाणिक जानकारी खोजें।'
+                    : 'Search generic and branded medicine uses, dosages, side effects, precautions, and safety warnings.',
             ],
             'medicines.show' => [
-                'title' => $isHindi ? 'दवा विवरण एवं सुरक्षा सलाह | Arogio' : 'Medicine Details & Safety Guidance | Arogio',
+                'title' => $isHindi ? 'दवा विवरण | Arogio' : 'Medicine Details | Arogio',
                 'description' => $isHindi
-                    ? 'चयनित दवा के उपयोग, दुष्प्रभाव, सावधानियां और चिकित्सीय चेतावनियां देखें।'
-                    : 'View comprehensive medicine indications, precautions, potential side effects, and safe usage guidance.',
+                    ? 'चयनित दवा की सामान्य जानकारी, दुष्प्रभाव और सुरक्षा सलाह देखें।'
+                    : 'View comprehensive medicine composition, indications, warnings, and safety guidance.',
             ],
             'activities.index' => [
-                'title' => $isHindi ? 'मानसिक स्वास्थ्य एवं वेलनेस गतिविधियां | Arogio' : 'Mental Wellness & Calming Activities | Arogio',
+                'title' => $isHindi ? 'वेलनेस गतिविधियां | Arogio' : 'Wellness Activities | Arogio',
                 'description' => $isHindi
-                    ? 'तनाव राहत, गाइडेड श्वास अभ्यास, 5-4-3-2-1 ग्राउंडिंग और मूड चेक-इन टूल्स का उपयोग करें।'
-                    : 'Explore guided breathing exercises, 5-4-3-2-1 sensory grounding, calming audio, and mood check-in activities.',
+                    ? 'तनाव राहत, ग्राउंडिंग और मूड चेक-इन गतिविधियां उपयोग करें।'
+                    : 'Use stress-relief, grounding, and mood check-in activities.',
             ],
             'activities.breathing' => [
-                'title' => $isHindi ? 'गाइडेड श्वास अभ्यास | तनाव राहत | Arogio' : 'Guided Breathing Exercise | Stress Relief | Arogio',
+                'title' => $isHindi ? 'श्वास अभ्यास | Arogio' : 'Breathing Exercise | Arogio',
                 'description' => $isHindi
-                    ? 'धीमी और गहरी श्वास का शांत अभ्यास, जो चिंता और तनाव कम करने में तुरंत मदद करता है।'
-                    : 'Practice slow, rhythmic guided breathing to calm your mind, lower heart rate, and relieve acute anxiety.',
+                    ? 'धीमी श्वास के शांत अभ्यास का उपयोग करें।'
+                    : 'Use a calm guided breathing exercise.',
             ],
             'activities.grounding' => [
-                'title' => $isHindi ? '5-4-3-2-1 ग्राउंडिंग अभ्यास | Arogio' : '5-4-3-2-1 Grounding Technique | Arogio',
+                'title' => $isHindi ? 'ग्राउंडिंग अभ्यास | Arogio' : 'Grounding Exercise | Arogio',
                 'description' => $isHindi
-                    ? '5-4-3-2-1 संवेदी तकनीक से चिंता को नियंत्रित करें और वर्तमान में शांति महसूस करें।'
-                    : 'Use the 5-4-3-2-1 sensory awareness method to manage panic, reduce anxiety, and regain presence.',
+                    ? '5-4-3-2-1 तकनीक से वर्तमान में लौटें।'
+                    : 'Use the 5-4-3-2-1 technique to return to the present moment.',
             ],
             'activities.mood-check' => [
-                'title' => $isHindi ? 'दैनिक मूड चेक-इन | Arogio' : 'Daily Mood Check-in | Arogio',
+                'title' => $isHindi ? 'मूड चेक-इन | Arogio' : 'Mood Check-in | Arogio',
                 'description' => $isHindi
-                    ? 'अपनी मानसिक स्थिति और भावनाओं को ट्रैक करें और उपयुक्त वेलनेस सुझाव पाएं।'
-                    : 'Track your emotional wellness, identify patterns, and access supportive mental health resources.',
+                    ? 'अपनी भावना पहचानें और जरूरत पर सहायता देखें।'
+                    : 'Check how you feel and see support if needed.',
             ],
             'quizzes.index' => [
-                'title' => $isHindi ? 'स्वास्थ्य एवं वेलनेस क्विज़ | Arogio' : 'Health & Wellness Quizzes | Arogio',
+                'title' => $isHindi ? 'हेल्थ क्विज़ | Arogio' : 'Health Quizzes | Arogio',
                 'description' => $isHindi
-                    ? 'स्वास्थ्य जागरूकता, पोषण, नींद और वेलनेस पर इंटरैक्टिव क्विज़ लें और अपनी जानकारी परखें।'
-                    : 'Take self-reflection quizzes on health awareness, stress, sleep hygiene, and nutrition knowledge.',
+                    ? 'सामान्य जागरूकता और आत्म-चिंतन के लिए क्विज़ लें।'
+                    : 'Take quizzes for awareness and self-reflection.',
             ],
             'quizzes.show' => [
                 'title' => $isHindi ? 'क्विज़ विवरण | Arogio' : 'Quiz Details | Arogio',
-                'description' => $isHindi ? 'सामान्य स्वास्थ्य जागरूकता क्विज़ पूरा करें।' : 'Complete an interactive health awareness quiz.',
+                'description' => $isHindi ? 'सामान्य जागरूकता क्विज़ पूरा करें।' : 'Complete a general awareness quiz.',
             ],
             'support.crisis' => [
-                'title' => $isHindi ? '24/7 संकट सहायता एवं हेल्पलाइन | Arogio' : '24/7 Crisis Support & Helplines | Arogio',
+                'title' => $isHindi ? 'संकट सहायता | Arogio' : 'Crisis Support | Arogio',
                 'description' => $isHindi
-                    ? 'मानसिक स्वास्थ्य और संकट के समय तुरंत निःशुल्क हेल्पलाइन नंबर (KIRAN, Tele-MANAS, Vandrevala Foundation) पर संपर्क करें।'
-                    : 'Immediate, confidential mental health helpline numbers (Tele-MANAS, KIRAN 1800-599-0019) for emergency psychological support.',
+                    ? 'असुरक्षित महसूस होने पर तुरंत सहायता विकल्प देखें।'
+                    : 'See immediate support options if you feel unsafe.',
             ],
             'about' => [
-                'title' => $isHindi ? 'हमारे बारे में - स्वास्थ्य सेवा को पारदर्शी बनाना | Arogio' : 'About Us - Simplifying Healthcare Discovery | Arogio',
+                'title' => $isHindi ? 'हमारे बारे में | Arogio' : 'About Us | Arogio',
                 'description' => $isHindi
-                    ? 'Arogio का उद्देश्य हर नागरिक तक सत्यापित डॉक्टर, अस्पताल और स्वास्थ्य जानकारी को सरल और सुलभ बनाना है।'
-                    : 'Learn about Arogio mission to make verified doctors, hospitals, blood banks, and health guidance accessible to everyone.',
+                    ? 'Arogio का मिशन भरोसेमंद और पारदर्शी हेल्थकेयर खोज को सरल बनाना है।'
+                    : 'Learn about Arogio and our mission for transparent, accessible healthcare discovery.',
             ],
             'contact' => [
-                'title' => $isHindi ? 'संपर्क करें | सहायता एवं प्रतिक्रिया | Arogio' : 'Contact Us | Support & Feedback | Arogio',
+                'title' => $isHindi ? 'संपर्क करें | Arogio' : 'Contact Us | Arogio',
                 'description' => $isHindi
-                    ? 'Arogio सहायता टीम से संपर्क करें, नई जानकारी जोड़ें या अपनी प्रतिक्रिया साझा करें।'
-                    : 'Get in touch with the Arogio team for inquiries, directory updates, provider corrections, and feedback.',
-            ],
-            'privacy.policy' => [
-                'title' => $isHindi ? 'गोपनीयता नीति | Arogio' : 'Privacy Policy | Arogio',
-                'description' => $isHindi
-                    ? 'Arogio की गोपनीयता नीति — जानें कि हम आपके डेटा की सुरक्षा और गोपनीयता कैसे सुनिश्चित करते हैं।'
-                    : 'Learn about Arogio commitment to protecting your privacy and personal data security.',
-            ],
-            'terms.service' => [
-                'title' => $isHindi ? 'सेवा की शर्तें | Arogio' : 'Terms of Service | Arogio',
-                'description' => $isHindi
-                    ? 'Arogio प्लेटफॉर्म उपयोग करने की नियम एवं शर्तें।'
-                    : 'Review the terms and conditions governing the use of the Arogio healthcare discovery platform.',
+                    ? 'सहायता और प्रतिक्रिया के लिए Arogio से संपर्क करें।'
+                    : 'Contact Arogio for support, corrections, and feedback.',
             ],
         ];
         $computedTitle = $routeSeo[$routeName]['title'] ?? $defaultTitle;
@@ -401,6 +399,7 @@
             'nani-dadi.show' => $isHindi ? 'नुस्खा विवरण' : 'Remedy Details',
             'articles.index' => $isHindi ? 'लेख' : 'Articles',
             'articles.show' => $isHindi ? 'लेख विवरण' : 'Article',
+            'consultations.room' => $isHindi ? 'परामर्श कक्ष' : 'Consultation Room',
             'medicines.index' => $isHindi ? 'दवाइयाँ' : 'Medicines',
             'medicines.show' => $isHindi ? 'दवा विवरण' : 'Medicine Details',
             'activities.index' => $isHindi ? 'गतिविधियां' : 'Activities',
@@ -446,11 +445,15 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link
-        href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&family=Inter:wght@300;400;500;600;700&family=Noto+Sans+Devanagari:wght@400;500;600;700&family=Hind:wght@400;500;600;700&display=swap"
+        href="https://fonts.googleapis.com/css2?family=Urbanist:wght@400;500;600;700;800&family=Noto+Sans+Devanagari:wght@400;500;600;700&display=swap"
         rel="stylesheet">
     <style>
         html {
             scrollbar-gutter: stable;
+        }
+
+        .design-fallback {
+            display: none !important;
         }
 
         .ss-mobile-only {
@@ -498,7 +501,7 @@
             theme: {
                 extend: {
                     fontFamily: {
-                        sans: ['Outfit', 'sans-serif'],
+                        sans: ['Urbanist', 'Noto Sans Devanagari', 'sans-serif'],
                     },
                 }
             }
@@ -561,150 +564,24 @@
         $chatbotCityPills = $chatbotCities;
     @endphp
 
-    <!-- Header Navbar -->
-    <nav class="sticky top-0 z-50 glass-panel shadow-sm site-header">
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative">
-            <div class="flex justify-between min-h-16 py-2 items-center gap-2 sm:gap-4">
-                <div class="flex items-center min-w-0">
-                    <a href="{{ route('home') }}"
-                        class="flex items-center space-x-1.5 sm:space-x-3 group mr-1 sm:mr-6 shrink min-w-0">
-                        <span class="relative block h-11 w-[148px] sm:h-12 sm:w-[162px] shrink-0" aria-label="Arogio">
-                            <img src="{{ $brandLogoUrl }}" alt="Arogio"
-                                class="absolute inset-0 h-full w-full object-contain object-left drop-shadow-sm dark:opacity-0">
-                            <img src="{{ $brandLogoDarkUrl }}" alt="Arogio"
-                                class="absolute inset-0 h-full w-full object-contain object-left drop-shadow-sm opacity-0 dark:opacity-100">
-                        </span>
-                    </a>
-
-                    <div class="hidden md:flex items-center space-x-1 lg:space-x-2">
-                        <a href="{{ route('doctors.index') }}"
-                            class="px-3 py-2 rounded-xl text-sm font-semibold transition-all duration-200 {{ request()->routeIs('doctors.*') ? 'bg-teal-50 dark:bg-teal-900/40 text-teal-700 dark:text-teal-400 border border-teal-100/80 dark:border-teal-900/50 shadow-2xs' : 'text-slate-600 dark:text-slate-300 hover:text-slate-900 dark:hover:text-white hover:bg-slate-50 dark:hover:bg-slate-800' }}">
-                            {{ $locale === 'hi' ? 'डॉक्टर खोजें' : 'Doctors' }}
-                        </a>
-                        <a href="{{ route('hospitals.index') }}"
-                            class="px-3 py-2 rounded-xl text-sm font-semibold transition-all duration-200 {{ request()->routeIs('hospitals.*') ? 'bg-teal-50 dark:bg-teal-900/40 text-teal-700 dark:text-teal-400 border border-teal-100/80 dark:border-teal-900/50 shadow-2xs' : 'text-slate-600 dark:text-slate-300 hover:text-slate-900 dark:hover:text-white hover:bg-slate-50 dark:hover:bg-slate-800' }}">
-                            {{ $locale === 'hi' ? 'अस्पताल व क्लिनिक' : 'Hospitals' }}
-                        </a>
-                        <a href="{{ route('blood_banks.index') }}"
-                            class="px-3 py-2 rounded-xl text-sm font-semibold transition-all duration-200 {{ request()->routeIs('blood_banks.*') ? 'bg-teal-50 dark:bg-teal-900/40 text-teal-700 dark:text-teal-400 border border-teal-100/80 dark:border-teal-900/50 shadow-2xs' : 'text-slate-600 dark:text-slate-300 hover:text-slate-900 dark:hover:text-white hover:bg-slate-50 dark:hover:bg-slate-800' }}">
-                            Blood Banks
-                        </a>
-                        <a href="{{ route('articles.index') }}"
-                            class="px-3 py-2 rounded-xl text-sm font-semibold transition-all duration-200 {{ request()->routeIs('articles.*') ? 'bg-teal-50 dark:bg-teal-900/40 text-teal-700 dark:text-teal-400 border border-teal-100/80 dark:border-teal-900/50 shadow-2xs' : 'text-slate-600 dark:text-slate-300 hover:text-slate-900 dark:hover:text-white hover:bg-slate-50 dark:hover:bg-slate-800' }}">
-                            {{ $locale === 'hi' ? 'स्वास्थ्य लेख' : 'Articles' }}
-                        </a>
-                        <a href="{{ route('about') }}"
-                            class="px-3 py-2 rounded-xl text-sm font-semibold transition-all duration-200 {{ request()->routeIs('about') ? 'bg-teal-50 dark:bg-teal-900/40 text-teal-700 dark:text-teal-400 border border-teal-100/80 dark:border-teal-900/50 shadow-2xs' : 'text-slate-600 dark:text-slate-300 hover:text-slate-900 dark:hover:text-white hover:bg-slate-50 dark:hover:bg-slate-800' }}">
-                            {{ $locale === 'hi' ? 'हमारे बारे में' : 'About Us' }}
-                        </a>
-                        <a href="{{ route('contact') }}"
-                            class="px-3 py-2 rounded-xl text-sm font-semibold transition-all duration-200 {{ request()->routeIs('contact') ? 'bg-teal-50 dark:bg-teal-900/40 text-teal-700 dark:text-teal-400 border border-teal-100/80 dark:border-teal-900/50 shadow-2xs' : 'text-slate-600 dark:text-slate-300 hover:text-slate-900 dark:hover:text-white hover:bg-slate-50 dark:hover:bg-slate-800' }}">
-                            {{ $locale === 'hi' ? 'संपर्क करें' : 'Contact Us' }}
-                        </a>
-                    </div>
-                </div>
-
-                <div class="flex items-center gap-1 sm:gap-2 shrink-0">
-                    <div
-                        class="hidden md:flex items-center bg-slate-100 dark:bg-slate-800 p-0.5 rounded-xl border border-slate-200/60 dark:border-slate-700/60 shadow-inner">
-                        <form action="{{ route('switch.locale') }}" method="POST" class="inline">
-                            @csrf
-                            <input type="hidden" name="locale" value="en">
-                            <button type="submit"
-                                class="flex items-center justify-center gap-1 px-2 sm:px-3 py-1 rounded-lg text-[11px] sm:text-sm font-medium leading-none whitespace-nowrap transition-all duration-200 min-w-[58px] sm:min-w-[88px] {{ $locale === 'en' ? 'bg-white dark:bg-slate-700 text-indigo-900 dark:text-indigo-200 shadow-sm font-semibold' : 'text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white' }}">
-                                <i data-lucide="globe" class="w-3 h-3 sm:w-3.5 sm:h-3.5 text-teal-600 shrink-0"></i>
-                                <span class="hidden sm:inline">English</span><span
-                                    class="sm:hidden font-bold">EN</span>
-                            </button>
-                        </form>
-                        <form action="{{ route('switch.locale') }}" method="POST" class="inline">
-                            @csrf
-                            <input type="hidden" name="locale" value="hi">
-                            <button type="submit"
-                                class="flex items-center justify-center gap-1 px-2 sm:px-3 py-1 rounded-lg text-[11px] sm:text-sm font-medium leading-none whitespace-nowrap transition-all duration-200 min-w-[58px] sm:min-w-[88px] {{ $locale === 'hi' ? 'bg-white dark:bg-slate-700 text-indigo-900 dark:text-indigo-200 shadow-sm font-semibold' : 'text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white' }}">
-                                <i data-lucide="globe" class="w-3 h-3 sm:w-3.5 sm:h-3.5 text-teal-600 shrink-0"></i>
-                                <span class="hidden sm:inline">हिन्दी</span><span
-                                    class="sm:hidden font-bold">HI</span>
-                            </button>
-                        </form>
-                    </div>
-                    <button id="theme-toggle" type="button" onclick="window.toggleThemeMode()"
-                        class="p-2.5 rounded-xl border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 text-slate-700 dark:text-slate-200 hover:bg-slate-50 dark:hover:bg-slate-700 transition-all duration-200 flex items-center justify-center gap-2 shadow-xs min-w-[44px] sm:min-w-[52px]"
-                        aria-label="Switch to dark mode">
-                        <span class="text-base leading-none dark:hidden" aria-hidden="true">🌙</span>
-                        <span class="text-base leading-none hidden dark:inline" aria-hidden="true">☀️</span>
-                        <span class="theme-toggle-dark-label hidden sm:inline text-xs font-semibold">Dark</span>
-                        <span class="theme-toggle-light-label text-xs font-semibold">Light</span>
-                    </button>
-                    <button type="button" onclick="toggleMobileMenu()" id="mobile-menu-toggle-btn"
-                        class="md:hidden p-2 rounded-xl border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 text-slate-700 dark:text-slate-200 hover:bg-slate-50 dark:hover:bg-slate-700 transition-colors"
-                        aria-controls="mobile-nav-menu" aria-expanded="false" aria-label="Open navigation menu">
-                        <i data-lucide="menu" id="mobile-menu-open-icon" class="w-5 h-5"></i>
-                        <i data-lucide="x" id="mobile-menu-close-icon" class="w-5 h-5 hidden"></i>
-                    </button>
-                </div>
-            </div>
-            <div id="mobile-nav-menu"
-                class="md:hidden ss-mobile-menu-panel absolute left-4 right-4 top-full mt-2 z-40">
-                <div class="mobile-nav-list">
-                    <div
-                        class="grid grid-cols-2 gap-2 p-3 border-b border-slate-200 dark:border-slate-800 bg-slate-50/80 dark:bg-slate-900/70">
-                        <form action="{{ route('switch.locale') }}" method="POST">
-                            @csrf
-                            <input type="hidden" name="locale" value="en">
-                            <button type="submit"
-                                class="w-full flex items-center justify-center gap-1 px-3 py-2 rounded-xl text-xs font-semibold {{ $locale === 'en' ? 'bg-white dark:bg-slate-700 text-indigo-900 dark:text-indigo-200 shadow-sm' : 'bg-transparent text-slate-600 dark:text-slate-300' }}">
-                                <i data-lucide="globe" class="w-3.5 h-3.5 text-teal-600 shrink-0"></i>
-                                <span>English</span>
-                            </button>
-                        </form>
-                        <form action="{{ route('switch.locale') }}" method="POST">
-                            @csrf
-                            <input type="hidden" name="locale" value="hi">
-                            <button type="submit"
-                                class="w-full flex items-center justify-center gap-1 px-3 py-2 rounded-xl text-xs font-semibold {{ $locale === 'hi' ? 'bg-white dark:bg-slate-700 text-indigo-900 dark:text-indigo-200 shadow-sm' : 'bg-transparent text-slate-600 dark:text-slate-300' }}">
-                                <i data-lucide="globe" class="w-3.5 h-3.5 text-teal-600 shrink-0"></i>
-                                <span>हिन्दी</span>
-                            </button>
-                        </form>
-                    </div>
-                    <a href="{{ route('doctors.index') }}"
-                        class="mobile-nav-item {{ request()->routeIs('doctors.*') ? 'active' : '' }}">
-                        <i data-lucide="stethoscope" class="w-4 h-4"></i>
-                        <span>{{ $locale === 'hi' ? 'डॉक्टर खोजें' : 'Doctors' }}</span>
-                    </a>
-                    <a href="{{ route('hospitals.index') }}"
-                        class="mobile-nav-item {{ request()->routeIs('hospitals.*') ? 'active' : '' }}">
-                        <i data-lucide="building-2" class="w-4 h-4"></i>
-                        <span>{{ $locale === 'hi' ? 'अस्पताल व क्लिनिक' : 'Hospitals' }}</span>
-                    </a>
-                    <a href="{{ route('blood_banks.index') }}"
-                        class="mobile-nav-item {{ request()->routeIs('blood_banks.*') ? 'active' : '' }}">
-                        <i data-lucide="droplet" class="w-4 h-4"></i>
-                        <span>Blood Banks</span>
-                    </a>
-                    <a href="{{ route('articles.index') }}"
-                        class="mobile-nav-item {{ request()->routeIs('articles.*') ? 'active' : '' }}">
-                        <i data-lucide="book-open" class="w-4 h-4"></i>
-                        <span>Articles</span>
-                    </a>
-                    <a href="{{ route('about') }}"
-                        class="mobile-nav-item {{ request()->routeIs('about') ? 'active' : '' }}">
-                        <i data-lucide="info" class="w-4 h-4"></i>
-                        <span>{{ $locale === 'hi' ? 'हमारे बारे में' : 'About Us' }}</span>
-                    </a>
-                    <a href="{{ route('contact') }}"
-                        class="mobile-nav-item {{ request()->routeIs('contact') ? 'active' : '' }}">
-                        <i data-lucide="phone" class="w-4 h-4"></i>
-                        <span>{{ $locale === 'hi' ? 'संपर्क' : 'Contact' }}</span>
-                    </a>
-                </div>
-            </div>
-        </div>
-    </nav>
+    @include('partials.design-config')
+    <a class="design-skip" href="#main-content">{{ $locale === 'hi' ? 'मुख्य सामग्री पर जाएँ' : 'Skip to main content' }}</a>
+    <div id="arogio-header">
+        <nav class="design-fallback" aria-label="Main navigation">
+            <a href="{{ route('home') }}"><img src="{{ $brandLogoUrl }}" alt="Arogio" width="126"></a>
+            <a href="{{ route('doctors.index') }}">{{ $locale === 'hi' ? 'डॉक्टर' : 'Doctors' }}</a>
+            <a href="{{ route('hospitals.index') }}">{{ $locale === 'hi' ? 'अस्पताल' : 'Hospitals' }}</a>
+            <a href="{{ route('medicines.index') }}">{{ $locale === 'hi' ? 'दवाइयाँ' : 'Medicines' }}</a>
+            <a href="{{ route('emergency') }}">{{ $locale === 'hi' ? 'आपातकाल' : 'Emergency' }}</a>
+        </nav>
+    </div>
 
     <!-- Main Content -->
-    @yield('content')
+    @if (request()->routeIs('home'))
+        @yield('content')
+    @else
+        <main id="main-content" tabindex="-1" class="arogio-legacy-content">@yield('content')</main>
+    @endif
 
     <div id="chatbot-mobile-overlay" class="hidden fixed inset-0 bg-slate-950/45 backdrop-blur-[1px] z-[70] sm:hidden"
         onclick="toggleChatbot()"></div>
@@ -824,256 +701,13 @@
             </form>
         </div>
     </div>
-    <!-- Floating Chatbot Widget -->
-    <div class="fixed bottom-[17px] right-[17px] sm:bottom-[29px] sm:right-[29px] z-[95]" id="chatbot-container">
-        <!-- Chat Button -->
-        <button id="chatbot-toggle-btn" aria-label="Open Jeeva assistant" onclick="toggleChatbot()"
-            class="chatbot-fab fab-contracted relative isolate overflow-visible flex items-center gap-3 text-white px-7 py-4 rounded-full transition-all duration-300 transform group">
-            <div class="chatbot-fab-icon w-6 h-6 flex items-center justify-center shrink-0">
-                <i data-lucide="sparkles" class="w-5 h-5 text-white"></i>
-            </div>
-            <span id="chatbot-fab-label"
-                class="chatbot-fab-label hidden sm:inline-flex whitespace-nowrap leading-none">
-                <span class="chatbot-fab-title">{{ $locale === 'hi' ? 'Talk to Jeeva' : 'Talk to Jeeva' }}</span>
-            </span>
-        </button>
-
-        <!-- Chat Window -->
-        <div id="chatbot-window"
-            class="hidden w-[95vw] sm:w-[460px] h-[78vh] max-h-[760px] min-h-[560px] bg-white dark:bg-slate-950 rounded-3xl shadow-2xl border border-slate-300/90 dark:border-slate-800 flex flex-col overflow-hidden animate-in fade-in duration-300 chatbot-window">
-            <!-- Header -->
-            <div id="chatbot-header" class="relative chatbot-header text-white p-3.5 sm:p-4 shadow-md">
-                <div class="flex items-start justify-between gap-3">
-                    <div class="flex items-center gap-3 min-w-0 flex-1 pr-1">
-                        <div class="chatbot-avatar-shell">
-                            <div class="chatbot-avatar-core">
-                                <i data-lucide="sparkles" class="w-5 h-5 text-white"></i>
-                            </div>
-                        </div>
-                        <div class="min-w-0 flex-1">
-                            <div class="chatbot-title-row">
-                                <h3 class="font-bold text-[17px] leading-tight text-white">Jeeva</h3>
-                                <span
-                                    class="chatbot-status-badge">{{ $locale === 'hi' ? 'Here for you' : 'Here for you' }}</span>
-                                <button type="button" id="chatbot-important-toggle"
-                                    onclick="toggleChatbotImportant()" class="chatbot-info-btn"
-                                    aria-label="Show important assistant details">i</button>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="chatbot-header-actions shrink-0">
-                        <select id="chatbot-language"
-                            class="chatbot-header-select text-xs bg-white dark:bg-slate-800 text-slate-900 dark:text-slate-100 border border-white/40 rounded-lg px-2 py-1 focus:outline-none focus:ring-2 focus:ring-teal-400/60">
-                            <option value="en" {{ $locale === 'en' ? 'selected' : '' }}>EN</option>
-                            <option value="hi" {{ $locale === 'hi' ? 'selected' : '' }}>HI</option>
-                        </select>
-                        <button type="button" onclick="toggleSpeakEnabled()" id="chatbot-speak-toggle"
-                            class="chatbot-header-icon-btn" title="Speak replies">
-                            <i data-lucide="volume-2" class="w-4 h-4"></i>
-                        </button>
-                        <button onclick="toggleChatbot()" aria-label="Close AI assistant"
-                            class="chatbot-header-icon-btn">
-                            <i data-lucide="x" class="w-4.5 h-4.5"></i>
-                        </button>
-                    </div>
-                </div>
-                <div id="chatbot-important-details"
-                    class="hidden absolute left-4 right-4 top-[74px] z-20 text-[11px] leading-relaxed text-amber-950 bg-white border border-amber-200 rounded-xl px-3 py-2 shadow-xl">
-                    This assistant does not provide diagnosis or treatment. For severe or urgent symptoms, visit the
-                    nearest hospital immediately and consult a qualified healthcare professional.
-                </div>
-            </div>
-
-            <div
-                class="px-3.5 py-2 bg-slate-50/90 dark:bg-slate-900/90 border-t border-b border-slate-200/80 dark:border-slate-800/80">
-                <div class="flex items-center justify-between gap-2 min-h-[36px] w-full text-xs">
-                    <!-- City Pills Selection State (visible when not locked) -->
-                    <div id="chatbot-city-select-wrapper" class="flex-1 flex items-center gap-1.5 min-w-0">
-                        <i data-lucide="map-pin" class="w-4 h-4 text-slate-500 shrink-0"></i>
-                        <div id="chatbot-city-pill-wrap" class="flex flex-wrap gap-1.5 max-h-20 overflow-y-auto pr-1">
-                            @foreach ($chatbotCityPills as $city)
-                                <button type="button" class="chatbot-city-pill" data-city="{{ $city }}"
-                                    onclick="selectChatbotCity('{{ addslashes($city) }}')">
-                                    {{ $city }}
-                                </button>
-                            @endforeach
-                        </div>
-                    </div>
-
-                    <!-- Locked Selected State (visible when locked) -->
-                    <div id="chatbot-city-locked-wrapper" class="hidden flex-1 items-center justify-between min-w-0">
-                        <div class="flex items-center gap-1.5 min-w-0">
-                            <i data-lucide="map-pin" class="w-4 h-4 text-teal-600 shrink-0 animate-custom-pulse"></i>
-                            <span
-                                class="text-slate-500 mr-1 shrink-0 font-medium">{{ $locale === 'hi' ? 'शहर:' : 'City:' }}</span>
-                            <span id="chatbot-selected-city-label"
-                                class="font-extrabold text-slate-900 dark:text-slate-100 truncate"></span>
-                        </div>
-                        <button type="button" id="chatbot-change-city-btn" onclick="enableCitySelection()"
-                            class="hidden shrink-0 text-[11px] font-bold text-cyan-700 hover:text-indigo-850 dark:text-indigo-400 dark:hover:text-indigo-350 bg-cyan-50 dark:bg-indigo-950/40 hover:bg-indigo-100 dark:hover:bg-indigo-900/60 border border-indigo-200 dark:border-indigo-800 rounded-lg px-2.5 py-1.5 leading-none transition-all">
-                            {{ $locale === 'hi' ? 'बदलें' : 'Change' }}
-                        </button>
-                    </div>
-                </div>
-            </div>
-
-            <!-- Messages Body -->
-            <div id="chatbot-messages" class="chatbot-messages-surface flex-1 p-4 overflow-y-auto space-y-4">
-                <!-- Initial Bot Message -->
-                <div class="flex justify-start">
-                    <div class="flex space-x-2 max-w-[85%] flex-row">
-                        <div class="chatbot-message-avatar">
-                            <i data-lucide="sparkles" class="w-4 h-4"></i>
-                        </div>
-                        <div id="chatbot-initial-message"
-                            class="chatbot-bot-bubble p-3.5 rounded-2xl text-sm leading-relaxed rounded-tl-none">
-                            {{ $locale === 'hi' ? "Hello! I'm Jeeva. How can I help you today?" : "Hello! I'm Jeeva. How can I help you today?" }}
-                        </div>
-                    </div>
-                </div>
-                <div id="chatbot-city-select-message"
-                    class="hidden ml-9 max-w-[85%] rounded-xl border border-indigo-200 bg-cyan-50 px-3 py-2.5 dark:border-indigo-800 dark:bg-indigo-950/30">
-                    <p class="text-xs font-bold text-indigo-900 dark:text-indigo-100 mb-2 leading-relaxed">
-                        {{ $locale === 'hi' ? 'सक्रिय शहर: ' . $activeCityHi : 'Active city: ' . $activeCity }}
-                    </p>
-                    <div class="flex flex-wrap gap-1.5">
-                        @foreach ($chatbotCityPills as $city)
-                            <button type="button" class="chatbot-city-pill" data-city="{{ $city }}"
-                                onclick="selectChatbotCity('{{ addslashes($city) }}')">
-                                {{ $city }}
-                            </button>
-                        @endforeach
-                    </div>
-                </div>
-                <div id="chatbot-post-city-questions-wrapper"
-                    class="hidden ml-9 max-w-[85%] rounded-xl border border-teal-100 dark:border-teal-900/60 bg-teal-50/80 dark:bg-teal-950/25 px-3 py-2">
-                    <p class="text-[11px] font-semibold text-teal-900 dark:text-teal-100">
-                        {{ $locale === 'hi' ? 'Try: "What to do", "I have fever", "How do I start a symptom check?"' : 'Try: "What to do", "I have fever", "How do I start a symptom check?"' }}
-                    </p>
-                </div>
-
-                <div class="hidden" id="chatbot-quick-prompts-wrap">
-                    <div class="ml-9 max-w-[85%]">
-                        <div class="flex flex-wrap gap-1.5 mb-2" id="chatbot-quick-prompts">
-                            <button type="button" onclick="useQuickPrompt(this)" class="chatbot-chip"
-                                data-message="{{ $locale === 'hi' ? 'What to do' : 'What to do' }}">{{ $locale === 'hi' ? 'What to do?' : 'What to do?' }}</button>
-                            <button type="button" onclick="goToSymptomTest()"
-                                class="chatbot-chip">{{ $locale === 'hi' ? 'लक्षण टेस्ट शुरू करें' : 'Start Symptom Test' }}</button>
-                            <button type="button" onclick="useQuickPrompt(this)"
-                                class="chatbot-chip chatbot-chip-danger"
-                                data-message="{{ $locale === 'hi' ? 'मुझे आपातकालीन मदद चाहिए' : 'I need emergency help' }}">{{ $locale === 'hi' ? 'आपातकालीन मदद' : 'Emergency Help' }}</button>
-                        </div>
-                        <div
-                            class="rounded-xl border border-cyan-200 dark:border-cyan-900/60 bg-cyan-50 dark:bg-cyan-950/25 px-3 py-2">
-                            <p class="text-[11px] font-bold text-cyan-900 dark:text-cyan-100 mb-1.5">
-                                {{ $locale === 'hi' ? 'जल्दी पूछें' : 'Quick prompts' }}
-                            </p>
-                            <div class="flex flex-wrap gap-1.5">
-                                <button type="button" onclick="useQuickPrompt(this)" class="chatbot-chip"
-                                    data-message="{{ $locale === 'hi' ? 'मुझे बुखार है' : 'I have fever' }}">{{ $locale === 'hi' ? 'बुखार' : 'Fever' }}</button>
-                                <button type="button" onclick="useQuickPrompt(this)" class="chatbot-chip"
-                                    data-message="{{ $locale === 'hi' ? 'मुझे खांसी है' : 'I have cough' }}">{{ $locale === 'hi' ? 'खांसी' : 'Cough' }}</button>
-                                <button type="button" onclick="useQuickPrompt(this)" class="chatbot-chip"
-                                    data-message="{{ $locale === 'hi' ? 'मुझे सिरदर्द है' : 'I have headache' }}">{{ $locale === 'hi' ? 'सिरदर्द' : 'Headache' }}</button>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-            <!-- Loading Indicator -->
-            <div id="chatbot-loading"
-                class="chatbot-loading-shell hidden px-4 py-2.5 flex space-x-2.5 items-center text-slate-700 dark:text-slate-200 text-sm border-y">
-                <div class="typing-dots" aria-hidden="true">
-                    <span></span><span></span><span></span>
-                </div>
-                <span
-                    id="chatbot-loading-text">{{ $locale === 'hi' ? 'Jeeva is thinking...' : 'Jeeva is thinking...' }}</span>
-            </div>
-            <!-- Input Footer -->
-            <form id="chatbot-form" onsubmit="handleChatbotSubmit(event)"
-                class="p-3 bg-slate-50 dark:bg-slate-900 border-t border-slate-200/80 dark:border-slate-800 flex items-center space-x-2 shadow-lg">
-                <input type="text" id="chatbot-input"
-                    placeholder="{{ $locale === 'hi' ? 'Describe your symptoms or ask a health question...' : 'Describe your symptoms or ask a health question...' }}"
-                    class="flex-1 bg-white dark:bg-slate-950 border border-slate-300/80 dark:border-slate-700 rounded-2xl px-4 py-2.5 text-sm text-slate-900 dark:text-slate-100 placeholder:text-slate-400 dark:placeholder:text-slate-500 focus:outline-none focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-500/80 transition-all duration-200">
-                <button type="button" id="chatbot-voice-btn" onclick="toggleVoiceTyping()"
-                    class="bg-teal-600 hover:bg-teal-500 dark:bg-cyan-700 dark:hover:bg-cyan-600 text-white p-2.5 rounded-2xl shadow-md transition-all duration-200 transform active:scale-95"
-                    title="{{ $locale === 'hi' ? 'वॉइस टाइपिंग चालू/बंद करें' : 'Start/Stop voice typing' }}">
-                    <i data-lucide="mic" class="w-5 h-5"></i>
-                </button>
-                <button type="submit" aria-label="Send message"
-                    class="bg-cyan-600 hover:bg-cyan-500 dark:bg-indigo-700 dark:hover:bg-indigo-600 text-white p-2.5 rounded-2xl shadow-md transition-all duration-200 transform active:scale-95">
-                    <i data-lucide="send" class="w-5 h-5"></i>
-                </button>
-            </form>
-        </div>
-    </div>
+    <div id="arogio-jeeva"></div>
 
     <!-- Footer -->
-    <footer class="bg-cyan-950 text-white border-t border-cyan-900 py-12 mt-auto">
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-8">
-                <div class="lg:col-span-2">
-                    <div class="flex items-center mb-4">
-                        <span class="relative block h-11 w-[148px] sm:h-12 sm:w-[162px] shrink-0" aria-label="Arogio">
-                            <img src="{{ $brandLogoDarkUrl }}" alt="Arogio" class="absolute inset-0 h-full w-full object-contain object-left drop-shadow-sm">
-                        </span>
-
-                    </div>
-                    <p class="text-sm text-slate-300">
-                        {{ $locale === 'hi' ? 'Arogio स्वास्थ्य सेवा प्रदाता खोजने में मदद करता है। हम निदान, उपचार या आपातकालीन प्रतिक्रिया प्रदान नहीं करते। जाने से पहले कृपया कॉल करें।' : 'Arogio helps users find healthcare providers. We do not provide diagnosis, treatment, or emergency response. Please call before visiting.' }}
-                    </p>
-                </div>
-                <div>
-                    <h4 class="text-sm font-semibold mb-3 text-slate-100">
-                        {{ $locale === 'hi' ? 'प्लेटफ़ॉर्म' : 'Platform' }}</h4>
-                    <div class="space-y-2 text-sm text-slate-400">
-                        <a href="{{ route('about') }}" class="block hover:text-white">About</a>
-                        <a href="{{ route('contact') }}" class="block hover:text-white">Contact</a>
-
-                        <a href="{{ route('activities.index') }}"
-                            class="block hover:text-white">{{ $locale === 'hi' ? 'गतिविधियां' : 'Activities' }}</a>
-                        <a href="{{ route('quizzes.index') }}"
-                            class="block hover:text-white">{{ $locale === 'hi' ? 'क्विज़' : 'Quizzes' }}</a>
-                        <a href="{{ route('articles.index') }}" class="block hover:text-white">Articles</a>
-                    </div>
-                </div>
-                <div>
-                    <h4 class="text-sm font-semibold mb-3 text-slate-100">
-                        {{ $locale === 'hi' ? 'शहर हेल्थकेयर' : 'Healthcare in Your City' }}</h4>
-                    <div class="space-y-2 text-sm text-slate-400">
-                        <a href="{{ route('doctors.index') }}"
-                            class="block hover:text-white">Find Doctors</a>
-                        <a href="{{ route('hospitals.index') }}"
-                            class="block hover:text-white">Find Hospitals</a>
-                        <a href="{{ route('blood_banks.index') }}"
-                            class="block hover:text-white">Find Blood Banks</a>
-                        <a href="{{ route('emergency') }}"
-                            class="block hover:text-white">Emergency Help</a>
-                        <a href="{{ route('medicines.index') }}"
-                            class="block hover:text-white">Medicine Information</a>
-                        <a href="{{ route('support.crisis') }}"
-                            class="block hover:text-white">Crisis Support</a>
-                    </div>
-                </div>
-                <div>
-                    <h4 class="text-sm font-semibold mb-3 text-slate-100">
-                        {{ $locale === 'hi' ? 'सहायता व कानूनी' : 'Support & Legal' }}</h4>
-                    <div class="space-y-2 text-sm text-slate-400">
-                        <a href="{{ route('contact') }}"
-                            class="block hover:text-white">{{ $locale === 'hi' ? 'गलत जानकारी रिपोर्ट करें' : 'Report Incorrect Information' }}</a>
-                        <a href="{{ route('privacy.policy') }}"
-                            class="block hover:text-white">{{ $locale === 'hi' ? 'गोपनीयता नीति' : 'Privacy Policy' }}</a>
-                        <a href="{{ route('terms.service') }}"
-                            class="block hover:text-white">{{ $locale === 'hi' ? 'सेवा की शर्तें' : 'Terms of Service' }}</a>
-                    </div>
-                </div>
-            </div>
-            <div class="mt-8 pt-6 border-t border-slate-800 text-xs text-slate-400 text-center md:text-left">
-                {{ $locale === 'hi' ? '© 2026 Arogio. मरीजों के लिए निःशुल्क, भरोसेमंद और विज्ञापन-मुक्त हेल्थकेयर खोज मंच।' : '© 2026 Arogio. A free, trustworthy, ad-free healthcare discovery platform.' }}
-            </div>
-        </div>
-    </footer>
+    <div id="arogio-footer"><footer class="design-fallback">
+        <p>Arogio — {{ $locale === 'hi' ? 'निःशुल्क स्वास्थ्य सेवा खोज मंच' : 'A free, ad-free healthcare discovery platform.' }}</p>
+        <nav><a href="{{ route('about') }}">About</a><a href="{{ route('contact') }}">Contact</a><a href="{{ route('privacy.policy') }}">Privacy Policy</a><a href="{{ route('terms.service') }}">Terms of Service</a></nav>
+    </footer></div>
 
     <!-- Compare Dock -->
     <div id="compare-dock"
@@ -3197,6 +2831,7 @@
                 initialMsg.textContent = getInitialChatbotMessage();
             }
         });
+        if (!document.getElementById('arogio-jeeva')) {
         initializeChatbotCity();
         setupChatbotKeyboardHandlers();
         document.getElementById('chatbot-toggle-btn')?.classList.remove('chatbot-fab-hidden');
@@ -3206,6 +2841,7 @@
             chatbotInitialMessagesHtml = initialMessagesDiv.innerHTML;
         }
         setupFabHintCycle();
+        }
 
         document.getElementById('lead-capture-overlay')?.addEventListener('click', () => skipLeadCapture(3));
         document.getElementById('lead-capture-skip')?.addEventListener('click', () => skipLeadCapture(7));
@@ -3274,7 +2910,7 @@
             }
         });
 
-        setTimeout(showLeadCaptureModal, 3500);
+        // Health-update signup is user initiated; never interrupt healthcare discovery.
         document.getElementById('listing-report-overlay')?.addEventListener('click', closeListingReportModal);
         document.getElementById('listing-report-cancel')?.addEventListener('click', closeListingReportModal);
         document.getElementById('listing-report-form')?.addEventListener('submit', async function(e) {
@@ -4859,6 +4495,11 @@
                 color: #ffffff !important;
             }
     </style>
+    @php
+        $arogioCssPath = public_path('build/arogio.css');
+        $arogioCssVersion = file_exists($arogioCssPath) ? filemtime($arogioCssPath) : '1.0';
+    @endphp
+    <link rel="stylesheet" href="{{ asset('build/arogio.css') }}?v={{ $arogioCssVersion }}">
     @stack('scripts')
 </body>
 

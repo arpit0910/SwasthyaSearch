@@ -1,0 +1,21 @@
+import { build } from 'esbuild';
+import { copyFileSync, existsSync, mkdirSync } from 'node:fs';
+
+if (!existsSync('public/build')) {
+  mkdirSync('public/build', { recursive: true });
+}
+
+await build({
+  entryPoints: ['resources/js/arogio.jsx'],
+  bundle: true,
+  minify: true,
+  outfile: 'public/build/arogio.js',
+  target: ['es2020'],
+  define: { 'process.env.NODE_ENV': '"production"' },
+  legalComments: 'eof',
+});
+
+if (existsSync('resources/js/arogio.css')) {
+  copyFileSync('resources/js/arogio.css', 'public/build/arogio.css');
+}
+

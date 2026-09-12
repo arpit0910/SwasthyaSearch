@@ -12,151 +12,64 @@ class DoctorController extends Controller
 {
     public function index(Request $request)
     {
-        $activeCity = config('healthcare.active_city', 'Jaipur');
-        $userLat = $request->filled('user_lat') ? (float)$request->input('user_lat') : null;
-        $userLng = $request->filled('user_lng') ? (float)$request->input('user_lng') : null;
-        $hasUserLocation = is_numeric($userLat) && is_numeric($userLng);
+        $cityInput = $request->input('city', config('healthcare.active_city', 'Jaipur'));
+        $activeCity = trim((string) (is_array($cityInput) ? ($cityInput[0] ?? '') : $cityInput));
+        $activeCity = $activeCity ?: config('healthcare.active_city', 'Jaipur');
+        $list = fn ($key) => array_values(array_filter((array) $request->input($key, []), fn ($v) => is_scalar($v) && $v !== '' && $v !== 'All'));
+        $departmentFilter = $list('department');
+        $typeFilter = $list('type');
+        $benefitFilter = $list('benefit');
+        $experience = max(0, min(60, (int) (collect($list('experience'))->min() ?? 0)));
+        $userLat = is_numeric($request->input('user_lat')) ? (float) $request->input('user_lat') : null;
+        $userLng = is_numeric($request->input('user_lng')) ? (float) $request->input('user_lng') : null;
+        $hasUserLocation = $userLat !== null && $userLng !== null && abs($userLat) <= 90 && abs($userLng) <= 180;
+        if (! $hasUserLocation) { $userLat = null; $userLng = null; }
+        $perPage = in_array((int) $request->input('per_page'), [10, 20, 50], true) ? (int) $request->input('per_page') : 10;
+        $sort = in_array($request->input('sort'), ['name', 'experience', 'nearest', 'latest'], true) ? $request->input('sort') : 'experience';
+        $search = trim((string) $request->input('search', ''));
 
-        $query = Doctor::with(['department', 'hospitals'])
+        $query = Doctor::with(['department', 'hospitals' => fn ($q) => $q->whereRaw('LOWER(TRIM(city)) = ?', [mb_strtolower($activeCity)])])
             ->where('is_verified', true)
-            ->whereHas('hospitals', fn($hospitalQuery) => $hospitalQuery->where('city', 'LIKE', "%{$activeCity}%"));
-
-        // Treat nearby as the base filter: first limit to nearby doctors, then apply other filters.
-        if ($hasUserLocation) {
-            $allDoctorsMapped = Doctor::with('hospitals')
-                ->where('is_verified', true)
-                ->whereHas('hospitals', fn($hospitalQuery) => $hospitalQuery->where('city', 'LIKE', "%{$activeCity}%"))
-                ->get()
-                ->map(function (Doctor $doctor) use ($userLat, $userLng) {
-                    $primaryHospital = $doctor->hospitals->first();
-                    $distanceKm = $this->calculateDistanceKm(
-                        $userLat,
-                        $userLng,
-                        $doctor->latitude ?? $primaryHospital?->latitude,
-                        $doctor->longitude ?? $primaryHospital?->longitude
-                    );
-
-                    return [
-                        'id' => $doctor->id,
-                        'distance_km' => $distanceKm,
-                    ];
-                });
-
-            $nearbyDoctorIds = $allDoctorsMapped
-                ->filter(fn(array $doctor) => $doctor['distance_km'] !== null && $doctor['distance_km'] < 50)
-                ->sortBy(fn(array $doctor) => $doctor['distance_km'])
-                ->pluck('id')
-                ->values();
-
-            if ($nearbyDoctorIds->isEmpty()) {
-                $nearbyDoctorIds = $allDoctorsMapped
-                    ->sortBy(fn(array $doctor) => $doctor['distance_km'] ?? PHP_FLOAT_MAX)
-                    ->pluck('id')
-                    ->values();
-            }
-
-            if ($nearbyDoctorIds->isEmpty()) {
-                $doctors = $this->paginateCollection(collect(), $request, 30);
-
-                $nameColumn = app()->getLocale() === 'hi' ? 'name_hi' : 'name_en';
-                $departments = Department::where('is_active', true)
-                    ->whereNotNull('name_en')
-                    ->where('name_en', '!=', '')
-                    ->whereHas('doctors')
-                    ->orderBy($nameColumn)
-                    ->get();
-                return view('doctors.index', [
-                    'doctors' => $doctors,
-                    'departments' => $departments->map(fn(Department $department) => $this->formatDepartment($department)),
-                    'cities' => collect([$activeCity]),
-                    'filters' => array_merge($request->only(['department', 'experience', 'search', 'user_lat', 'user_lng']), ['city' => [$activeCity]]),
-                    'hasUserLocation' => $hasUserLocation,
-                    'activeCity' => $activeCity,
-                ]);
-            }
-
-            $query->whereIn('id', $nearbyDoctorIds->all());
-        }
-
-        // Filter by Department - support multiple selections
-        $departments = $request->input('department', []);
-        if (!is_array($departments)) {
-            $departments = ($departments && $departments !== 'All') ? [$departments] : [];
-        }
-        $departments = array_filter($departments); // Remove empty values
-
-        if (!empty($departments)) {
-            $query->where(function ($q) use ($departments) {
-                foreach ($departments as $dept) {
-                    $q->orWhereHas('department', function ($sq) use ($dept) {
-                        $sq->where('departments.name_en', 'LIKE', "%{$dept}%")
-                            ->orWhere('departments.name_hi', 'LIKE', "%{$dept}%")
-                            ->orWhere('departments.id', $dept);
-                    })->orWhereHas('departments', function ($sq) use ($dept) {
-                        $sq->where('departments.name_en', 'LIKE', "%{$dept}%")
-                            ->orWhere('departments.name_hi', 'LIKE', "%{$dept}%")
-                            ->orWhere('departments.id', $dept);
-                    });
+            ->whereHas('hospitals', function ($q) use ($activeCity, $typeFilter, $benefitFilter) {
+                $q->whereRaw('LOWER(TRIM(city)) = ?', [mb_strtolower($activeCity)]);
+                if ($typeFilter) $q->whereIn('type', $typeFilter);
+                $benefits = ['esic' => 'accepts_esic', 'cghs' => 'accepts_cghs', 'ayushman' => 'accepts_ayushman', 'janaadhaar' => 'accepts_janaadhaar', 'cashless' => 'is_cashless'];
+                foreach ($benefitFilter as $benefit) if (isset($benefits[$benefit])) $q->where($benefits[$benefit], true);
+            });
+        if ($departmentFilter) {
+            $query->where(function ($q) use ($departmentFilter) {
+                foreach ($departmentFilter as $department) {
+                    $match = fn ($sq) => $sq->where('departments.id', $department)->orWhere('departments.name_en', 'like', "%{$department}%")->orWhere('departments.name_hi', 'like', "%{$department}%");
+                    $q->orWhereHas('department', $match)->orWhereHas('departments', $match);
                 }
             });
         }
-
-        // Filter by Experience Years - support multiple selections
-        $experiences = $request->input('experience', []);
-        if (!is_array($experiences)) {
-            $experiences = ($experiences && $experiences !== 'All') ? [$experiences] : [];
+        if ($experience) $query->where('experience_years', '>=', $experience);
+        if ($search !== '') {
+            $query->where(fn ($q) => $q->where('first_name', 'like', "%{$search}%")->orWhere('last_name', 'like', "%{$search}%")
+                ->orWhere('education_degrees', 'like', "%{$search}%")
+                ->orWhere('specialization_summary', 'like', "%{$search}%")
+                ->orWhereHas('department', fn ($d) => $d->where('name_en', 'like', "%{$search}%")->orWhere('name_hi', 'like', "%{$search}%"))
+                ->orWhereHas('hospitals', fn ($h) => $h->where('name_en', 'like', "%{$search}%")->orWhere('name_hi', 'like', "%{$search}%")));
         }
-        $experiences = array_filter($experiences); // Remove empty values
-
-        if (!empty($experiences)) {
-            $experiences = array_map('intval', $experiences);
-            $query->where(function ($q) use ($experiences) {
-                foreach ($experiences as $exp) {
-                    $q->orWhere('experience_years', '>=', $exp);
-                }
-            });
-        }
-
-        // Filter by City - support multiple selections
-        // Filter by Search Keyword
-        if ($request->filled('search')) {
-            $search = $request->search;
-            $query->where(function ($q) use ($search) {
-                $q->where('first_name', 'LIKE', "%{$search}%")
-                    ->orWhere('last_name', 'LIKE', "%{$search}%")
-                    ->orWhere('about_en', 'LIKE', "%{$search}%")
-                    ->orWhere('about_hi', 'LIKE', "%{$search}%");
-            });
-        }
-
-        $nameColumn = app()->getLocale() === 'hi' ? 'name_hi' : 'name_en';
-        $departments = Department::where('is_active', true)
-            ->whereNotNull('name_en')
-            ->where('name_en', '!=', '')
-            ->whereHas('doctors')
-            ->orderBy($nameColumn)
-            ->get();
+        if ($sort === 'name') $query->orderBy('first_name')->orderBy('last_name');
+        elseif ($sort === 'experience') $query->orderByDesc('experience_years');
+        else $query->latest();
         if ($hasUserLocation) {
-            $doctors = $query
-                ->latest()
-                ->get()
-                ->map(fn(Doctor $doctor) => $this->formatDoctor($doctor, $userLat, $userLng))
-                ->sortBy(fn(array $doctor) => $doctor['distance_km'] ?? PHP_FLOAT_MAX)
-                ->values();
-
-            $doctors = $this->paginateCollection($doctors, $request, 30);
+            $items = $query->get()->map(fn (Doctor $doctor) => $this->formatDoctor($doctor, $userLat, $userLng))
+                ->filter(fn ($doctor) => $doctor['distance_km'] !== null && $doctor['distance_km'] <= 50)
+                ->sortBy('distance_km')->values();
+            $doctors = $this->paginateCollection($items, $request, $perPage);
         } else {
-            $doctors = $query
-                ->latest()
-                ->paginate(30)
-                ->through(fn(Doctor $doctor) => $this->formatDoctor($doctor, $userLat, $userLng));
+            $doctors = $query->paginate($perPage)->withQueryString()->through(fn (Doctor $doctor) => $this->formatDoctor($doctor));
         }
-
+        $departments = Department::where('is_active', true)->orderBy(app()->getLocale() === 'hi' ? 'name_hi' : 'name_en')->get();
         return view('doctors.index', [
             'doctors' => $doctors,
-            'departments' => $departments->map(fn(Department $department) => $this->formatDepartment($department)),
-            'cities' => collect([$activeCity]),
-            'filters' => array_merge($request->only(['department', 'experience', 'search', 'user_lat', 'user_lng']), ['city' => [$activeCity]]),
+            'departments' => $departments->map(fn (Department $department) => $this->formatDepartment($department)),
+            'cities' => Hospital::whereNotNull('city')->distinct()->orderBy('city')->pluck('city')->push($activeCity)->unique()->values(),
+            'types' => Hospital::whereNotNull('type')->distinct()->orderBy('type')->pluck('type'),
+            'filters' => ['city' => [$activeCity], 'department' => $departmentFilter, 'experience' => [$experience], 'type' => $typeFilter, 'benefit' => $benefitFilter, 'search' => $search, 'sort' => $sort, 'per_page' => $perPage, 'user_lat' => $userLat, 'user_lng' => $userLng],
             'hasUserLocation' => $hasUserLocation,
             'activeCity' => $activeCity,
         ]);
