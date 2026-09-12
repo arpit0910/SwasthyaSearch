@@ -4423,7 +4423,11 @@
                 color: #ffffff !important;
             }
     </style>
-    <link rel="stylesheet" href="{{ asset('build/arogio.css') }}?v={{ filemtime(public_path('build/arogio.css')) }}">
+    @php
+        $arogioCssPath = public_path('build/arogio.css');
+        $arogioCssVersion = file_exists($arogioCssPath) ? filemtime($arogioCssPath) : '1.0';
+    @endphp
+    <link rel="stylesheet" href="{{ asset('build/arogio.css') }}?v={{ $arogioCssVersion }}">
     @stack('scripts')
 </body>
 

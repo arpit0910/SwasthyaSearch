@@ -25,4 +25,8 @@
     ];
 @endphp
 <script>window.arogioDesign = {{ Illuminate\Support\Js::from($designConfig) }};</script>
-<script defer src="{{ asset('build/arogio.js') }}?v={{ filemtime(public_path('build/arogio.js')) }}"></script>
+@php
+    $arogioJsPath = public_path('build/arogio.js');
+    $arogioJsVersion = file_exists($arogioJsPath) ? filemtime($arogioJsPath) : '1.0';
+@endphp
+<script defer src="{{ asset('build/arogio.js') }}?v={{ $arogioJsVersion }}"></script>
