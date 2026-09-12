@@ -62,126 +62,188 @@
         $activeCityHi = config('healthcare.active_city_hi', 'जयपुर');
 
         $defaultTitle = $isHindi
-            ? 'Arogio - डॉक्टर, अस्पताल और ब्लड बैंक खोजें'
-            : 'Arogio - Find Doctors, Hospitals, and Blood Banks';
+            ? 'Arogio - डॉक्टर, अस्पताल, 24/7 ब्लड बैंक और स्वास्थ्य सेवाएं खोजें'
+            : 'Arogio - Find Doctors Near Me, Hospitals, Blood Banks & Healthcare';
         $defaultDescription = $isHindi
-            ? 'arogio पर अपने शहर में सत्यापित डॉक्टर, अस्पताल, क्लिनिक और ब्लड बैंक खोजें।'
-            : 'Find verified doctors, hospitals, clinics, blood banks, and health articles on Arogio.';
+            ? 'Arogio पर अपने पास सत्यापित डॉक्टर, 24/7 आपातकालीन अस्पताल, ब्लड बैंक, दवाइयां और दादी-नानी के घरेलू नुस्खे खोजें। नि:शुल्क स्वास्थ्य निर्देशिका।'
+            : 'Find verified doctors near you, 24/7 emergency hospitals, blood banks, medicines, and Ayurvedic home remedies on Arogio. Free healthcare directory.';
         $defaultKeywords = $isHindi
-            ? \App\Support\Seo::keywords(['Arogio', 'डॉक्टर', 'अस्पताल', 'ब्लड बैंक', 'स्वास्थ्य लेख', 'दवा जानकारी', $activeCityHi])
-            : \App\Support\Seo::keywords(['Arogio', 'doctors', 'hospitals', 'blood banks', 'health articles', 'medicine information', $activeCity]);
+            ? \App\Support\Seo::keywords(['Arogio', 'डॉक्टर मेरे पास', 'Doctor near me', 'अस्पताल मेरे पास', 'Hospitals near me', 'ब्लड बैंक', 'Blood bank near me', 'दादी नानी के नुस्खे', 'घरेलू नुस्खे', 'दवा जानकारी', 'आपातकालीन अस्पताल', 'लक्षण परीक्षक', $activeCityHi, $activeCity])
+            : \App\Support\Seo::keywords(['Arogio', 'Doctor near me', 'Doctors near me', 'Hospitals near me', 'Blood banks near me', '24/7 Blood bank', 'Emergency hospital', 'Ayurvedic home remedies', 'Dadi nani ke nuskhe', 'Medicine uses and side effects', 'Online symptom checker', 'Healthcare directory', $activeCity]);
 
         $routeName = request()->route()?->getName() ?? '';
         $routeSeo = [
             'home' => [
                 'title' => $isHindi
-                    ? 'Arogio - अपने पास विश्वसनीय स्वास्थ्य सेवा खोजें'
-                    : 'Arogio - Trusted Healthcare Discovery Near You',
+                    ? 'Arogio - अपने पास डॉक्टर, अस्पताल, ब्लड बैंक और स्वास्थ्य सेवाएं खोजें'
+                    : 'Arogio - Find Doctors Near Me, 24/7 Hospitals & Blood Banks',
                 'description' => $isHindi
-                    ? 'लक्षण, विभाग, शहर या नाम से डॉक्टर, अस्पताल, क्लिनिक और ब्लड बैंक खोजें।'
-                    : 'Search doctors, hospitals, blood banks, and departments by symptom, city, or keyword.',
+                    ? 'लक्षण, विभाग, शहर या नाम से डॉक्टर, अस्पताल, क्लिनिक और 24/7 ब्लड बैंक खोजें। दादी-नानी के नुस्खे और दवा जानकारी उपलब्ध।'
+                    : 'Search verified doctors near you, 24/7 emergency hospitals, blood banks, clinical departments, medicines, and traditional home remedies.',
             ],
             'doctors.index' => [
-                'title' => $isHindi ? 'डॉक्टर निर्देशिका | Arogio' : 'Doctors Directory | Arogio',
+                'title' => $isHindi
+                    ? 'मेरे पास डॉक्टर - सत्यापित विशेषज्ञ एवं क्लिनिक निर्देशिका | Arogio'
+                    : 'Doctors Near Me - Verified Specialists & Clinics Directory | Arogio',
                 'description' => $isHindi
-                    ? 'अपने शहर में सत्यापित विशेषज्ञ डॉक्टर खोजें।'
-                    : 'Browse verified specialist doctors by city, department, and experience.',
+                    ? 'अपने पास के सत्यापित विशेषज्ञ डॉक्टर खोजें। विभाग, अनुभव, क्लिनिक और परामर्श शुल्क के अनुसार खोजें व सीधे संपर्क करें।'
+                    : 'Find verified doctors and clinics near you. Browse specialists by clinical department, experience, hospital affiliation, and contact info.',
             ],
             'hospitals.index' => [
                 'title' => $isHindi
-                    ? 'अस्पताल और क्लिनिक निर्देशिका | Arogio'
-                    : 'Hospitals & Clinics Directory | Arogio',
+                    ? 'मेरे पास अस्पताल व क्लिनिक - 24/7 आपातकालीन सेवा निर्देशिका | Arogio'
+                    : 'Hospitals Near Me - 24/7 Emergency Care & Clinics Directory | Arogio',
                 'description' => $isHindi
-                    ? 'अपने शहर के अस्पताल और क्लिनिक खोजें।'
-                    : 'Find verified hospitals and clinics with location and contact details.',
+                    ? 'अपने शहर में 24/7 आपातकालीन अस्पताल, क्लिनिक, आयुष्मान, ESIC और CGHS योजना से जुड़े अस्पताल खोजें।'
+                    : 'Find verified hospitals and clinics near you with 24/7 emergency care, Ayushman Bharat, ESIC, CGHS empanelment, and direct directions.',
             ],
             'blood_banks.index' => [
-                'title' => $isHindi ? 'ब्लड बैंक निर्देशिका | Arogio' : 'Blood Banks Directory | Arogio',
+                'title' => $isHindi
+                    ? 'मेरे पास ब्लड बैंक - 24/7 रक्त उपलब्धता निर्देशिका | Arogio'
+                    : 'Blood Banks Near Me - 24/7 Verified Blood Availability | Arogio',
                 'description' => $isHindi
-                    ? 'अपने शहर में ब्लड बैंक खोजें और उपलब्धता फोन पर पुष्टि करें।'
-                    : 'Find blood banks by city and blood group. Call to confirm current availability.',
+                    ? 'अपने शहर में 24/7 सत्यापित ब्लड बैंक खोजें। रक्त समूह (A+, B+, O+, AB+, आदि) के अनुसार तुरंत उपलब्धता और संपर्क नंबर देखें।'
+                    : 'Locate verified 24/7 blood banks near you by blood group and city. Direct phone numbers for instant blood unit availability confirmation.',
+            ],
+            'emergency' => [
+                'title' => $isHindi
+                    ? 'आपातकालीन स्वास्थ्य सेवाएं व हेल्पलाइन नंबर | Arogio'
+                    : 'Emergency Healthcare & Ambulance Helpline Numbers | Arogio',
+                'description' => $isHindi
+                    ? '24/7 आपातकालीन नंबर, एम्बुलेंस हेल्पलाइन (108/102), नेशनल इमरजेंसी (112), ब्लड बैंक व क्रिटिकल केयर सहायता।'
+                    : '24/7 emergency medical helpline numbers, national ambulance contacts (108/102), critical trauma care, and rapid crisis support.',
+            ],
+            'departments.index' => [
+                'title' => $isHindi
+                    ? 'चिकित्सा विभाग एवं विशेषज्ञताएं | Arogio'
+                    : 'Medical Departments & Clinical Specialties | Arogio',
+                'description' => $isHindi
+                    ? 'कार्डियोलॉजी, न्यूरोलॉजी, बाल रोग, हड्डी रोग और त्वचा विज्ञान सहित सभी प्रमुख चिकित्सा विभागों की जानकारी।'
+                    : 'Explore all medical departments and clinical specialties to find the right specialist for your healthcare needs.',
+            ],
+            'diseases.index' => [
+                'title' => $isHindi
+                    ? 'रोग एवं स्वास्थ्य स्थितियां निर्देशिका | Arogio'
+                    : 'Diseases & Health Conditions Guide | Arogio',
+                'description' => $isHindi
+                    ? 'प्रमुख बीमारियों, उनके लक्षणों, कारणों, रोकथाम और संबंधित विशेषज्ञ डॉक्टरों की संपूर्ण जानकारी।'
+                    : 'Comprehensive guide to common diseases, symptoms, causes, prevention, and related specialist departments.',
+            ],
+            'symptom-test' => [
+                'title' => $isHindi
+                    ? 'मुफ्त ऑनलाइन लक्षण परीक्षक एवं स्वास्थ्य मूल्यांकन | Arogio'
+                    : 'Free Online Symptom Checker & Health Assessment | Arogio',
+                'description' => $isHindi
+                    ? 'अपने लक्षणों का ऑनलाइन त्वरित विश्लेषण करें और संभावित स्वास्थ्य स्थितियों व उपयुक्त विभाग का सुझाव प्राप्त करें।'
+                    : 'Analyze your symptoms online to discover likely health conditions and get recommended specialist departments instantly.',
+            ],
+            'nani-dadi.index' => [
+                'title' => $isHindi
+                    ? 'दादी-नानी के घरेलू नुस्खे - पारंपरिक भारतीय प्राकृतिक उपचार | Arogio'
+                    : 'Dadi Nani Ke Nuskhe - Traditional Indian Home Remedies | Arogio',
+                'description' => $isHindi
+                    ? 'खांसी, जुकाम, गैस, एसिडिटी और पाचन के लिए प्रामाणिक, डॉक्टर-समीक्षित दादी-नानी के घरेलू व आयुर्वेदिक नुस्खे।'
+                    : 'Discover evidence-reviewed traditional Indian home remedies (Nani Dadi Ke Nuskhe) for cough, cold, digestion, and daily wellness.',
+            ],
+            'nani-dadi.category' => [
+                'title' => $isHindi
+                    ? 'श्रेणी अनुसार घरेलू नुस्खे | दादी-नानी के नुस्खे | Arogio'
+                    : 'Home Remedies by Category | Dadi Nani Ke Nuskhe | Arogio',
+                'description' => $isHindi
+                    ? 'स्वास्थ्य श्रेणी, लक्षण और रोग के अनुसार पारंपरिक भारतीय घरेलू नुस्खे खोजें।'
+                    : 'Browse traditional Indian home remedies categorized by health conditions, symptoms, and wellness topics.',
+            ],
+            'nani-dadi.ingredient' => [
+                'title' => $isHindi
+                    ? 'प्राकृतिक सामग्री अनुसार नुस्खे | दादी-नानी के नुस्खे | Arogio'
+                    : 'Home Remedies by Natural Ingredient | Arogio',
+                'description' => $isHindi
+                    ? 'अदरक, हल्दी, तुलसी, शहद, लौंग और प्राकृतिक जड़ी-बूटियों से बने पारंपरिक घरेलू नुस्खे और उनके लाभ।'
+                    : 'Explore traditional home remedies and health benefits of turmeric, ginger, tulsi, honey, and natural Indian herbs.',
             ],
             'articles.index' => [
-                'title' => $isHindi ? 'स्वास्थ्य लेख | Arogio' : 'Health Articles | Arogio',
+                'title' => $isHindi ? 'स्वास्थ्य लेख एवं वेलनेस टिप्स | Arogio' : 'Health Articles & Wellness Tips | Arogio',
                 'description' => $isHindi
-                    ? 'स्वास्थ्य, पोषण और वेलनेस पर उपयोगी लेख पढ़ें।'
-                    : 'Read useful health, wellness, and medical awareness articles.',
-            ],
-            'consultations.index' => [
-                'title' => $isHindi ? 'Video Consulting | Arogio' : 'Video Consulting | Arogio',
-                'description' => $isHindi
-                    ? 'अपने ब्राउज़र से तुरंत निजी वीडियो परामर्श शुरू करें।'
-                    : 'Start a private browser-based video consultation instantly.',
-            ],
-            'consultations.room' => [
-                'title' => $isHindi ? 'परामर्श कक्ष | Arogio' : 'Consultation Room | Arogio',
-                'description' => $isHindi
-                    ? 'निजी वीडियो परामर्श कक्ष में जुड़े रहें।'
-                    : 'Stay connected inside the private consultation room.',
+                    ? 'चिकित्सा विशेषज्ञों द्वारा प्रमाणित स्वास्थ्य, पोषण, जीवनशैली और वेलनेस पर उपयोगी लेख पढ़ें।'
+                    : 'Read expert-verified articles on healthcare, nutrition, fitness, disease prevention, and healthy lifestyle guidance.',
             ],
             'medicines.index' => [
-                'title' => $isHindi ? 'दवा जानकारी | Arogio' : 'Medicine Information | Arogio',
+                'title' => $isHindi
+                    ? 'दवा निर्देशिका - उपयोग, खुराक, दुष्प्रभाव और चेतावनियां | Arogio'
+                    : 'Medicine Directory - Uses, Side Effects & Safety Warnings | Arogio',
                 'description' => $isHindi
-                    ? 'दवाओं के उपयोग, दुष्प्रभाव, सावधानियां और चेतावनियों की सामान्य जानकारी खोजें।'
-                    : 'Search medicine uses, side effects, precautions, and warnings.',
+                    ? 'दवाओं के चिकित्सीय उपयोग, खुराक, सामग्री, सामान्य दुष्प्रभाव और सुरक्षा सावधानियों की विस्तृत जानकारी।'
+                    : 'Search medicines to understand active ingredients, clinical indications, dosages, side effects, and safety warnings.',
             ],
             'medicines.show' => [
-                'title' => $isHindi ? 'दवा विवरण | Arogio' : 'Medicine Details | Arogio',
+                'title' => $isHindi ? 'दवा विवरण एवं सुरक्षा सलाह | Arogio' : 'Medicine Details & Safety Guidance | Arogio',
                 'description' => $isHindi
-                    ? 'चयनित दवा की सामान्य जानकारी और सुरक्षा सलाह देखें।'
-                    : 'View general medicine information and safety guidance.',
+                    ? 'चयनित दवा के उपयोग, दुष्प्रभाव, सावधानियां और चिकित्सीय चेतावनियां देखें।'
+                    : 'View comprehensive medicine indications, precautions, potential side effects, and safe usage guidance.',
             ],
             'activities.index' => [
-                'title' => $isHindi ? 'वेलनेस गतिविधियां | Arogio' : 'Wellness Activities | Arogio',
+                'title' => $isHindi ? 'मानसिक स्वास्थ्य एवं वेलनेस गतिविधियां | Arogio' : 'Mental Wellness & Calming Activities | Arogio',
                 'description' => $isHindi
-                    ? 'तनाव राहत, ग्राउंडिंग और मूड चेक-इन गतिविधियां उपयोग करें।'
-                    : 'Use stress-relief, grounding, and mood check-in activities.',
+                    ? 'तनाव राहत, गाइडेड श्वास अभ्यास, 5-4-3-2-1 ग्राउंडिंग और मूड चेक-इन टूल्स का उपयोग करें।'
+                    : 'Explore guided breathing exercises, 5-4-3-2-1 sensory grounding, calming audio, and mood check-in activities.',
             ],
             'activities.breathing' => [
-                'title' => $isHindi ? 'श्वास अभ्यास | Arogio' : 'Breathing Exercise | Arogio',
+                'title' => $isHindi ? 'गाइडेड श्वास अभ्यास | तनाव राहत | Arogio' : 'Guided Breathing Exercise | Stress Relief | Arogio',
                 'description' => $isHindi
-                    ? 'धीमी श्वास के शांत अभ्यास का उपयोग करें।'
-                    : 'Use a calm guided breathing exercise.',
+                    ? 'धीमी और गहरी श्वास का शांत अभ्यास, जो चिंता और तनाव कम करने में तुरंत मदद करता है।'
+                    : 'Practice slow, rhythmic guided breathing to calm your mind, lower heart rate, and relieve acute anxiety.',
             ],
             'activities.grounding' => [
-                'title' => $isHindi ? 'ग्राउंडिंग अभ्यास | Arogio' : 'Grounding Exercise | Arogio',
+                'title' => $isHindi ? '5-4-3-2-1 ग्राउंडिंग अभ्यास | Arogio' : '5-4-3-2-1 Grounding Technique | Arogio',
                 'description' => $isHindi
-                    ? '5-4-3-2-1 तकनीक से वर्तमान में लौटें।'
-                    : 'Use the 5-4-3-2-1 technique to return to the present moment.',
+                    ? '5-4-3-2-1 संवेदी तकनीक से चिंता को नियंत्रित करें और वर्तमान में शांति महसूस करें।'
+                    : 'Use the 5-4-3-2-1 sensory awareness method to manage panic, reduce anxiety, and regain presence.',
             ],
             'activities.mood-check' => [
-                'title' => $isHindi ? 'मूड चेक-इन | Arogio' : 'Mood Check-in | Arogio',
+                'title' => $isHindi ? 'दैनिक मूड चेक-इन | Arogio' : 'Daily Mood Check-in | Arogio',
                 'description' => $isHindi
-                    ? 'अपनी भावना पहचानें और जरूरत पर सहायता देखें।'
-                    : 'Check how you feel and see support if needed.',
+                    ? 'अपनी मानसिक स्थिति और भावनाओं को ट्रैक करें और उपयुक्त वेलनेस सुझाव पाएं।'
+                    : 'Track your emotional wellness, identify patterns, and access supportive mental health resources.',
             ],
             'quizzes.index' => [
-                'title' => $isHindi ? 'हेल्थ क्विज़ | Arogio' : 'Health Quizzes | Arogio',
+                'title' => $isHindi ? 'स्वास्थ्य एवं वेलनेस क्विज़ | Arogio' : 'Health & Wellness Quizzes | Arogio',
                 'description' => $isHindi
-                    ? 'सामान्य जागरूकता और आत्म-चिंतन के लिए क्विज़ लें।'
-                    : 'Take quizzes for awareness and self-reflection.',
+                    ? 'स्वास्थ्य जागरूकता, पोषण, नींद और वेलनेस पर इंटरैक्टिव क्विज़ लें और अपनी जानकारी परखें।'
+                    : 'Take self-reflection quizzes on health awareness, stress, sleep hygiene, and nutrition knowledge.',
             ],
             'quizzes.show' => [
                 'title' => $isHindi ? 'क्विज़ विवरण | Arogio' : 'Quiz Details | Arogio',
-                'description' => $isHindi ? 'सामान्य जागरूकता क्विज़ पूरा करें।' : 'Complete a general awareness quiz.',
+                'description' => $isHindi ? 'सामान्य स्वास्थ्य जागरूकता क्विज़ पूरा करें।' : 'Complete an interactive health awareness quiz.',
             ],
             'support.crisis' => [
-                'title' => $isHindi ? 'संकट सहायता | Arogio' : 'Crisis Support | Arogio',
+                'title' => $isHindi ? '24/7 संकट सहायता एवं हेल्पलाइन | Arogio' : '24/7 Crisis Support & Helplines | Arogio',
                 'description' => $isHindi
-                    ? 'असुरक्षित महसूस होने पर तुरंत सहायता विकल्प देखें।'
-                    : 'See immediate support options if you feel unsafe.',
+                    ? 'मानसिक स्वास्थ्य और संकट के समय तुरंत निःशुल्क हेल्पलाइन नंबर (KIRAN, Tele-MANAS, Vandrevala Foundation) पर संपर्क करें।'
+                    : 'Immediate, confidential mental health helpline numbers (Tele-MANAS, KIRAN 1800-599-0019) for emergency psychological support.',
             ],
             'about' => [
-                'title' => $isHindi ? 'हमारे बारे में | Arogio' : 'About Us | Arogio',
+                'title' => $isHindi ? 'हमारे बारे में - स्वास्थ्य सेवा को पारदर्शी बनाना | Arogio' : 'About Us - Simplifying Healthcare Discovery | Arogio',
                 'description' => $isHindi
-                    ? 'arogio का मिशन भरोसेमंद हेल्थकेयर खोज को सरल बनाना है।'
-                    : 'Learn about Arogio and our mission for transparent healthcare discovery.',
+                    ? 'Arogio का उद्देश्य हर नागरिक तक सत्यापित डॉक्टर, अस्पताल और स्वास्थ्य जानकारी को सरल और सुलभ बनाना है।'
+                    : 'Learn about Arogio mission to make verified doctors, hospitals, blood banks, and health guidance accessible to everyone.',
             ],
             'contact' => [
-                'title' => $isHindi ? 'संपर्क करें | Arogio' : 'Contact Us | Arogio',
+                'title' => $isHindi ? 'संपर्क करें | सहायता एवं प्रतिक्रिया | Arogio' : 'Contact Us | Support & Feedback | Arogio',
                 'description' => $isHindi
-                    ? 'सहायता और प्रतिक्रिया के लिए arogio से संपर्क करें।'
-                    : 'Contact Arogio for support, corrections, and feedback.',
+                    ? 'Arogio सहायता टीम से संपर्क करें, नई जानकारी जोड़ें या अपनी प्रतिक्रिया साझा करें।'
+                    : 'Get in touch with the Arogio team for inquiries, directory updates, provider corrections, and feedback.',
+            ],
+            'privacy.policy' => [
+                'title' => $isHindi ? 'गोपनीयता नीति | Arogio' : 'Privacy Policy | Arogio',
+                'description' => $isHindi
+                    ? 'Arogio की गोपनीयता नीति — जानें कि हम आपके डेटा की सुरक्षा और गोपनीयता कैसे सुनिश्चित करते हैं।'
+                    : 'Learn about Arogio commitment to protecting your privacy and personal data security.',
+            ],
+            'terms.service' => [
+                'title' => $isHindi ? 'सेवा की शर्तें | Arogio' : 'Terms of Service | Arogio',
+                'description' => $isHindi
+                    ? 'Arogio प्लेटफॉर्म उपयोग करने की नियम एवं शर्तें।'
+                    : 'Review the terms and conditions governing the use of the Arogio healthcare discovery platform.',
             ],
         ];
         $computedTitle = $routeSeo[$routeName]['title'] ?? $defaultTitle;
@@ -329,10 +391,17 @@
             'doctors.index' => $isHindi ? 'डॉक्टर' : 'Doctors',
             'hospitals.index' => $isHindi ? 'अस्पताल' : 'Hospitals',
             'blood_banks.index' => $isHindi ? 'ब्लड बैंक' : 'Blood Banks',
+            'emergency' => $isHindi ? 'आपातकाल' : 'Emergency',
+            'departments.index' => $isHindi ? 'विभाग' : 'Departments',
+            'diseases.index' => $isHindi ? 'रोग' : 'Diseases',
+            'symptom-test' => $isHindi ? 'लक्षण परीक्षक' : 'Symptom Checker',
+            'nani-dadi.index' => $isHindi ? 'दादी-नानी के नुस्खे' : 'Nani Dadi Ke Nuskhe',
+            'nani-dadi.category' => $isHindi ? 'नुस्खे श्रेणी' : 'Remedy Category',
+            'nani-dadi.ingredient' => $isHindi ? 'नुस्खे सामग्री' : 'Remedy Ingredient',
+            'nani-dadi.show' => $isHindi ? 'नुस्खा विवरण' : 'Remedy Details',
             'articles.index' => $isHindi ? 'लेख' : 'Articles',
-            'consultations.room' => $isHindi ? 'परामर्श कक्ष' : 'Consultation Room',
             'articles.show' => $isHindi ? 'लेख विवरण' : 'Article',
-
+            'medicines.index' => $isHindi ? 'दवाइयाँ' : 'Medicines',
             'medicines.show' => $isHindi ? 'दवा विवरण' : 'Medicine Details',
             'activities.index' => $isHindi ? 'गतिविधियां' : 'Activities',
             'activities.breathing' => $isHindi ? 'श्वास अभ्यास' : 'Breathing Exercise',

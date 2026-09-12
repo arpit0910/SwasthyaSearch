@@ -78,4 +78,62 @@ class SeoInfrastructureTest extends TestCase
             ->assertSee('property="article:author"', false)
             ->assertSee('name="keywords"', false);
     }
+
+    public function test_sitemap_xml_includes_all_core_pages_remedies_and_medicines(): void
+    {
+        $cat = \App\Models\HomeRemedyCategory::create([
+            'name_en' => 'Digestion',
+            'name_hi' => 'पाचन',
+            'slug' => 'digestion',
+            'is_active' => true,
+        ]);
+
+        $ing = \App\Models\HomeRemedyIngredient::create([
+            'name_en' => 'Ginger',
+            'name_hi' => 'अदरक',
+            'slug' => 'ginger',
+            'is_active' => true,
+        ]);
+
+        $remedy = \App\Models\HomeRemedy::create([
+            'category_id' => $cat->id,
+            'title_en' => 'Ginger Tea for Cold',
+            'title_hi' => 'जुकाम के लिए अदरक चाय',
+            'slug' => 'ginger-tea-cold',
+            'short_description_en' => 'Traditional tea.',
+            'short_description_hi' => 'पारंपरिक चाय।',
+            'is_published' => true,
+            'medical_review_status' => 'medical_reviewed',
+        ]);
+
+        $response = $this->get('/sitemap.xml');
+
+        $response->assertOk();
+        $response->assertHeader('Content-Type', 'application/xml; charset=UTF-8');
+        $response->assertSee(route('home'), false);
+        $response->assertSee(route('doctors.index'), false);
+        $response->assertSee(route('hospitals.index'), false);
+        $response->assertSee(route('blood_banks.index'), false);
+        $response->assertSee(route('emergency'), false);
+        $response->assertSee(route('nani-dadi.index'), false);
+        $response->assertSee(route('nani-dadi.show', $remedy->slug), false);
+        $response->assertSee(route('nani-dadi.category', $cat->slug), false);
+        $response->assertSee(route('nani-dadi.ingredient', $ing->slug), false);
+    }
+
+    public function test_homepage_and_directory_contain_high_intent_search_keywords(): void
+    {
+        $response = $this->get(route('home'));
+        $response->assertOk();
+        $response->assertSee('Doctor near me', false);
+        $response->assertSee('Blood bank near me', false);
+
+        $doctorsResponse = $this->get(route('doctors.index'));
+        $doctorsResponse->assertOk();
+        $doctorsResponse->assertSee('Doctors Near Me', false);
+
+        $bloodBanksResponse = $this->get(route('blood_banks.index'));
+        $bloodBanksResponse->assertOk();
+        $bloodBanksResponse->assertSee('Blood Banks Near Me', false);
+    }
 }

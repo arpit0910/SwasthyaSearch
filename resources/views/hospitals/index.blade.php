@@ -58,15 +58,16 @@ $pageTitle = filled($searchTerm)
     ? "Hospitals for {$searchTerm} in {$selectedCity} | Arogio"
     : (!empty($selectedTypes)
         ? "{$typePhrase} in {$selectedCity} | Arogio"
-        : "Hospitals and Clinics in {$selectedCity} | Arogio");
+        : ($locale === 'hi' ? "{$selectedCity} में अस्पताल व क्लीनिक - 24/7 आपातकालीन सेवा | Arogio" : "Hospitals Near Me in {$selectedCity} - 24/7 Emergency Care & Clinics | Arogio"));
 $pageDescription = filled($searchTerm)
     ? "Find hospitals and clinics in {$selectedCity} related to {$searchTerm}. Review services, addresses, and direct contact numbers before visiting."
     : (!empty($selectedBenefits)
         ? "Browse {$benefitPhrase} hospitals and clinics in {$selectedCity}. Compare verified healthcare facilities, schemes, and direct contact details."
-        : "Find verified hospitals and clinics in {$selectedCity}. Check facility type, accepted schemes, location details, and direct phone numbers on Arogio.");
+        : "Find verified 24/7 hospitals and clinics near you in {$selectedCity}. Check facility type, Ayushman/ESIC/CGHS accepted schemes, location details, and direct phone numbers on Arogio.");
 @endphp
 @section('meta_title', $pageTitle)
 @section('meta_description', $pageDescription)
+@section('meta_keywords', \App\Support\Seo::keywords(['Hospitals near me', 'Hospital near me', 'Clinics near me', 'Hospitals in ' . $selectedCity, '24/7 Emergency hospital', 'Ayushman hospital', 'ESIC hospital', 'CGHS hospital', $selectedCity]))
 @section('structured_data')
 <script type="application/ld+json">
 {!! json_encode([

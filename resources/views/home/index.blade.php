@@ -1,10 +1,10 @@
 @extends('layouts.public')
 
-@section('title', ($locale === 'hi' ? 'मुखपृष्ठ' : 'Home') . ' - Arogio')
+@section('title', ($locale === 'hi' ? 'डॉक्टर, 24/7 अस्पताल और ब्लड बैंक खोजें' : 'Find Doctors Near Me, 24/7 Hospitals & Blood Banks') . ' - Arogio')
 
-@section('meta_title', $locale === 'hi' ? 'Arogio | Doctors, Hospitals, Blood Banks, Articles और Health Tools' : 'Arogio | Doctors, Hospitals, Blood Banks, Articles & Health Tools')
-@section('meta_description', $locale === 'hi' ? 'Arogio पर अपने शहर में trusted doctors, hospitals, blood banks, health articles, symptom tools और wellness resources खोजें।' : 'Find trusted doctors, hospitals, blood banks, health articles, symptom tools, and wellness resources in your city with Arogio.')
-@section('meta_keywords', $locale === 'hi' ? 'Arogio, डॉक्टर, अस्पताल, ब्लड बैंक, स्वास्थ्य लेख, symptom test, wellness tools' : 'Arogio, doctors, hospitals, blood banks, health articles, symptom test, wellness tools')
+@section('meta_title', $locale === 'hi' ? 'Arogio - अपने पास डॉक्टर, 24/7 अस्पताल और ब्लड बैंक खोजें' : 'Arogio - Find Doctors Near Me, 24/7 Hospitals & Blood Banks')
+@section('meta_description', $locale === 'hi' ? 'Arogio पर अपने पास 100% सत्यापित डॉक्टर, 24/7 आपातकालीन अस्पताल, ब्लड बैंक, दवाइयां, लक्षण परीक्षक और दादी-नानी के घरेलू नुस्खे खोजें।' : 'Find 100% verified doctors near you, 24/7 emergency hospitals, blood banks, medicines, symptom checker, and traditional home remedies with Arogio.')
+@section('meta_keywords', $locale === 'hi' ? \App\Support\Seo::keywords(['Arogio', 'Doctor near me', 'Doctors near me', 'Hospitals near me', 'Blood bank near me', 'Blood banks near me', 'डॉक्टर मेरे पास', 'अस्पताल मेरे पास', 'ब्लड बैंक', 'दादी नानी के नुस्खे', 'आपातकालीन अस्पताल', 'Jaipur doctors']) : \App\Support\Seo::keywords(['Arogio', 'Doctor near me', 'Doctors near me', 'Hospitals near me', 'Blood bank near me', 'Blood banks near me', '24/7 Blood bank', 'Emergency hospital', 'Ayurvedic home remedies', 'Dadi nani ke nuskhe', 'Jaipur doctors', 'Healthcare directory']))
 @section('content')
 @php
 $quickSymptoms =

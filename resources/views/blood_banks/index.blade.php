@@ -49,15 +49,16 @@
         ? "Blood Banks for {$searchTerm} in {$selectedCity} | Arogio"
         : (!empty($selectedBloodGroups)
             ? "{$bloodGroupPhrase} Blood Banks in {$selectedCity} | Arogio"
-            : "Blood Banks in {$selectedCity} | Emergency Contacts | Arogio");
+            : ($locale === 'hi' ? "{$selectedCity} में ब्लड बैंक - 24/7 रक्त उपलब्धता | Arogio" : "Blood Banks Near Me in {$selectedCity} - 24/7 Emergency Blood Contacts | Arogio"));
     $pageDescription = filled($searchTerm)
         ? "Find blood banks in {$selectedCity} related to {$searchTerm}. Confirm blood availability, directions, and contact numbers before visiting."
         : (!empty($selectedFacilities)
             ? "Browse {$facilityPhrase} blood banks in {$selectedCity}. Check verified contacts and confirm current blood availability before visiting."
-            : "Find verified blood banks in {$selectedCity}. Check emergency contacts, directions, and current blood group availability before visiting.");
+            : "Find verified 24/7 blood banks near you in {$selectedCity}. Check emergency contacts, directions, and current blood group availability before visiting.");
 @endphp
 @section('meta_title', $pageTitle)
 @section('meta_description', $pageDescription)
+@section('meta_keywords', \App\Support\Seo::keywords(['Blood bank near me', 'Blood banks near me', 'Blood banks in ' . $selectedCity, '24/7 Blood bank', 'Blood availability', 'Emergency blood donor', $selectedCity]))
 @section('structured_data')
 <script type="application/ld+json">
 {!! json_encode([

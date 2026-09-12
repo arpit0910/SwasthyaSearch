@@ -56,15 +56,16 @@ $pageTitle = filled($searchTerm)
     ? "Doctors for {$searchTerm} in {$selectedCity} | Arogio"
     : (!empty($selectedDepartmentNames)
         ? "{$departmentPhrase} Doctors in {$selectedCity} | Arogio"
-        : "Doctors Directory in {$selectedCity} | Verified Specialists | Arogio");
+        : ($locale === 'hi' ? "{$selectedCity} में डॉक्टर - सत्यापित विशेषज्ञ निर्देशिका | Arogio" : "Doctors Near Me in {$selectedCity} - Verified Specialists Directory | Arogio"));
 $pageDescription = filled($searchTerm)
-    ? "Find verified doctors in {$selectedCity} related to {$searchTerm}. Check specialties, clinic details, and contact information before visiting."
+    ? "Find doctors in {$selectedCity} related to {$searchTerm}. Check specialties, clinic details, and contact information before visiting."
     : (!empty($selectedDepartmentNames)
         ? "Browse verified {$departmentPhrase} doctors in {$selectedCity}. Compare experience, hospitals, and direct contact information."
-        : "Find verified doctors in {$selectedCity} by specialty, symptoms, department, and experience. Contact hospitals and clinics directly through Arogio.");
+        : "Find verified doctors near you in {$selectedCity} by specialty, symptoms, department, and experience. Contact hospitals and clinics directly through Arogio.");
 @endphp
 @section('meta_title', $pageTitle)
 @section('meta_description', $pageDescription)
+@section('meta_keywords', \App\Support\Seo::keywords(['Doctor near me', 'Doctors near me', 'Doctors in ' . $selectedCity, 'Specialist doctors in ' . $selectedCity, 'Clinics near me', 'Healthcare directory', $selectedCity]))
 @section('structured_data')
 <script type="application/ld+json">
 {!! json_encode([
