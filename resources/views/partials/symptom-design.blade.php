@@ -1,3 +1,0 @@
-@php($symptomDesign = ['symptoms' => $symptoms])
-<script>window.arogioSymptoms = {{ Illuminate\Support\Js::from($symptomDesign) }};</script>
-<div id="arogio-symptoms"><section class="design-fallback"><h1>{{ $locale === 'hi' ? 'लक्षणों का निर्देशित आकलन' : 'Guided Symptom Assessment' }}</h1><p>{{ $locale === 'hi' ? 'यह जानकारी चिकित्सा निदान नहीं है।' : 'Explore informational symptom matches. This is not a medical diagnosis.' }}</p><noscript>{{ $locale === 'hi' ? 'आकलन के लिए JavaScript चालू करें।' : 'Enable JavaScript to use the guided assessment.' }}</noscript><a href="{{ route('doctors.index') }}">{{ $locale === 'hi' ? 'डॉक्टर खोजें' : 'Find doctors' }}</a></section></div>

@@ -1,3 +1,1 @@
-@extends('layouts.public') @section('content')
-@include('partials.remedy-design')
-@endsection
+@extends('layouts.public') @section('content')<main class="mx-auto max-w-6xl px-4 py-12"><h1 class="text-4xl font-bold">{{e($ingredient->getTranslation('name',app()->getLocale()))}}</h1><p class="mt-2 text-slate-500">{{e($ingredient->getTranslation('name',app()->getLocale()==='hi'?'en':'hi'))}}</p><p class="mt-6 max-w-3xl text-slate-600">{{e($ingredient->getTranslation('description',app()->getLocale()))}}</p><h2 class="mt-10 text-2xl font-bold">Related Nuskhe</h2><div class="mt-4 grid gap-4 sm:grid-cols-3">@foreach($remedies as $r)<a class="rounded-xl border p-4" href="{{route('nani-dadi.show',$r->slug)}}">{{e($r->getTranslation('title',app()->getLocale()))}}</a>@endforeach</div>{{$remedies->links()}}</main>@endsection
