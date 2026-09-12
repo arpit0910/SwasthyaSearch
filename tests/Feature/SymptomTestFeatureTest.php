@@ -21,9 +21,8 @@ class SymptomTestFeatureTest extends TestCase
 
         $response->assertOk();
         $response->assertSee('Symptom Test', false);
-        $response->assertSee('data-step-panel="1"', false);
-        $response->assertSee('data-step-panel="2"', false);
-        $response->assertSee('data-step-panel="3"', false);
+        $response->assertSee('arogio-symptoms', false);
+        $response->assertSee('window.arogioSymptoms', false);
     }
 
     public function test_symptom_analysis_returns_likely_condition_and_follow_up_symptoms(): void
