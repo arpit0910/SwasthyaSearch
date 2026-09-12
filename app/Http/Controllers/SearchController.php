@@ -25,6 +25,7 @@ class SearchController extends Controller
             'departments' => Department::where('is_active', true)->orderBy($nameColumn)->get()->map(fn(Department $department) => $this->formatDepartment($department)),
             'doctors' => Doctor::with(['department', 'hospitals'])->where('is_verified', true)->whereHas('hospitals', fn($query) => $query->where('city', 'LIKE', "%{$activeCity}%"))->latest()->take(6)->get()->map(fn(Doctor $doctor) => $this->formatDoctor($doctor)),
             'medicines' => Medicine::published()->latest()->take(3)->get(),
+            'featuredRemedy' => \App\Models\HomeRemedy::published()->orderByDesc('is_featured')->latest()->first(),
             'articles' => Article::with('comments')
                 ->where('is_published', true)
                 ->whereRaw('LOWER(COALESCE(category, \'\')) NOT LIKE ?', ['%sexual wellness%'])
