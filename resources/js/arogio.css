@@ -61,6 +61,7 @@ body > .pointer-events-none.fixed { display: none; }
   .design-logo img { width: 102px; }
 }
 .stitch-directory-layout { display: grid; grid-template-columns: 280px minmax(0, 1fr); gap: 24px; }
+.stitch-directory-layout > * { min-width: 0; }
 .stitch-remedy-intro { display: grid; grid-template-columns: minmax(0, 1.7fr) minmax(0, 1fr); gap: 32px; align-items: center; }
 .stitch-page .MuiPaper-root { overflow-wrap: anywhere; }
 .stitch-page .MuiOutlinedInput-input { border: 0; box-shadow: none; background: transparent; }
