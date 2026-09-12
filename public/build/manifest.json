@@ -1,0 +1,214 @@
+{
+  "_Chatbot-2ZtTZR5g.js": {
+    "file": "assets/Chatbot-2ZtTZR5g.js",
+    "name": "Chatbot",
+    "imports": [
+      "resources/js/app.tsx"
+    ],
+    "dynamicImports": [
+      "resources/js/app.tsx"
+    ]
+  },
+  "_activity-BuBd5eVB.js": {
+    "file": "assets/activity-BuBd5eVB.js",
+    "name": "activity",
+    "imports": [
+      "_Chatbot-2ZtTZR5g.js"
+    ]
+  },
+  "_book-open-BRb6-trP.js": {
+    "file": "assets/book-open-BRb6-trP.js",
+    "name": "book-open",
+    "imports": [
+      "_Chatbot-2ZtTZR5g.js"
+    ]
+  },
+  "_clock-iNNnJAIL.js": {
+    "file": "assets/clock-iNNnJAIL.js",
+    "name": "clock",
+    "imports": [
+      "_Chatbot-2ZtTZR5g.js"
+    ]
+  },
+  "_phone-DnWUGLCn.js": {
+    "file": "assets/phone-DnWUGLCn.js",
+    "name": "phone",
+    "imports": [
+      "_Chatbot-2ZtTZR5g.js"
+    ]
+  },
+  "_rotate-ccw-cLN2RDLF.js": {
+    "file": "assets/rotate-ccw-cLN2RDLF.js",
+    "name": "rotate-ccw",
+    "imports": [
+      "_Chatbot-2ZtTZR5g.js"
+    ]
+  },
+  "_search-DkASQP-p.js": {
+    "file": "assets/search-DkASQP-p.js",
+    "name": "search",
+    "imports": [
+      "_Chatbot-2ZtTZR5g.js"
+    ]
+  },
+  "_sparkles-CFQfW89E.js": {
+    "file": "assets/sparkles-CFQfW89E.js",
+    "name": "sparkles",
+    "imports": [
+      "_Chatbot-2ZtTZR5g.js"
+    ]
+  },
+  "_trophy-B5RKLmyi.js": {
+    "file": "assets/trophy-B5RKLmyi.js",
+    "name": "trophy",
+    "imports": [
+      "_Chatbot-2ZtTZR5g.js"
+    ]
+  },
+  "_users-CGyDfCNO.js": {
+    "file": "assets/users-CGyDfCNO.js",
+    "name": "users",
+    "imports": [
+      "_Chatbot-2ZtTZR5g.js"
+    ]
+  },
+  "resources/css/app.css": {
+    "file": "assets/app-BoQEByeo.css",
+    "src": "resources/css/app.css",
+    "isEntry": true
+  },
+  "resources/js/Pages/Articles/Index.tsx": {
+    "file": "assets/Index-DK_735q6.js",
+    "name": "Index",
+    "src": "resources/js/Pages/Articles/Index.tsx",
+    "isDynamicEntry": true,
+    "imports": [
+      "resources/js/app.tsx",
+      "_Chatbot-2ZtTZR5g.js",
+      "_search-DkASQP-p.js",
+      "_rotate-ccw-cLN2RDLF.js",
+      "_book-open-BRb6-trP.js"
+    ]
+  },
+  "resources/js/Pages/Articles/Show.tsx": {
+    "file": "assets/Show-CSLEXo1h.js",
+    "name": "Show",
+    "src": "resources/js/Pages/Articles/Show.tsx",
+    "isDynamicEntry": true,
+    "imports": [
+      "resources/js/app.tsx",
+      "_Chatbot-2ZtTZR5g.js",
+      "_clock-iNNnJAIL.js"
+    ]
+  },
+  "resources/js/Pages/Doctors/Index.tsx": {
+    "file": "assets/Index-Dl-8sZU7.js",
+    "name": "Index",
+    "src": "resources/js/Pages/Doctors/Index.tsx",
+    "isDynamicEntry": true,
+    "imports": [
+      "resources/js/app.tsx",
+      "_Chatbot-2ZtTZR5g.js",
+      "_search-DkASQP-p.js",
+      "_rotate-ccw-cLN2RDLF.js",
+      "_trophy-B5RKLmyi.js",
+      "_clock-iNNnJAIL.js",
+      "_phone-DnWUGLCn.js"
+    ]
+  },
+  "resources/js/Pages/Home/Index.tsx": {
+    "file": "assets/Index-BpJ-KhLC.js",
+    "name": "Index",
+    "src": "resources/js/Pages/Home/Index.tsx",
+    "isDynamicEntry": true,
+    "imports": [
+      "resources/js/app.tsx",
+      "_Chatbot-2ZtTZR5g.js",
+      "_sparkles-CFQfW89E.js",
+      "_search-DkASQP-p.js",
+      "_trophy-B5RKLmyi.js",
+      "_clock-iNNnJAIL.js",
+      "_phone-DnWUGLCn.js",
+      "_book-open-BRb6-trP.js"
+    ]
+  },
+  "resources/js/Pages/Hospitals/Index.tsx": {
+    "file": "assets/Index-DHmDI-Um.js",
+    "name": "Index",
+    "src": "resources/js/Pages/Hospitals/Index.tsx",
+    "isDynamicEntry": true,
+    "imports": [
+      "resources/js/app.tsx",
+      "_Chatbot-2ZtTZR5g.js",
+      "_search-DkASQP-p.js",
+      "_rotate-ccw-cLN2RDLF.js"
+    ]
+  },
+  "resources/js/Pages/Pages/About.tsx": {
+    "file": "assets/About-C9Sd-iAg.js",
+    "name": "About",
+    "src": "resources/js/Pages/Pages/About.tsx",
+    "isDynamicEntry": true,
+    "imports": [
+      "resources/js/app.tsx",
+      "_Chatbot-2ZtTZR5g.js",
+      "_sparkles-CFQfW89E.js",
+      "_users-CGyDfCNO.js"
+    ]
+  },
+  "resources/js/Pages/Pages/Contact.tsx": {
+    "file": "assets/Contact-BcoeOPVP.js",
+    "name": "Contact",
+    "src": "resources/js/Pages/Pages/Contact.tsx",
+    "isDynamicEntry": true,
+    "imports": [
+      "resources/js/app.tsx",
+      "_Chatbot-2ZtTZR5g.js",
+      "_phone-DnWUGLCn.js"
+    ]
+  },
+  "resources/js/Pages/Pages/Departments.tsx": {
+    "file": "assets/Departments-Bvzsixjd.js",
+    "name": "Departments",
+    "src": "resources/js/Pages/Pages/Departments.tsx",
+    "isDynamicEntry": true,
+    "imports": [
+      "resources/js/app.tsx",
+      "_Chatbot-2ZtTZR5g.js",
+      "_search-DkASQP-p.js",
+      "_activity-BuBd5eVB.js",
+      "_users-CGyDfCNO.js"
+    ]
+  },
+  "resources/js/Pages/Pages/Diseases.tsx": {
+    "file": "assets/Diseases-DcCfoblG.js",
+    "name": "Diseases",
+    "src": "resources/js/Pages/Pages/Diseases.tsx",
+    "isDynamicEntry": true,
+    "imports": [
+      "resources/js/app.tsx",
+      "_Chatbot-2ZtTZR5g.js",
+      "_activity-BuBd5eVB.js",
+      "_search-DkASQP-p.js",
+      "_rotate-ccw-cLN2RDLF.js"
+    ]
+  },
+  "resources/js/app.tsx": {
+    "file": "assets/app-DRXwQhJW.js",
+    "name": "app",
+    "src": "resources/js/app.tsx",
+    "isEntry": true,
+    "isDynamicEntry": true,
+    "dynamicImports": [
+      "resources/js/Pages/Articles/Index.tsx",
+      "resources/js/Pages/Articles/Show.tsx",
+      "resources/js/Pages/Doctors/Index.tsx",
+      "resources/js/Pages/Home/Index.tsx",
+      "resources/js/Pages/Hospitals/Index.tsx",
+      "resources/js/Pages/Pages/About.tsx",
+      "resources/js/Pages/Pages/Contact.tsx",
+      "resources/js/Pages/Pages/Departments.tsx",
+      "resources/js/Pages/Pages/Diseases.tsx"
+    ]
+  }
+}

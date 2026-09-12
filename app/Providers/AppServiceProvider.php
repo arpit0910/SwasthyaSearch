@@ -22,6 +22,10 @@ class AppServiceProvider extends ServiceProvider
     {
         Paginator::useBootstrapFive();
 
+        if (app()->environment('production') || (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on') || (isset($_SERVER['HTTP_X_FORWARDED_PROTO']) && $_SERVER['HTTP_X_FORWARDED_PROTO'] === 'https')) {
+            \Illuminate\Support\Facades\URL::forceScheme('https');
+        }
+
         if (\Illuminate\Support\Facades\DB::connection()->getDriverName() === 'sqlite') {
             $pdo = \Illuminate\Support\Facades\DB::connection()->getPdo();
             if (method_exists($pdo, 'sqliteCreateFunction')) {
